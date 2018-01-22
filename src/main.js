@@ -1,3 +1,5 @@
+/*程序入口
+*/
 window.uri = 'http://localhost:8080'
 window.urlConf = {
   datasource: {
