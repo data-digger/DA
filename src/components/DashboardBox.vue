@@ -1,5 +1,5 @@
 <template>
-  <div class="col col-lg-3 col-md-3 col-sm-6 col-xs-12" @click='link(subpath)' >
+  <div class="col col-lg-3 col-md-3 col-sm-6 col-xs-12" >
     <div class="dashboard-stat blue-madison">
       <div class="visual">
         <i class="fa fa-comments"></i>
@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="more">
-      VIEW MORE <i class="m-icon-swapright m-icon-white"></i>
+        <span>编辑</span><span>预览</span> 
       </div>
     </div>
   </div>
@@ -23,14 +23,7 @@
 
 export default {
   name: 'dashboardbox',
-  props:['id','name','desc','subpath'],
-  methods:{
-    link:function(subpath){
-      this.$router.push({
-        path:subpath
-      })
-    }
-  }
+  props:['id','name','desc'],
 }
 </script>
 
@@ -60,6 +53,10 @@ export default {
   line-height: 30px;
   color: #d4abab;
   background-color:#f9f0f0;
+}
+.more span {
+  float: left;
+  margin-right:10px;
 }
 .name{
   font-size: 16px;

@@ -11,6 +11,10 @@ window.urlConf = {
     list:`${window.uri}/bizview/list`,
     new: `${window.uri}/bizview/new`,
     preview:`${window.uri}/bizview/preview`
+  },
+  chart: {
+    list:`${window.uri}/chart/list`,
+    new: `${window.uri}/chart/new`,
   }
 }
 

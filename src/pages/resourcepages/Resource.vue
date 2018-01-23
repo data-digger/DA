@@ -94,11 +94,20 @@ export default {
           Vue.$store.dispatch('getQueryBox',response);
         }
       );
-    }
+    },
+    getDashboardBox (){
+      let Vue = this;
+      Vue.AxiosPost("getChart",'',
+        function(response){
+          Vue.$store.dispatch('getDashboardBox',response);
+        }
+      );
+    },
   },
   mounted:function(){
      this.getDatasourceBox();
      this.getQueryBox();
+     this.getDashboardBox();
   }
 }
 </script>
