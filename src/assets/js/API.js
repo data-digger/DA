@@ -37,5 +37,13 @@ export default {
    /*预览查询器数据*/
    previewBizView(params){
      return axios.post(urlConf.bizview.preview, params); 
-   }
+   },
+    /*创建仪表*/
+    createChart(params){
+      return axios.post(urlConf.chart.new, params); 
+    },
+    /*获取仪表*/
+    getChart(params){
+      return axios.post(urlConf.chart.list, params); 
+    },
 };

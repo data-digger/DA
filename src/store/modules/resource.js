@@ -5,7 +5,7 @@ import * as types from '../mutation-types'
 const state = {
   datasourceList:null,
   reportList:[{"id":"1","name":"report","desc":"report"}],
-  dashboardList:[{"id":"2","name":"dashboard","desc":"dashboard"}],
+  dashboardList:null,
   queryList:null,
   showEdit:false,
   showPreview:false,
@@ -33,6 +33,9 @@ const actions = {
   getQueryBox ({ commit, state }, param){   
     commit('getQueryBox', param);  
   },
+  getDashboardBox ({ commit, state }, param){   
+    commit('getDashboardBox', param);  
+  },
   changeState({ commit, state },param){
     commit('changeState', param);
   }
@@ -45,6 +48,9 @@ const mutations = {
   },
   getQueryBox(state,param){
     state.queryList = param.data;
+  },
+  getDashboardBox(state,param){
+    state.dashboardList = param.data;
   },
   changeState(state,param){
     state.showEdit = param.showEdit;
