@@ -7,7 +7,7 @@ import createdatasource from '@/pages/createpages/CreateDatasource'
 import resource from '@/pages/resourcepages/Resource'
 import datasourcemng from '@/pages/resourcepages/DatasourceMng'
 import createquery from '@/pages/createpages/CreateQuery'
-import createdashboard from '@/pages/createpages/Createdashboard'
+import createchart from '@/pages/createpages/CreateChart'
 
 Vue.use(Router)
 
@@ -49,9 +49,9 @@ export default new Router({
         component: createquery  
       },
       {
-        path: 'Createdashboard',
-        name: 'Createdashboard',
-        component: createdashboard  
+        path: 'CreateChart',
+        name: 'CreateChart',
+        component: createchart  
       }]
     }
 

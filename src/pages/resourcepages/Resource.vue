@@ -24,13 +24,13 @@
     </div>
     <div class="row dashboard">
        <div class="note note-dashboard">
-          <h4 class="block">仪表盘</h4>
+          <h4 class="block">图表</h4>
           <p>
              Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
           </p>
        </div>
        <div class="row box">
-          <DashboardBox v-for="box in dashboardList" :key='box.id' :name='box.name' :desc='box.desc'></DashboardBox>
+          <ChartBox v-for="box in chartList" :key='box.id' :name='box.name' :desc='box.desc'></ChartBox>
        </div>
     </div>
     <div class="row query">
@@ -51,7 +51,7 @@
 <script>
 import DatasourceBox from './../../components/DatasourceBox'
 import ReportBox from './../../components/ReportBox'
-import DashboardBox from './../../components/DashboardBox'
+import ChartBox from './../../components/ChartBox'
 import QueryBox from './../../components/QueryBox'
 import {mapGetters} from 'vuex'
 export default {
@@ -59,14 +59,21 @@ export default {
   components:{
     DatasourceBox,
     ReportBox,
+<<<<<<< HEAD
     DashboardBox,
     QueryBox
+=======
+    ChartBox,
+    QueryBox,
+    QueryPreview,
+    QueryEdit
+>>>>>>> b3aa37fdf71ecbbb7e50a8c62720b42755eebe59
   },
   computed: {
     ...mapGetters({
       datasourceList: 'datasourceList',
       reportList:'reportList',
-      dashboardList:'dashboardList',
+      chartList:'chartList',
       queryList:'queryList',
       showEdit:'showEdit',
       showPreview:'showPreview'
@@ -89,11 +96,11 @@ export default {
         }
       );
     },
-    getDashboardBox (){
+    getChartBox (){
       let Vue = this;
       Vue.AxiosPost("getChart",'',
         function(response){
-          Vue.$store.dispatch('getDashboardBox',response);
+          Vue.$store.dispatch('getChartBox',response);
         }
       );
     }
@@ -101,7 +108,7 @@ export default {
   mounted (){
      this.getDatasourceBox();
      this.getQueryBox();
-     this.getDashboardBox();
+     this.getChartBox();
   }
 }
 </script>
