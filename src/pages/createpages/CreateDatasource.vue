@@ -179,7 +179,7 @@ export default {
       let Vue = this;
       Vue.AxiosPost("createDatasource",Vue.datasource,
       function(){
-        alert("created succeed!")
+        alert("新建数据源成功!")
       })
     }
   }

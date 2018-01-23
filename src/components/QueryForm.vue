@@ -84,7 +84,7 @@ export default {
        Vue.bizView.defineJSON = Vue.sqlEditor.doc.getValue();
        Vue.AxiosPost("createQuery",Vue.bizView,
        function(){
-          alert("created succeed!")
+          alert("提交成功！")
        });
     },
     initSqlEdit(){

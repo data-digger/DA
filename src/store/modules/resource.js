@@ -8,7 +8,9 @@ const state = {
   dashboardList:[{"id":"2","name":"dashboard","desc":"dashboard"}],
   queryList:null,
   showEdit:false,
-  showPreview:false
+  showPreview:false,
+  bizViewId:null,
+  bizViewName:null
 }
 
 // getters
