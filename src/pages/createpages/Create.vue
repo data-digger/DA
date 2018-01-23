@@ -19,7 +19,7 @@ export default {
     return {
         createboxList:[{id:1,name:"数据源",desc:"DataSource",subpath:'/Home/CreateDatasource'},
           {id:2,name:"报表",desc:"Report",subpath:'/Home/Datasource'},
-          {id:3,name:"仪表盘",desc:"Dashboard",subpath:'/Home/Createdashboard'},
+          {id:3,name:"图表",desc:"Chart",subpath:'/Home/CreateChart'},
           {id:4,name:"查询器",desc:"query",subpath:'/Home/CreateQuery'}],
     }
   }

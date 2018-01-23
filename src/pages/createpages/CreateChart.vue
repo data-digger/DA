@@ -1,11 +1,11 @@
 <template>
-  <div id='dashboard'>
+  <div id='chart'>
        <div class="row chartedit">
         <div class="col-md-12">
           <div class="portlet box crusta">
             <div class="portlet-title">
               <div class="caption">
-                <i class="fa fa-gift"></i>新建仪表
+                <i class="fa fa-gift"></i>新建图表
               </div>
             </div>
             <div class="portlet-body form">
@@ -19,7 +19,7 @@
                   </div>
                 </div>
                 <div class="form-group col-md-12">
-                  <label class="col-sm-2 control-label">仪表名称:</label>
+                  <label class="col-sm-2 control-label">图表名称:</label>
                   <div class="col-sm-9">
                     <div class="input-group">
                       <span class="input-group-addon">
@@ -30,7 +30,7 @@
                   </div>
                 </div>
                 <div class="form-group col-md-12">
-                  <label class="col-sm-2 control-label">仪表别名:</label>
+                  <label class="col-sm-2 control-label">图表别名:</label>
                   <div class="col-sm-9">
                     <div class="input-group">
                       <span class="input-group-addon">
@@ -41,7 +41,7 @@
                   </div>
                 </div>
                 <div class="form-group col-md-12">
-                  <label class="col-sm-2 control-label">仪表描述:</label>
+                  <label class="col-sm-2 control-label">图表描述:</label>
                   <div class="col-sm-9">
                     <div class="input-group">
                       <span class="input-group-addon">
@@ -52,7 +52,7 @@
                   </div>
                 </div>
                 <div class="form-group col-md-12">
-                    <label class="col-md-2 control-label">Echarts-OPtion:</label>
+                    <label class="col-md-2 control-label">Echarts-Option:</label>
                     <div class="col-md-9">
                       <textarea id='chartOption'></textarea>
                     </div>
@@ -62,7 +62,7 @@
                     <div class="col-md-offset-2 col-md-8">  
                       <button type="button" class="btn btn-green" @click="drawChart">预览</button>
                       <button type="button" class="btn" @click="saveChart">保存</button>
-                      <button type="button" class="btn">取消</button>
+                      <button type="button" class="btn">返回</button>
                     </div>
                   </div>
                 </div>
@@ -84,7 +84,7 @@ import CodeMirror from "codemirror/lib/codemirror.js"
 import "codemirror/mode/javascript/javascript.js"
 import {mapGetters} from 'vuex'
 export default {
-  name: 'Dashboard',
+  name: 'Chart',
    data () {
     return {
       queryData:null,
@@ -162,7 +162,7 @@ export default {
 </script>
 
 <style scoped>
-#dashboard{
+#chart{
   width: 87%;
   height: 100%;
   float: left;
