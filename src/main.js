@@ -22,6 +22,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import bus from "@/assets/js/TransferBus.js"
 import $ from 'jquery'
 import API from '@/assets/js/API.js'
 import toastr from'toastr/build/toastr.min'
@@ -30,8 +31,17 @@ import 'bootstrap/dist/js/bootstrap.js'
 import 'bootstrap/dist/css/bootstrap.css'
 import "codemirror/lib/codemirror.css"
 import "datatables/media/css/jquery.dataTables.css"
+
+import iView from 'iview';
+import 'iview/dist/styles/iview.css';
+
+Vue.use(router);
+Vue.use(iView);
+
 Vue.config.productionTip = false
 Vue.prototype.toastr = toastr
+Vue.prototype.bus = bus
+
 new Vue({
   el: '#app',
   store,

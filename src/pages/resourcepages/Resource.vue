@@ -42,8 +42,7 @@
      </div>
      <div class="row box">
         <QueryBox  v-for="q in queryList" :key='q.id' :id='q.id' :name='q.name' :desc='q.desc'></QueryBox>
-        <QueryPreview v-if="showPreview"></QueryPreview>
-        <QueryEdit v-if="showEdit"></QueryEdit>
+       
      </div>
   </div> 
 </div>
@@ -54,8 +53,6 @@ import DatasourceBox from './../../components/DatasourceBox'
 import ReportBox from './../../components/ReportBox'
 import DashboardBox from './../../components/DashboardBox'
 import QueryBox from './../../components/QueryBox'
-import QueryPreview from './QueryPreview'
-import QueryEdit from './QueryEdit'
 import {mapGetters} from 'vuex'
 export default {
   name: 'Resource',
@@ -63,9 +60,7 @@ export default {
     DatasourceBox,
     ReportBox,
     DashboardBox,
-    QueryBox,
-    QueryPreview,
-    QueryEdit
+    QueryBox
   },
   computed: {
     ...mapGetters({
@@ -77,7 +72,6 @@ export default {
       showPreview:'showPreview'
     })
   },
-  
   methods:{
     getDatasourceBox(){
       let Vue = this;
@@ -102,9 +96,9 @@ export default {
           Vue.$store.dispatch('getDashboardBox',response);
         }
       );
-    },
+    }
   },
-  mounted:function(){
+  mounted (){
      this.getDatasourceBox();
      this.getQueryBox();
      this.getDashboardBox();
@@ -122,7 +116,6 @@ export default {
 #resource .row{
   width: 100%;
   margin:20px;
-  position: relative;
 }
 .datasource,.report,.dashboard,.query{
   border: 1px solid #f5f3f3;

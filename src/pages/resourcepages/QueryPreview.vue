@@ -2,7 +2,7 @@
   <div id='QueryPreview'>
           <div class="portlet box crusta">
             <div class="portlet-title">
-              <div class="caption">预览{{bizViewId}}查询器</div>
+              <div class="caption">预览{{bizViewName}}查询器</div>
               <div class="tools">
                 <a href="javascript:;" class="remove" data-original-title="" title="" @click="deletePreview()">×
                 </a>
@@ -17,15 +17,8 @@
 
 <script>
 import dataTables from 'dataTables/media/js/jquery.dataTables.min.js'
-import {mapGetters} from 'vuex'
 export default {
-  name: 'QueryPreview',
-  computed: {
-    ...mapGetters({
-      bizViewId:'bizViewId',
-      bizViewName:'bizViewName',
-    })
-  },
+props:['bizViewId','bizViewName'],
   methods:{
     //加载预览查询器表格
     initPreviewTable:function(gridData){
@@ -66,10 +59,10 @@ export default {
     },
     //关闭预览弹框
     deletePreview (){
-      this.$store.dispatch('changeState',{showPreview:false})
+      this.$emit("delete",false);
     }
   },
-  mounted:function(){
+  mounted(){
     this.previewBizView();
   }
 }
@@ -80,6 +73,7 @@ export default {
 /*@import "./../../../node_modules/datatables/media/css/jquery.dataTables.css"*/
 #QueryPreview{
   position: absolute;
+  z-index: 100;
   width: 500px;
   left: 250px;
   top: -330px;
@@ -107,6 +101,7 @@ export default {
 }
 .portlet.box > .portlet-body{
   background-color: #fff;
+  color: black;
   padding: 30px 10px;
   border: 1px solid #45b6af;
   overflow-x: auto;
