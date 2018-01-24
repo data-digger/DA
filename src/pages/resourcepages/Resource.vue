@@ -30,7 +30,8 @@
           </p>
        </div>
        <div class="row box">
-          <ChartBox v-for="box in chartList" :key='box.id' :name='box.name' :desc='box.desc'></ChartBox>
+          <ChartBox v-for="box in chartList" :key='box.id' :id='box.id' :name='box.name' :desc='box.desc' :defineJSON='box.defineJSON'></ChartBox>
+          <ChartPreview v-if="chartPreview"></ChartPreview>
        </div>
     </div>
     <div class="row query">
@@ -55,6 +56,7 @@ import ReportBox from './../../components/ReportBox'
 import ChartBox from './../../components/ChartBox'
 import QueryBox from './../../components/QueryBox'
 import QueryPreview from './QueryPreview'
+import ChartPreview from './ChartPreview'
 import QueryEdit from './QueryEdit'
 import {mapGetters} from 'vuex'
 export default {
@@ -64,6 +66,7 @@ export default {
     ReportBox,
     ChartBox,
     QueryBox,
+    ChartPreview,
     QueryPreview,
     QueryEdit
   },
@@ -73,6 +76,7 @@ export default {
       reportList:'reportList',
       chartList:'chartList',
       queryList:'queryList',
+      chartPreview:'chartPreview',
       showEdit:'showEdit',
       showPreview:'showPreview'
     })

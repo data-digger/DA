@@ -7,8 +7,15 @@ const state = {
   reportList:[{"id":"1","name":"report","desc":"report"}],
   chartList:null,
   queryList:null,
+  bizViewId:'',
+  bizViewName:'',
   showEdit:false,
-  showPreview:false
+  showPreview:false,
+  chartId:'',
+  chartName:'',
+  chartOption:null,
+  chartPreview:false,
+  chartEdit:false,
 }
 
 // getters
@@ -21,6 +28,11 @@ const getters = {
   showPreview: state => state.showPreview,
   bizViewId: state => state.bizViewId,
   bizViewName: state =>state.bizViewName,
+  chartId: state => state.chartId,
+  chartName: state => state.chartName,
+  chartOption: state => state.chartOption,
+  chartPreview: state => state.chartPreview,
+  chartEdit: state => state.chartEdit,
 }
 
 // actions
@@ -36,6 +48,9 @@ const actions = {
   },
   changeState({ commit, state },param){
     commit('changeState', param);
+  },
+  chartState({ commit, state },param){
+    commit('chartState', param);
   }
 }
 
@@ -56,6 +71,13 @@ const mutations = {
     state.bizViewId = param.bizViewId;
     state.bizViewName = param.bizViewName;
   },
+  chartState(state,param){
+    state.chartPreview = param.chartPreview;
+    state.chartEdit = param.chartEdit;
+    state.chartId = param.chartId;
+    state.chartName = param.chartName;
+    state.chartOption = param.chartOption;
+  }
 }
 
 export default {

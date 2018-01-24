@@ -13,7 +13,8 @@
         </div>
       </div>
       <div class="more">
-        <span>编辑</span><span>预览</span> 
+        <span>编辑</span>
+        <span @click='preview()'>预览</span> 
       </div>
     </div>
   </div>
@@ -22,8 +23,21 @@
 <script>
 
 export default {
-  name: 'dashboardbox',
-  props:['id','name','desc'],
+  name: 'ChartBox',
+  props:['id','name','desc','defineJSON'],
+  methods:{
+    preview:function(){ 
+      let param = {
+                    chartEdit:false,
+                    chartPreview:true,
+                    chartId:this.id,
+                    chartName:this.name,
+                    chartOption:this.defineJSON
+                  };
+      this.$store.dispatch('chartState',param);
+    },
+  }
+
 }
 </script>
 
