@@ -22,14 +22,14 @@
           <ReportBox v-for="box in reportList" :key='box.id' :name='box.name' :desc='box.desc'></ReportBox>
        </div>
     </div>
-    <div class="row dashboard">
-       <div class="note note-dashboard">
+    <div class="row chart">
+       <div class="note note-chart">
           <h4 class="block">图表</h4>
           <p>
              Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
           </p>
        </div>
-       <div class="row box">
+       <div class="row box chart-box">
           <ChartBox v-for="box in chartList" :key='box.id' :id='box.id' :name='box.name' :desc='box.desc' :defineJSON='box.defineJSON'></ChartBox>
           <ChartPreview v-if="chartPreview"></ChartPreview>
        </div>
@@ -43,8 +43,7 @@
      </div>
      <div class="row box">
         <QueryBox  v-for="q in queryList" :key='q.id' :id='q.id' :name='q.name' :desc='q.desc'></QueryBox>
-        <QueryPreview v-if="showPreview"></QueryPreview>
-        <QueryEdit v-if="showEdit"></QueryEdit>
+       
      </div>
   </div> 
 </div>
@@ -55,9 +54,7 @@ import DatasourceBox from './../../components/DatasourceBox'
 import ReportBox from './../../components/ReportBox'
 import ChartBox from './../../components/ChartBox'
 import QueryBox from './../../components/QueryBox'
-import QueryPreview from './QueryPreview'
 import ChartPreview from './ChartPreview'
-import QueryEdit from './QueryEdit'
 import {mapGetters} from 'vuex'
 export default {
   name: 'Resource',
@@ -67,8 +64,6 @@ export default {
     ChartBox,
     QueryBox,
     ChartPreview,
-    QueryPreview,
-    QueryEdit
   },
   computed: {
     ...mapGetters({
@@ -81,7 +76,6 @@ export default {
       showPreview:'showPreview'
     })
   },
-  
   methods:{
     getDatasourceBox(){
       let Vue = this;
@@ -106,9 +100,9 @@ export default {
           Vue.$store.dispatch('getChartBox',response);
         }
       );
-    },
+    }
   },
-  mounted:function(){
+  mounted (){
      this.getDatasourceBox();
      this.getQueryBox();
      this.getChartBox();
@@ -126,15 +120,14 @@ export default {
 #resource .row{
   width: 100%;
   margin:20px;
-  position: relative;
 }
-.datasource,.report,.dashboard,.query{
+.datasource,.report,.chart,.query{
   border: 1px solid #f5f3f3;
   padding-right: 30px;
 }
 .note.note-datasource,
 .note.note-report,
-.note.note-dashboard,
+.note.note-chart,
 .note.note-query{
   color: #3c763d, 80%;
   margin-bottom: 0px;
@@ -149,7 +142,7 @@ export default {
   background-color: #eef7fb;
   border-color: #91d9e8;
 }
-.note.note-dashboard{
+.note.note-chart{
   background-color: #f9f0f0;
   border-color: #dca7b0;
 }
@@ -169,5 +162,8 @@ export default {
 }
 .box{
   float: left;
+}
+.chart-box{
+  position: relative;
 }
 </style>

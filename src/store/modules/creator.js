@@ -8,8 +8,7 @@ const state = {
 }
 // getters
 const getters = {
-  datasource: state=> state.datasource,
-  bizView: state=> state.bizView
+
 }
 
 // actions

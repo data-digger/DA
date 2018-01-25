@@ -7,8 +7,6 @@ const state = {
   reportList:[{"id":"1","name":"report","desc":"report"}],
   chartList:null,
   queryList:null,
-  bizViewId:'',
-  bizViewName:'',
   showEdit:false,
   showPreview:false,
   chartId:'',
@@ -16,6 +14,8 @@ const state = {
   chartOption:null,
   chartPreview:false,
   chartEdit:false,
+  bizViewId:null,
+  bizViewName:null
 }
 
 // getters
@@ -24,8 +24,6 @@ const getters = {
   reportList: state=> state.reportList,
   chartList: state => state.chartList,
   queryList: state => state.queryList,
-  showEdit: state => state.showEdit,
-  showPreview: state => state.showPreview,
   bizViewId: state => state.bizViewId,
   bizViewName: state =>state.bizViewName,
   chartId: state => state.chartId,
@@ -66,10 +64,7 @@ const mutations = {
     state.chartList = param.data;
   },
   changeState(state,param){
-    state.showEdit = param.showEdit;
-    state.showPreview = param.showPreview;
-    state.bizViewId = param.bizViewId;
-    state.bizViewName = param.bizViewName;
+   
   },
   chartState(state,param){
     state.chartPreview = param.chartPreview;

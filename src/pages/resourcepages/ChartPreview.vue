@@ -37,11 +37,12 @@ export default {
   methods:{
     //解析图表选项并渲染图表
     previewChart:function(){
-        let Vue = this;
-        this.eoption = eval("(" + this.chartOption + ")");
         if(this.chartView != null){
           this.chartView.dispose();
         }
+        let Vue = this;
+        this.eoption = eval("(" + this.chartOption + ")");
+        
       // 基于准备好的dom，初始化echarts实例
         this.chartView = echarts.init(document.getElementById('priviewChart'))
         

@@ -108,7 +108,7 @@ export default {
   },
   mounted:function(){
     this.initOptionEdit();
-   // this.getQueryList();
+    this.getQueryList();
   },
   methods:{
    initOptionEdit: function(){

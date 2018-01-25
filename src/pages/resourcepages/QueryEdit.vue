@@ -19,18 +19,14 @@ import bus from "../../assets/js/TransferBus.js"
 import {mapGetters} from 'vuex'
 export default {
   name: 'QueryEdit',
+  props:['bizViewId','bizViewName'],
   components:{
     QueryForm
   },
-  computed: {
-    ...mapGetters({
-      bizViewName:'bizViewName'
-  })
-  },
   methods:{
-    deleteEdit (){
-      this.$store.dispatch('changeState',{showEdit:false})
-    },
+     deleteEdit (){
+      this.$emit("delete",false);
+    }
   },
 }
 </script>

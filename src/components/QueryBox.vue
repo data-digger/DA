@@ -1,4 +1,4 @@
-<template>
+<template >
   <div class="col col-lg-3 col-md-3 col-sm-6 col-xs-12">
     <div class="dashboard-stat blue-madison">
       <div class="visual">
@@ -17,24 +17,41 @@
       <span @click='preview()'>预览</span> 
       </div>
     </div>
+    <QueryPreview v-if="showPreview" :bizViewId="id" :bizViewName="name" v-on:delete='close'></QueryPreview>
+    <QueryEdit v-if="showEdit" v-on:delete='close'></QueryEdit>
   </div>
 </template>
 
 <script>
-import bus from "../assets/js/TransferBus.js"
+import QueryPreview from './../pages/resourcepages/QueryPreview'
+import QueryEdit from './../pages/resourcepages/QueryEdit'
 export default {
   name: 'query',
+  components:{
+    QueryPreview,
+    QueryEdit
+  },
+  data(){
+    return {
+      showPreview:false,
+      showEdit:false
+    }
+  },
   props:['id','name','desc'],
   methods:{
-    preview:function(){ 
-      let param = {showEdit:false,showPreview:true,bizViewId:this.id,bizViewName:this.name};
-      this.$store.dispatch('changeState',param);
+    preview (){ 
+      this.showPreview = true;
+      this.QueryEdit = false;
     },
-    edit:function(){
-      let param = {showEdit:true,showPreview:false,bizViewId:this.id,bizViewName:this.name};
-      this.$store.dispatch('changeState',param);
+    edit (){
+      this.showPreview = false;
+      this.showEdit = true;
+    },
+    close(param){
+      this.showPreview = param;
+      this.showEdit = param;
     }
-  }
+   }
 }
 </script>
 <style scoped>
