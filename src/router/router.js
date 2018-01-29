@@ -57,6 +57,7 @@ export const otherRouter = {
     component: Main,
     children: [
         { path: 'home', title: '首页', name: 'home_index', component: () => import('@/views/home/home.vue') },
+        { path: 'createDatasource', title: '新建数据源', name: 'createDatasource', component: () => import('@/views/create/CreateDatasource.vue') }
     ]
 };
 
