@@ -1,9 +1,7 @@
 <template>
   <div id='create'>
-     <div class="row">
         <CreatorBox v-for="box in createboxList" :key='box.id' :name='box.name' :desc='box.desc' :subpath='box.subpath'></CreatorBox>
   </div>
-</div>
 </template>
 
 <script>
@@ -32,9 +30,5 @@ export default {
   width: 87%;
   height: 100%;
   float: left;
-}
-#create .row{
-  width: 100%;
-  margin:20px;
 }
 </style>

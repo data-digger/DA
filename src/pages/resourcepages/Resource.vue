@@ -59,15 +59,8 @@ export default {
   components:{
     DatasourceBox,
     ReportBox,
-<<<<<<< HEAD
-    DashboardBox,
-    QueryBox
-=======
-    ChartBox,
     QueryBox,
-    QueryPreview,
-    QueryEdit
->>>>>>> b3aa37fdf71ecbbb7e50a8c62720b42755eebe59
+    ChartBox
   },
   computed: {
     ...mapGetters({

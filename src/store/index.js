@@ -1,15 +1,27 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import creator from './modules/creator'
+import Vue from 'vue';
+import Vuex from 'vuex';
+
+import app from './modules/app';
+import user from './modules/user';
 import resource from './modules/resource'
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-const debug = process.env.NODE_ENV !== 'production'
+const store = new Vuex.Store({
+    state: {
+        //
+    },
+    mutations: {
+        //
+    },
+    actions: {
 
-export default new Vuex.Store({
-  modules: {
-   creator,
-   resource
-  }
-})
+    },
+    modules: {
+        app,
+        user,
+        resource
+    }
+});
+
+export default store;

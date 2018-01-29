@@ -1,102 +1,114 @@
-<template>
-  <div id='home'>
-     <div class="header">Data-Digger</div>
-     <div class="content">
-      <div id='menu'>
-        <div class="menu selected" @click='link("/Home/Create")'> <span></span>新建 </div>
-        <div class="menu" @click='link("/Home/Resource")'> 资源 </div> 
-        <div class="menu" @click='link("/Home/Create")'> 其他 </div> 
-      </div>
-      <router-view></router-view>
-     </div>
-     <!-- <div class="footer"></div> -->
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'Home',
-  data () {
-    return {
-    
-    }
-  },
-  methods:{
-    link:function(route){
-      this.$router.push({
-        path:route
-      })
-    }
-  }
-}
-</script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#home{
-  width:100%;
-  height:100%; 
-}
-.header{
-  width:100%;
-  height: 10%;
-  top: 0;
-  position: absolute;
-  background-color:#2b3643;    
-  text-align: left;
-  color: #c64348;
-  line-height: 60px;
-  font-size: 20px;
-  padding: 0px 14px;
-}
-.content{
-  width:100%;
-  height: 90%;
-  top: 10%;
-  position: absolute;
-}
-.footer{
-   width:100%;
-   height: 3%;
-   bottom: 0;
-   position: absolute;
-   background-color: #2b3643;
-}
-  #menu{
-    width:13%;;
-    height: 100%;
-    float: left;
-    background-color:#364150;
-  }
-  .menu{
-    width:100%;;
-    height: 40px;
-    text-align: center;
-    line-height: 40px;
-    color:#b2bdcc;
-    background-color:#364150;
-    border-bottom: 1px solid #3d4857;
-    position: relative;
-  }
-  .menu.selected{
-    background-color:#3e4b5c;
-  }
-  .menu.selected span{
-    display: block;
-    float: right;
-    position: absolute;
-    right: 0px;
-    top: 8px;
-    background: none;
-    width: 0;
-    height: 0;
-    border-top: 12px solid transparent;
-    border-bottom: 12px solid transparent;
-    border-right: 12px solid #ffffff;
-  }
-  .menu:hover{
-    background-color:#3e4b5c;
-    opacity: 0.8;
-    cursor: pointer;
-  }
+    .layout{
+        border: 1px solid #d7dde4;
+        background: #f5f7f9;
+        position: relative;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .layout-header-bar{
+        background: #fff;
+        box-shadow: 0 1px 1px rgba(0,0,0,.1);
+    }
+    .layout-logo-left{
+        width: 90%;
+        height: 30px;
+        background: #5b6270;
+        border-radius: 3px;
+        margin: 15px auto;
+    }
+    .menu-icon{
+        transition: all .3s;
+    }
+    .rotate-icon{
+        transform: rotate(-90deg);
+    }
+    .menu-item span{
+        display: inline-block;
+        overflow: hidden;
+        width: 69px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        vertical-align: bottom;
+        transition: width .2s ease .2s;
+    }
+    .menu-item i{
+        transform: translateX(0px);
+        transition: font-size .2s ease, transform .2s ease;
+        vertical-align: middle;
+        font-size: 16px;
+    }
+    .collapsed-menu span{
+        width: 0px;
+        transition: width .2s ease;
+    }
+    .collapsed-menu i{
+        transform: translateX(5px);
+        transition: font-size .2s ease .2s, transform .2s ease .2s;
+        vertical-align: middle;
+        font-size: 22px;
+    }
 </style>
+<template>
+    <div class="layout">
+        <Layout>
+            <Sider ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
+                <Menu active-name="1-2" theme="dark" width="auto" :class="menuitemClasses">
+                    <MenuItem name="1-1">
+                        <Icon type="ios-navigate"></Icon>
+                        <span @click='link("/Home/Resource")'>资源</span>
+                    </MenuItem>
+                    <MenuItem name="1-2">
+                        <Icon type="search"></Icon>
+                        <span>Option 2</span>
+                    </MenuItem>
+                    <MenuItem name="1-3">
+                        <Icon type="settings"></Icon>
+                        <span>Option 3</span>
+                    </MenuItem>
+                </Menu>
+            </Sider>
+            <Layout>
+                <Header :style="{padding: 0}" class="layout-header-bar">
+                    <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '20px 20px 0'}" type="navicon-round" size="24"></Icon>
+                </Header>
+                <Content :style="{margin: '20px', background: '#fff', minHeight: '360px'}">
+                    Content
+                </Content>
+            </Layout>
+        </Layout>
+    </div>
+</template>
+<script>
+    export default {
+        data () {
+            return {
+                isCollapsed: false
+            }
+        },
+        computed: {
+            rotateIcon () {
+                return [
+                    'menu-icon',
+                    this.isCollapsed ? 'rotate-icon' : ''
+                ];
+            },
+            menuitemClasses () {
+                return [
+                    'menu-item',
+                    this.isCollapsed ? 'collapsed-menu' : ''
+                ]
+            }
+        },
+        methods: {
+            collapsedSider () {
+                this.$refs.side1.toggleCollapse();
+            },
+            link:function(route){
+                this.$router.push({
+                path:route
+            })
+    }
+        }
+    }
+</script>

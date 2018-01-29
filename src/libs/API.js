@@ -1,6 +1,23 @@
 import axios from 'axios'
 import Qs from 'qs'//添加请求拦截器，目前没有用到
 
+window.uri = 'http://localhost:8080'
+window.urlConf = {
+  datasource: {
+    list: `${window.uri}/datasource/list`,
+    new: `${window.uri}/datasource/new`,
+  },
+  bizview: {
+    list:`${window.uri}/bizview/list`,
+    new: `${window.uri}/bizview/new`,
+    preview:`${window.uri}/bizview/preview`
+  },
+  chart: {
+    list:`${window.uri}/chart/list`,
+    new: `${window.uri}/chart/new`,
+  }
+}
+
 // axios 配置
 axios.defaults.timeout = 10000;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
