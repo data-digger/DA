@@ -22,15 +22,16 @@
           <ReportBox v-for="box in reportList" :key='box.id' :name='box.name' :desc='box.desc'></ReportBox>
        </div>
     </div>
-    <div class="row dashboard">
-       <div class="note note-dashboard">
+    <div class="row chart">
+       <div class="note note-chart">
           <h4 class="block">图表</h4>
           <p>
              Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
           </p>
        </div>
-       <div class="row box">
-          <ChartBox v-for="box in chartList" :key='box.id' :name='box.name' :desc='box.desc'></ChartBox>
+       <div class="row box chart-box">
+          <ChartBox v-for="box in chartList" :key='box.id' :id='box.id' :name='box.name' :desc='box.desc' :defineJSON='box.defineJSON'></ChartBox>
+          <ChartPreview v-if="chartPreview"></ChartPreview>
        </div>
     </div>
     <div class="row query">
@@ -53,14 +54,21 @@ import DatasourceBox from './../../components/DatasourceBox'
 import ReportBox from './../../components/ReportBox'
 import ChartBox from './../../components/ChartBox'
 import QueryBox from './../../components/QueryBox'
+import ChartPreview from './ChartPreview'
 import {mapGetters} from 'vuex'
 export default {
   name: 'Resource',
   components:{
     DatasourceBox,
     ReportBox,
+<<<<<<< HEAD
     QueryBox,
     ChartBox
+=======
+    ChartBox,
+    QueryBox,
+    ChartPreview,
+>>>>>>> 33f43e357742a388cd24f6040b35a43e1a3e3b53
   },
   computed: {
     ...mapGetters({
@@ -68,6 +76,7 @@ export default {
       reportList:'reportList',
       chartList:'chartList',
       queryList:'queryList',
+      chartPreview:'chartPreview',
       showEdit:'showEdit',
       showPreview:'showPreview'
     })
@@ -118,12 +127,14 @@ export default {
   margin:20px;
 }
 .datasource,.report,.dashboard,.query{
+.datasource,.report,.chart,.query{
   border: 1px solid #f5f3f3;
   padding-right: 30px;
 }
 .note.note-datasource,
 .note.note-report,
 .note.note-dashboard,
+.note.note-chart,
 .note.note-query{
   color: #3c763d, 80%;
   margin-bottom: 0px;
@@ -138,7 +149,7 @@ export default {
   background-color: #eef7fb;
   border-color: #91d9e8;
 }
-.note.note-dashboard{
+.note.note-chart{
   background-color: #f9f0f0;
   border-color: #dca7b0;
 }
@@ -158,5 +169,8 @@ export default {
 }
 .box{
   float: left;
+}
+.chart-box{
+  position: relative;
 }
 </style>

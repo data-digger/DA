@@ -59,8 +59,8 @@
                 </div>
                 <div class="form-actions">
                   <div class="row">
-                    <div class="col-md-offset-2 col-md-8">  
-                      <button type="button" class="btn btn-green" @click="drawChart">预览</button>
+                    <div class="col-md-offset-2 col-md-8">
+                      <button type="button" class="btn btn-green" @click="drawChart">预览</button>  
                       <button type="button" class="btn" @click="saveChart">保存</button>
                       <button type="button" class="btn">返回</button>
                     </div>
@@ -71,8 +71,8 @@
           </div>         
         </div>
       </div>
-       <div class="row chartArea">
-            <div id="myChart"></div>
+      <div class="row chartArea">
+        <div id="myChart"></div>
       </div>
   </div>
 </template>
@@ -91,6 +91,7 @@ export default {
       chartView:null,
       eoption:null,
       chartView:null,
+      chartPreview:false,
       myChart:{
         name:'myChart',
         alias:'myChartAlias',
@@ -107,7 +108,7 @@ export default {
   },
   mounted:function(){
     this.initOptionEdit();
-   // this.getQueryList();
+    this.getQueryList();
   },
   methods:{
    initOptionEdit: function(){
@@ -138,8 +139,11 @@ export default {
     },
     drawChart:function(eOption){
         let Vue = this;
-        Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue().replace(/\n/g, "");
-        this.eoption = JSON5.parse(Vue.myChart.defineJSON);
+        this.chartPreview=true;
+        //Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue().replace(/\n/g, "");
+        //this.eoption = JSON5.parse(Vue.myChart.defineJSON);
+        Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
+        this.eoption = eval("(" + Vue.myChart.defineJSON + ")");
         if(this.chartView != null){
           this.chartView.dispose();
         }
@@ -151,7 +155,8 @@ export default {
     },
     saveChart:function(){
       let Vue = this;
-      Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue().replace(/\n/g, "");
+      //Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue().replace(/\n/g, "");
+      Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
       Vue.AxiosPost("createChart",Vue.myChart,
           function(){
             alert("created succeed!")
@@ -177,6 +182,9 @@ export default {
 }
 .chartedit{
   margin:9px !important;
+}
+.option-edit{
+  position: relative;
 }
 #notific8_show{
   color: white;
@@ -206,6 +214,9 @@ export default {
 }
 .btn-green{
   background-color: #d4abab;
+}
+.CodeMirror-lines{
+  text-align: left;
 }
 .chartArea{
   position: relative;

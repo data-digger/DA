@@ -1,6 +1,7 @@
 /*程序入口
 *author:蔡安琪
 */
+<<<<<<< HEAD
 import Vue from 'vue';
 import iView from 'iview';
 import {router} from './router/index';
@@ -13,6 +14,39 @@ import util from './libs/util';
 
 Vue.use(iView);
 
+=======
+window.uri = 'http://localhost:8080'
+window.urlConf = {
+  datasource: {
+    list: `${window.uri}/datasource/list`,
+    new: `${window.uri}/datasource/new`,
+  },
+  bizview: {
+    list:`${window.uri}/bizview/list`,
+    new: `${window.uri}/bizview/new`,
+    preview:`${window.uri}/bizview/preview`
+  },
+  chart: {
+    list:`${window.uri}/chart/list`,
+    new: `${window.uri}/chart/new`,
+  }
+}
+
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+import store from './store'
+import $ from 'jquery'
+import API from '@/assets/js/API.js'
+import toastr from'toastr/build/toastr.min'
+import 'toastr/build/toastr.min.css'
+import 'bootstrap/dist/js/bootstrap.js'
+import 'bootstrap/dist/css/bootstrap.css'
+import "codemirror/lib/codemirror.css"
+import "datatables/media/css/jquery.dataTables.css"
+Vue.config.productionTip = false
+Vue.prototype.toastr = toastr
+>>>>>>> 33f43e357742a388cd24f6040b35a43e1a3e3b53
 new Vue({
     el: '#app',
     router: router,
