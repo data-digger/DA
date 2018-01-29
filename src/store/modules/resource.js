@@ -7,8 +7,6 @@ const state = {
   reportList:[{"id":"1","name":"report","desc":"report"}],
   chartList:null,
   queryList:null,
-  showEdit:false,
-  showPreview:false,
   chartId:'',
   chartName:'',
   chartOption:null,
