@@ -1,58 +1,80 @@
 <template>
-  <div id='createReport'>
-       <div class="row queryedit">
-        <div class="col-md-12">
-          <div class="portlet box crusta">
-            <div class="portlet-title">
-              <div class="caption">
-                <i class="fa fa-gift"></i>新建报表
-              </div>
-            </div>
-            
-          </div>
-        </div>
-      </div>
-  </div>
+  <div>
+    <Carousel v-model="value" :height='setting.height' :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
+        <CarouselItem>
+            <div class="demo-carousel">选择布局：<SelectLayout></SelectLayout></div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="demo-carousel"><component :is="layout.component"v-for="layout in layouts"></component></div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="demo-carousel">3</div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="demo-carousel">4</div>
+        </CarouselItem>
+    </Carousel>
+     <Row  class='button'>
+      <Button type="primary" @click='pre()'>上一步</Button>
+      <Button type="primary" @click='next()'>下一步</Button>
+    </Row> 
+ </div>
 </template>
-
 <script>
-import CodeMirror from "codemirror/lib/codemirror.js"
-import "codemirror/mode/sql/sql.js"
+import SelectLayout from "./../report/SelectLayout"
+import Layout1 from "./../report/Layout1"
+import Layout2 from "./../report/Layout2"
+import Layout3 from "./../report/Layout3"
+import Layout4 from "./../report/Layout4"
+import {mapGetters} from 'vuex'
+    export default {
+        components:{
+          SelectLayout,
+          Layout1,
+          Layout2,
+          Layout3,
+          Layout4
+        },
+        computed: {
+          ...mapGetters({
+            layoutSelected: 'layoutSelected'
+          })
+        },
+        data () {
+            return {
+                value: 0,
+                setting: {
+                    dots:"none",
+                    arrow:"none",
+                    height:"450px"
+                },
+                layouts:[]
+            }
+        },
+        methods:{
+          next() {
+            if(this.value <3){
+              this.$refs.slide.arrowEvent(1);
+              if(this.value == 1){//根据选择的布局
+                this.layouts =[];
+                if(this.layoutSelected == "布局1"){ this.layouts.push({component: Layout1})}
+                if(this.layoutSelected == "布局2"){ this.layouts.push({component: Layout2})}
+                if(this.layoutSelected == "布局3"){ this.layouts.push({component: Layout3})}
+                if(this.layoutSelected == "布局4"){ this.layouts.push({component: Layout4})}  
+              }
+            }
 
-export default {
-  name: 'createReport'
-}
+          },
+          pre() {
+            if(this.value !=0){
+              this.$refs.slide.arrowEvent(-1);
+            }
+          }
+        }
+    }
 </script>
-
-<style scoped>
-/*@import "codemirror/lib/codemirror.css"*/
-#queryedit{
-  width: 87%;
-  height: 100%;
-  float: left;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-.queryedit{
-  margin:9px !important;
-}
-#notific8_show{
-  color: white;
-  background-color: #45b6af;
-}
-.portlet.box > .portlet-title {
-    border-bottom: 0;
-    padding: 0 10px;
-    margin-bottom: 0;
-    color: #fff;
-    background-color:#45b6af;
-    min-height: 41px;
-    text-align: left;
-    line-height: 41px;
-}
-.portlet > .portlet-body.crusta, .portlet.crusta {
-    background-color: #fff;
-    border: 1px solid #45b6af;
-    border-top: 0;
-}
+<style scope>
+  .button {
+    text-align: center;
+  }
 </style>

@@ -103,6 +103,7 @@ util.setCurrentPath = function (vm, name) {
         ];
     } else {
         let currentPathObj = vm.$store.state.app.routers.filter(item => {
+            if (item == undefined) return false;
             if (item.children.length <= 1) {
                 return item.children[0].name === name;
             } else {
@@ -118,6 +119,11 @@ util.setCurrentPath = function (vm, name) {
                 return false;
             }
         })[0];
+
+        if(currentPathObj == undefined) {
+            console.log('currentPathObj is null');
+            return [];
+        }
         if (currentPathObj.children.length <= 1 && currentPathObj.name === 'home') {
             currentPathArr = [
                 {
