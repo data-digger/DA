@@ -11,6 +11,7 @@ import App from './app.vue';
 import API from '@/libs/API.js';
 import 'iview/dist/styles/iview.css';
 import "codemirror/lib/codemirror.css"
+import 'dataTables/media/css/jquery.dataTables.min.css'
 import util from './libs/util';
 
 Vue.use(iView);
