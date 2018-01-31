@@ -52,9 +52,9 @@ export const otherRouter = {
     children: [
         { path: 'home', title: '首页', name: 'home_index', component: () => import('@/views/home/home.vue') },
         { path: 'createDatasource', title: '新建数据源', name: 'createDatasource', component: () => import('@/views/create/CreateDatasource.vue') },
-        { path: 'createChart', title: '新建图表', name: 'createChart', component: () => import('@/views/create/CreateChart.vue') },
+        { path: 'createChart',title: '新建图表', name: 'createChart', component: () => import('@/views/create/CreateChart.vue')},
         { path: 'createQuery', title: '新建查询器', name: 'createQuery', component: () => import('@/views/create/createQuery.vue') },
-        { path: 'createReport', title: '新建报表', name: 'createReport', component: () => import('@/views/create/CreateReport.vue') }
+        { path: 'createReport',title: '新建报表', name: 'createReport',component: () => import('@/views/create/CreateReport.vue') }
     ]
 };
 

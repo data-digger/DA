@@ -19,16 +19,7 @@ import {mapGetters} from 'vuex'
         },
         methods: {
           getMockData () {
-                let mockData = [];
-                for (let i = 1; i <= 20; i++) {
-                    mockData.push({
-                        key: i.toString(),
-                        label: 'Content ' + i,
-                        description: 'The desc of content  ' + i,
-                        disabled: Math.random() * 3 < 1
-                    });
-                }
-                return mockData;
+                
           },
           render(datasourceList){
             return datasourceList.name

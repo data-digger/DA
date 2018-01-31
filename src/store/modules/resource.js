@@ -12,8 +12,7 @@ const state = {
   chartOption:null,
   chartPreview:false,
   chartEdit:false,
-  bizViewId:null,
-  bizViewName:null
+  layoutSelected:"布局1"
 }
 
 // getters
@@ -22,13 +21,12 @@ const getters = {
   reportList: state=> state.reportList,
   chartList: state => state.chartList,
   queryList: state => state.queryList,
-  bizViewId: state => state.bizViewId,
-  bizViewName: state =>state.bizViewName,
   chartId: state => state.chartId,
   chartName: state => state.chartName,
   chartOption: state => state.chartOption,
   chartPreview: state => state.chartPreview,
   chartEdit: state => state.chartEdit,
+  layoutSelected: state => state.layoutSelected,
 }
 
 // actions
@@ -41,9 +39,6 @@ const actions = {
   },
   getChartBox ({ commit, state }, param){   
     commit('getChartBox', param);  
-  },
-  changeState({ commit, state },param){
-    commit('changeState', param);
   },
   chartState({ commit, state },param){
     commit('chartState', param);
@@ -61,15 +56,15 @@ const mutations = {
   getChartBox(state,param){
     state.chartList = param.data;
   },
-  changeState(state,param){
-   
-  },
   chartState(state,param){
     state.chartPreview = param.chartPreview;
     state.chartEdit = param.chartEdit;
     state.chartId = param.chartId;
     state.chartName = param.chartName;
     state.chartOption = param.chartOption;
+  },
+  layoutSelected(state,param){
+    state.layoutSelected = param;
   }
 }
 
