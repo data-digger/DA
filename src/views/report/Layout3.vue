@@ -14,9 +14,13 @@
 </template>
 
 <script>
-
-
-
+    export default {
+        data(){
+            return{
+                id:3
+            }
+        }
+    }
 </script>
 
 <style scoped>
