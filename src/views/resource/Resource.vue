@@ -24,15 +24,15 @@
           <Creator :routerpath='createreport'></Creator>
        </div>
     </div>
-    <div class="row dashboard">
-       <div class="note note-dashboard">
+    <div class="row chart">
+       <div class="note note-chart">
           <h4 class="block">图表</h4>
           <p>
              Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
           </p>
        </div>
        <div class="row box">
-          <ChartBox v-for="box in chartList" :key='box.id' :name='box.name' :desc='box.desc'></ChartBox> 
+          <ChartBox v-for="(chart,index) in chartList" :key='chart.id' :chartbox='chart' :index='index'></ChartBox> 
           <Creator :routerpath='createchart'></Creator>
        </div>
     </div>
@@ -128,13 +128,13 @@ export default {
   width: 100%;
   margin:20px;
 }
-.datasource,.report,.dashboard,.query{
+.datasource,.report,.chart,.query{
   border: 1px solid #f5f3f3;
   padding-right: 30px;
 }
 .note.note-datasource,
 .note.note-report,
-.note.note-dashboard,
+.note.note-chart,
 .note.note-query{
   color: #3c763d, 80%;
   margin-bottom: 0px;
@@ -149,7 +149,7 @@ export default {
   background-color: #eef7fb;
   border-color: #91d9e8;
 }
-.note.note-dashboard{
+.note.note-chart{
   background-color: #f9f0f0;
   border-color: #dca7b0;
 }

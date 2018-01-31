@@ -1,80 +1,31 @@
 <template>
-  <div id='createChart'>
-       <div class="row chartedit">
-        <div class="col-md-12">
-          <div class="portlet box crusta">
-            <div class="portlet-title">
-              <div class="caption">
-                <i class="fa fa-gift"></i>新建图表
-              </div>
-            </div>
-            <div class="portlet-body form">
-              <form action="#" id="form-username" class="form-horizontal form-bordered">
-                 <div class="form-group col-md-12">
-                  <label class="col-sm-2 control-label">查询器:</label>
-                  <div class="col-sm-9">
-                     <select class="form-control" v-model="myChart.bizViewId" @change="getQueryData"> 
-                        <option v-for = 'q in queryList' :key='q.id' :name='q.name' :value="q.id" >{{q.name}}</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group col-md-12">
-                  <label class="col-sm-2 control-label">图表名称:</label>
-                  <div class="col-sm-9">
-                    <div class="input-group">
-                      <span class="input-group-addon">
-                      <i class="fa fa-user"></i>
-                      </span>
-                      <input type="text" class="form-control" v-model="myChart.name"/>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group col-md-12">
-                  <label class="col-sm-2 control-label">图表别名:</label>
-                  <div class="col-sm-9">
-                    <div class="input-group">
-                      <span class="input-group-addon">
-                      <i class="fa fa-user"></i>
-                      </span>
-                      <input type="text" class="form-control" v-model="myChart.alias"/>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group col-md-12">
-                  <label class="col-sm-2 control-label">图表描述:</label>
-                  <div class="col-sm-9">
-                    <div class="input-group">
-                      <span class="input-group-addon">
-                      <i class="fa fa-user"></i>
-                      </span>
-                      <input type="text" class="form-control" v-model="myChart.desc"/>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group col-md-12">
-                    <label class="col-md-2 control-label">Echarts-Option:</label>
-                    <div class="col-md-9">
-                      <textarea id='chartOption'></textarea>
-                    </div>
-                </div>
-                <div class="form-actions">
-                  <div class="row">
-                    <div class="col-md-offset-2 col-md-8">
-                      <button type="button" class="btn btn-green" @click="drawChart">预览</button>  
-                      <button type="button" class="btn" @click="saveChart">保存</button>
-                      <button type="button" class="btn">返回</button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>         
-        </div>
-      </div>
-      <div class="row chartArea">
-        <div id="myChart"></div>
-      </div>
-  </div>
+  <Form id="createChart" ref="myChart" :model="myChart" :rules="ruleValidate" :label-width="80">
+        <FormItem label="名称" prop="name">
+            <Input v-model="myChart.name" placeholder="输入名称"></Input>
+        </FormItem>
+        <FormItem label="别名" prop="alias">
+            <Input v-model="myChart.alias" placeholder="输入别名"></Input>
+        </FormItem>
+        <FormItem label="描述" prop="desc">
+            <Input v-model="myChart.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter chart descript..."></Input>
+        </FormItem>
+        <FormItem label="查询器" prop="bizViewId">
+            <Select class="form-control" v-model='myChart.bizViewId'>               
+                <Option v-for = 'q in queryList' :key='q.id' :name='q.name' :value="q.id" >{{q.name}}</option>
+            </Select>
+        </FormItem>
+        <FormItem label="Option:" prop="defineJSON">
+            <textarea id='chartOption' v-model='myChart.defineJSON'></textarea>
+        </FormItem>
+        <FormItem>
+            <Button type="ghost" shape="circle" icon="ios-search" @click="drawChart"></Button>
+            <Button type="primary" @click="saveChart">Save</Button>
+            <Button type="ghost" style="margin-left: 8px" @click="handleReset">Reset</Button>
+        </FormItem> 
+        <FormItem>
+          <div id="myChart" v-show="chartPreview"></div>
+        </FormItem>
+    </Form>  
 </template>
 
 <script>
@@ -87,18 +38,31 @@ export default {
   name: 'createChart',
    data () {
     return {
+      chartPreview:false,
       queryData:null,
       chartView:null,
       eoption:null,
-      chartView:null,
-      chartPreview:false,
       myChart:{
-        name:'myChart',
+        name:'',
         alias:'myChartAlias',
         bizViewId:'',
         desc:'this is my desc',
         defineJSON:''
-      }     
+      },
+      ruleValidate:{
+        name: [
+            { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+        ],
+        alias: [
+            { required: true, message: 'alias cannot be empty', trigger: 'blur' }
+        ],
+        bizViewId: [
+            { required: true, message: 'Please select the bizView', trigger: 'change' }
+        ],
+        defineJSON: [
+            { required: true, message: 'echartsOption define cannot be empty', trigger: 'blur' }
+        ]
+      }    
     }
   },
    computed: {
@@ -107,8 +71,15 @@ export default {
     })
   },
   mounted:function(){
-    this.initOptionEdit();
-    this.getQueryList();
+    let Vue = this;
+     Vue.initOptionEdit();
+     window.addEventListener('resize', function () {
+                if(Vue.chartView == null){
+                  return false;
+                }
+                Vue.chartView.resize();
+            });
+    //this.getQueryList();
   },
   methods:{
    initOptionEdit: function(){
@@ -137,90 +108,62 @@ export default {
         }
       ); 
     },
-    drawChart:function(eOption){
+    drawChart:function(){
         let Vue = this;
-        this.chartPreview=true;
+        Vue.chartPreview=true;
         //Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue().replace(/\n/g, "");
         //this.eoption = JSON5.parse(Vue.myChart.defineJSON);
-        Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
-        this.eoption = eval("(" + Vue.myChart.defineJSON + ")");
-        if(this.chartView != null){
-          this.chartView.dispose();
-        }
-      // 基于准备好的dom，初始化echarts实例
-        this.chartView = echarts.init(document.getElementById('myChart'))
+        this.$nextTick(function(){
+          Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
+          Vue.eoption = eval("(" + Vue.myChart.defineJSON + ")");
+          if(Vue.chartView != null){
+            Vue.chartView.dispose();
+          }
+        // 基于准备好的dom，初始化echarts实例
+          Vue.chartView = echarts.init(document.getElementById('myChart'))
         
         // 绘制图表
-         this.chartView.setOption(this.eoption);
+          Vue.chartView.setOption(this.eoption);
+        })    
     },
     saveChart:function(){
       let Vue = this;
       //Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue().replace(/\n/g, "");
       Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
-      Vue.AxiosPost("createChart",Vue.myChart,
-          function(){
-            alert("created succeed!")
-      });
+      Vue.$refs["myChart"].validate((valid) => {
+                    if (valid) {
+                         Vue.AxiosPost("createChart",
+                          Vue.myChart,
+                           function(){
+                              Vue.$Message.success('Success!');
+                           });
+                    } else {
+                        Vue.$Message.error('Fail!');
+                    }
+                })
+    },
+    handleReset:function(){
+      let Vue = this;
+      Vue.myChart.name = '';
+      Vue.myChart.alias = 'myChartAlias';
+      Vue.myChart.bizViewId = '';
+      Vue.myChart.desc =  'this is my desc';
+      $('#chartOption').empty();
+		  $('#chartOption').text('');
+		  Vue.optionEditor.doc.setValue('');
+      Vue.optionEditor.refresh();
+      Vue.chartPreview = false;
+      Vue.eoption = null;
     }
   }
 }
 </script>
 
 <style scoped>
-#chart{
-  width: 87%;
-  height: 100%;
-  float: left;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
 #myChart{
   height: 350px;
-}
-#chartOption{
-  text-align: left;
-}
-.chartedit{
-  margin:9px !important;
-}
-.option-edit{
-  position: relative;
-}
-#notific8_show{
-  color: white;
-  background-color: #d4abab;
-}
-.portlet.box > .portlet-title {
-    border-bottom: 0;
-    padding: 0 10px;
-    margin-bottom: 0;
-    color: #fff;
-    background-color:#d4abab;
-    min-height: 41px;
-    text-align: left;
-    line-height: 41px;
-}
-.portlet > .portlet-body.crusta, .portlet.crusta {
-    background-color: #fff;
-    border: 1px solid #d4abab;
-    border-top: 0;
-}
-.portlet.box {
-    padding: 0px !important;
-}
-.portlet.box > .portlet-body {
-    background-color: #fff;
-    padding: 30px 10px;
-}
-.btn-green{
-  background-color: #d4abab;
 }
 .CodeMirror-lines{
   text-align: left;
 }
-.chartArea{
-  position: relative;
-  padding : 0 38px;
-}
-
 </style>
