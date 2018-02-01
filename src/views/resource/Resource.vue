@@ -5,7 +5,12 @@
           <h4 class="block">数据源</h4>
           <p>
              Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
-          </p>
+          </p> 
+         <!--   <info-card :frontType="'graph'"
+            :frontTitle="front.title"
+            :frontData="front.graphData"
+            :backTitle="back.title"
+            :backData="back.message" /> -->
        </div>
        <div class="row box">
           <DatasourceBox v-for="ds in datasourceList" :key='ds.id' :datasource = 'ds'></DatasourceBox>
@@ -65,7 +70,15 @@ export default {
       createdatasource:'/createDatasource',
       createchart:'/createChart',
       createquery:'/createquery',
-      createreport:'/createreport'
+      createreport:'/createreport',
+/*     front: {
+        title: 'Daily Conversion Value',
+        graphData: [3, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
+      },
+      back: {
+        title: 'Monthly Summary',
+        message: 'Your average daily conversion value for this month is <b>50.4$</b>. It is below the average of the last six months.',
+      },*/
     }
   },
   components:{
@@ -73,7 +86,7 @@ export default {
     Creator,
     ReportBox,
     QueryBox,
-    ChartBox
+    ChartBox,
   },
   computed: {
     ...mapGetters({
