@@ -6,6 +6,11 @@
         <FormItem label="别名" prop="alias">
             <Input v-model="myChart.alias" placeholder="输入别名"></Input>
         </FormItem>
+        <FormItem label="类型" prop="type">
+           <Select class="form-control" v-model='myChart.type'>               
+                <Option v-for = 't in type' :key='t' :value="t" >{{t}}</option>
+           </Select>
+        </FormItem>
         <FormItem label="描述" prop="desc">
             <Input v-model="myChart.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter chart descript..."></Input>
         </FormItem>
@@ -14,12 +19,15 @@
                 <Option v-for = 'q in queryList' :key='q.id' :name='q.name' :value="q.id" >{{q.name}}</option>
             </Select>
         </FormItem>
+         <FormItem v-if="colNameShow" label="" prop="colNames">
+            <Tag type="border" color="blue" v-for= 'col in queryData.stringHeaders' :key="col">{{col}}</Tag>
+        </FormItem>
         <FormItem label="Option:" prop="defineJSON">
             <textarea id='chartOption' v-model='myChart.defineJSON'></textarea>
         </FormItem>
         <FormItem>
-            <Button type="ghost" shape="circle" icon="ios-search" @click="drawChart"></Button>
-            <Button type="primary" @click="saveChart">Save</Button>
+            <Button type="ghost" shape="circle" icon="ios-search" :disabled='!colNameShow'  @click="drawChart"></Button>
+            <Button type="primary" :disabled='!chartPreview' @click="saveChart">Save</Button>
             <Button type="ghost" style="margin-left: 8px" @click="handleReset">Reset</Button>
         </FormItem> 
         <FormItem>
@@ -34,20 +42,25 @@ import JSON5 from 'json5'
 import CodeMirror from "codemirror/lib/codemirror.js"
 import "codemirror/mode/javascript/javascript.js"
 import {mapGetters} from 'vuex'
+import ChartTemplate from './../../libs/ChartTemplate.js'
+import chartUtil from './../../libs/chartUtil.js'
 export default {
   name: 'createChart',
    data () {
     return {
       chartPreview:false,
+      colNameShow:false,
       queryData:null,
       chartView:null,
       eoption:null,
+      type:['line','bar','pie'],
       myChart:{
         name:'',
         alias:'myChartAlias',
+        type:'line',
         bizViewId:'',
         desc:'this is my desc',
-        defineJSON:''
+        defineJSON:'',
       },
       ruleValidate:{
         name: [
@@ -55,6 +68,9 @@ export default {
         ],
         alias: [
             { required: true, message: 'alias cannot be empty', trigger: 'blur' }
+        ],
+        type: [
+            { required: true, message: 'Please select the type', trigger: 'change' }
         ],
         bizViewId: [
             { required: true, message: 'Please select the bizView', trigger: 'change' }
@@ -68,8 +84,14 @@ export default {
    computed: {
     ...mapGetters({
       queryList:'queryList',
-    })
+    }),
   },
+  　watch:{
+　　　'myChart.bizViewId': 'getQueryData',
+     'myChart.type':function(curType){
+       this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate[curType]));
+     }
+　},
   mounted:function(){
     let Vue = this;
      Vue.initOptionEdit();
@@ -91,6 +113,7 @@ export default {
         content: myTextarea.value,
         extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
     });
+    this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.line));
    },
    getQueryList:function(){
       let Vue = this;
@@ -105,6 +128,7 @@ export default {
         Vue.AxiosPost("previewBizView",{'bizViewId':Vue.myChart.bizViewId},
         function(response){
           Vue.queryData = response.data;
+          Vue.colNameShow = true;
         }
       ); 
     },
@@ -119,9 +143,11 @@ export default {
           if(Vue.chartView != null){
             Vue.chartView.dispose();
           }
+          //根据类型和字段解析option
+          chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
         // 基于准备好的dom，初始化echarts实例
-          Vue.chartView = echarts.init(document.getElementById('myChart'))
-        
+          Vue.chartView = echarts.init(document.getElementById('myChart'));
+          
         // 绘制图表
           Vue.chartView.setOption(this.eoption);
         })    
@@ -150,8 +176,7 @@ export default {
       Vue.myChart.desc =  'this is my desc';
       $('#chartOption').empty();
 		  $('#chartOption').text('');
-		  Vue.optionEditor.doc.setValue('');
-      Vue.optionEditor.refresh();
+		  Vue.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.line));
       Vue.chartPreview = false;
       Vue.eoption = null;
     }
