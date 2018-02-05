@@ -9,6 +9,9 @@
         <FormItem label="别名" prop="alias">
             <Input v-model="myChart.alias" placeholder="输入别名"></Input>
         </FormItem>
+        <FormItem label="类型" prop="type">
+           <Input v-model="myChart.type" disabled></Input>
+        </FormItem>
         <FormItem label="描述" prop="desc">
             <Input v-model="myChart.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter chart descript..."></Input>
         </FormItem>
@@ -16,6 +19,9 @@
             <Select class="form-control" v-model='myChart.bizViewId'>               
                 <Option v-for = 'q in queryList' :key='q.id' :name='q.name' :value="q.id" >{{q.name}}</option>
             </Select>
+        </FormItem>
+        <FormItem label="" prop="colNames" v-if='colShow'>
+            <Tag type="border" color="blue" v-for= 'col in queryData.stringHeaders' :key="col">{{col}}</Tag>
         </FormItem>
         <FormItem label="Option:" prop="defineJSON">
             <textarea id='chartOption' v-model='myChart.defineJSON'></textarea>
@@ -39,6 +45,8 @@ export default {
   },
   data(){
     return {
+      queryData:null,
+      colShow:false,
       ruleValidate:{
         name: [
             { required: true, message: 'The name cannot be empty', trigger: 'blur' }
@@ -55,6 +63,9 @@ export default {
       }  
     }
   },
+  watch:{
+　　　'myChart.bizViewId': 'getQueryData',
+　},
   methods:{
     saveChart:function(){
       let Vue = this;
@@ -81,9 +92,20 @@ export default {
             extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
         });
    },
+   getQueryData:function(){
+       let Vue = this;
+        Vue.AxiosPost("previewBizView",{'bizViewId':Vue.myChart.bizViewId},
+        function(response){
+          Vue.queryData = response.data;
+          Vue.colShow = true;
+        }
+      ); 
+    },
   },
   mounted:function(){
+    this.getQueryData();
     this.initOptionEdit();
+    
   }
 }
 </script>

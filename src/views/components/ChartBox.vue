@@ -26,6 +26,7 @@
 <script>
 import echarts from 'echarts'
 import ChartForm from './../components/ChartForm'
+import chartUtil from './../../libs/chartUtil.js'
 export default {
   name: 'ChartBox',
   components:{
@@ -62,10 +63,17 @@ export default {
       let Vue = this;
       let eoption = eval("(" + Vue.chartbox.defineJSON + ")");
       //let eoption = JSON.parse(Vue.chartbox.defineJSON);
-      // 基于准备好的dom，初始化echarts实例
-      let chartView = echarts.init(document.getElementById('previewChart'+Vue.index));
-      // 绘制图表
-      chartView.setOption(eoption);
+      //解析Option
+      Vue.AxiosPost("previewBizView",{'bizViewId':Vue.chartbox.bizViewId},
+        function(response){
+          chartUtil.analysis(eoption,Vue.chartbox.type,response.data);
+          // 基于准备好的dom，初始化echarts实例
+          let chartView = echarts.init(document.getElementById('previewChart'+Vue.index));
+          // 绘制图表
+          chartView.setOption(eoption);
+        }
+      ); 
+      
     }
   }
 }
