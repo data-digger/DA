@@ -99,5 +99,38 @@ ChartTemplate.bar = {
             }
         }
     ]
+},
+ChartTemplate.pie = {
+    title : {
+        text: '饼图',
+        subtext: '',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        show: true,
+        orient: 'vertical',
+        left: 'left',
+    },
+    series : [
+        {
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+                {name:'@name',value:'@value'},
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
 }
 export default ChartTemplate;

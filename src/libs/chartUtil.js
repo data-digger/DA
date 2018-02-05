@@ -22,7 +22,6 @@ function getColData(colName,data){
 
 }
 function analysisGridChart(option,data){
-    let valid = 1;
     let xName = validColName(option.xAxis.data);
     let yName = [];
     for(let s in option.series){
@@ -35,6 +34,19 @@ function analysisGridChart(option,data){
         option.series[i].data = getColData(yName[i],data);
     }
 }
+
+function analysisCirChart(option,data){
+    for(let s in option.series){
+        let nameCol = validColName(option.series[s].data[0].name);
+        let valueCol = validColName(option.series[s].data[0].value);
+        let nameList= getColData(nameCol,data);
+        let valueList = getColData(valueCol,data);
+        option.series[s].data = [];
+        for (let i in nameList){
+            option.series[s].data.push({name:nameList[i],value:valueList[i]})
+        }
+    } 
+}
 let chartUtil = {
 
 };
@@ -44,6 +56,9 @@ chartUtil.analysis = function (option,type,data) {
    }
    if(type == 'bar'){
     analysisGridChart(option,data)
+   }
+   if(type == 'pie'){
+    analysisCirChart(option,data)
    }
 };
 

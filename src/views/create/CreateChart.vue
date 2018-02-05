@@ -23,7 +23,7 @@
             <Tag type="border" color="blue" v-for= 'col in queryData.stringHeaders' :key="col">{{col}}</Tag>
         </FormItem>
         <FormItem label="Option:" prop="defineJSON">
-            <textarea id='chartOption' v-model='myChart.defineJSON'></textarea>
+            <textarea id='chartOption'></textarea>
         </FormItem>
         <FormItem>
             <Button type="ghost" shape="circle" icon="ios-search" :disabled='!colNameShow'  @click="drawChart"></Button>
@@ -89,7 +89,9 @@ export default {
   　watch:{
 　　　'myChart.bizViewId': 'getQueryData',
      'myChart.type':function(curType){
-       this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate[curType]));
+       this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate[curType])
+                                            .replace(/},/g, "},\n").replace(/],/g, "],\n"));
+       $('#chartOption').val(ChartTemplate[curType]);
      }
 　},
   mounted:function(){
@@ -113,7 +115,8 @@ export default {
         content: myTextarea.value,
         extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
     });
-    this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.line));
+    this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.line)
+                                         .replace(/},/g, "},\n").replace(/],/g, "],\n"))
    },
    getQueryList:function(){
       let Vue = this;
@@ -136,10 +139,10 @@ export default {
         let Vue = this;
         Vue.chartPreview=true;
         //Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue().replace(/\n/g, "");
-        //this.eoption = JSON5.parse(Vue.myChart.defineJSON);
         this.$nextTick(function(){
           Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
           Vue.eoption = eval("(" + Vue.myChart.defineJSON + ")");
+          //Vue.eoption = JSON.parse(Vue.myChart.defineJSON);
           if(Vue.chartView != null){
             Vue.chartView.dispose();
           }
@@ -176,7 +179,7 @@ export default {
       Vue.myChart.desc =  'this is my desc';
       $('#chartOption').empty();
 		  $('#chartOption').text('');
-		  Vue.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.line));
+		  Vue.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.line).replace(/},/g, "},\n").replace(/],/g, "],\n"));
       Vue.chartPreview = false;
       Vue.eoption = null;
     }

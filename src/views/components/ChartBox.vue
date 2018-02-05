@@ -61,6 +61,7 @@ export default {
     previewChart(){
       let Vue = this;
       let eoption = eval("(" + Vue.chartbox.defineJSON + ")");
+      //let eoption = JSON.parse(Vue.chartbox.defineJSON);
       // 基于准备好的dom，初始化echarts实例
       let chartView = echarts.init(document.getElementById('previewChart'+Vue.index));
       // 绘制图表
