@@ -7,11 +7,6 @@ const state = {
   reportList:null,
   chartList:null,
   queryList:null,
-  chartId:'',
-  chartName:'',
-  chartOption:null,
-  chartPreview:false,
-  chartEdit:false,
   report:{
     id:'',
     name:'',
@@ -33,11 +28,6 @@ const getters = {
   reportList: state=> state.reportList,
   chartList: state => state.chartList,
   queryList: state => state.queryList,
-  chartId: state => state.chartId,
-  chartName: state => state.chartName,
-  chartOption: state => state.chartOption,
-  chartPreview: state => state.chartPreview,
-  chartEdit: state => state.chartEdit,
   layoutSelected: state => state.layoutSelected,
   report: state => state.report,
 }
@@ -56,9 +46,6 @@ const actions = {
   getReportBox ({ commit, state }, param){   
     commit('getReportBox', param);  
   },
-  chartState({ commit, state },param){
-    commit('chartState', param);
-  }
 }
 
 // mutations
@@ -79,13 +66,6 @@ const mutations = {
            paramData[i].defineJSON = defineJSON;
     }
     state.reportList = paramData;
-  },
-  chartState(state,param){
-    state.chartPreview = param.chartPreview;
-    state.chartEdit = param.chartEdit;
-    state.chartId = param.chartId;
-    state.chartName = param.chartName;
-    state.chartOption = param.chartOption;
   },
   initPortlets(state,param){
     state.report.defineJSON.content.portlets = param.portlets;
