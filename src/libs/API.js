@@ -15,7 +15,11 @@ window.urlConf = {
   chart: {
     list:`${window.uri}/chart/list`,
     new: `${window.uri}/chart/new`,
-  }
+  },
+  report: {
+    list:`${window.uri}/report/list`,
+    new: `${window.uri}/report/new`,
+  },
 }
 
 // axios 配置
@@ -62,5 +66,13 @@ export default {
     /*获取仪表*/
     getChart(params){
       return axios.post(urlConf.chart.list, params); 
+    },
+    /*创建报表*/
+    createReport(params){
+      return axios.post(urlConf.report.new, params); 
+    },
+    /*获取报表*/
+    getReport(params){
+      return axios.post(urlConf.report.list, params); 
     },
 };

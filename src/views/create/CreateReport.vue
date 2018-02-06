@@ -2,14 +2,18 @@
   <div>
     <Carousel v-model="value" :height='setting.height' :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
         <CarouselItem>
+            <div class="demo-carousel"><BaseInfo></BaseInfo>
+            </div>
+        </CarouselItem>
+        <CarouselItem>
             <div class="demo-carousel"><SelectLayout></SelectLayout>
             </div>
         </CarouselItem>
         <CarouselItem>
-            <div class="demo-carousel"><component :is="layout.component" v-for="layout in layouts" :key='layout.id'></component></div>
+            <div class="demo-carousel"><component :is="layouts"></component></div>
         </CarouselItem>
         <CarouselItem>
-            <div class="demo-carousel">3</div>
+            <div class="demo-carousel"><SelectReport></SelectReport></div>
         </CarouselItem>
         <CarouselItem>
             <div class="demo-carousel">4</div>
@@ -17,12 +21,14 @@
     </Carousel>
      <Row  class='button'>
       <Button type="primary" @click='pre()'>上一步</Button>
-      <Button type="primary" @click='next()'>下一步</Button>
+      <Button v-if="!finished" type="primary" @click='next()'>下一步</Button>
+      <Button v-if="finished" type="primary" @click='save()'>保存</Button>
     </Row> 
  </div>
 </template>
 <script>
 import SelectLayout from "./../report/SelectLayout"
+import BaseInfo from "./../report/BaseInfo"
 import Layout1 from "./../report/Layout1"
 import Layout2 from "./../report/Layout2"
 import Layout3 from "./../report/Layout3"
@@ -31,6 +37,7 @@ import {mapGetters} from 'vuex'
     export default {
         components:{
           SelectLayout,
+          BaseInfo,
           Layout1,
           Layout2,
           Layout3,
@@ -38,39 +45,64 @@ import {mapGetters} from 'vuex'
         },
         computed: {
           ...mapGetters({
-            layoutSelected: 'layoutSelected'
+            layoutSelected:'layoutSelected',
+            report:'report'
           })
         },
         data () {
             return {
+                finished:false,
                 value: 0,
                 setting: {
                     dots:"none",
                     arrow:"none",
-                    height:"450px"
                 },
                 layouts:[]
             }
         },
         methods:{
+          init(){
+             //this.$store.commit("initPortlets",{portlets:[]});
+          },
           next() {
             if(this.value <3){
               this.$refs.slide.arrowEvent(1);
-              if(this.value == 1){//根据选择的布局
+              if(this.value == 2){//根据选择的布局
                 this.layouts =[];
-                if(this.layoutSelected == "布局1"){ this.layouts.push({component: Layout1,id:1})}
-                if(this.layoutSelected == "布局2"){ this.layouts.push({component: Layout2,id:2})}
-                if(this.layoutSelected == "布局3"){ this.layouts.push({component: Layout3,id:3})}
-                if(this.layoutSelected == "自定义"){ this.layouts.push({component: Layout4,id:4})} 
-              }
+                if(this.layoutSelected == "布局1"){ this.layouts=Layout1};
+                if(this.layoutSelected == "布局2"){ this.layouts=Layout2};
+                if(this.layoutSelected == "布局3"){ this.layouts=Layout3};
+                if(this.layoutSelected == "自定义"){ this.layouts=Layout4};
+                this.finished = true;
+              }         
             }
 
           },
           pre() {
             if(this.value !=0){
               this.$refs.slide.arrowEvent(-1);
+              this.finished = false;
             }
-          }
+          },
+          save() {
+               console.log(JSON.stringify(this.report));
+               this.createReport();
+          },
+          createReport(){
+               let Vue = this;
+              
+               var ClonedReport = JSON.parse(JSON.stringify(Vue.report));
+               var defineJSON = JSON.stringify(ClonedReport.defineJSON);
+               ClonedReport.defineJSON = defineJSON;
+               Vue.AxiosPost("createReport",
+                 ClonedReport,
+                 function(){
+                    alert("新建成功！")
+                 });
+            },
+        },
+        mounted(){
+           this.init();
         }
     }
 </script>

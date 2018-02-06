@@ -1,67 +1,64 @@
 <template>
-            <grid-layout :layout="layout"
-                         :col-num="12"
-                         :row-height="30"
-                         :is-draggable="draggable"
-                         :is-resizable="resizable"
-                         :vertical-compact="true"
-                         :use-css-transforms="true"
-            >
-                <grid-item v-for="item in layout"
-                           :x="item.x"
-                           :y="item.y"
-                           :w="item.w"
-                           :h="item.h"
-                           :i="item.i"
-                        :key='item.i'>
-                    <span class="text">{{item.i}}</span>
-                </grid-item>
-            </grid-layout>
-
+     <div>
+      <div class="toolbar"><Button @click="addPortlet()">添加模块</Button></div>
+      <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="draggable":is-resizable="resizable":vertical-compact="true":use-css-transforms="true">
+        <grid-item v-for="(item,index) in report.defineJSON.content.portlets":x="item.x":y="item.y":w="item.w":h="item.h":i="item.i":key='item.i'drag-ignore-from=".no-drag"drag-allow-from=".vue-draggable-handle">
+           <GridItemContent :griditemTitle='item.i' :portletID="item.i"></GridItemContent>
+        </grid-item>
+      </grid-layout>        
+    </div>
 </template>
 
 <script>
 import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
+import GridItemContent from "./GridItemContent.vue"
+import {mapGetters} from 'vuex'
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
 export default {
     components: {
         "GridLayout": GridLayout,
-        "GridItem": GridItem
+        "GridItem": GridItem,
+        GridItemContent
+    },
+    computed: {
+    ...mapGetters({
+      report: 'report'
+    })
     },
     data(){
       return {
-        id:4,
-        layout: [
-                {"x":0,"y":0,"w":2,"h":2,"i":"0"},
-                {"x":2,"y":0,"w":2,"h":4,"i":"1"},
-                {"x":4,"y":0,"w":2,"h":5,"i":"2"},
-                {"x":6,"y":0,"w":2,"h":3,"i":"3"},
-                {"x":8,"y":0,"w":2,"h":3,"i":"4"},
-                {"x":10,"y":0,"w":2,"h":3,"i":"5"},
-                {"x":0,"y":5,"w":2,"h":5,"i":"6"},
-                {"x":2,"y":5,"w":2,"h":5,"i":"7"},
-                {"x":4,"y":5,"w":2,"h":5,"i":"8"},
-                {"x":6,"y":4,"w":2,"h":4,"i":"9"},
-                {"x":8,"y":4,"w":2,"h":4,"i":"10"},
-                {"x":10,"y":4,"w":2,"h":4,"i":"11"},
-                {"x":0,"y":10,"w":2,"h":5,"i":"12"},
-                {"x":2,"y":10,"w":2,"h":5,"i":"13"},
-                {"x":4,"y":8,"w":2,"h":4,"i":"14"},
-                {"x":6,"y":8,"w":2,"h":4,"i":"15"},
-                {"x":8,"y":10,"w":2,"h":5,"i":"16"},
-                {"x":10,"y":4,"w":2,"h":2,"i":"17"},
-                {"x":0,"y":9,"w":2,"h":3,"i":"18"},
-                {"x":2,"y":6,"w":2,"h":2,"i":"19"}
-            ],
         draggable: true,
         resizable: true,
-        index: 0
+        index:0
       }
+    },
+    methods:{
+        addPortlet(){
+            this.index = this.index+1;
+            var portlet ={ "id":this.index,
+                           "name":"",
+                           "x":0,"y":0,"w":2,"h":4,"i":this.index,
+                           "tabs":[{"id":this.index,"title":"","objtype":"","objid":""}]
+                         };
+            this.$store.commit("addPortlet",portlet);
+        }
+    },
+    created(){
+        console.log('Layout4 created');
+    },
+    mounted(){
+        console.log('Layout4 mounted');
     }
 }
 </script>
 
 <style scoped>
-
+.toolbar{
+    padding: 3px;
+    margin: 3px;
+}
+.delete-icon{
+    float: right;
+}
 </style>

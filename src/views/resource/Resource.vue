@@ -6,11 +6,6 @@
           <p>
              Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
           </p> 
-         <!--   <info-card :frontType="'graph'"
-            :frontTitle="front.title"
-            :frontData="front.graphData"
-            :backTitle="back.title"
-            :backData="back.message" /> -->
        </div>
        <div class="row box">
           <DatasourceBox v-for="ds in datasourceList" :key='ds.id' :datasource = 'ds'></DatasourceBox>
@@ -25,7 +20,7 @@
           </p>
        </div>
        <div class="row box">
-          <ReportBox v-for="box in reportList" :key='box.id' :name='box.name' :desc='box.desc'></ReportBox>
+          <ReportBox v-for="rp in reportList" :key='rp.id' :reportbox='rp'></ReportBox>
           <Creator :routerpath='createreport'></Creator>
        </div>
     </div>
@@ -37,7 +32,7 @@
           </p>
        </div>
        <div class="row box">
-          <ChartBox v-for="(chart,index) in chartList" :key='chart.id' :chartbox='chart' :index='index'></ChartBox> 
+          <ChartBox v-for="(chart,index) in chartList" :key='chart.id' :chartbox='chart' :index='index'></ChartBox>
           <Creator :routerpath='createchart'></Creator>
        </div>
     </div>
@@ -71,14 +66,6 @@ export default {
       createchart:'/createChart',
       createquery:'/createquery',
       createreport:'/createreport',
-/*     front: {
-        title: 'Daily Conversion Value',
-        graphData: [3, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
-      },
-      back: {
-        title: 'Monthly Summary',
-        message: 'Your average daily conversion value for this month is <b>50.4$</b>. It is below the average of the last six months.',
-      },*/
     }
   },
   components:{
@@ -113,6 +100,14 @@ export default {
         }
       );
     },
+    getReportBox (){
+      let Vue = this;
+      Vue.AxiosPost("getReport",'',
+        function(response){
+          Vue.$store.dispatch('getReportBox',response);
+        }
+      );
+    },   
     getChartBox (){
       let Vue = this;
       Vue.AxiosPost("getChart",'',
@@ -124,6 +119,7 @@ export default {
   },
   mounted (){
      this.getDatasourceBox();
+     this.getReportBox();
      this.getQueryBox();
      this.getChartBox();
   }
