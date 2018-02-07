@@ -8,23 +8,19 @@
     <Modal
       v-model="reportPreview"
       :title="reportbox.name"
+      width ="900px"
       ok-text = '导出'
       @on-ok="editOk"
       @on-cancel="cancel">
-         <ReportForm :report='reportbox' :reportPreview='reportPreview'></ReportForm>
+        <ReportForm :report='reportbox' ref='reportForm'></ReportForm>
     </Modal>    
   </Col>
 </template>
 <script>
-/*import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"*/
 import ReportForm from "./ReportForm.vue"
-/*var GridLayout = VueGridLayout.GridLayout;
-var GridItem = VueGridLayout.GridItem;*/
 export default {
   props:['reportbox'],
   components: {
-/*      "GridLayout": GridLayout,
-      "GridItem": GridItem,*/
       ReportForm
   },
   data(){
@@ -35,6 +31,9 @@ export default {
   methods:{
     preview(){
       this.reportPreview = true;
+      this.$nextTick(function(){
+        this.$refs.reportForm.initReport();
+     })     
     },
   }
 }

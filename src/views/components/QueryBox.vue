@@ -19,7 +19,7 @@
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <table id='previewTable'></table>
+      <table :id="'previewTable'+index"></table>
     </Modal>
   </Col>
 </template>
@@ -38,7 +38,7 @@ export default {
       modalpreview:false
     }
   },
-  props:['querybox'],
+  props:['querybox','index'],
   methods:{
     preview (){ 
       this.modalpreview = true;
@@ -74,7 +74,7 @@ export default {
           }
           rows.push(row);
       };
-      var previewTable = $('#previewTable').DataTable({
+      var previewTable = $('#previewTable'+this.index).DataTable({
         "destroy": true,
         pageLength: 3,
         searching:false,

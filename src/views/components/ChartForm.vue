@@ -104,8 +104,7 @@ export default {
   },
   mounted:function(){
     this.getQueryData();
-    this.initOptionEdit();
-    
+    this.initOptionEdit();    
   }
 }
 </script>

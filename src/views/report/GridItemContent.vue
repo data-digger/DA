@@ -1,47 +1,66 @@
 <template>
      <div class="text">
         <div class="no-drag">
-          <Dropdown style='float:right;margin-right:5px' @on-click='selectChart'>   
+          <Dropdown style='float:right;margin-right:5px' @on-click='drawChart'>   
             <Icon type="arrow-down-b"></Icon>
             <DropdownMenu slot="list">
-                <DropdownItem name="line">line</DropdownItem>
-                <DropdownItem name="line2">line2</DropdownItem>
+                <DropdownItem v-for='chart in chartInfo':name="chart" :key='chart.bizViewId'>{{chart.name}}</DropdownItem>
             </DropdownMenu>
           </Dropdown> 
-          <div class='griditem-title'><input style='background-color:lightgray;border: 0;'placeholder="点击编辑title" :value='griditemTitle'></input></div>
-          <component :is="component"></component>
+          <div class='griditem-title'>{{griditemTitle}}</div>
+          <div :id="'chartBox'+portletID" style='height:90%'></div>
         </div>
         <div class="vue-draggable-handle"></div> 
     </div>
 </template>
 
 <script>
-import line from "./line.vue"
-import line2 from "./line2.vue"
 import {mapGetters} from 'vuex'
+import echarts from 'echarts'
+import chartUtil from './../../libs/chartUtil.js'
 export default {
-    components: {
-        line2,
-        line
-    },
+    components: {},
     props:['griditemTitle','portletID'],
     data(){
       return {
-        component:null
+        component:null,
+        chartInfo:null,
+        chartView:[],
       }
     },
     methods:{
-        selectChart(name){
-          if(name =="line"){
-            this.component=line;
-            var tabs = [{"portletID":this.portletID,"title":this.griditemTitle,"objtype":"Line","objid":"charid"}];
-            this.$store.commit("addChartComponent",tabs);
+        drawChart(chart){
+          let Vue = this;
+          if(Vue.chartView[Vue.portletID-1]){
+            Vue.chartView[Vue.portletID-1].dispose();
           }
-          if(name == "line2"){
-            this.component=line2;
-            this.$store.commit("addChartComponent",{title:this.griditemTitle,chartId:"#myChartLine2"});
-          }
+          let eoption = eval("(" + chart.defineJSON + ")");
+          Vue.AxiosPost("previewBizView",{'bizViewId':chart.bizViewId},
+            function(response){
+              chartUtil.analysis(eoption,chart.type,response.data);
+              // 基于准备好的dom，初始化echarts实例
+              let chartView = echarts.init(document.getElementById('chartBox'+Vue.portletID));
+               
+              // 绘制图表
+              chartView.setOption(eoption);
+              Vue.chartView[Vue.portletID-1] = chartView;
+              var tabs = [{"portletID":Vue.portletID,"title":Vue.griditemTitle,"chartDefine":chart.defineJSON,"bizViewId":chart.bizViewId,"type":chart.type}];
+              Vue.$store.commit("addChartComponent",tabs); 
+            }
+          );
+     
+        },
+        getChart(){
+          let Vue = this;
+          Vue.AxiosPost("getChart",'',
+            function(response){
+               Vue.chartInfo = response.data;
+            }
+          ); 
         }
+    },
+    mounted(){
+      this.getChart();
     }
 }
 </script>

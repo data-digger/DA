@@ -20,7 +20,7 @@
           </p>
        </div>
        <div class="row box">
-          <ReportBox v-for="rp in reportList" :key='rp.id' :reportbox='rp'></ReportBox>
+          <ReportBox v-for="(rp,index) in reportList" :key='rp.id' :reportbox='rp' :index='index'></ReportBox>
           <Creator :routerpath='createreport'></Creator>
        </div>
     </div>
@@ -44,7 +44,7 @@
         </p>
      </div>
      <div class="row box">
-        <QueryBox  v-for="q in queryList" :key='q.id':querybox='q'></QueryBox>
+        <QueryBox  v-for="(q,index) in queryList" :key='q.id':querybox='q' :index='index'></QueryBox>
         <Creator :routerpath='createquery'></Creator>
      </div>
   </div> 

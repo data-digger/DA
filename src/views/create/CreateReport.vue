@@ -61,9 +61,6 @@ import {mapGetters} from 'vuex'
             }
         },
         methods:{
-          init(){
-             //this.$store.commit("initPortlets",{portlets:[]});
-          },
           next() {
             if(this.value <3){
               this.$refs.slide.arrowEvent(1);
@@ -85,24 +82,22 @@ import {mapGetters} from 'vuex'
             }
           },
           save() {
-               console.log(JSON.stringify(this.report));
                this.createReport();
           },
           createReport(){
                let Vue = this;
-              
                var ClonedReport = JSON.parse(JSON.stringify(Vue.report));
                var defineJSON = JSON.stringify(ClonedReport.defineJSON);
                ClonedReport.defineJSON = defineJSON;
                Vue.AxiosPost("createReport",
                  ClonedReport,
                  function(){
-                    alert("新建成功！")
+                    Vue.$Message.success('新建成功!');
                  });
             },
         },
         mounted(){
-           this.init();
+
         }
     }
 </script>

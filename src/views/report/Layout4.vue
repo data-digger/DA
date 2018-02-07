@@ -30,15 +30,15 @@ export default {
       return {
         draggable: true,
         resizable: true,
-        index:0
+        index:1
       }
     },
     methods:{
         addPortlet(){
             this.index = this.index+1;
-            var portlet ={ "id":this.index,
+            var portlet ={ "id":""+this.index,
                            "name":"",
-                           "x":0,"y":0,"w":2,"h":4,"i":this.index,
+                           "x":0,"y":0,"w":6,"h":4,"i":""+this.index,
                            "tabs":[{"id":this.index,"title":"","objtype":"","objid":""}]
                          };
             this.$store.commit("addPortlet",portlet);

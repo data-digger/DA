@@ -19,6 +19,7 @@ window.urlConf = {
   report: {
     list:`${window.uri}/report/list`,
     new: `${window.uri}/report/new`,
+    preview: `${window.uri}/report/getone`,
   },
 }
 
@@ -75,4 +76,8 @@ export default {
     getReport(params){
       return axios.post(urlConf.report.list, params); 
     },
+    /*预览单张报表的数据*/
+    getReportOne(params){
+      return axios.post(urlConf.report.getone, params); 
+    }
 };
