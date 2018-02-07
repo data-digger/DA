@@ -30,7 +30,7 @@ export default {
       return {
         draggable: true,
         resizable: true,
-        index:1
+        index:0
       }
     },
     methods:{

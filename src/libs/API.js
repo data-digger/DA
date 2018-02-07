@@ -53,13 +53,13 @@ export default {
    	 return axios.post(urlConf.bizview.new, params); 
    },
    /*获取查询器*/
-   getQuery(params){
+    getQuery(params){
    	 return axios.post(urlConf.bizview.list, params); 
-   },
-   /*预览查询器数据*/
-   previewBizView(params){
+    },
+    /*预览查询器数据*/
+    previewBizView(params){
      return axios.post(urlConf.bizview.preview, params); 
-   },
+    },
     /*创建仪表*/
     createChart(params){
       return axios.post(urlConf.chart.new, params); 

@@ -4,11 +4,11 @@
           <Dropdown style='float:right;margin-right:5px' @on-click='drawChart'>   
             <Icon type="arrow-down-b"></Icon>
             <DropdownMenu slot="list">
-                <DropdownItem v-for='chart in chartInfo':name="chart" :key='chart.bizViewId'>{{chart.name}}</DropdownItem>
+                <DropdownItem v-for='chart in chartInfo':name="chart" :key='chart.id'>{{chart.name}}</DropdownItem>
             </DropdownMenu>
           </Dropdown> 
           <div class='griditem-title'>{{griditemTitle}}</div>
-          <div :id="'chartBox'+portletID" style='height:90%'></div>
+          <div :id="chartID+portletID" style='height:90%'></div>
         </div>
         <div class="vue-draggable-handle"></div> 
     </div>
@@ -26,11 +26,13 @@ export default {
         component:null,
         chartInfo:null,
         chartView:[],
+        chartID:null
       }
     },
     methods:{
         drawChart(chart){
           let Vue = this;
+          Vue.chartID = chart.id;
           if(Vue.chartView[Vue.portletID-1]){
             Vue.chartView[Vue.portletID-1].dispose();
           }
@@ -39,8 +41,7 @@ export default {
             function(response){
               chartUtil.analysis(eoption,chart.type,response.data);
               // 基于准备好的dom，初始化echarts实例
-              let chartView = echarts.init(document.getElementById('chartBox'+Vue.portletID));
-               
+              let chartView = echarts.init(document.getElementById(Vue.chartID+Vue.portletID));
               // 绘制图表
               chartView.setOption(eoption);
               Vue.chartView[Vue.portletID-1] = chartView;
@@ -48,7 +49,6 @@ export default {
               Vue.$store.commit("addChartComponent",tabs); 
             }
           );
-     
         },
         getChart(){
           let Vue = this;

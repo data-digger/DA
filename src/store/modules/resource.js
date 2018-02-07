@@ -67,9 +67,9 @@ const mutations = {
     }
     state.reportList = paramData;
   },
-  initPortlets(state,param){
+/*  initPortlets(state,param){
     state.report.defineJSON.content.portlets = param.portlets;
-  },
+  },*/
   addPortlet(state,param){
     state.report.defineJSON.content.portlets.push(param);
   },

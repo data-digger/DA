@@ -10,7 +10,6 @@
             :margin="[10, 10]"
             :use-css-transforms="true"
     >
-
         <grid-item v-for="item in layout"
                    :x="item.x"
                    :y="item.y"
@@ -18,19 +17,21 @@
                    :h="item.h"
                    :i="item.i"
                    :key='item.i'>
-           <div class='griditem-title'>{{item.i}}</div>
+         <GridItemContent :griditemTitle='item.i' :portletID="item.i"></GridItemContent>
         </grid-item>
     </grid-layout>
-    </div>
+  </div>
 </template>
 <script>
 import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
+import GridItemContent from "./GridItemContent.vue"
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
 export default {
     components: {
       "GridLayout": GridLayout,
       "GridItem": GridItem,
+      GridItemContent
     },
     data(){
         return{

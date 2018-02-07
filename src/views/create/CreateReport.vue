@@ -12,12 +12,6 @@
         <CarouselItem>
             <div class="demo-carousel"><component :is="layouts"></component></div>
         </CarouselItem>
-        <CarouselItem>
-            <div class="demo-carousel"><SelectReport></SelectReport></div>
-        </CarouselItem>
-        <CarouselItem>
-            <div class="demo-carousel">4</div>
-        </CarouselItem>
     </Carousel>
      <Row  class='button'>
       <Button type="primary" @click='pre()'>上一步</Button>
