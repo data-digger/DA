@@ -86,7 +86,7 @@ export default {
   methods:{
     getDatasourceBox(){
       let Vue = this;
-      Vue.AxiosPost("getDatasource",'',
+      Vue.AxiosPost("getDatasourceList",'',
         function(response){
           Vue.$store.dispatch('getDatasourceBox',response);
         }
@@ -94,7 +94,7 @@ export default {
     },
     getQueryBox (){
       let Vue = this;
-      Vue.AxiosPost("getQuery",'',
+      Vue.AxiosPost("getQueryList",'',
         function(response){
           Vue.$store.dispatch('getQueryBox',response);
         }
@@ -102,7 +102,7 @@ export default {
     },
     getReportBox (){
       let Vue = this;
-      Vue.AxiosPost("getReport",'',
+      Vue.AxiosPost("getReportList",'',
         function(response){
           Vue.$store.dispatch('getReportBox',response);
         }
@@ -110,7 +110,7 @@ export default {
     },   
     getChartBox (){
       let Vue = this;
-      Vue.AxiosPost("getChart",'',
+      Vue.AxiosPost("getChartList",'',
         function(response){
           Vue.$store.dispatch('getChartBox',response);
         }

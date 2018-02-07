@@ -37,7 +37,7 @@ export default {
             Vue.chartView[Vue.portletID-1].dispose();
           }
           let eoption = eval("(" + chart.defineJSON + ")");
-          Vue.AxiosPost("previewBizView",{'bizViewId':chart.bizViewId},
+          Vue.AxiosPost("getChartData",{'chartId':chart.id},
             function(response){
               chartUtil.analysis(eoption,chart.type,response.data);
               // 基于准备好的dom，初始化echarts实例
@@ -45,14 +45,15 @@ export default {
               // 绘制图表
               chartView.setOption(eoption);
               Vue.chartView[Vue.portletID-1] = chartView;
-              var tabs = [{"portletID":Vue.portletID,"title":Vue.griditemTitle,"chartDefine":chart.defineJSON,"bizViewId":chart.bizViewId,"type":chart.type}];
+              //存储tabs
+              var tabs = [{"tabID":Vue.portletID,"title":Vue.griditemTitle,"objid":chart.id,"objtype":chart.type}];
               Vue.$store.commit("addChartComponent",tabs); 
             }
           );
         },
-        getChart(){
+        getChartList(){
           let Vue = this;
-          Vue.AxiosPost("getChart",'',
+          Vue.AxiosPost("getChartList",'',
             function(response){
                Vue.chartInfo = response.data;
             }
@@ -60,7 +61,7 @@ export default {
         }
     },
     mounted(){
-      this.getChart();
+      this.getChartList();
     }
 }
 </script>

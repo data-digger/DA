@@ -73,12 +73,15 @@ const mutations = {
   addPortlet(state,param){
     state.report.defineJSON.content.portlets.push(param);
   },
+  addDedinedComponent(state,param){
+    state.report.defineJSON.content.portlets=param;
+  },
   layoutSelected(state,param){
     state.layoutSelected = param;
   },
   addChartComponent(state,param){
     for( let index in state.report.defineJSON.content.portlets){
-      if(state.report.defineJSON.content.portlets[index].id == param[0].portletID){
+      if(state.report.defineJSON.content.portlets[index].portletID == param[0].tabID){
         state.report.defineJSON.content.portlets[index].tabs = param;
       }
     }

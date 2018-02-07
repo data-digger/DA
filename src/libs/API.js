@@ -15,11 +15,13 @@ window.urlConf = {
   chart: {
     list:`${window.uri}/chart/list`,
     new: `${window.uri}/chart/new`,
+    getone:`${window.uri}/chart/getone`,
+    getdata:`${window.uri}/chart/getdata`,
   },
   report: {
     list:`${window.uri}/report/list`,
     new: `${window.uri}/report/new`,
-    preview: `${window.uri}/report/getone`,
+    getone: `${window.uri}/report/getone`,
   },
 }
 
@@ -44,39 +46,47 @@ export default {
    createDatasource(params){
      return axios.post(urlConf.datasource.new, params);  
    },
-   /*获取数据源*/
-   getDatasource(params){
+   /*获取数据源列表*/
+   getDatasourceList(params){
    	 return axios.post(urlConf.datasource.list, params); 
    },
    /*创建查询器*/
    createQuery(params){
    	 return axios.post(urlConf.bizview.new, params); 
    },
-   /*获取查询器*/
-    getQuery(params){
+   /*获取查询器列表*/
+   getQueryList(params){
    	 return axios.post(urlConf.bizview.list, params); 
     },
     /*预览查询器数据*/
-    previewBizView(params){
+   previewBizView(params){
      return axios.post(urlConf.bizview.preview, params); 
     },
     /*创建仪表*/
     createChart(params){
       return axios.post(urlConf.chart.new, params); 
     },
+    /*获取仪表列表*/
+    getChartList(params){
+      return axios.post(urlConf.chart.list, params); 
+    },
     /*获取仪表*/
     getChart(params){
-      return axios.post(urlConf.chart.list, params); 
+      return axios.post(urlConf.chart.getone, params); 
+    },
+    /*获取仪表数据*/
+    getChartData(params){
+      return axios.post(urlConf.chart.getdata, params); 
     },
     /*创建报表*/
     createReport(params){
       return axios.post(urlConf.report.new, params); 
     },
-    /*获取报表*/
-    getReport(params){
+    /*获取报表列表*/
+    getReportList(params){
       return axios.post(urlConf.report.list, params); 
     },
-    /*预览单张报表的数据*/
+    /*预览单张报表*/
     getReportOne(params){
       return axios.post(urlConf.report.getone, params); 
     }
