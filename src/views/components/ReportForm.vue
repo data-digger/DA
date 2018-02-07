@@ -29,10 +29,18 @@ export default {
     initReport(){
       let Vue = this;
         var responseData = Vue.report.defineJSON.content.portlets;
-     /*   for(var i in responseData){
-          
-        }*/
-        var eoption = eval("(" + responseData[0].tabs[0].chartDefine + ")");
+        //for(var i in responseData){
+            Vue.AxiosPost("getReportData",{'reportID':Vue.report.id},
+            function(response){
+              console.log(response);
+             /*  chartUtil.analysis(eoption,responseData[i].tabs[0].type,response.data);
+              // 基于准备好的dom，初始化echarts实例
+              let chartView = echarts.init(document.getElementById(Vue.chartID+Vue.portletID));
+              // 绘制图表
+              chartView.setOption(eoption);*/
+            })
+       // }
+    /*    var eoption = eval("(" + responseData[0].tabs[0].chartDefine + ")");
         Vue.AxiosPost("previewBizView",{'bizViewId':responseData[0].tabs[0].bizViewId},function(result){
            chartUtil.analysis(eoption,responseData[0].tabs[0].type,result.data);
            // 基于准备好的dom，初始化echarts实例
@@ -40,7 +48,7 @@ export default {
            // 绘制图表
            chartView.setOption(eoption);
 
-        })
+        })*/
      }
   },
   mounted(){

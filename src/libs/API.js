@@ -22,6 +22,7 @@ window.urlConf = {
     list:`${window.uri}/report/list`,
     new: `${window.uri}/report/new`,
     getone: `${window.uri}/report/getone`,
+    getdata: `${window.uri}/report/getdata`,
   },
 }
 
@@ -87,7 +88,11 @@ export default {
       return axios.post(urlConf.report.list, params); 
     },
     /*预览单张报表*/
-    getReportOne(params){
+    getReport(params){
       return axios.post(urlConf.report.getone, params); 
+    },
+    /*获取单张报表数据*/
+    getReportData(params){
+      return axios.post(urlConf.report.getdata, params); 
     }
 };
