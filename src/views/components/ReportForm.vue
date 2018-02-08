@@ -34,15 +34,15 @@ export default {
                var portlets = JSON.parse(response.data.defineJSON).content.portlets;
                var chartData = response.data.data;     
                for (var i in chartData){
-                var cData = chartData[i];
-                var gridData = cData.gridData;
-                var chartDefineJSON = cData.defineJSON;
-                var type = cData.type;
-                console.log(chartDefineJSON);
-                var eoption = eval('(' + chartDefineJSON + ')');
-                chartUtil.analysis(eoption,type,gridData);
-                let chartView = echarts.init(document.getElementById(Vue.report.id +cData.portletID));
-                chartView.setOption(eoption);
+                  var cData = chartData[i];
+                  var gridData = cData.gridData;
+                  var chartDefineJSON = cData.defineJSON;
+                  var type = cData.type;
+                  console.log(chartDefineJSON);
+                  var eoption = eval('(' + chartDefineJSON + ')');
+                  chartUtil.analysis(eoption,type,gridData);
+                  let chartView = echarts.init(document.getElementById(Vue.report.id +cData.portletID));
+                  chartView.setOption(eoption);
                }         
             })         
      }

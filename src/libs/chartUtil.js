@@ -51,13 +51,13 @@ let chartUtil = {
 
 };
 chartUtil.analysis = function (option,type,data) {
-   if(type == 'line'){
+   if(type == 'Line'){
     analysisGridChart(option,data)
    }
-   if(type == 'bar'){
+   if(type == 'Bar'){
     analysisGridChart(option,data)
    }
-   if(type == 'pie'){
+   if(type == 'Pie'){
     analysisCirChart(option,data)
    }
 };
