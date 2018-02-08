@@ -1,6 +1,6 @@
 <template >
   <Col :xs="8" :sm="8" :md="8" :lg="6">
-    <Card  @click='link(subpath)' style="margin-bottom:10px">
+    <Card  @click='link(subpath)' style="margin-bottom:10px;height: 150px;">
         <p slot="title">{{chartbox.name}}</p>
         <p> {{chartbox.desc}}</p>
         <p><button @click='edit()'>编辑</button>

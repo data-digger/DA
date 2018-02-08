@@ -1,6 +1,6 @@
 <template>
   <Col :xs="8" :sm="8" :md="8" :lg="6">
-    <Card>
+    <Card style="margin-bottom:10px;height: 150px;">
         <p slot="title">{{reportbox.name}}</p>
         <p> {{reportbox.desc}}</p>
         <button @click='preview()'>预览</button></p> 

@@ -12,10 +12,11 @@
     </div>
   </div> -->
   <Col :xs="8" :sm="8" :md="8" :lg="6">
-  <Card >
-    <p @click='createDataSource(routerpath)'>新建</p>
-  </Card>
-</Col>
+    <Card style="margin-bottom:10px;height: 150px;">
+        <p slot="title">新建</p> 
+        <p @click="createDataSource(routerpath)" style='text-align:center'><Icon  class='newbuild'type="plus"></Icon></p>  
+    </Card>
+  </Col>
 </template>
 
 <script>
@@ -35,38 +36,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.col{
-  width: 20%;
-  height: 120px;
-  margin:15px;
-  text-align: right;
-  padding-top: 25px;
-  color:white;
-  position: relative;
-  background-color:#bbdba1;
-  float: left;
-}
-.col:hover{
-  cursor: pointer;
-}
-.more{
-  width: 100%;
-  height: 30px;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  text-align: left;
-  padding-left: 6px;
-  line-height: 30px;
-  color: #d4abab;
-  background-color:#eef7ea;
-}
-.name{
-  font-size: 16px;
-  color:#e3f4f3;
-}
-.desc{
-  font-size: 12px;
-  color:#def1ea;
+.newbuild{
+    font-size: 45px;
+    display: inline-block;
+    text-align: center;
 }
 </style>

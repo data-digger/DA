@@ -12,7 +12,7 @@ import API from '@/libs/API.js';
 import 'iview/dist/styles/iview.css';
 import "codemirror/lib/codemirror.css"
 import 'dataTables/media/css/jquery.dataTables.min.css'
-import "vue-grid-layout/examples/app.css"
+import "@/assets/css/gridlayout.css"
 import InfoCard from "vue-info-card/dist/vue-info-card.js"
 import util from './libs/util';
 Vue.config.silent = true;
