@@ -18,7 +18,7 @@
       title="图表预览"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <div class="previewChart" :id="'previewChart'+index"></div>
+      <div class="previewChart" :id="'previewChart'+chartbox.id"></div>
     </Modal>
   </Col>
 </template>
@@ -68,7 +68,7 @@ export default {
         function(response){
           chartUtil.analysis(eoption,Vue.chartbox.type,response.data);
           // 基于准备好的dom，初始化echarts实例
-          let chartView = echarts.init(document.getElementById('previewChart'+Vue.index));
+          let chartView = echarts.init(document.getElementById('previewChart'+Vue.chartbox.id));
           // 绘制图表
           chartView.setOption(eoption);
         }

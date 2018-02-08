@@ -53,11 +53,11 @@ export default {
       queryData:null,
       chartView:null,
       eoption:null,
-      type:['line','bar','pie'],
+      type:ChartTemplate.TYPE,
       myChart:{
         name:'',
         alias:'myChartAlias',
-        type:'line',
+        type:'Line',
         bizViewId:'',
         desc:'this is my desc',
         defineJSON:'',
@@ -115,7 +115,7 @@ export default {
         content: myTextarea.value,
         extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
     });
-    this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.line)
+    this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.Line)
                                          .replace(/},/g, "},\n").replace(/],/g, "],\n"))
    },
    getQueryList:function(){
@@ -179,7 +179,7 @@ export default {
       Vue.myChart.desc =  'this is my desc';
       $('#chartOption').empty();
 		  $('#chartOption').text('');
-		  Vue.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.line).replace(/},/g, "},\n").replace(/],/g, "],\n"));
+		  Vue.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.Line).replace(/},/g, "},\n").replace(/],/g, "],\n"));
       Vue.chartPreview = false;
       Vue.eoption = null;
     }
