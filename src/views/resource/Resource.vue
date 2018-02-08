@@ -12,18 +12,18 @@
           <Creator :routerpath="createdatasource"></Creator>
        </div>
     </div>
-    <div class="row report">
-       <div class="note note-report">
-          <h4 class="block">报表</h4>
-          <p>
-             Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
-          </p>
-       </div>
-       <div class="row box">
-          <ReportBox v-for="(rp,index) in reportList" :key='rp.id' :reportbox='rp' :index='index'></ReportBox>
-          <Creator :routerpath='createreport'></Creator>
-       </div>
-    </div>
+    <div class="row query">
+     <div class="note note-query">
+        <h4 class="block">查询器</h4>
+        <p>
+           Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
+        </p>
+     </div>
+     <div class="row box">
+        <QueryBox  v-for="(q,index) in queryList" :key='q.id':querybox='q' :index='index'></QueryBox>
+        <Creator :routerpath='createquery'></Creator>
+     </div>
+    </div> 
     <div class="row chart">
        <div class="note note-chart">
           <h4 class="block">图表</h4>
@@ -36,18 +36,18 @@
           <Creator :routerpath='createchart'></Creator>
        </div>
     </div>
-    <div class="row query">
-     <div class="note note-query">
-        <h4 class="block">查询器</h4>
-        <p>
-           Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
-        </p>
-     </div>
-     <div class="row box">
-        <QueryBox  v-for="(q,index) in queryList" :key='q.id':querybox='q' :index='index'></QueryBox>
-        <Creator :routerpath='createquery'></Creator>
-     </div>
-  </div> 
+      <div class="row report">
+         <div class="note note-report">
+            <h4 class="block">报表</h4>
+            <p>
+               Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
+            </p>
+         </div>
+         <div class="row box">
+            <ReportBox v-for="(rp,index) in reportList" :key='rp.id' :reportbox='rp' :index='index'></ReportBox>
+            <Creator :routerpath='createreport'></Creator>
+         </div>
+      </div>
 </div>
 </template>
 
