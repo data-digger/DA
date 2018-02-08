@@ -63,6 +63,7 @@ export default {
     mounted(){
       this.getChartList();
     }
+   /* "chartboxname":Vue.chartID+Vue.portletID*/
 }
 </script>
 

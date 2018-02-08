@@ -30,9 +30,12 @@ export default {
   }, 
   methods:{
     preview(){
-      this.reportPreview = true;
-      this.$nextTick(function(){
-        this.$refs.reportForm.initReport();
+      var self = this;
+      self.reportPreview = true;
+      self.$nextTick(function(){
+        setTimeout(function(){
+          self.$refs.reportForm.initReport();
+        },500)
      })     
     },
   }
