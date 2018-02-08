@@ -5,7 +5,7 @@
             :col-num="12"
             :row-height="30"
             :is-draggable="false"
-            :is-resizable="true"
+            :is-resizable="false"
             :vertical-compact="true"
             :margin="[10, 10]"
             :use-css-transforms="true"

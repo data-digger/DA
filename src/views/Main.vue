@@ -12,7 +12,7 @@
                 :open-names="openedSubmenuArr"
                 :menu-list="menuList">
                 <div slot="top" class="logo-con">
-                    <h class='logo-title'>数据分析</h>
+                    <h class='logo-title'>DataAnalysis</h>
                 </div>
             </shrinkable-menu>
         </div>

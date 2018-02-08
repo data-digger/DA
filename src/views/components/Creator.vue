@@ -40,5 +40,6 @@ export default {
     font-size: 45px;
     display: inline-block;
     text-align: center;
+    cursor: pointer;
 }
 </style>

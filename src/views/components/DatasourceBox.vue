@@ -8,7 +8,7 @@
     </Card>
     <Modal
       v-model="datasourcedit"
-      title="编辑数据源"
+      :title='"编辑"+datasource.name'
       @on-ok="editOk"
       @on-cancel="cancel"
       width='630px'>
@@ -16,7 +16,7 @@
     </Modal>
      <Modal
       v-model="datasourcemng"
-      title="管理数据源"
+      :title='"管理"+datasource.name'
       @on-ok="editOk"
       @on-cancel="cancel"
       width='500px'>

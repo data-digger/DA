@@ -8,7 +8,7 @@
             </DropdownMenu>
           </Dropdown> 
           <div class='griditem-title'>{{griditemTitle}}</div>
-          <div :id="chartID+portletID" style='height:90%'></div>
+          <div :id="chartID+portletID" style='height:85%'></div>
         </div>
         <div class="vue-draggable-handle"></div> 
     </div>

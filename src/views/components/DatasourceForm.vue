@@ -7,7 +7,7 @@
             <Input v-model="datasource.alias" placeholder="输入别名"></Input>
         </FormItem>
         <FormItem label="驱动程序类型" prop="driverType">
-            <Select v-model="datasource.driverType" placeholder="Select ...">
+            <Select class="form-control"v-model="datasource.driverType" placeholder="Select ...">
                <Option value="MySQL">MySQL</Option>
                <Option value="DB2">DB2</Option>
             </Select>
@@ -19,7 +19,7 @@
             <Input v-model="datasource.url" placeholder="输入连接字符串"></Input>
         </FormItem>
         <FormItem label="数据库字符集" prop="dbCharset">
-            <Select v-model="datasource.dbCharset" placeholder="Select ...">
+            <Select class="form-control"v-model="datasource.dbCharset" placeholder="Select ...">
                <Option value="UTF-8">UTF-8</Option>
                <Option value="GBK">GBK</Option>
             </Select>
@@ -37,8 +37,8 @@
             <Input v-model="datasource.password" placeholder="输入密码"></Input>
         </FormItem>
         <FormItem label="事物隔离级别" prop="transactionIsolation">
-            <Select v-model="datasource.transactionIsolation" placeholder="Select ...">
-               <Option value=-1>-1</Option>
+            <Select class="form-control"v-model="datasource.transactionIsolation" placeholder="Select ...">
+               <Option value="-1">-1</Option>
             </Select>
         </FormItem>  
         <FormItem label="描述" prop="desc">
@@ -83,7 +83,7 @@
                     password: [
                         { required: true, message: 'The name cannot be empty', trigger: 'blur' }
                     ],
-                  /*  transactionIsolation: [
+                   /* transactionIsolation: [
                         { required: true,message: 'Please select the transactionIsolation', trigger: 'change' }
                     ],*/
                     desc: [
