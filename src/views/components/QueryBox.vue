@@ -4,8 +4,7 @@
         <p slot="title">{{querybox.name}}</p>
         <p> {{querybox.desc}}</p>
         <p><button @click='edit()'>编辑</button>
-        <button @click='preview()'>预览</button> </p>
-        
+        <button @click='preview()'>预览</button> </p>     
     </Card>
     <Modal
       v-model="modaledit"

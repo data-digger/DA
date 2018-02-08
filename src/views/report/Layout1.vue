@@ -4,7 +4,7 @@
             :layout="portlets"
             :col-num="12"
             :row-height="30"
-            :is-draggable="true"
+            :is-draggable="false"
             :is-resizable="true"
             :vertical-compact="true"
             :margin="[10, 10]"
@@ -59,9 +59,7 @@ export default {
                      "name":"",
                      "x":0,"y":28,"w":12,"h":8,"i":"4",
                      "tabs":[{"id":"4","title":"","objtype":"","objid":""}]
-                    }],                  
-            chartInfo:null,
-            chartView:[],
+                    }]
         }
       },
     mounted(){

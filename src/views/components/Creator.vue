@@ -1,5 +1,5 @@
 <template>
-  <div class="col col-lg-3 col-md-3 col-sm-6 col-xs-12"  >
+<!--   <div class="col col-lg-3 col-md-3 col-sm-6 col-xs-12"  >
     <div class="dashboard-stat blue-madison">
       <div class="visual">
         <i class="fa fa-comments"></i>
@@ -10,7 +10,12 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
+  <Col :xs="8" :sm="8" :md="8" :lg="6">
+  <Card >
+    <p @click='createDataSource(routerpath)'>新建</p>
+  </Card>
+</Col>
 </template>
 
 <script>

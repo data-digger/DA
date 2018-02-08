@@ -89,9 +89,12 @@ import {mapGetters} from 'vuex'
                     Vue.$Message.success('新建成功!');
                  });
             },
+          initReport(){
+            
+          }
         },
         mounted(){
-
+            this.initReport()
         }
     }
 </script>
