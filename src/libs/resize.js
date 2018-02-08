@@ -1,64 +1,109 @@
-(function($, h, c) {  
-    var a = $([]), e = $.resize = $.extend($.resize, {}), i, k = "setTimeout", j = "resize", d = j  
-            + "-special-event", b = "delay", f = "throttleWindow";  
-    e[b] = 350;  
-    e[f] = true;  
-    $.event.special[j] = {  
-        setup : function() {  
-            if (!e[f] && this[k]) {  
-                return false  
-            }  
-            var l = $(this);  
-            a = a.add(l);  
-            $.data(this, d, {  
-                w : l.width(),  
-                h : l.height()  
-            });  
-            if (a.length === 1) {  
-                g()  
-            }  
-        },  
-        teardown : function() {  
-            if (!e[f] && this[k]) {  
-                return false  
-            }  
-            var l = $(this);  
-            a = a.not(l);  
-            l.removeData(d);  
-            if (!a.length) {  
-                clearTimeout(i)  
-            }  
-        },  
-        add : function(l) {  
-            if (!e[f] && this[k]) {  
-                return false  
-            }  
-            var n;  
-            function m(s, o, p) {  
-                var q = $(this), r = $.data(this, d);  
-                r.w = o !== c ? o : q.width();  
-                r.h = p !== c ? p : q.height();  
-                n.apply(this, arguments)  
-            }  
-            if ($.isFunction(l)) {  
-                n = l;  
-                return m  
-            } else {  
-                n = l.handler;  
-                l.handler = m  
-            }  
-        }  
-    };  
-    function g() {  
-        i = h[k](function() {  
-            a.each(function() {  
-                var n = $(this), m = n.width(), l = n.height(), o = $  
-                        .data(this, d);  
-                if (m !== o.w || l !== o.h) {  
-                    n.trigger(j, [ o.w = m, o.h = l ])  
-                }  
-            });  
-            g()  
-        }, e[b])  
-    }  
-})(jQuery, this);  
+/**
+ * Created by taozh on 2017/5/6.
+ * taozh1982@gmail.com
+ */
+var EleResize = {
+    _handleResize: function (e) {
+        var ele = e.target || e.srcElement;
+        var trigger = ele.__resizeTrigger__;
+        if (trigger) {
+            var handlers = trigger.__z_resizeListeners;
+            if (handlers) {
+                var size = handlers.length;
+                for (var i = 0; i < size; i++) {
+                    var h = handlers[i];
+                    var handler = h.handler;
+                    var context = h.context;
+                    handler.apply(context, [e]);
+                }
+            }
+        }
+    },
+    _removeHandler: function (ele, handler, context) {
+        var handlers = ele.__z_resizeListeners;
+        if (handlers) {
+            var size = handlers.length;
+            for (var i = 0; i < size; i++) {
+                var h = handlers[i];
+                if (h.handler === handler && h.context === context) {
+                    handlers.splice(i, 1);
+                    return;
+                }
+            }
+        }
+    },
+    _createResizeTrigger: function (ele) {
+        var obj = document.createElement('object');
+        obj.setAttribute('style',
+            'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden;opacity: 0; pointer-events: none; z-index: -1;');
+        obj.onload = EleResize._handleObjectLoad;
+        obj.type = 'text/html';
+        ele.appendChild(obj);
+        obj.data = 'about:blank';
+        return obj;
+    },
+    _handleObjectLoad: function (evt) {
+        this.contentDocument.defaultView.__resizeTrigger__ = this.__resizeElement__;
+        this.contentDocument.defaultView.addEventListener('resize', EleResize._handleResize);
+    }
+};
+if (document.attachEvent) {//ie9-10
+    EleResize.on = function (ele, handler, context) {
+        var handlers = ele.__z_resizeListeners;
+        if (!handlers) {
+            handlers = [];
+            ele.__z_resizeListeners = handlers;
+            ele.__resizeTrigger__ = ele;
+            ele.attachEvent('onresize', EleResize._handleResize);
+        }
+        handlers.push({
+            handler: handler,
+            context: context
+        });
+    };
+    EleResize.off = function (ele, handler, context) {
+        var handlers = ele.__z_resizeListeners;
+        if (handlers) {
+            EleResize._removeHandler(ele, handler, context);
+            if (handlers.length === 0) {
+                ele.detachEvent('onresize', EleResize._handleResize);
+                delete  ele.__z_resizeListeners;
+            }
+        }
+    }
+} else {
+    EleResize.on = function (ele, handler, context) {
+        var handlers = ele.__z_resizeListeners;
+        if (!handlers) {
+            handlers = [];
+            ele.__z_resizeListeners = handlers;
+
+            if (getComputedStyle(ele, null).position === 'static') {
+                ele.style.position = 'relative';
+            }
+            var obj = EleResize._createResizeTrigger(ele);
+            ele.__resizeTrigger__ = obj;
+            obj.__resizeElement__ = ele;
+        }
+        handlers.push({
+            handler: handler,
+            context: context
+        });
+    };
+    EleResize.off = function (ele, handler, context) {
+        var handlers = ele.__z_resizeListeners;
+        if (handlers) {
+            EleResize._removeHandler(ele, handler, context);
+            if (handlers.length === 0) {
+                var trigger = ele.__resizeTrigger__;
+                if (trigger) {
+                    trigger.contentDocument.defaultView.removeEventListener('resize', EleResize._handleResize);
+                    ele.removeChild(trigger);
+                    delete ele.__resizeTrigger__;
+                }
+                delete  ele.__z_resizeListeners;
+            }
+        }
+    }
+}
+export default EleResize;

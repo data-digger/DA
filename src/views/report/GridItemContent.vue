@@ -1,5 +1,5 @@
 <template>
-     <div class="text">
+     <div :id="'portlet'+portletID"class="text">
         <div class="no-drag">
           <Dropdown style='float:right;margin-right:5px' @on-click='drawChart'>   
             <Icon type="arrow-down-b"></Icon>
@@ -18,6 +18,7 @@
 import {mapGetters} from 'vuex'
 import echarts from 'echarts'
 import chartUtil from './../../libs/chartUtil.js'
+import EleResize from './../../libs/resize.js'
 export default {
     components: {},
     props:['griditemTitle','portletID'],
@@ -25,7 +26,8 @@ export default {
       return {
         component:null,
         chartInfo:null,
-        chartView:[],
+        chartView:null,
+        hasResized:false,
         chartID:null
       }
     },
@@ -33,18 +35,17 @@ export default {
         drawChart(chart){
           let Vue = this;
           Vue.chartID = chart.id;
-          if(Vue.chartView[Vue.portletID-1]){
-            Vue.chartView[Vue.portletID-1].dispose();
+          if(Vue.chartView != null){
+            Vue.chartView.dispose();
           }
           let eoption = eval("(" + chart.defineJSON + ")");
           Vue.AxiosPost("getChartData",{'chartId':chart.id},
             function(response){
               chartUtil.analysis(eoption,chart.type,response.data);
               // 基于准备好的dom，初始化echarts实例
-              let chartView = echarts.init(document.getElementById(Vue.chartID+Vue.portletID));
+              Vue.chartView = echarts.init(document.getElementById(Vue.chartID+Vue.portletID));
               // 绘制图表
-              chartView.setOption(eoption);
-              Vue.chartView[Vue.portletID-1] = chartView;
+              Vue.chartView.setOption(eoption);
               //存储tabs
               var tabs = [{"tabID":Vue.portletID,"title":Vue.griditemTitle,"objid":chart.id,"objtype":chart.type}];
               Vue.$store.commit("addChartComponent",tabs); 
@@ -58,12 +59,20 @@ export default {
                Vue.chartInfo = response.data;
             }
           ); 
+        },
+        resized(){
+          let Vue = this;
+           EleResize.on(document.getElementById('portlet'+Vue.portletID), function(){
+            if(Vue.chartView!=null){
+              Vue.chartView.resize();
+            }                
+          });
         }
     },
     mounted(){
       this.getChartList();
+      this.resized();
     }
-   /* "chartboxname":Vue.chartID+Vue.portletID*/
 }
 </script>
 

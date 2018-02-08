@@ -88,6 +88,7 @@ export default {
       let Vue = this;
       Vue.AxiosPost("getDatasourceList",'',
         function(response){
+          console.log($(".block").html());
           Vue.$store.dispatch('getDatasourceBox',response);
         }
       );   

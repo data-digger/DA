@@ -42,6 +42,9 @@ export default {
                            "tabs":[{"id":this.index,"title":"","objtype":"","objid":""}]
                          };
             this.$store.commit("addPortlet",portlet);
+        },
+        deletePorlet(){
+          
         }
     },
     created(){
