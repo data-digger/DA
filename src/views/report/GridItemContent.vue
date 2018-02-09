@@ -1,13 +1,16 @@
 <template>
      <div :id="'portlet'+portletID"class="text">
         <div class="no-drag">
+          <div class='griditem-title'>
+          <div @click='deletePortlet(portletID)'><Icon class='delete-portlet'type="android-close" ></Icon></div>
+          {{griditemTitle}}
           <Dropdown style='float:right;margin-right:5px' @on-click='drawChart'>   
             <Icon type="arrow-down-b"></Icon>
             <DropdownMenu slot="list">
                 <DropdownItem v-for='chart in chartInfo':name="chart" :key='chart.id'>{{chart.name}}</DropdownItem>
             </DropdownMenu>
           </Dropdown> 
-          <div class='griditem-title'>{{griditemTitle}}</div>
+          </div>
           <div :id="chartID+portletID" style='height:85%'></div>
         </div>
         <div class="vue-draggable-handle"></div> 
@@ -67,6 +70,9 @@ export default {
               Vue.chartView.resize();
             }                
           });
+        },
+        deletePortlet(portletID){
+          this.$store.commit("deletePortlet",portletID);
         }
     },
     mounted(){
@@ -79,5 +85,9 @@ export default {
 <style scoped>
 .griditem-title{
     background-color:lightgray;
+}
+.delete-portlet{
+  float: right;
+  margin: 5px 20px;
 }
 </style>

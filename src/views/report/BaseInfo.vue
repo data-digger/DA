@@ -15,18 +15,27 @@
 <script>
 import {mapGetters} from 'vuex'
  export default {
-    computed: {
+/*    computed: {
     ...mapGetters({
       report: 'report'
     })
-    },
+    },*/
     data(){
        return {
-          name:""
+         report:{
+           name:'',
+           alias:'',
+           desc:''
+         }
        }
     },
     methods:{
-
+       //更新报表中baseInfo
+       initBaseInfo(){
+         this.$store.commit("initBaseInfo",this.report)
+       }
+    },
+    mounted(){
     }
 }
 </script>

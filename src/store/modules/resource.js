@@ -67,13 +67,24 @@ const mutations = {
     }
     state.reportList = paramData;
   },
-/*  initPortlets(state,param){
-    state.report.defineJSON.content.portlets = param.portlets;
-  },*/
-  addPortlet(state,param){
-    state.report.defineJSON.content.portlets.push(param);
+  initBaseInfo(state,param){
+     state.report.name = param.name;
+     state.report.alias = param.alias;
+     state.report.desc = param.desc;
   },
-  addDedinedComponent(state,param){
+  initDefineJSON(state,param){
+    state.report.defineJSON = param;
+  },
+  deletePortlet(state,param){
+     let portlets = state.report.defineJSON.content.portlets
+     for(var i in portlets){
+        if(portlets[i].portletID == param){
+          portlets.splice(i,1);
+          break;
+        }
+     }
+  },
+  addDedinedPortlets(state,param){
     state.report.defineJSON.content.portlets=param;
   },
   layoutSelected(state,param){

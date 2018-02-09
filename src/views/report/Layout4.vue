@@ -21,17 +21,22 @@ export default {
         "GridItem": GridItem,
         GridItemContent
     },
-    computed: {
-    ...mapGetters({
-      report: 'report'
-    })
-    },
-    data(){
+    data () {
       return {
         draggable: true,
         resizable: true,
-        index:-1
-      }
+        index:-1,
+        report:{
+          defineJSON:{
+            header:{conditons:[{type:"",objid:""}]},
+            content:{
+              portlets:[]
+            },
+            tail:{}
+          }
+        }
+        
+      }       
     },
     methods:{
         addPortlet(){
@@ -41,10 +46,8 @@ export default {
                            "x":0,"y":0,"w":6,"h":4,"i":""+this.index,
                            "tabs":[{"id":this.index,"title":"","objtype":"","objid":""}]
                          };
-            this.$store.commit("addPortlet",portlet);
-        },
-        deletePorlet(){
-          
+            this.report.defineJSON.content.portlets.push(portlet);
+            this.$store.commit("initDefineJSON",this.report.defineJSON);
         }
     },
     created(){

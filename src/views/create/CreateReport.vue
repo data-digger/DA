@@ -2,7 +2,7 @@
   <div>
     <Carousel v-model="value" :height='setting.height' :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
         <CarouselItem>
-            <div class="demo-carousel"><BaseInfo></BaseInfo>
+            <div class="demo-carousel"><BaseInfo ref='initBaseInfo'></BaseInfo>
             </div>
         </CarouselItem>
         <CarouselItem>
@@ -58,6 +58,9 @@ import {mapGetters} from 'vuex'
           next() {
             if(this.value <3){
               this.$refs.slide.arrowEvent(1);
+              if(this.value == 1){
+                this.$refs.initBaseInfo.initBaseInfo();
+              }
               if(this.value == 2){//根据选择的布局
                 this.layouts =[];
                 if(this.layoutSelected == "布局1"){ this.layouts=Layout1};
@@ -88,13 +91,10 @@ import {mapGetters} from 'vuex'
                  function(){
                     Vue.$Message.success('新建成功!');
                  });
-            },
-          initReport(){
-            
-          }
+            }
         },
         mounted(){
-            this.initReport()
+           
         }
     }
 </script>

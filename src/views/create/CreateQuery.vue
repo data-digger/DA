@@ -38,9 +38,9 @@ export default {
   data(){
     return {
       bizView: {
-        name:'ddd',
-        alias:'sss',
-        desc:'sss',
+        name:'',
+        alias:'',
+        desc:'',
         dataSourceId:'',
         defineJSON:'select * from dual'
       },
