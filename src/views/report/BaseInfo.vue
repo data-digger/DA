@@ -15,11 +15,6 @@
 <script>
 import {mapGetters} from 'vuex'
  export default {
-/*    computed: {
-    ...mapGetters({
-      report: 'report'
-    })
-    },*/
     data(){
        return {
          report:{

@@ -2,7 +2,7 @@
     <div>
       <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="false":is-resizable="false":vertical-compact="true":use-css-transforms="true">
             <grid-item v-for="item in report.defineJSON.content.portlets":x="item.x":y="item.y":w="item.w":h="item.h":i="item.i":key='item.i'>
-              <div class='griditem-title'>{{item.i}}</div>
+              <div class='griditem-title'>{{item.name+item.i}}</div>
               <div :id="report.id+item.i" style='height:90%;' ></div>                
             </grid-item>
          </grid-layout>
