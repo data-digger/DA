@@ -1,7 +1,7 @@
 let  ChartTemplate= {
 
 };
-ChartTemplate.TYPE = ['Line','Bar','Pie'];
+ChartTemplate.TYPE = ['Line','Bar','Pie','Table'];
 
 ChartTemplate.Line = {
     title: {

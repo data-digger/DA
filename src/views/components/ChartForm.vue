@@ -23,7 +23,7 @@
         <FormItem label="" prop="colNames" v-if='colShow'>
             <Tag type="border" color="blue" v-for= 'col in queryData.stringHeaders' :key="col">{{col}}</Tag>
         </FormItem>
-        <FormItem label="Option:" prop="defineJSON">
+        <FormItem v-show="myChart.type!='Table'"  label="Option:" prop="defineJSON">
             <textarea id='chartOption' v-model='myChart.defineJSON'></textarea>
         </FormItem>
     </Form>  
@@ -57,9 +57,6 @@ export default {
         bizViewId: [
             { required: true, message: 'Please select the bizView', trigger: 'change' }
         ],
-        defineJSON: [
-            { required: true, message: 'echartsOption define cannot be empty', trigger: 'blur' }
-        ]
       }  
     }
   },
@@ -69,8 +66,11 @@ export default {
   methods:{
     saveChart:function(){
       let Vue = this;
-      //Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue().replace(/\n/g, "");
-      Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
+      if (Vue.myChart.type == 'Table'){
+          Vue.myChart.defineJSON = null;
+      } else {
+          Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
+      }
       Vue.$refs["myChart"].validate((valid) => {
                     if (valid) {
                          Vue.AxiosPost("createChart",

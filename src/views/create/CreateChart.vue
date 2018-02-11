@@ -22,16 +22,17 @@
          <FormItem v-if="colNameShow" label="" prop="colNames">
             <Tag type="border" color="blue" v-for= 'col in queryData.stringHeaders' :key="col">{{col}}</Tag>
         </FormItem>
-        <FormItem label="Option:" prop="defineJSON">
+        <FormItem v-show="optionShow" label="Option:" prop="defineJSON">
             <textarea id='chartOption'></textarea>
         </FormItem>
         <FormItem>
-            <Button type="ghost" shape="circle" icon="ios-search" :disabled='!colNameShow'  @click="drawChart"></Button>
+            <Button type="ghost" shape="circle" icon="ios-search" :disabled='!colNameShow'  @click="previewChart"></Button>
             <Button type="primary" :disabled='!chartPreview' @click="saveChart">Save</Button>
             <Button type="ghost" style="margin-left: 8px" @click="handleReset">Reset</Button>
         </FormItem> 
         <FormItem>
-          <div id="myChart" v-show="chartPreview"></div>
+          <div id="myChart" v-show="chartPreview && myChart.type != 'Table'"></div>
+          <table id='myTable' v-show="chartPreview && myChart.type == 'Table'"></table>
         </FormItem>
     </Form>  
 </template>
@@ -52,6 +53,7 @@ export default {
       colNameShow:false,
       queryData:null,
       chartView:null,
+      tableView:null,
       eoption:null,
       type:ChartTemplate.TYPE,
       myChart:{
@@ -75,9 +77,6 @@ export default {
         bizViewId: [
             { required: true, message: 'Please select the bizView', trigger: 'change' }
         ],
-        defineJSON: [
-            { required: true, message: 'echartsOption define cannot be empty', trigger: 'blur' }
-        ]
       }    
     }
   },
@@ -85,13 +84,23 @@ export default {
     ...mapGetters({
       queryList:'queryList',
     }),
+    optionShow:function(){
+      if(this.myChart.type == 'Table'){
+        return false
+      }else{
+        return true
+      }
+    },
   },
   　watch:{
 　　　'myChart.bizViewId': 'getQueryData',
      'myChart.type':function(curType){
-       this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate[curType])
+       if (curType != 'Table'){
+         this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate[curType])
                                             .replace(/},/g, "},\n").replace(/],/g, "],\n"));
-       $('#chartOption').val(ChartTemplate[curType]);
+        $('#chartOption').val(ChartTemplate[curType]);
+       }
+       
      }
 　},
   mounted:function(){
@@ -100,8 +109,10 @@ export default {
      window.addEventListener('resize', function () {
                 if(Vue.chartView == null){
                   return false;
+                }else{
+                  Vue.chartView.resize();
                 }
-                Vue.chartView.resize();
+                
             });
     //this.getQueryList();
   },
@@ -128,37 +139,87 @@ export default {
     },
    getQueryData:function(){
        let Vue = this;
-        Vue.AxiosPost("previewBizView",{'bizViewId':Vue.myChart.bizViewId},
-        function(response){
-          Vue.queryData = response.data;
-          Vue.colNameShow = true;
-        }
-      ); 
+       if (Vue.myChart.bizViewId != ''){
+           Vue.AxiosPost("previewBizView",{'bizViewId':Vue.myChart.bizViewId},
+            function(response){
+              Vue.queryData = response.data;
+              Vue.colNameShow = true;
+            }
+        ); 
+       }
+      
     },
-    drawChart:function(){
+    previewChart:function(){
         let Vue = this;
         Vue.chartPreview=true;
-        //Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue().replace(/\n/g, "");
         this.$nextTick(function(){
-          Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
-          Vue.eoption = eval("(" + Vue.myChart.defineJSON + ")");
-          //Vue.eoption = JSON.parse(Vue.myChart.defineJSON);
-          if(Vue.chartView != null){
-            Vue.chartView.dispose();
+          if(Vue.myChart.type == 'Table'){
+            Vue.drawTable();
+          } else {
+            Vue.drawEChart();
           }
-          //根据类型和字段解析option
-          chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
-        // 基于准备好的dom，初始化echarts实例
-          Vue.chartView = echarts.init(document.getElementById('myChart'));
-          
-        // 绘制图表
-          Vue.chartView.setOption(this.eoption);
         })    
+    },
+    drawTable(){
+      let Vue = this;
+      if(Vue.chartView != null){
+            Vue.chartView.dispose();
+            Vue.chartView = null;
+       } 
+       if(Vue.tableView != null){
+         Vue.tableView.destroy();
+         $('#myTable').empty();
+       }
+      var header = Vue.queryData.stringHeaders;
+      var cols = [];
+      for(let c in header){
+         cols.push({
+          "title":header[c]
+         })
+      };
+      var rows = [];
+      var rowData = Vue.queryData.data;
+       for(let i in rowData){
+          let row = [];
+          for (let j in rowData[i]){
+              row.push(rowData[i][j].displayValue);
+          }
+          rows.push(row);
+      };
+          Vue.tableView = $('#myTable').DataTable({
+          "destroy": true,
+          pageLength: 3,
+          searching:false,
+          lengthChange:false,
+          bInfo:false,
+          bSort:false,
+          columns: cols,
+          data:rows
+      });
+     
+    },
+    drawEChart(){
+      let Vue = this;
+       Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
+       Vue.eoption = eval("(" + Vue.myChart.defineJSON + ")");
+       if(Vue.chartView != null){
+            Vue.chartView.dispose();
+       }
+       //根据类型和字段解析option
+      chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
+      // 基于准备好的dom，初始化echarts实例
+      Vue.chartView = echarts.init(document.getElementById('myChart')); 
+      // 绘制图表
+      Vue.chartView.setOption(this.eoption);   
     },
     saveChart:function(){
       let Vue = this;
       //Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue().replace(/\n/g, "");
-      Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
+      if(Vue.myChart.type == 'Table'){
+        Vue.myChart.defineJSON = null;
+      } else{
+        Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
+      }
       Vue.$refs["myChart"].validate((valid) => {
                     if (valid) {
                          Vue.AxiosPost("createChart",
@@ -173,6 +234,7 @@ export default {
     },
     handleReset:function(){
       let Vue = this;
+      Vue.colNameShow = false;
       Vue.myChart.name = '';
       Vue.myChart.alias = 'myChartAlias';
       Vue.myChart.bizViewId = '';

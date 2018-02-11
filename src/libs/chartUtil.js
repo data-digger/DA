@@ -60,6 +60,9 @@ chartUtil.analysis = function (option,type,data) {
    if(type == 'Pie'){
     analysisCirChart(option,data)
    }
+   if(type == 'Table'){
+    option = null
+   }
 };
 
 export default chartUtil;
