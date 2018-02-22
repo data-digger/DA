@@ -3,7 +3,7 @@ let  ChartTemplate= {
 };
 ChartTemplate.TYPE = ['Line','Bar','Pie','Table'];
 
-ChartTemplate.Line = {
+ChartTemplate.Line = `{
     title: {
         text: '折线图',
     },
@@ -42,8 +42,8 @@ ChartTemplate.Line = {
             type:'line',
         },
     ]
-};
-ChartTemplate.Bar = {
+}`;
+ChartTemplate.Bar = `{
     title : {
         text: '柱状图',
     },
@@ -101,8 +101,8 @@ ChartTemplate.Bar = {
             }
         }
     ]
-},
-ChartTemplate.Pie = {
+}`,
+ChartTemplate.Pie = `{
     title : {
         text: '饼图',
         subtext: '',
@@ -134,5 +134,5 @@ ChartTemplate.Pie = {
             }
         }
     ]
-}
+}`
 export default ChartTemplate;

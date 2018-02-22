@@ -32,7 +32,7 @@
         </FormItem> 
         <FormItem>
           <div id="myChart" v-show="chartPreview && myChart.type != 'Table'"></div>
-          <table id='myTable' v-show="chartPreview && myChart.type == 'Table'"></table>
+          <table id='myTable' v-show="chartPreview && myChart.type == 'Table'" width="100%"></table>
         </FormItem>
     </Form>  
 </template>
@@ -96,8 +96,9 @@ export default {
 　　　'myChart.bizViewId': 'getQueryData',
      'myChart.type':function(curType){
        if (curType != 'Table'){
-         this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate[curType])
-                                            .replace(/},/g, "},\n").replace(/],/g, "],\n"));
+         /*this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate[curType])
+                                            .replace(/},/g, "},\n").replace(/],/g, "],\n"));*/
+        this.optionEditor.getDoc().setValue(ChartTemplate[curType]);
         $('#chartOption').val(ChartTemplate[curType]);
        }
        
@@ -107,12 +108,9 @@ export default {
     let Vue = this;
      Vue.initOptionEdit();
      window.addEventListener('resize', function () {
-                if(Vue.chartView == null){
-                  return false;
-                }else{
+                if(Vue.myChart.type != 'Table' && Vue.chartView != null){
                   Vue.chartView.resize();
                 }
-                
             });
     //this.getQueryList();
   },
@@ -126,8 +124,9 @@ export default {
         content: myTextarea.value,
         extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
     });
-    this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.Line)
-                                         .replace(/},/g, "},\n").replace(/],/g, "],\n"))
+    /*this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.Line)
+                                         .replace(/},/g, "},\n").replace(/],/g, "],\n"))*/
+    this.optionEditor.getDoc().setValue(ChartTemplate.Line)
    },
    getQueryList:function(){
       let Vue = this;
@@ -241,7 +240,8 @@ export default {
       Vue.myChart.desc =  'this is my desc';
       $('#chartOption').empty();
 		  $('#chartOption').text('');
-		  Vue.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.Line).replace(/},/g, "},\n").replace(/],/g, "],\n"));
+      //Vue.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.Line).replace(/},/g, "},\n").replace(/],/g, "],\n"));
+      Vue.optionEditor.getDoc().setValue(ChartTemplate.Line)
       Vue.chartPreview = false;
       Vue.eoption = null;
     }
