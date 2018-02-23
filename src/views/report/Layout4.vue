@@ -47,7 +47,7 @@ export default {
                            "tabs":[{"id":this.index,"title":"","objtype":"","objid":""}]
                          };
             this.report.defineJSON.content.portlets.push(portlet);
-            this.$store.commit("initDefineJSON",this.report.defineJSON);
+            this.$store.commit("addDefinePorlets",this.report.defineJSON);
         }
     },
     created(){

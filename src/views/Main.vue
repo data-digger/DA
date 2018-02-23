@@ -68,7 +68,7 @@
     import breadcrumbNav from './main-components/breadcrumb-nav.vue';
     import fullScreen from './main-components/fullscreen.vue';
     import lockScreen from './main-components/lockscreen/lockscreen.vue';
-    import themeSwitch from './main-components/theme-switch/theme-switch.vue';
+/*    import themeSwitch from './main-components/theme-switch/theme-switch.vue';*/
     import Cookies from 'js-cookie';
     import util from '@/libs/util.js';
     
@@ -79,7 +79,7 @@
             breadcrumbNav,
             fullScreen,
             lockScreen,
-            themeSwitch
+/*            themeSwitch*/
         },
         data () {
             return {

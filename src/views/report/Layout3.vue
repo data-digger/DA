@@ -62,7 +62,7 @@ export default {
                     }]        }
     },
     mounted(){
-       this.$store.commit("addDedinedPortlets",this.portlets);
+       this.$store.commit("initDefaultdPortlets",this.portlets);
     }
 }
 </script>

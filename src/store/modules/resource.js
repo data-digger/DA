@@ -67,12 +67,18 @@ const mutations = {
     }
     state.reportList = paramData;
   },
-  initBaseInfo(state,param){
+  initReportBaseInfo(state,param){
      state.report.name = param.name;
      state.report.alias = param.alias;
      state.report.desc = param.desc;
   },
-  initDefineJSON(state,param){
+  layoutSelected(state,param){
+    state.layoutSelected = param;
+  },
+  initDefaultdPortlets(state,param){
+    state.report.defineJSON.content.portlets=param;
+  },
+  addDefinePorlets(state,param){
     state.report.defineJSON = param;
   },
   deletePortlet(state,param){
@@ -84,13 +90,7 @@ const mutations = {
         }
      }
   },
-  addDedinedPortlets(state,param){
-    state.report.defineJSON.content.portlets=param;
-  },
-  layoutSelected(state,param){
-    state.layoutSelected = param;
-  },
-  addChartComponent(state,param){
+  saveTabs(state,param){
     for( let index in state.report.defineJSON.content.portlets){
       if(state.report.defineJSON.content.portlets[index].portletID == param[0].tabID){
         state.report.defineJSON.content.portlets[index].tabs = param;
