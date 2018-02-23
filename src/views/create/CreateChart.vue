@@ -22,7 +22,7 @@
          <FormItem v-if="colNameShow" label="" prop="colNames">
             <Tag type="border" color="blue" v-for= 'col in queryData.stringHeaders' :key="col">{{col}}</Tag>
         </FormItem>
-        <FormItem v-show="optionShow" label="Option:" prop="defineJSON">
+        <FormItem label="Option:" prop="defineJSON">
             <textarea id='chartOption'></textarea>
         </FormItem>
         <FormItem>
@@ -31,8 +31,7 @@
             <Button type="ghost" style="margin-left: 8px" @click="handleReset">Reset</Button>
         </FormItem> 
         <FormItem>
-          <div id="myChart" v-show="chartPreview && myChart.type != 'Table'"></div>
-          <table id='myTable' v-show="chartPreview && myChart.type == 'Table'" width="100%"></table>
+          <div id="myChart" v-show="chartPreview"></div>
         </FormItem>
     </Form>  
 </template>
@@ -84,31 +83,21 @@ export default {
     ...mapGetters({
       queryList:'queryList',
     }),
-    optionShow:function(){
-      if(this.myChart.type == 'Table'){
-        return false
-      }else{
-        return true
-      }
-    },
   },
   　watch:{
 　　　'myChart.bizViewId': 'getQueryData',
      'myChart.type':function(curType){
-       if (curType != 'Table'){
          /*this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate[curType])
                                             .replace(/},/g, "},\n").replace(/],/g, "],\n"));*/
         this.optionEditor.getDoc().setValue(ChartTemplate[curType]);
         $('#chartOption').val(ChartTemplate[curType]);
-       }
-       
      }
 　},
   mounted:function(){
     let Vue = this;
      Vue.initOptionEdit();
      window.addEventListener('resize', function () {
-                if(Vue.myChart.type != 'Table' && Vue.chartView != null){
+                if(Vue.chartView != null){
                   Vue.chartView.resize();
                 }
             });
@@ -124,8 +113,6 @@ export default {
         content: myTextarea.value,
         extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
     });
-    /*this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.Line)
-                                         .replace(/},/g, "},\n").replace(/],/g, "],\n"))*/
     this.optionEditor.getDoc().setValue(ChartTemplate.Line)
    },
    getQueryList:function(){
@@ -152,50 +139,8 @@ export default {
         let Vue = this;
         Vue.chartPreview=true;
         this.$nextTick(function(){
-          if(Vue.myChart.type == 'Table'){
-            Vue.drawTable();
-          } else {
             Vue.drawEChart();
-          }
         })    
-    },
-    drawTable(){
-      let Vue = this;
-      if(Vue.chartView != null){
-            Vue.chartView.dispose();
-            Vue.chartView = null;
-       } 
-       if(Vue.tableView != null){
-         Vue.tableView.destroy();
-         $('#myTable').empty();
-       }
-      var header = Vue.queryData.stringHeaders;
-      var cols = [];
-      for(let c in header){
-         cols.push({
-          "title":header[c]
-         })
-      };
-      var rows = [];
-      var rowData = Vue.queryData.data;
-       for(let i in rowData){
-          let row = [];
-          for (let j in rowData[i]){
-              row.push(rowData[i][j].displayValue);
-          }
-          rows.push(row);
-      };
-          Vue.tableView = $('#myTable').DataTable({
-          "destroy": true,
-          pageLength: 3,
-          searching:false,
-          lengthChange:false,
-          bInfo:false,
-          bSort:false,
-          columns: cols,
-          data:rows
-      });
-     
     },
     drawEChart(){
       let Vue = this;
@@ -213,12 +158,7 @@ export default {
     },
     saveChart:function(){
       let Vue = this;
-      //Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue().replace(/\n/g, "");
-      if(Vue.myChart.type == 'Table'){
-        Vue.myChart.defineJSON = null;
-      } else{
-        Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
-      }
+      Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
       Vue.$refs["myChart"].validate((valid) => {
                     if (valid) {
                          Vue.AxiosPost("createChart",

@@ -19,8 +19,7 @@
       @on-ok="previewOk"
       @on-cancel="cancel">
       <Condition :showOptions='showOptions'></Condition>
-      <div v-if="chartbox.type != 'Table'" class="previewChart" :id="'previewChart'+chartbox.id"></div>
-      <table :id="'previewTable'+index" v-if="chartbox.type == 'Table'"></table>
+      <div class="previewChart" :id="'previewChart'+chartbox.id"></div>
     </Modal>
   </Col>
 </template>
@@ -72,45 +71,7 @@ export default {
     },
     previewChart(){
       let Vue = this;
-      if (Vue.chartbox.type == 'Table'){
-        Vue.drawTable();
-      } else {
-        Vue.drawEChart();
-      }
-    },
-     drawTable(){
-      let Vue = this;
-      if(Vue.tableView != null){
-         Vue.tableView.destroy();
-         $('#previewTable'+Vue.index).empty(); 
-       }
-      var header = Vue.queryData.stringHeaders;
-      var cols = [];
-      for(let c in header){
-         cols.push({
-          "title":header[c]
-         })
-      };
-      var rows = [];
-      var rowData = Vue.queryData.data;
-       for(let i in rowData){
-          let row = [];
-          for (let j in rowData[i]){
-              row.push(rowData[i][j].displayValue);
-          }
-          rows.push(row);
-      };
-          Vue.tableView= $('#previewTable'+Vue.index).DataTable({
-          "destroy": true,
-          pageLength: 3,
-          searching:false,
-          lengthChange:false,
-          bInfo:false,
-          bSort:false,
-          columns: cols,
-          data:rows
-      });
-     
+      Vue.drawEChart();
     },
     drawEChart(){
       let Vue = this;
