@@ -2,7 +2,7 @@
      <div :id="'portlet'+portletID"class="text">
         <div class="no-drag">
           <div class='griditem-title'>
-            <div @click='deletePortlet(portletID)'><Icon class='delete-portlet'type="android-close" ></Icon></div>
+            <div @click='deletePortlet(portletID)'><Icon class='delete-portlet'type="android-close" v-if='ifShowDeleteIcon()'></Icon></div>
             {{griditemTitle}}
             <Dropdown style='float:right;margin-right:5px' @on-click='drawChart'>   
               <Icon type="arrow-down-b"></Icon>
@@ -25,7 +25,7 @@ import dataTables from 'dataTables/media/js/jquery.dataTables.min.js'
 import chartUtil from './../../libs/chartUtil.js'
 import EleResize from './../../libs/resize.js'
 export default {
-    props:['griditemTitle','portletID'],
+    props:['griditemTitle','portletID','ifDeletePortlet'],
     data(){
       return {
         chartInfo:null,
@@ -37,6 +37,14 @@ export default {
       }
     },
     methods:{
+      ifShowDeleteIcon(){
+        let Vue =this;
+        if(Vue.ifDeletePortlet == false){
+          return false;
+        }else{
+          return true;
+        }
+      },
       drawChart(chart){
         let Vue = this;
         Vue.chartID = chart.id;

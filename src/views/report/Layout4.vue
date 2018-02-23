@@ -3,7 +3,7 @@
       <div class="toolbar"><Button @click="addPortlet()">添加模块</Button></div>
       <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="draggable":is-resizable="resizable":vertical-compact="true":use-css-transforms="true">
         <grid-item v-for="(item,index) in report.defineJSON.content.portlets":x="item.x":y="item.y":w="item.w":h="item.h":i="item.i":key='item.i'drag-ignore-from=".no-drag"drag-allow-from=".vue-draggable-handle">
-           <GridItemContent :griditemTitle='item.name+item.i' :portletID="item.i"></GridItemContent>
+           <GridItemContent :griditemTitle='item.name+item.i' :portletID="item.i"  :ifDeletePortlet = 'true'></GridItemContent>
         </grid-item>
       </grid-layout>        
     </div>
