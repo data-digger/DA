@@ -84,6 +84,18 @@ export default {
     getChartData(params){
       return axios.post(urlConf.chart.getdata, params); 
     },
+    /*创建表格*/
+    createTable(params){
+      return axios.post(urlConf.table.new, params); 
+    },
+    /*预览表格数据*/
+    previewTable(params){
+      return axios.post(urlConf.table.preview, params); 
+    },
+    /*获取表格列表*/
+    getTableList(params){
+      return axios.post(urlConf.table.list, params); 
+    },
     /*创建报表*/
     createReport(params){
       return axios.post(urlConf.report.new, params); 

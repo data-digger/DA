@@ -13,16 +13,7 @@ import 'iview/dist/styles/iview.css';
 import "codemirror/lib/codemirror.css"
 import "@/assets/css/gridlayout.css"
 import util from './libs/util';
-/*import 'dataTables/media/css/jquery.dataTables.min.css'*/
-
-
-import 'vue-easytable/libs/themes-base/index.css'
-// 导入 table 组件 和分页组件
-import {VTable,VPagination} from 'vue-easytable'
-Vue.config.silent = true;
-// 将table组件注册到全局
-Vue.component(VTable.name, VTable)
-Vue.component(VPagination.name, VPagination)
+import 'dataTables/media/css/jquery.dataTables.min.css'
 Vue.use(iView);
 
 new Vue({

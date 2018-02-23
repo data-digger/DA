@@ -44,9 +44,9 @@
           </p>
        </div>
        <div class="row box">
-          <TableBox ></TableBox>
+          <TableBox v-for="(rp,index) in tableList" :key='tb.id' :tablebox='tb' :index='index'></TableBox>
           <!-- v-for="(rp,index) in tableList" :key='tb.id' :tablebox='tb' :index='index' -->
-          <Creator :routerpath='createtable'></Creator>
+          <Creator :routerpath='createtable' ></Creator>
        </div>
     </div>    
     <div class="row report">
@@ -133,6 +133,14 @@ export default {
           Vue.$store.dispatch('getChartBox',response);
         }
       );
+    },
+    getTableBox (){
+      let Vue = this;
+      Vue.AxiosPost("getTableList",'',
+        function(response){
+          Vue.$store.dispatch('getTableBox',response);
+        }
+      );      
     }
   },
   mounted (){
@@ -140,6 +148,7 @@ export default {
      this.getReportBox();
      this.getQueryBox();
      this.getChartBox();
+     this.getTableBox();
   }
 }
 </script>
@@ -186,8 +195,8 @@ export default {
   border-color: #45b6af;
 }
 .note.note-table{
-  background-color: #c5e3e1;
-  border-color: #45b6af;
+  background-color: #bbd5ef;
+  border-color: #569de7;
 }
 .note {
   margin: 0 0 20px 0;

@@ -9,7 +9,7 @@
         <FormItem label="描述" prop="desc">
             <Input v-model="bizView.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
         </FormItem>
-        <FormItem label="数据源" prop="driverType">
+        <FormItem label="数据源" prop="dataSourceId">
             <Select class="form-control" v-model='bizView.dataSourceId'>               
                 <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
             </Select>
@@ -18,8 +18,8 @@
             <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="createQuery()">Submit</Button>
-            <Button type="ghost" @click="handleReset()" style="margin-left: 8px">Reset</Button>
+            <Button type="primary" @click="createQuery('bizView')">Submit</Button>
+            <Button type="ghost" @click="handleReset('bizView')" style="margin-left: 8px">Reset</Button>
         </FormItem>
     </Form>
 </template>
@@ -52,7 +52,7 @@ export default {
             { required: true, message: 'alias cannot be empty', trigger: 'blur' }
         ],
         dataSourceId: [
-            { required: true, message: 'Please select the driverType', trigger: 'change' }
+            { required: true, message: 'Please select the dataSourceId', trigger: 'change' }
         ],
         defineJSON: [
             { required: true, message: 'sql define cannot be empty', trigger: 'blur' }
@@ -61,21 +61,25 @@ export default {
     }
   },
   methods:{
-    createQuery(){
-               let Vue = this;
-               Vue.bizView.defineJSON = Vue.sqlEditor.doc.getValue();
-               Vue.$refs["bizView"].validate((valid) => {
-                    if (valid) {
-                         Vue.AxiosPost("createQuery",
-                          Vue.bizView,
-                           function(){
-                              alert("新建成功！")
-                           });
-                    } else {
-                        Vue.$Message.error('Fail!');
-                    }
-                })
-            },   
+    createQuery(bizView){
+      let Vue = this;
+      Vue.bizView.defineJSON = Vue.sqlEditor.doc.getValue();
+      Vue.$refs[bizView].validate((valid) => {
+        if (valid) {
+             Vue.AxiosPost("createQuery",
+              Vue.bizView,
+               function(){
+                  alert("新建成功！")
+               });
+        } else {
+            Vue.$Message.error('Fail!');
+        }
+      })
+    },  
+    handleReset(bizView){
+      let Vue = this;
+      Vue.$refs[bizView].resetFields();
+    },     
     initSqlEdit(){
       var myTextarea = $("#defineJSON")[0];
       this.sqlEditor = CodeMirror.fromTextArea(myTextarea,{

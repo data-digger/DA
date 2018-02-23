@@ -7,6 +7,7 @@ const state = {
   reportList:null,
   chartList:null,
   queryList:null,
+  tablelist:null,
   report:{
     id:'',
     name:'',
@@ -28,6 +29,7 @@ const getters = {
   reportList: state=> state.reportList,
   chartList: state => state.chartList,
   queryList: state => state.queryList,
+  tablelist: state => state.tablelist,
   layoutSelected: state => state.layoutSelected,
   report: state => state.report,
 }
@@ -46,6 +48,9 @@ const actions = {
   getReportBox ({ commit, state }, param){   
     commit('getReportBox', param);  
   },
+  getTableBox ({ commit, state }, param){   
+    commit('getTableBox', param);  
+  },
 }
 
 // mutations
@@ -58,6 +63,9 @@ const mutations = {
   },
   getChartBox(state,param){
     state.chartList = param.data;
+  },
+  getTableBox(state,param){
+    state.tableList = param.data;
   },
   getReportBox(state,param){
     var paramData = param.data;
