@@ -24,6 +24,11 @@ window.urlConf = {
     getone: `${window.uri}/report/getone`,
     getdata: `${window.uri}/report/getdata`,
   },
+  table: {
+    list: `${window.uri}/table/list`,
+    new: `${window.uri}/table/new`,
+    preview:`${window.uri}/table/preview`
+  },
 }
 
 // axios 配置
@@ -48,19 +53,19 @@ export default {
      return axios.post(urlConf.datasource.new, params);  
    },
    /*获取数据源列表*/
-   getDatasourceList(params){
+    getDatasourceList(params){
    	 return axios.post(urlConf.datasource.list, params); 
    },
    /*创建查询器*/
-   createQuery(params){
+    createQuery(params){
    	 return axios.post(urlConf.bizview.new, params); 
    },
    /*获取查询器列表*/
-   getQueryList(params){
+    getQueryList(params){
    	 return axios.post(urlConf.bizview.list, params); 
     },
     /*预览查询器数据*/
-   previewBizView(params){
+    previewBizView(params){
      return axios.post(urlConf.bizview.preview, params); 
     },
     /*创建仪表*/

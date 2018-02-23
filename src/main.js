@@ -11,12 +11,18 @@ import App from './app.vue';
 import API from '@/libs/API.js';
 import 'iview/dist/styles/iview.css';
 import "codemirror/lib/codemirror.css"
-import 'dataTables/media/css/jquery.dataTables.min.css'
 import "@/assets/css/gridlayout.css"
-import InfoCard from "vue-info-card/dist/vue-info-card.js"
 import util from './libs/util';
+/*import 'dataTables/media/css/jquery.dataTables.min.css'*/
+
+
+import 'vue-easytable/libs/themes-base/index.css'
+// 导入 table 组件 和分页组件
+import {VTable,VPagination} from 'vue-easytable'
 Vue.config.silent = true;
-Vue.component('InfoCard',InfoCard);
+// 将table组件注册到全局
+Vue.component(VTable.name, VTable)
+Vue.component(VPagination.name, VPagination)
 Vue.use(iView);
 
 new Vue({

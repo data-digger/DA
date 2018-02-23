@@ -50,14 +50,16 @@ export default {
         if(Vue.chartView != null){
           Vue.chartView.dispose();
         }
+        Vue.chartID = chart.id;
         Vue.AxiosPost("getChartData",{'chartId':chart.id},
           function(response){
             if(chart.type == 'Table'){
               Vue.chartShow = false;
               Vue.drawTable(chart,response);
             }else{
-              Vue.drawChart(chart,response);
-            }
+              Vue.chartShow = true;
+              Vue.drawChart(chart,response); 
+            }              
             //存储tabs
             var tabs = [{"tabID":Vue.portletID,"title":Vue.griditemTitle,"objid":chart.id,"objtype":chart.type}];
             Vue.$store.commit("saveTabs",tabs); 
@@ -66,7 +68,6 @@ export default {
       },
       drawChart (chart,chartData) {
         let Vue = this;
-        Vue.chartID = chart.id;
         let eoption = eval("(" + chart.defineJSON + ")");
         //解析option
         chartUtil.analysis(eoption,chart.type,chartData.data);

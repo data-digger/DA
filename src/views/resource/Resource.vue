@@ -36,18 +36,31 @@
           <Creator :routerpath='createchart'></Creator>
        </div>
     </div>
-      <div class="row report">
-         <div class="note note-report">
-            <h4 class="block">报表</h4>
-            <p>
-               Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
-            </p>
-         </div>
-         <div class="row box">
-            <ReportBox v-for="(rp,index) in reportList" :key='rp.id' :reportbox='rp' :index='index'></ReportBox>
-            <Creator :routerpath='createreport'></Creator>
-         </div>
-      </div>
+    <div class="row table">
+       <div class="note note-table">
+          <h4 class="block">表格</h4>
+          <p>
+             Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
+          </p>
+       </div>
+       <div class="row box">
+          <TableBox ></TableBox>
+          <!-- v-for="(rp,index) in tableList" :key='tb.id' :tablebox='tb' :index='index' -->
+          <Creator :routerpath='createtable'></Creator>
+       </div>
+    </div>    
+    <div class="row report">
+       <div class="note note-report">
+          <h4 class="block">报表</h4>
+          <p>
+             Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
+          </p>
+       </div>
+       <div class="row box">
+          <ReportBox v-for="(rp,index) in reportList" :key='rp.id' :reportbox='rp' :index='index'></ReportBox>
+          <Creator :routerpath='createreport'></Creator>
+       </div>
+    </div>
 </div>
 </template>
 
@@ -57,6 +70,7 @@ import Creator from './../components/Creator'
 import ReportBox from './../components/ReportBox'
 import ChartBox from './../components/ChartBox'
 import QueryBox from './../components/QueryBox'
+import TableBox from './../components/TableBox'
 import {mapGetters} from 'vuex'
 export default {
   name: 'Resource',
@@ -66,6 +80,7 @@ export default {
       createchart:'/createChart',
       createquery:'/createquery',
       createreport:'/createreport',
+      createtable:'/createtable',
     }
   },
   components:{
@@ -74,6 +89,7 @@ export default {
     ReportBox,
     QueryBox,
     ChartBox,
+    TableBox
   },
   computed: {
     ...mapGetters({
@@ -81,6 +97,7 @@ export default {
       reportList:'reportList',
       chartList:'chartList',
       queryList:'queryList',
+      tableList:'tableList',
     })
   },
   methods:{
@@ -138,14 +155,15 @@ export default {
   width: 100%;
   margin:20px;
 }
-.datasource,.report,.chart,.query{
+.datasource,.report,.chart,.query,.table{
   border: 1px solid #f5f3f3;
   padding-right: 30px;
 }
 .note.note-datasource,
 .note.note-report,
 .note.note-chart,
-.note.note-query{
+.note.note-query,
+.note.note-table{
   color: #3c763d, 80%;
   margin-bottom: 0px;
   float: left;
@@ -164,6 +182,10 @@ export default {
   border-color: #dca7b0;
 }
 .note.note-query{
+  background-color: #c5e3e1;
+  border-color: #45b6af;
+}
+.note.note-table{
   background-color: #c5e3e1;
   border-color: #45b6af;
 }

@@ -64,7 +64,7 @@ export default {
           rows.push(row);
       };
       $('#table'+Vue.report.name+tableData.portletID).DataTable({
-        "destroy": true,
+        bDestroy: true,
         pageLength: 3,
         searching:false,
         lengthChange:false,
