@@ -4,7 +4,7 @@
           <div class='griditem-title'>
             <div @click='deletePortlet(portletID)'><Icon class='delete-portlet'type="android-close" v-if='ifShowDeleteIcon()'></Icon></div>
             {{griditemTitle}}
-            <Dropdown style='float:right;margin-right:5px' @on-click='drawChart'>   
+            <Dropdown style='float:right;margin-right:5px' @on-click='drawReport'>   
               <Icon type="arrow-down-b"></Icon>
               <DropdownMenu slot="list">
                   <DropdownItem v-for='chart in chartInfo':name="chart" :key='chart.id'>{{chart.name}}</DropdownItem>
@@ -45,56 +45,64 @@ export default {
           return true;
         }
       },
-      drawChart(chart){
+      drawReport(chart){
         let Vue = this;
-        Vue.chartID = chart.id;
         if(Vue.chartView != null){
           Vue.chartView.dispose();
         }
-        let eoption = eval("(" + chart.defineJSON + ")");
         Vue.AxiosPost("getChartData",{'chartId':chart.id},
           function(response){
             if(chart.type == 'Table'){
               Vue.chartShow = false;
-              var header = response.data.stringHeaders;
-              var cols = [];
-              for(let c in header){
-                 cols.push({
-                  "title":header[c]
-                 })
-              };
-              var rows = [];
-              var rowData = response.data.data;
-               for(let i in rowData){
-                  let row = [];
-                  for (let j in rowData[i]){
-                      row.push(rowData[i][j].displayValue);
-                  }
-                  rows.push(row);
-              };
-              $('#table-'+Vue.portletID).DataTable({
-                "destroy": true,
-                pageLength: 3,
-                searching:false,
-                lengthChange:false,
-                bInfo:false,
-                bSort:false,
-                columns: cols,
-                data:rows
-              });             
+              Vue.drawTable(chart,response);
             }else{
-              //解析option
-              chartUtil.analysis(eoption,chart.type,response.data);
-              // 基于准备好的dom，初始化echarts实例
-              Vue.chartView = echarts.init(document.getElementById("chart-"+Vue.chartID+Vue.portletID));
-              // 绘制图表
-              Vue.chartView.setOption(eoption);
+              Vue.drawChart(chart,response);
             }
-              //存储tabs
-              var tabs = [{"tabID":Vue.portletID,"title":Vue.griditemTitle,"objid":chart.id,"objtype":chart.type}];
-              Vue.$store.commit("saveTabs",tabs); 
+            //存储tabs
+            var tabs = [{"tabID":Vue.portletID,"title":Vue.griditemTitle,"objid":chart.id,"objtype":chart.type}];
+            Vue.$store.commit("saveTabs",tabs); 
           }
         );
+      },
+      drawChart (chart,chartData) {
+        let Vue = this;
+        Vue.chartID = chart.id;
+        let eoption = eval("(" + chart.defineJSON + ")");
+        //解析option
+        chartUtil.analysis(eoption,chart.type,chartData.data);
+        // 基于准备好的dom，初始化echarts实例
+        Vue.chartView = echarts.init(document.getElementById("chart-"+Vue.chartID+Vue.portletID));
+        // 绘制图表
+        Vue.chartView.setOption(eoption);
+      },
+      drawTable(chart,tableData){
+        let Vue = this;
+        var header = tableData.data.stringHeaders;
+        var cols = [];
+        for(let c in header){
+           cols.push({
+            "title":header[c]
+           })
+        };
+        var rows = [];
+        var rowData = tableData.data.data;
+         for(let i in rowData){
+            let row = [];
+            for (let j in rowData[i]){
+                row.push(rowData[i][j].displayValue);
+            }
+            rows.push(row);
+        };
+        $('#table-'+Vue.portletID).DataTable({
+          "destroy": true,
+          pageLength: 3,
+          searching:false,
+          lengthChange:false,
+          bInfo:false,
+          bSort:false,
+          columns: cols,
+          data:rows
+        }); 
       },
       getChartList(){
         let Vue = this;
