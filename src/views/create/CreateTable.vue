@@ -12,6 +12,9 @@
         <FormItem label="表描述" prop="desc">
             <Input v-model="table.desc" placeholder="表描述"></Input>
         </FormItem>
+        <FormItem label="bizViewId" prop="bizViewId">
+            <Input v-model="table.bizViewId" placeholder=""></Input>
+        </FormItem>
         <FormItem>
             <Button type="primary" @click="createTable('table')">Submit</Button>
             <Button type="ghost" @click="handleReset('table')" style="margin-left: 8px">Reset</Button>
@@ -35,6 +38,7 @@ export default {
         name:'',
         alias:'',
         desc:'',
+        bizViewId:''
       },
       ruleValidate:{
         name: [

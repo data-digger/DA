@@ -18,19 +18,13 @@
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <!-- <table :id="'previewTable'+index"></table> -->
-      <v-table
-       :width="500"
-       :columns="columns"
-       :table-data="tableData"
-       :show-vertical-border="false"
-      ></v-table>
+      <table :id="'previewTable'+index"></table>
     </Modal>
   </Col>
 </template>
 
 <script>
-/*import dataTables from 'dataTables/media/js/jquery.dataTables.min.js'*/
+import dataTables from 'dataTables/media/js/jquery.dataTables.min.js'
 import QueryForm from './../components/QueryForm'
 export default {
   name: 'query',

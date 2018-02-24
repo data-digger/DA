@@ -38,6 +38,12 @@ export default {
         },500)
      })     
     },
+    editOk(){
+      
+    },
+    cancel(){
+      
+    },
   }
 }
 </script>
