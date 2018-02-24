@@ -9,10 +9,10 @@ import {appRouter} from './router/router';
 import store from './store';
 import App from './app.vue';
 import API from '@/libs/API.js';
+import util from './libs/util';
 import 'iview/dist/styles/iview.css';
 import "codemirror/lib/codemirror.css"
 import "@/assets/css/gridlayout.css"
-import util from './libs/util';
 import 'dataTables/media/css/jquery.dataTables.min.css'
 Vue.use(iView);
 
