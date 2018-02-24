@@ -11,8 +11,8 @@
                 :before-push="beforePush"
                 :open-names="openedSubmenuArr"
                 :menu-list="menuList">
-                <div slot="top" class="logo-con">
-                    <h class='logo-title'>DataAnalysis</h>
+                <div slot="top" class="logo-con ">
+                    <div class='logo-title'>DataAnalysis</div>
                 </div>
             </shrinkable-menu>
         </div>
@@ -31,7 +31,6 @@
                 <div class="header-avator-con">
                     <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
                     <lock-screen></lock-screen>
-                    <theme-switch></theme-switch>
                     <div class="user-dropdown-menu-con">
                         <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
                             <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
