@@ -8,7 +8,7 @@
         </FormItem>
         <FormItem label="类型" prop="type">
            <Select class="form-control" v-model='myChart.type'>               
-                <Option v-for = 't in type' :key='t' :value="t" >{{t}}</option>
+                <Option v-for = 't in type' :key='t' :value="t" >{{t}}</Option>
            </Select>
         </FormItem>
         <FormItem label="描述" prop="desc">
