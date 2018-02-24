@@ -1,8 +1,5 @@
 <template>
   <Form id="createTable" ref="table" :model="table" :rules="ruleValidate" :label-width="80">
-        <FormItem label="表格ID" prop="id">
-            <Input v-model="table.id" placeholder="表格ID"></Input>
-        </FormItem>
         <FormItem label="表名称" prop="name">
             <Input v-model="table.name" placeholder="表名称"></Input>
         </FormItem>
@@ -11,6 +8,11 @@
         </FormItem>
         <FormItem label="表描述" prop="desc">
             <Input v-model="table.desc" placeholder="表描述"></Input>
+        </FormItem>
+        <FormItem label="查询器" prop="bizViewId">
+            <Select class="form-control" v-model='table.bizViewId'>               
+                <Option v-for = 'q in queryList' :key='q.id' :name='q.name' :value="q.id" >{{q.name}}</option>
+            </Select>
         </FormItem>
         <FormItem>
             <Button type="primary" @click="createTable('table')">Submit</Button>
@@ -32,9 +34,11 @@ export default {
     return {
       table: {
         id:'',
+        bizViewId:'',
         name:'',
         alias:'',
         desc:'',
+
       },
       ruleValidate:{
         name: [
@@ -43,11 +47,16 @@ export default {
         alias: [
             { required: true, message: 'alias cannot be empty', trigger: 'blur' }
         ],
-        id: [
-            { required: true, message: 'id cannot be empty', trigger: 'blur' }
-        ]
+        bizViewId: [
+            { required: true, message: 'Please select the bizView', trigger: 'change' }
+        ],
       }
     }
+  },
+  computed: {
+    ...mapGetters({
+      queryList:'queryList',
+    }),
   },
   methods:{
     createTable(table){

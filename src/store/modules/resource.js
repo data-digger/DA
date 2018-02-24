@@ -7,7 +7,7 @@ const state = {
   reportList:null,
   chartList:null,
   queryList:null,
-  tablelist:null,
+  tableList:null,
   report:{
     id:'',
     name:'',
@@ -29,7 +29,7 @@ const getters = {
   reportList: state=> state.reportList,
   chartList: state => state.chartList,
   queryList: state => state.queryList,
-  tablelist: state => state.tablelist,
+  tableList: state => state.tableList,
   layoutSelected: state => state.layoutSelected,
   report: state => state.report,
 }

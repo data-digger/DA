@@ -18,13 +18,13 @@
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <!-- <table :id="'previewTable'+index"></table> -->
-      <v-table
+      <table :id="'previewTable'+index"></table>
+      <!-- <v-table
        :width="500"
        :columns="columns"
        :table-data="tableData"
        :show-vertical-border="false"
-      ></v-table>
+      ></v-table> -->
     </Modal>
   </Col>
 </template>

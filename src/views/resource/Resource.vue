@@ -44,7 +44,7 @@
           </p>
        </div>
        <div class="row box">
-          <TableBox v-for="(rp,index) in tableList" :key='tb.id' :tablebox='tb' :index='index'></TableBox>
+          <TableBox v-for="(tb,index) in tableList" :key='tb.id' :tablebox='tb' :index='index'></TableBox>
           <!-- v-for="(rp,index) in tableList" :key='tb.id' :tablebox='tb' :index='index' -->
           <Creator :routerpath='createtable' ></Creator>
        </div>
