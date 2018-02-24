@@ -19,15 +19,12 @@
       @on-ok="previewOk"
       @on-cancel="cancel">
       <table :id="'previewTable'+index"></table>
-<<<<<<< HEAD
-=======
       <!-- <v-table
        :width="500"
        :columns="columns"
        :table-data="tableData"
        :show-vertical-border="false"
       ></v-table> -->
->>>>>>> a94b22969d753e6fc80b2655bb6268a2aef2c841
     </Modal>
   </Col>
 </template>

@@ -1,16 +1,18 @@
 <template>
   <Form id="createTable" ref="table" :model="table" :rules="ruleValidate" :label-width="80">
-        <FormItem label="表名称" prop="name">
+        <FormItem label="名称" prop="name">
             <Input v-model="table.name" placeholder="表名称"></Input>
         </FormItem>
-        <FormItem label="表别名" prop="alias">
+        <FormItem label="别名" prop="alias">
             <Input v-model="table.alias" placeholder="表别名"></Input>
         </FormItem>
-        <FormItem label="表描述" prop="desc">
+        <FormItem label="描述" prop="desc">
             <Input v-model="table.desc" placeholder="表描述"></Input>
         </FormItem>
-        <FormItem label="bizViewId" prop="bizViewId">
-            <Input v-model="table.bizViewId" placeholder=""></Input>
+        <FormItem label="查询器" prop="bizViewId">
+            <Select class="form-control" v-model='table.bizViewId'>               
+                <Option v-for = 'q in queryList' :key='q.id' :name='q.name' :value="q.id" >{{q.name}}</option>
+            </Select>
         </FormItem>
         <FormItem>
             <Button type="primary" @click="createTable('table')">Submit</Button>
@@ -63,7 +65,7 @@ export default {
              Vue.AxiosPost("createTable",
               Vue.table,
                function(){
-                  alert("新建成功！")
+                  Vue.$Message.success('Success!');
                });
         } else {
             Vue.$Message.error('Fail!');
