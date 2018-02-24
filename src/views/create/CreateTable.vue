@@ -11,22 +11,17 @@
         </FormItem>
         <FormItem label="查询器" prop="bizViewId">
             <Select class="form-control" v-model='table.bizViewId'>               
-                <Option v-for = 'q in queryList' :key='q.id' :name='q.name' :value="q.id" >{{q.name}}</option>
+                <Option v-for = 'q in queryList' :key='q.id' :name='q.name' :value="q.id" >{{q.name}}</Option>
             </Select>
         </FormItem>
         <FormItem>
             <Button type="primary" @click="createTable('table')">Submit</Button>
             <Button type="ghost" @click="handleReset('table')" style="margin-left: 8px">Reset</Button>
-        </FormItem>
-     <!--    <FormItem label="表" prop="id">
-            <Input v-model="table.id" placeholder="输入名称"></Input>
-        </FormItem>  -->     
+        </FormItem>     
     </Form>
 </template>
 
 <script>
-import CodeMirror from "codemirror/lib/codemirror.js"
-import "codemirror/mode/sql/sql.js"
 import {mapGetters} from 'vuex'
 export default {
   name:"createQuery",
