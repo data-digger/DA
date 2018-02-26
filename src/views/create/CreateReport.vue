@@ -52,7 +52,7 @@ export default {
                 dots:"none",
                 arrow:"never",
             },
-            layouts:[]
+            layouts:Layout1
         }
     },
     methods:{
@@ -63,7 +63,7 @@ export default {
             this.$refs.initBaseInfo.initBaseInfo();
           }
           if(this.value == 2){//根据选择的布局
-            this.layouts =[];
+            //this.layouts =[];
             if(this.layoutSelected == "布局1"){ this.layouts=Layout1};
             if(this.layoutSelected == "布局2"){ this.layouts=Layout2};
             if(this.layoutSelected == "布局3"){ this.layouts=Layout3};

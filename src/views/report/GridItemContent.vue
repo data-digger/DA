@@ -7,12 +7,12 @@
            <Dropdown style='float:right;margin-right:5px' @on-click='drawReport'>   
             <Icon type="arrow-down-b"></Icon>
             <DropdownMenu slot="list">
-                <DropdownItem v-for='chart in chartInfo' :name="chart" :key='chart.id'>{{chart.name}}</DropdownItem>
+                <DropdownItem v-for='(chart,index) in chartInfo' :name='index' :key='chart.id'>{{chart.name}}</DropdownItem>
             </DropdownMenu>
           </Dropdown> - 
         </div>
         <div :id="'chart-'+chartID+portletID" style='height:85%' v-show = 'chartShow'></div>
-        <table :id="'table-'+portletID" style='width:85%' v-show = '!chartShow'></table>
+        <table :id="'table-'+portletID" style='width:85%;height:85%' v-show = '!chartShow'></table>
       </div>
       <div class="vue-draggable-handle"></div> 
     </div>
@@ -45,11 +45,12 @@ export default {
           return true;
         }
       },
-      drawReport(chart){
+      drawReport(chartindex){
         let Vue = this;
         if(Vue.chartView != null){
           Vue.chartView.dispose();
         }
+        let chart = Vue.chartInfo[chartindex];
         Vue.chartID = chart.id;
         Vue.AxiosPost("previewBizView",{'bizViewId':chart.bizViewId},
           function(response){
@@ -61,7 +62,7 @@ export default {
               Vue.drawTable(chart,response);
             }              
             //存储tabs
-            var tabs = [{"tabID":Vue.portletID,"title":Vue.griditemTitle,"objid":chart.id,"objtype":chart.type}];
+            var tabs = [{"tabID":Vue.portletID,"title":Vue.griditemTitle,"objid":chart.id,"objtype":chart.type?chart.type:'Table'}];
             Vue.$store.commit("saveTabs",tabs); 
           }
         );
