@@ -61,7 +61,7 @@ export default {
               Vue.drawTable(chart,response);
             }              
             //存储tabs
-            var tabs = [{"tabID":Vue.portletID,"title":Vue.griditemTitle,"objid":chart.id,"objtype":chart.type}];
+            var tabs = [{"tabID":Vue.portletID,"title":Vue.griditemTitle,"objid":chart.id,"objtype":chart.type?chart.type:'Table'}];
             Vue.$store.commit("saveTabs",tabs); 
           }
         );
