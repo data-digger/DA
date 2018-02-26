@@ -34,14 +34,13 @@ export default {
       Vue.AxiosPost("getReportData",{'reportID':Vue.report.id},
       function(response){
          var portlets = JSON.parse(response.data.defineJSON).content.portlets;
-         var chartData = response.data.data;     
+         var chartData = response.data.chartData;
+         var tableData = response.data.tableData;   
          for (var i in chartData){
-            if(chartData[i].type == 'Table'){
-              Vue.drawTable(chartData[i]);               
-            }else{
-              Vue.drawChart(chartData[i]);                
-            }
-
+            Vue.drawChart(chartData[i]);                
+         }
+         for(var j in tableData){
+            Vue.drawTable(tableData[j]); 
          }         
       })         
      },
@@ -58,7 +57,7 @@ export default {
       var rowData = tableData.gridData.data;
        for(let i in rowData){
           let row = [];
-          for (let j in rowData){
+          for (let j in rowData[i]){
               row.push(rowData[i][j].displayValue);
           }
           rows.push(row);

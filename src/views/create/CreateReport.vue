@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Carousel v-model="value" :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
+    <Carousel  v-model="value" :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
         <CarouselItem>
             <div class="demo-carousel"><BaseInfo ref='initBaseInfo'></BaseInfo>
             </div>
@@ -20,6 +20,7 @@
     </Row> 
  </div>
 </template>
+
 <script>
 import SelectLayout from "./../report/SelectLayout"
 import BaseInfo from "./../report/BaseInfo"
