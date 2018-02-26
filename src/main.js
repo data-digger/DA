@@ -11,10 +11,9 @@ import App from './app.vue';
 import API from '@/libs/API.js';
 import util from './libs/util';
 import 'iview/dist/styles/iview.css';
-import "codemirror/lib/codemirror.css"
-import "@/assets/css/gridlayout.css"
-import 'dataTables/media/css/jquery.dataTables.min.css'
-
+import "codemirror/lib/codemirror.css";
+import "@/assets/css/gridlayout.css";
+import 'dataTables/media/css/jquery.dataTables.min.css';
 Vue.use(iView);
 
 new Vue({

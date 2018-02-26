@@ -18,7 +18,7 @@
     "datatables": "^1.10.13",
     "echarts": "^4.0.2",
     "element-ui": "^2.0.10",
-    "iview": "^2.8.0",
+    "iview": "^2.9.2",
     "js-cookie": "^2.2.0",
     "less-loader": "^4.0.5",
     "toastr": "^2.1.4",

@@ -55,7 +55,7 @@ export const otherRouter = {
         { path: 'createChart',title: '新建图表', name: 'createChart', component: () => import('@/views/create/CreateChart.vue')},
         { path: 'createQuery', title: '新建查询器', name: 'createQuery', component: () => import('@/views/create/createQuery.vue')},
         { path: 'createReport',title: '新建报表', name: 'createReport',component: () => import('@/views/create/CreateReport.vue')},
-        { path: 'createTable',title: '新建表格', name: 'createTable',component: () => import('@/views/create/createTable.vue')},       
+        { path: 'createTable',title: '新建表格', name: 'createTable',component: () => import('@/views/create/CreateTable.vue')},       
        /* { path: ''}*/
     ]
 };
