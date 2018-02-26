@@ -7,7 +7,7 @@
            <button @click='manage()'>管理</button></p>
     </Card>
     <Modal
-      v-model="datasourcedit"
+      v-model="modaledit"
       :title='"编辑"+datasource.name'
       @on-ok="editOk"
       @on-cancel="cancel"
@@ -15,7 +15,7 @@
       <DatasourceForm ref="datasourcedit" :datasource='datasource'></DatasourceForm>
     </Modal>
      <Modal
-      v-model="datasourcemng"
+      v-model="modalmng"
       :title='"管理"+datasource.name'
       @on-ok="editOk"
       @on-cancel="cancel"
@@ -37,16 +37,16 @@ export default {
   },
   data(){
     return {
-      datasourcedit:false,
-      datasourcemng:false,
+      modaledit:false,
+      modalmng:false,
     }
   },
   methods:{
     edit (){
-      this.datasourcedit =true;
+      this.modaledit =true;
     },
     manage (){
-      this.datasourcemng = true;
+      this.modalmng = true;
     },
     editOk (){
       this.$refs.datasourcedit.createDatasource()

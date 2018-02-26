@@ -1,20 +1,20 @@
 <template>
-     <div :id="'portlet'+portletID"class="text">
+    <div :id="'portlet'+portletID"class="text">
         <div class="no-drag">
-          <div class='griditem-title'>
-            <div @click='deletePortlet(portletID)'><Icon class='delete-portlet'type="android-close" v-if='ifShowDeleteIcon()'></Icon></div>
-            {{griditemTitle}}
-            <Dropdown style='float:right;margin-right:5px' @on-click='drawReport'>   
-              <Icon type="arrow-down-b"></Icon>
-              <DropdownMenu slot="list">
-                  <DropdownItem v-for='chart in chartInfo':name="chart" :key='chart.id'>{{chart.name}}</DropdownItem>
-              </DropdownMenu>
-            </Dropdown> 
-          </div>
-          <div :id="'chart-'+chartID+portletID" style='height:85%' v-show = 'chartShow'></div>
-          <table :id="'table-'+portletID" style='width:85%' v-show = '!chartShow'></table>
+        <div class='griditem-title'>
+          <div @click='deletePortlet(portletID)'><Icon class='delete-portlet'type="android-close" v-if='isShowDeleteIcon()'></Icon></div>
+          {{griditemTitle}}
+           <Dropdown style='float:right;margin-right:5px' @on-click='drawReport'>   
+            <Icon type="arrow-down-b"></Icon>
+            <DropdownMenu slot="list">
+                <DropdownItem v-for='chart in chartInfo' :name="chart" :key='chart.id'>{{chart.name}}</DropdownItem>
+            </DropdownMenu>
+          </Dropdown> - 
         </div>
-        <div class="vue-draggable-handle"></div> 
+        <div :id="'chart-'+chartID+portletID" style='height:85%' v-show = 'chartShow'></div>
+        <table :id="'table-'+portletID" style='width:85%' v-show = '!chartShow'></table>
+      </div>
+      <div class="vue-draggable-handle"></div> 
     </div>
 </template>
 
@@ -28,7 +28,7 @@ export default {
     props:['griditemTitle','portletID','ifDeletePortlet'],
     data(){
       return {
-        chartInfo:null,
+        chartInfo:[],
         chartView:null,
         tableView:null,
         chartShow:true,
@@ -37,7 +37,7 @@ export default {
       }
     },
     methods:{
-      ifShowDeleteIcon(){
+      isShowDeleteIcon(){
         let Vue =this;
         if(Vue.ifDeletePortlet == false){
           return false;
@@ -51,14 +51,14 @@ export default {
           Vue.chartView.dispose();
         }
         Vue.chartID = chart.id;
-        Vue.AxiosPost("getChartData",{'chartId':chart.id},
+        Vue.AxiosPost("previewBizView",{'bizViewId':chart.bizViewId},
           function(response){
-            if(chart.type == 'Table'){
-              Vue.chartShow = false;
-              Vue.drawTable(chart,response);
-            }else{
+            if(chart.type){
               Vue.chartShow = true;
               Vue.drawChart(chart,response); 
+            }else{
+              Vue.chartShow = false;
+              Vue.drawTable(chart,response);
             }              
             //存储tabs
             var tabs = [{"tabID":Vue.portletID,"title":Vue.griditemTitle,"objid":chart.id,"objtype":chart.type}];
@@ -109,9 +109,17 @@ export default {
         let Vue = this;
         Vue.AxiosPost("getChartList",'',
           function(response){
-             Vue.chartInfo = response.data;
+            Vue.chartInfo = response.data;
+            Vue.getTableList();
           }
-        ); 
+        );   
+      },
+      getTableList(){
+        let Vue = this;
+        Vue.AxiosPost("getTableList",'',
+          function(response){
+            Vue.chartInfo = Vue.chartInfo.concat(response.data);
+        });
       },
       resized(){
         let Vue = this;

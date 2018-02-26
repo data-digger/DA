@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Carousel v-model="value" :height='setting.height' :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
+    <Carousel v-model="value" :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
         <CarouselItem>
             <div class="demo-carousel"><BaseInfo ref='initBaseInfo'></BaseInfo>
             </div>
@@ -28,75 +28,76 @@ import Layout2 from "./../report/Layout2"
 import Layout3 from "./../report/Layout3"
 import Layout4 from "./../report/Layout4"
 import {mapGetters} from 'vuex'
-    export default {
-        components:{
-          SelectLayout,
-          BaseInfo,
-          Layout1,
-          Layout2,
-          Layout3,
-          Layout4
-        },
-        computed: {
-          ...mapGetters({
-            layoutSelected:'layoutSelected',
-            report:'report'
-          })
-        },
-        data () {
-            return {
-                finished:false,
-                value: 0,
-                setting: {
-                    dots:"none",
-                    arrow:"none",
-                },
-                layouts:[]
-            }
-        },
-        methods:{
-          next() {
-            if(this.value <3){
-              this.$refs.slide.arrowEvent(1);
-              if(this.value == 1){
-                this.$refs.initBaseInfo.initBaseInfo();
-              }
-              if(this.value == 2){//根据选择的布局
-                this.layouts =[];
-                if(this.layoutSelected == "布局1"){ this.layouts=Layout1};
-                if(this.layoutSelected == "布局2"){ this.layouts=Layout2};
-                if(this.layoutSelected == "布局3"){ this.layouts=Layout3};
-                if(this.layoutSelected == "自定义"){ this.layouts=Layout4};
-                this.finished = true;
-              }         
-            }
-
-          },
-          pre() {
-            if(this.value !=0){
-              this.$refs.slide.arrowEvent(-1);
-              this.finished = false;
-            }
-          },
-          save() {
-               this.createReport();
-          },
-          createReport(){
-               let Vue = this;
-               var ClonedReport = JSON.parse(JSON.stringify(Vue.report));
-               var defineJSON = JSON.stringify(ClonedReport.defineJSON);
-               ClonedReport.defineJSON = defineJSON;
-               Vue.AxiosPost("createReport",
-                 ClonedReport,
-                 function(){
-                    Vue.$Message.success('新建成功!');
-                 });
-            }
-        },
-        mounted(){
-           
+export default {
+    components:{
+      SelectLayout,
+      BaseInfo,
+      Layout1,
+      Layout2,
+      Layout3,
+      Layout4
+    },
+    computed: {
+      ...mapGetters({
+        layoutSelected:'layoutSelected',
+        report:'report'
+      })
+    },
+    data () {
+        return {
+            finished:false,
+            value: 0,
+            setting: {
+                height:"200",
+                dots:"none",
+                arrow:"never",
+            },
+            layouts:[]
         }
+    },
+    methods:{
+      next() {
+        if(this.value <3){
+          this.$refs.slide.arrowEvent(1);
+          if(this.value == 1){
+            this.$refs.initBaseInfo.initBaseInfo();
+          }
+          if(this.value == 2){//根据选择的布局
+            this.layouts =[];
+            if(this.layoutSelected == "布局1"){ this.layouts=Layout1};
+            if(this.layoutSelected == "布局2"){ this.layouts=Layout2};
+            if(this.layoutSelected == "布局3"){ this.layouts=Layout3};
+            if(this.layoutSelected == "自定义"){ this.layouts=Layout4};
+            this.finished = true;
+          }         
+        }
+
+      },
+      pre() {
+        if(this.value !=0){
+          this.$refs.slide.arrowEvent(-1);
+          this.finished = false;
+        }
+      },
+      save() {
+           this.createReport();
+      },
+      createReport(){
+           let Vue = this;
+           var ClonedReport = JSON.parse(JSON.stringify(Vue.report));
+           var defineJSON = JSON.stringify(ClonedReport.defineJSON);
+           ClonedReport.defineJSON = defineJSON;
+           Vue.AxiosPost("createReport",
+             ClonedReport,
+             function(){
+                Vue.$Message.success('新建成功!');
+             });
+        }
+    },
+    mounted(){
+       
     }
+}
 </script>
 <style scope>
   .button {

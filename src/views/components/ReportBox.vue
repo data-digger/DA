@@ -6,7 +6,7 @@
         <button @click='preview()'>预览</button></p> 
     </Card>
     <Modal
-      v-model="reportPreview"
+      v-model="modalPreview"
       :title="reportbox.name"
       width ="900px"
       ok-text = '导出'
@@ -25,13 +25,13 @@ export default {
   },
   data(){
     return {
-      reportPreview:false,
+      modalPreview:false,
     }
   }, 
   methods:{
     preview(){
       var self = this;
-      self.reportPreview = true;
+      self.modalPreview = true;
       self.$nextTick(function(){
         setTimeout(function(){
           self.$refs.reportForm.initReport();

@@ -18,16 +18,16 @@ window.urlConf = {
     getone:`${window.uri}/chart/getone`,
     getdata:`${window.uri}/chart/getdata`,
   },
+  table: {
+    list: `${window.uri}/table/list`,
+    new: `${window.uri}/table/new`,
+    preview:`${window.uri}/table/preview`
+  },
   report: {
     list:`${window.uri}/report/list`,
     new: `${window.uri}/report/new`,
     getone: `${window.uri}/report/getone`,
     getdata: `${window.uri}/report/getdata`,
-  },
-  table: {
-    list: `${window.uri}/table/list`,
-    new: `${window.uri}/table/new`,
-    preview:`${window.uri}/table/preview`
   },
 }
 

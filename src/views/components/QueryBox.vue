@@ -18,7 +18,7 @@
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <table :id="'previewTable'+index"></table>
+      <table :id="querybox.name"></table>
     </Modal>
   </Col>
 </template>
@@ -75,7 +75,7 @@ export default {
           }
           rows.push(row);
       };
-      Vue.previewTable = $('#previewTable'+this.index).DataTable({
+      Vue.previewTable = $('#'+Vue.querybox.name).DataTable({
         "destroy": true,
         pageLength: 3,
         searching:false,
