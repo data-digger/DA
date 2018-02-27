@@ -4,7 +4,7 @@
             <grid-item v-for="item in report.defineJSON.content.portlets":x="item.x":y="item.y":w="item.w":h="item.h":i="item.i":key='item.i'>
               <div class='griditem-title'>{{item.name+item.i}}</div>
               <div :id="'chart'+report.id+item.i" style='height:90%;' v-show='chartShow && item.tabs[0].objtype != "Table"'></div>
-              <table :id="'table'+report.name+item.i" style='width:85%;' v-show='tableShow && item.tabs[0].objtype == "Table"'></table>               
+              <table :id="'table'+report.name+item.i" style='width:85%;' v-show='tableShow && item.tabs[0].objtype == "Table"'class="table table-striped table-bordered" cellspacing="0" width="90%" font-size='12px'></table>               
             </grid-item>
          </grid-layout>
     </div>    
@@ -12,7 +12,7 @@
 <script>
 import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
 import echarts from 'echarts'
-import dataTables from 'dataTables/media/js/jquery.dataTables.min.js'
+import dataTables from 'dataTables.net-bs/js/dataTables.bootstrap.js';
 import chartUtil from './../../libs/chartUtil.js'
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;

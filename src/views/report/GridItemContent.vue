@@ -2,51 +2,94 @@
     <div :id="'portlet'+portletID"class="text">
         <div class="no-drag">
         <div class='griditem-title'>
-          <div @click='deletePortlet(portletID)'><Icon class='delete-portlet'type="android-close" v-if='isShowDeleteIcon()'></Icon></div>
+          <div @click='deletePortlet(portletID)'><Icon class='delete-portlet'type="android-close" v-if='isShowExtraIcon()'></Icon></div>
           {{griditemTitle}}
-           <Dropdown style='float:right;margin-right:5px' @on-click='drawReport'>   
-            <Icon type="arrow-down-b"></Icon>
-            <DropdownMenu slot="list">
-                <DropdownItem v-for='(chart,index) in chartInfo' :name='index' :key='chart.id'>{{chart.name}}</DropdownItem>
-            </DropdownMenu>
-          </Dropdown> - 
+          <div style='float:right;margin-right:5px;cursor:pointer' @click = "selectReportChart()"><Icon type="plus-round"></Icon></div>
         </div>
+        <Modal
+          v-model="modalSelectChart"
+          title="选择图表"
+          width ="1200px"
+          @on-ok="drawReport"
+          @on-cancel="cancel">
+            <Tabs type="card" v-model='currentTab'>
+                <TabPane label="选择图形" name='chart'>
+                  <RadioGroup v-model="chartSelected" type='button'>
+                    <Radio v-for='(chart,chartIndex) in chartList' :key='chart.id' :label='chartIndex'>
+                      <Card style="width:250px;margin:10px;display:inline-block;" >
+                          <p slot="title">{{chart.name}}</p>
+                          <p>{{chart.desc}}</p>      
+                      </Card> 
+                    </Radio>
+                  </RadioGroup>
+                </TabPane>
+                <TabPane label="选择表格" name='table'>
+                  <RadioGroup v-model="tableSelected"type='button'>
+                    <Radio v-for='(table,tableIndex) in tableList' :key='table.id' :label='tableIndex'>
+                      <Card style="width:250px;margin:10px;display:inline-block;">
+                       <p slot="title">{{table.name}}</p>
+                        <p>{{table.desc}}</p>      
+                      </Card>
+                    </Radio>
+                  </RadioGroup>
+                </TabPane>
+            </Tabs>                   
+        </Modal>         
         <div :id="'chart-'+chartID+portletID" style='height:85%' v-if = 'chartShow'></div>
-        <table :id="'table-'+portletID" style='width:85%;height:85%' v-if = '!chartShow'></table>
+        <table :id="'table-'+portletID" class="table table-striped table-bordered" cellspacing="0" width="90%" v-if = '!chartShow'></table>
       </div>
-      <div class="vue-draggable-handle"></div> 
+      <div class="vue-draggable-handle" v-if='isShowExtraIcon()'></div> 
     </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
 import echarts from 'echarts'
-import dataTables from 'dataTables/media/js/jquery.dataTables.min.js'
+import dataTables from 'dataTables.net-bs/js/dataTables.bootstrap.js';
 import chartUtil from './../../libs/chartUtil.js'
 import EleResize from './../../libs/resize.js'
+import {mapGetters} from 'vuex'
 export default {
-    props:['griditemTitle','portletID','ifDeletePortlet'],
+    props:['griditemTitle','portletID','hasExtraIcon'],
+    computed: {
+      ...mapGetters({
+        chartList:'chartList',
+        tableList:'tableList'
+      }),
+    },    
     data(){
       return {
-        chartInfo:[],
         chartView:null,
         tableView:null,
         chartShow:true,
-        chartID:null
+        modalSelectChart:false,
+        chartID:null,
+        currentTab:"chart",
+        chartSelected:0,
+        tableSelected:0
       }
     },
     methods:{
-      isShowDeleteIcon(){
+      isShowExtraIcon(){
         let Vue =this;
-        if(Vue.ifDeletePortlet == false){
+        if(Vue.hasExtraIcon == false){
           return false;
         }else{
           return true;
         }
       },
-      drawReport(chartindex){
+      selectReportChart(){
         let Vue = this;
-        let chart = Vue.chartInfo[chartindex];
+        Vue.modalSelectChart = true;
+      },
+      drawReport(){
+        let Vue = this;
+        let chart;
+        if(Vue.currentTab == "chart"){
+          chart = Vue.chartList[Vue.chartSelected];
+        }
+        if(Vue.currentTab == "table"){
+          chart = Vue.tableList[Vue.tableSelected];
+        }
         Vue.chartID = chart.id;
         if(Vue.chartView != null){
           Vue.chartView.dispose();
@@ -54,7 +97,7 @@ export default {
         if(Vue.tableView != null){
           Vue.tableView.destroy();
           $('#table-'+Vue.portletID).empty();
-        }      
+        }     
         Vue.AxiosPost("previewBizView",{'bizViewId':chart.bizViewId},
           function(response){
             if(chart.type){
@@ -113,22 +156,6 @@ export default {
           data:rows
         }); 
       },
-      getChartList(){
-        let Vue = this;
-        Vue.AxiosPost("getChartList",'',
-          function(response){
-            Vue.chartInfo = response.data;
-            Vue.getTableList();
-          }
-        );   
-      },
-      getTableList(){
-        let Vue = this;
-        Vue.AxiosPost("getTableList",'',
-          function(response){
-            Vue.chartInfo = Vue.chartInfo.concat(response.data);
-        });
-      },
       resized(){
         let Vue = this;
          EleResize.on(document.getElementById('portlet'+Vue.portletID), function(){
@@ -139,10 +166,12 @@ export default {
       },
       deletePortlet(portletID){
         this.$store.commit("deletePortlet",portletID);
+      },
+      cancel(){
+
       }
     },
     mounted(){
-      this.getChartList();
       this.resized();
     }
 }
@@ -155,5 +184,8 @@ export default {
 .delete-portlet{
   float: right;
   margin: 5px 20px;
+}
+.ivu-radio-group-button .ivu-radio-wrapper{
+  height:100% !important;
 }
 </style>

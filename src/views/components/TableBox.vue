@@ -10,12 +10,11 @@
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <table :id="tablebox.name"></table>
+      <table :id="tablebox.name"class="table table-striped table-bordered" cellspacing="0" width="90%"></table>
     </Modal>  
   </Col>
 </template>
 <script>
-import dataTables from 'dataTables/media/js/jquery.dataTables.min.js'
 export default {
   props:['tablebox','index'],
   components: {

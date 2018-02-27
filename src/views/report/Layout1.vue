@@ -17,7 +17,7 @@
                    :h="item.h"
                    :i="item.i"
                    :key='item.i'>
-         <GridItemContent :griditemTitle='item.i' :portletID="item.i" :ifDeletePortlet = 'false'></GridItemContent>
+         <GridItemContent :griditemTitle='item.i' :portletID="item.i" :hasExtraIcon = 'false'></GridItemContent>
         </grid-item>
     </grid-layout>
   </div>
@@ -37,27 +37,27 @@ export default {
         return{
             portlets:[{"portletID":"0",
                      "name":"",
-                     "x":0,"y":0,"w":12,"h":4,"i":"0",
+                     "x":0,"y":0,"w":12,"h":8,"i":"0",
                      "tabs":[{"id":"0","title":"","objtype":"","objid":""}]
                     },
                     {"portletID":"1",
                      "name":"",
-                     "x":0,"y":4,"w":12,"h":8,"i":"1",
+                     "x":0,"y":4,"w":12,"h":12,"i":"1",
                      "tabs":[{"id":"1","title":"","objtype":"","objid":""}]
                     } ,
                     {"portletID":"2",
                      "name":"",
-                     "x":0,"y":12,"w":12,"h":8,"i":"2",
+                     "x":0,"y":12,"w":12,"h":12,"i":"2",
                      "tabs":[{"id":"2","title":"","objtype":"","objid":""}]
                     },
                     {"portletID":"3",
                      "name":"",
-                     "x":0,"y":20,"w":12,"h":8,"i":"3",
+                     "x":0,"y":20,"w":12,"h":12,"i":"3",
                      "tabs":[{"id":"3","title":"","objtype":"","objid":""}]
                     },
                     {"portletID":"4",
                      "name":"",
-                     "x":0,"y":28,"w":12,"h":8,"i":"4",
+                     "x":0,"y":28,"w":12,"h":12,"i":"4",
                      "tabs":[{"id":"4","title":"","objtype":"","objid":""}]
                     }]
         }
