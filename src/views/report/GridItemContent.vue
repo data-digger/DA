@@ -11,8 +11,8 @@
             </DropdownMenu>
           </Dropdown> - 
         </div>
-        <div :id="'chart-'+chartID+portletID" style='height:85%' v-show = 'chartShow'></div>
-        <table :id="'table-'+portletID" style='width:85%;height:85%' v-show = '!chartShow'></table>
+        <div :id="'chart-'+chartID+portletID" style='height:85%' v-if = 'chartShow'></div>
+        <table :id="'table-'+portletID" style='width:85%;height:85%' v-if = '!chartShow'></table>
       </div>
       <div class="vue-draggable-handle"></div> 
     </div>
@@ -32,7 +32,6 @@ export default {
         chartView:null,
         tableView:null,
         chartShow:true,
-        hasResized:false,
         chartID:null
       }
     },
@@ -47,19 +46,27 @@ export default {
       },
       drawReport(chartindex){
         let Vue = this;
-        if(Vue.chartView != null){
-          Vue.chartView.dispose();
-        }
         let chart = Vue.chartInfo[chartindex];
         Vue.chartID = chart.id;
+        if(Vue.chartView != null){
+          Vue.chartView.dispose();
+        }   
+        if(Vue.tableView != null){
+          Vue.tableView.destroy();
+          $('#table-'+Vue.portletID).empty();
+        }      
         Vue.AxiosPost("previewBizView",{'bizViewId':chart.bizViewId},
           function(response){
             if(chart.type){
               Vue.chartShow = true;
-              Vue.drawChart(chart,response); 
+              Vue.$nextTick(function(){
+                Vue.drawChart(chart,response); 
+              })   
             }else{
-              Vue.chartShow = false;
-              Vue.drawTable(chart,response);
+              Vue.chartShow = false;           
+              Vue.$nextTick(function(){
+                Vue.drawTable(chart,response);
+              })
             }              
             //存储tabs
             var tabs = [{"tabID":Vue.portletID,"title":Vue.griditemTitle,"objid":chart.id,"objtype":chart.type?chart.type:'Table'}];
@@ -95,8 +102,8 @@ export default {
             }
             rows.push(row);
         };
-        $('#table-'+Vue.portletID).DataTable({
-          "destroy": true,
+        Vue.tableView = $('#table-'+Vue.portletID).DataTable({
+          bDestroy: true,
           pageLength: 3,
           searching:false,
           lengthChange:false,
