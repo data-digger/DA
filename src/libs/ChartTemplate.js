@@ -1,7 +1,7 @@
 let  ChartTemplate= {
 
 };
-ChartTemplate.TYPE = ['Line','Bar','Pie'];
+ChartTemplate.TYPE = ['Line','Bar','HBar','Pie'];
 
 ChartTemplate.Line = `{
     title: {
@@ -134,5 +134,41 @@ ChartTemplate.Pie = `{
             }
         }
     ]
-}`
+}`,
+ChartTemplate.HBar = `{
+    title: {
+        text: '条形图',
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        show:true,
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    xAxis: {
+        type: 'value',
+        boundaryGap: [0, 0.01]
+    },
+    yAxis: {
+        type: 'category',
+        data: '@colName1'
+    },
+    series: [
+        {
+            name:'@colName2',
+            type:'bar',
+        },
+    ]
+}`;
 export default ChartTemplate;

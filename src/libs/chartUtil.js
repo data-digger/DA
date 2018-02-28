@@ -34,6 +34,19 @@ function analysisGridChart(option,data){
         option.series[i].data = getColData(yName[i],data);
     }
 }
+function analysisHbarChart(option,data){
+    let yName = validColName(option.yAxis.data);
+    let xName = [];
+    for(let s in option.series){
+        xName.push(validColName(option.series[s].name))
+    }
+    option.legend.data = xName;
+    option.yAxis.data = getColData(yName,data);
+    for(let i = 0; i<xName.length; i++){
+        option.series[i].name = xName[i];
+        option.series[i].data = getColData(xName[i],data);
+    }
+}
 
 function analysisCirChart(option,data){
     for(let s in option.series){
@@ -59,6 +72,9 @@ chartUtil.analysis = function (option,type,data) {
    }
    if(type == 'Pie'){
     analysisCirChart(option,data)
+   }
+   if(type == 'HBar'){
+    analysisHbarChart(option,data)
    }
 };
 
