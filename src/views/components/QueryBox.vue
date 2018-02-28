@@ -18,12 +18,12 @@
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <Table border :columns="columns" :data="queryData"></Table>
+      <Table border :columns="columns" :data="currentTableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
-            <Page :total="total" :current="1" @on-change="changePage"></Page>
+            <Page :total="total" :current="1" :page-size='pageSize' @on-change="changePage"></Page>
         </div>
-      </div>      
+    </div>      
     </Modal>
   </Col>
 </template>
@@ -40,8 +40,10 @@ export default {
       modaledit:false,
       modalpreview:false,
       total:null,
+      pageSize:4,
       columns:[],
-      queryData:[],      
+      historyData:[],
+      currentTableData:[],      
     }
   },
   props:['querybox','index'],
@@ -88,12 +90,21 @@ export default {
           };
           rows.push(row);
       }
-      Vue.columns = cols;
-      Vue.queryData = rows; 
+      Vue.columns = cols; 
       Vue.total = rows.length;
+      Vue.historyData = rows;
+      if(Vue.total<Vue.pageSize){
+        Vue.currentTableData = Vue.historyData;
+      }else{
+        Vue.currentTableData = Vue.historyData.slice(0,this.pageSize);
+      }
+      
     },
-    changePage(){
-
+    changePage(index){
+      let Vue = this;
+      var _start = ( index - 1 ) * Vue.pageSize;
+      var _end = index * Vue.pageSize;
+      Vue.currentTableData = Vue.historyData.slice(_start,_end);
     }
    }
 }

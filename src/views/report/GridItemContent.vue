@@ -36,10 +36,10 @@
             </Tabs>                   
         </Modal>         
         <div :id="'chart-'+chartID+portletID" style='height:85%' v-if = 'chartShow'></div>
-        <Table border :columns="columns" :data="queryData" v-if = '!chartShow'></Table>
+        <Table border :columns="columns" :data="currentTableData" v-if = '!chartShow'></Table>
         <div style="margin: 10px;overflow: hidden" v-if = '!chartShow'>
           <div style="float: right;">
-            <Page :total="total" :current="1" @on-change="changePage"></Page>
+            <Page :total="total" :current="1" :page-size='pageSize' @on-change="changePage"></Page>
           </div>
         </div> 
       </div>
@@ -66,7 +66,9 @@ export default {
         chartShow:true,
         total:null,
         columns:[],
-        queryData:[], 
+        historyData:[],
+        pageSize:4,
+        currentTableData:[], 
         modalSelectChart:false,
         chartID:null,
         currentTab:"chart",
@@ -149,9 +151,14 @@ export default {
             };
             rows.push(row);
         }
-        Vue.columns = cols;
-        Vue.queryData = rows; 
+        Vue.columns = cols; 
         Vue.total = rows.length;
+        Vue.historyData = rows;
+        if(Vue.total<Vue.pageSize){
+          Vue.currentTableData = Vue.historyData;
+        }else{
+          Vue.currentTableData = Vue.historyData.slice(0,this.pageSize);
+        } 
       },
       resized(){
         let Vue = this;
@@ -164,8 +171,11 @@ export default {
       deletePortlet(portletID){
         this.$store.commit("deletePortlet",portletID);
       },
-      changePage(){
-
+      changePage(index){
+        let Vue = this;
+        var _start = ( index - 1 ) * Vue.pageSize;
+        var _end = index * Vue.pageSize;
+        Vue.currentTableData = Vue.historyData.slice(_start,_end);
       },
       cancel(){
 

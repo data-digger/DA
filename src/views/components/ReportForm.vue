@@ -4,10 +4,10 @@
             <grid-item v-for="item in report.defineJSON.content.portlets":x="item.x":y="item.y":w="item.w":h="item.h":i="item.i":key='item.i'>
               <div class='griditem-title'>{{item.name+item.i}}</div>
               <div :id="'chart'+report.id+item.i" style='height:90%;' v-show='chartShow && item.tabs[0].objtype != "Table"'></div>  
-              <Table border :columns="columns" :data="queryData" v-show='tableShow && item.tabs[0].objtype == "Table"'></Table>
+              <Table border :columns="columns" :data="currentTableData" v-show='tableShow && item.tabs[0].objtype == "Table"'></Table>
               <div style="margin: 10px;overflow: hidden" v-show='tableShow && item.tabs[0].objtype == "Table"'>
                 <div style="float: right;">
-                  <Page :total="total" :current="1" @on-change="changePage"></Page>
+                  <Page :total="total" :current="1" :page-size='pageSize' @on-change="changePage"></Page>
                 </div>
               </div>                          
             </grid-item>
@@ -32,7 +32,9 @@ export default {
       tableShow : true,
       total:null,
       columns:[],
-      queryData:[],  
+      pageSize:4,
+      historyData:[],
+      currentTableData:[],  
     }
   }, 
   methods:{
@@ -71,9 +73,14 @@ export default {
           };
           rows.push(row);
       }
-      Vue.columns = cols;
-      Vue.queryData = rows; 
-      Vue.total = rows.length;          
+      Vue.columns = cols; 
+      Vue.total = rows.length;
+      Vue.historyData = rows;
+      if(Vue.total<Vue.pageSize){
+        Vue.currentTableData = Vue.historyData;
+      }else{
+        Vue.currentTableData = Vue.historyData.slice(0,this.pageSize);
+      }         
    },
    drawChart (chartData) {
     let Vue = this;
@@ -85,8 +92,11 @@ export default {
     let chartView = echarts.init(document.getElementById("chart"+Vue.report.id +chartData.portletID));
     chartView.setOption(eoption);           
    },
-   changePage(){
-
+   changePage(index){
+      let Vue = this;
+      var _start = ( index - 1 ) * Vue.pageSize;
+      var _end = index * Vue.pageSize;
+      Vue.currentTableData = Vue.historyData.slice(_start,_end);
    }
   }
 }
