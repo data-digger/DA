@@ -3,8 +3,13 @@
       <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="false":is-resizable="false":vertical-compact="true":use-css-transforms="true">
             <grid-item v-for="item in report.defineJSON.content.portlets":x="item.x":y="item.y":w="item.w":h="item.h":i="item.i":key='item.i'>
               <div class='griditem-title'>{{item.name+item.i}}</div>
-              <div :id="'chart'+report.id+item.i" style='height:90%;' v-show='chartShow && item.tabs[0].objtype != "Table"'></div>
-              <table :id="'table'+report.name+item.i" style='width:85%;' v-show='tableShow && item.tabs[0].objtype == "Table"'class="table table-striped table-bordered" cellspacing="0" width="90%" font-size='12px'></table>               
+              <div :id="'chart'+report.id+item.i" style='height:90%;' v-show='chartShow && item.tabs[0].objtype != "Table"'></div>  
+              <Table border :columns="columns" :data="queryData" v-show='tableShow && item.tabs[0].objtype == "Table"'></Table>
+              <div style="margin: 10px;overflow: hidden" v-show='tableShow && item.tabs[0].objtype == "Table"'>
+                <div style="float: right;">
+                  <Page :total="total" :current="1" @on-change="changePage"></Page>
+                </div>
+              </div>                          
             </grid-item>
          </grid-layout>
     </div>    
@@ -12,7 +17,6 @@
 <script>
 import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
 import echarts from 'echarts'
-import dataTables from 'dataTables.net-bs/js/dataTables.bootstrap.js';
 import chartUtil from './../../libs/chartUtil.js'
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
@@ -24,8 +28,11 @@ export default {
   },
   data(){
     return {
-       chartShow :true,
-       tableShow : true
+      chartShow :true,
+      tableShow : true,
+      total:null,
+      columns:[],
+      queryData:[],  
     }
   }, 
   methods:{
@@ -44,36 +51,31 @@ export default {
          }         
       })         
      },
-   drawTable (tableData){
+    drawTable (tableData){
       let Vue = this;
       var header = tableData.gridData.stringHeaders;
       var cols = [];
       for(let c in header){
          cols.push({
-          "title":header[c]
+          "title":header[c],
+          "key":header[c]
          })
       };
       var rows = [];
       var rowData = tableData.gridData.data;
-       for(let i in rowData){
-          let row = [];
-          for (let j in rowData[i]){
-              row.push(rowData[i][j].displayValue);
-          }
+       for(let r in rowData){
+          let row = {};
+          let curRow = rowData[r];
+           for(let col in header){
+             row[header[col]] = curRow[col].displayValue;
+          };
           rows.push(row);
-      };
-      $('#table'+Vue.report.name+tableData.portletID).DataTable({
-        bDestroy: true,
-        pageLength: 3,
-        searching:false,
-        lengthChange:false,
-        bInfo:false,
-        bSort:false,
-        columns: cols,
-        data:rows
-      });          
+      }
+      Vue.columns = cols;
+      Vue.queryData = rows; 
+      Vue.total = rows.length;          
    },
-  drawChart (chartData) {
+   drawChart (chartData) {
     let Vue = this;
     var gridData = chartData.gridData;
     var chartDefineJSON = chartData.defineJSON;
@@ -82,7 +84,10 @@ export default {
     chartUtil.analysis(eoption,type,gridData);
     let chartView = echarts.init(document.getElementById("chart"+Vue.report.id +chartData.portletID));
     chartView.setOption(eoption);           
-  }
+   },
+   changePage(){
+
+   }
   }
 }
 </script>

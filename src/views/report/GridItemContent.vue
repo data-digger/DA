@@ -36,7 +36,12 @@
             </Tabs>                   
         </Modal>         
         <div :id="'chart-'+chartID+portletID" style='height:85%' v-if = 'chartShow'></div>
-        <table :id="'table-'+portletID" class="table table-striped table-bordered" cellspacing="0" width="90%" v-if = '!chartShow'></table>
+        <Table border :columns="columns" :data="queryData" v-if = '!chartShow'></Table>
+        <div style="margin: 10px;overflow: hidden" v-if = '!chartShow'>
+          <div style="float: right;">
+            <Page :total="total" :current="1" @on-change="changePage"></Page>
+          </div>
+        </div> 
       </div>
       <div class="vue-draggable-handle" v-if='isShowExtraIcon()'></div> 
     </div>
@@ -44,7 +49,6 @@
 
 <script>
 import echarts from 'echarts'
-import dataTables from 'dataTables.net-bs/js/dataTables.bootstrap.js';
 import chartUtil from './../../libs/chartUtil.js'
 import EleResize from './../../libs/resize.js'
 import {mapGetters} from 'vuex'
@@ -59,8 +63,10 @@ export default {
     data(){
       return {
         chartView:null,
-        tableView:null,
         chartShow:true,
+        total:null,
+        columns:[],
+        queryData:[], 
         modalSelectChart:false,
         chartID:null,
         currentTab:"chart",
@@ -93,11 +99,7 @@ export default {
         Vue.chartID = chart.id;
         if(Vue.chartView != null){
           Vue.chartView.dispose();
-        }   
-        if(Vue.tableView != null){
-          Vue.tableView.destroy();
-          $('#table-'+Vue.portletID).empty();
-        }     
+        }       
         Vue.AxiosPost("previewBizView",{'bizViewId':chart.bizViewId},
           function(response){
             if(chart.type){
@@ -133,28 +135,23 @@ export default {
         var cols = [];
         for(let c in header){
            cols.push({
-            "title":header[c]
+            "title":header[c],
+            "key":header[c]
            })
         };
         var rows = [];
         var rowData = tableData.data.data;
-         for(let i in rowData){
-            let row = [];
-            for (let j in rowData[i]){
-                row.push(rowData[i][j].displayValue);
-            }
+         for(let r in rowData){
+            let row = {};
+            let curRow = rowData[r];
+             for(let col in header){
+               row[header[col]] = curRow[col].displayValue;
+            };
             rows.push(row);
-        };
-        Vue.tableView = $('#table-'+Vue.portletID).DataTable({
-          bDestroy: true,
-          pageLength: 3,
-          searching:false,
-          lengthChange:false,
-          bInfo:false,
-          bSort:false,
-          columns: cols,
-          data:rows
-        }); 
+        }
+        Vue.columns = cols;
+        Vue.queryData = rows; 
+        Vue.total = rows.length;
       },
       resized(){
         let Vue = this;
@@ -166,6 +163,9 @@ export default {
       },
       deletePortlet(portletID){
         this.$store.commit("deletePortlet",portletID);
+      },
+      changePage(){
+
       },
       cancel(){
 

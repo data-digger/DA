@@ -13,10 +13,6 @@ import util from './libs/util';
 import 'iview/dist/styles/iview.css';
 import "codemirror/lib/codemirror.css";
 import "@/assets/css/gridlayout.css";
-import 'dataTables/media/js/jquery.dataTables.min.js'
-import 'dataTables/media/css/jquery.dataTables.min.css';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'dataTables.net-bs/css/dataTables.bootstrap.css';
 Vue.use(iView);
 
 new Vue({

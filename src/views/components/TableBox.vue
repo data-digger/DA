@@ -10,7 +10,12 @@
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <table :id="tablebox.name"class="table table-striped table-bordered" cellspacing="0" width="90%"></table>
+      <Table border :columns="columns" :data="queryData"></Table>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+            <Page :total="total" :current="1" @on-change="changePage"></Page>
+        </div>
+      </div>
     </Modal>  
   </Col>
 </template>
@@ -22,13 +27,20 @@ export default {
   data(){
     return {
       modalpreview:false,
-      previewTable:null,
+      total:null,
+      columns:[],
+      queryData:[], 
     }
   }, 
   methods:{
     preview(){
-      this.modalpreview = true;
-      this.previewTableData();
+      let Vue = this;
+      Vue.modalpreview = true;
+      Vue.AxiosPost("previewBizView",{'bizViewId':Vue.tablebox.bizViewId},
+        function(response){
+          Vue.initPreviewTable(response.data);
+        }
+      );
     },
     cancel(){
 
@@ -42,42 +54,27 @@ export default {
       var cols = [];
       for(let c in header){
          cols.push({
-          "title":header[c]
+          "title":header[c],
+          "key":header[c]
          })
       };
       var rows = [];
       var rowData = gridData.data;
-       for(let i in rowData){
-          let row = [];
-          for (let j in rowData[i]){
-              row.push(rowData[i][j].displayValue);
-          }
+       for(let r in rowData){
+          let row = {};
+          let curRow = rowData[r];
+           for(let col in header){
+             row[header[col]] = curRow[col].displayValue;
+          };
           rows.push(row);
-      };
-      Vue.previewTable = $('#'+Vue.tablebox.name).DataTable({
-        "destroy": true,
-        pageLength: 3,
-        searching:false,
-        lengthChange:false,
-        bInfo:false,
-        bSort:false,
-        columns:cols,
-        data:rows
-      });
+      }
+      Vue.columns = cols;
+      Vue.queryData = rows; 
+      Vue.total = rows.length;
     },
-    previewTableData(){
-      let Vue = this;
-      if(Vue.previewTable != null ){
-         Vue.previewTable.destroy();
-         $('#previewTable'+Vue.index).empty();
-      };
-      Vue.AxiosPost("previewBizView",{'bizViewId':Vue.tablebox.bizViewId},
-        function(response){
-          Vue.initPreviewTable(response.data);
-        }
-      );
-    },
+    changePage(){
 
+    }
   }
 }
 </script>
