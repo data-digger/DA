@@ -187,9 +187,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang='less'>
 .griditem-title{
-    background-color:lightgray;
+  height:35px;
+  background-color:#2d8cf0;
+  color:white;
 }
 .delete-portlet{
   float: right;

@@ -8,6 +8,7 @@
     </Card>
     <Modal
       v-model="modaledit"
+      width ="1200px"
       title="Common Modal dialog box title"
       @on-ok="editOk"
       @on-cancel="cancel">
@@ -15,6 +16,7 @@
     </Modal>
     <Modal
       v-model="modalpreview"
+      width ="1200px"
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">

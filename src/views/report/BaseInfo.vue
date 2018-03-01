@@ -1,5 +1,5 @@
 <template>
-  <Form id="createReport"  :model="report" :label-width="80">
+  <Form id="createReport"  :model="report" :label-width="80" :rules="ruleValidate">
         <FormItem label="名称" prop="name">
             <Input v-model="report.name" placeholder="输入名称"></Input>
         </FormItem>
@@ -17,11 +17,19 @@ import {mapGetters} from 'vuex'
  export default {
     data(){
        return {
-         report:{
-           name:'',
-           alias:'',
-           desc:''
-         }
+        report:{
+          name:'',
+          alias:'',
+          desc:''
+        },
+        ruleValidate:{
+          name: [
+              { required: true, message: '名称不能为空', trigger: 'blur' }
+          ],
+          alias: [
+              { required: true, message: '别名不能为空', trigger: 'blur' }
+          ]
+        }         
        }
     },
     methods:{

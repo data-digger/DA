@@ -6,7 +6,8 @@
 .vue-grid-layout {
     height: 400px !important;
     background-color: white;
-    position: absolute;
+    box-shadow: 5px 5px 3px 8px lightgrey;
+    /*position: absolute;*/
     overflow-y: auto;
 }
 
@@ -64,6 +65,9 @@
 }
 .vue-grid-item{
     overflow: auto;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+    box-shadow: 5px 5px 5px lightgray;
 }
 .vue-grid-item .text {
    /* font-size: 24px;*/

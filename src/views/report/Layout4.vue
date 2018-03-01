@@ -43,7 +43,7 @@ export default {
             this.index = this.index+1;
             var portlet ={ "portletID":""+this.index,
                            "name":"portleName",
-                           "x":0,"y":0,"w":6,"h":4,"i":""+this.index,
+                           "x":0,"y":0,"w":6,"h":6,"i":""+this.index,
                            "tabs":[{"id":this.index,"title":"","objtype":"","objid":""}]
                          };
             this.report.defineJSON.content.portlets.push(portlet);
@@ -59,10 +59,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang='less'>
+@background-color:#2d8cf0;
+
 .toolbar{
     padding: 3px;
     margin: 3px;
+}
+.toolbar Button{
+  background-color:@background-color;
+  color:white;
 }
 .delete-icon{
     float: right;
