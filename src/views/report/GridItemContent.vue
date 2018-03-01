@@ -3,7 +3,7 @@
         <div class="no-drag">
         <div class='griditem-title'>
           <div @click='deletePortlet(portletID)'><Icon class='delete-portlet'type="android-close" v-if='isShowExtraIcon()'></Icon></div>
-          {{griditemTitle}}
+          <input></input>
           <div style='float:right;margin-right:5px;cursor:pointer' @click = "selectReportChart()"><Icon type="plus-round"></Icon></div>
         </div>
         <Modal

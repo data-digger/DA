@@ -21,7 +21,6 @@ import chartUtil from './../../libs/chartUtil.js'
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
 export default {
-  /*props:['report'],*/
   components: {
       "GridLayout": GridLayout,
       "GridItem": GridItem
