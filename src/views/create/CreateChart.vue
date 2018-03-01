@@ -31,7 +31,22 @@
             <Button type="ghost" style="margin-left: 8px" @click="handleReset">Reset</Button>
         </FormItem> 
         <FormItem>
-          <div id="myChart" v-show="chartPreview"></div>
+          <div id="myChart" v-if="chartPreview && myChart.type != 'Card'"></div>
+          <div id="myCard" v-if="chartPreview && myChart.type == 'Card'">  
+            <infoCard               
+                :id-name="eoption.name"
+                :end-val="eoption.data"
+                :iconType="eoption.iconType"
+                :icon-size="eoption.iconSize"
+                :color="eoption.color"
+                :count-size="eoption.countSize"
+                :count-weight="eoption.countWeight"
+                :intro-text="eoption.introText"
+                :intro-color='eoption.introColor'
+                :intro-size='eoption.introSize'
+                :intro-weight='eoption.introWeight'                         
+            ></infoCard>
+          </div>
         </FormItem>
     </Form>  
 </template>
@@ -44,8 +59,12 @@ import "codemirror/mode/javascript/javascript.js"
 import {mapGetters} from 'vuex'
 import ChartTemplate from './../../libs/ChartTemplate.js'
 import chartUtil from './../../libs/chartUtil.js'
+import infoCard from './../home/components/inforCard'
 export default {
   name: 'createChart',
+  components:{
+   infoCard
+  },
    data () {
     return {
       chartPreview:false,
@@ -53,8 +72,8 @@ export default {
       queryData:null,
       chartView:null,
       tableView:null,
-      eoption:null,
       type:ChartTemplate.TYPE,
+      eoption:null,
       myChart:{
         name:'',
         alias:'myChartAlias',
@@ -89,8 +108,10 @@ export default {
      'myChart.type':function(curType){
          /*this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate[curType])
                                             .replace(/},/g, "},\n").replace(/],/g, "],\n"));*/
+        this.chartPreview = false;
         this.optionEditor.getDoc().setValue(ChartTemplate[curType]);
-        $('#chartOption').val(ChartTemplate[curType]);
+        //this.eoption = eval("(" + ChartTemplate[curType] + ")");
+        //$('#chartOption').val(ChartTemplate[curType]);
      }
 　},
   mounted:function(){
@@ -137,15 +158,28 @@ export default {
     },
     previewChart:function(){
         let Vue = this;
-        Vue.chartPreview=true;
-        this.$nextTick(function(){
-            Vue.drawEChart();
+        Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
+        Vue.eoption = eval("(" + Vue.myChart.defineJSON + ")");
+        if(Vue.myChart.type == 'Card'){
+          Vue.drawCard();
+        }else{
+           Vue.chartPreview=true;
+           this.$nextTick(function(){
+           Vue.drawEChart();
         })    
+        }
+       
+    },
+    drawCard(){
+      let Vue = this;      
+       chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
+       Vue.eoption.name = "cardName";
+       Vue.chartPreview=true;
     },
     drawEChart(){
       let Vue = this;
-       Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
-       Vue.eoption = eval("(" + Vue.myChart.defineJSON + ")");
+       //Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
+       //Vue.eoption = eval("(" + Vue.myChart.defineJSON + ")");
        if(Vue.chartView != null){
             Vue.chartView.dispose();
        }
@@ -192,6 +226,11 @@ export default {
 <style scoped>
 #myChart{
   height: 350px;
+}
+#myCard{
+  width: 300px;
+  height: 350px;
+  margin: auto;
 }
 .CodeMirror-lines{
   text-align: left;

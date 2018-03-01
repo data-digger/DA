@@ -19,7 +19,23 @@
       @on-ok="previewOk"
       @on-cancel="cancel">
       <Condition :showOptions='showOptions'></Condition>
-      <div class="previewChart" :id="'previewChart'+chartbox.id"></div>
+      <div v-if="chartbox.type != 'Card'" class="previewChart" :id="'previewChart'+chartbox.id"></div>
+      <div v-if="chartbox.type == 'Card'" class="previewCard">
+        <infoCard 
+              v-if = "cardShow"
+              :id-name="chartbox.id"
+              :end-val="cardOption.data"
+              :iconType="cardOption.iconType"
+              :icon-size="cardOption.iconSize"
+              :color="cardOption.color"
+              :count-size="cardOption.countSize"
+              :count-weight="cardOption.countWeight"
+              :intro-text="cardOption.introText"
+              :intro-color='cardOption.introColor'
+              :intro-size='cardOption.introSize'
+              :intro-weight='cardOption.introWeight'                         
+          ></infoCard>
+      </div>
     </Modal>
   </Col>
 </template>
@@ -29,11 +45,13 @@ import echarts from 'echarts'
 import ChartForm from './../components/ChartForm'
 import Condition from './../components/Condition'
 import chartUtil from './../../libs/chartUtil.js'
+import infoCard from './../home/components/inforCard'
 export default {
   name: 'ChartBox',
   components:{
     ChartForm,
-    Condition
+    Condition,
+    infoCard
   },
   data(){
     return {
@@ -41,6 +59,8 @@ export default {
       modalpreview:false,
       tableView:null,
       chartView:null,
+      cardShow:false,
+      cardOption:null,
       showOptions:{date:true}
     }
   },
@@ -52,9 +72,14 @@ export default {
         function(response){
           Vue.queryData = response.data;
           Vue.modalpreview = true;
-          Vue.$nextTick(function(){
-            Vue.previewChart();
-        })
+          if(Vue.chartbox.type=='Card'){
+              Vue.drawCard();
+          }else{
+              Vue.$nextTick(function(){
+              Vue.drawEChart();
+            })
+          }
+         
       });
     },
     edit (){
@@ -69,9 +94,11 @@ export default {
     cancel(){
       
     },
-    previewChart(){
+    drawCard(){
       let Vue = this;
-      Vue.drawEChart();
+      Vue.cardOption = eval("(" + Vue.chartbox.defineJSON + ")");
+      chartUtil.analysis(Vue.cardOption,Vue.chartbox.type,Vue.queryData);
+      Vue.cardShow = true;     
     },
     drawEChart(){
       let Vue = this;
@@ -95,5 +122,10 @@ export default {
 <style scoped>
   .previewChart{
     height: 250px;
+  }
+  .previewCard{
+    width: 400px;
+    height: 150px;
+    margin: auto;
   }
 </style>

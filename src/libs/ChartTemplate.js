@@ -1,8 +1,22 @@
 let  ChartTemplate= {
 
 };
-ChartTemplate.TYPE = ['Line','Bar','HBar','Pie'];
+ChartTemplate.TYPE = ['Line','Bar','HBar','Pie','Card'];
 
+
+ChartTemplate.Card = `{
+    data:"@colName",
+    iconType:"android-person-add",
+    color:"#2d8cf0",
+    introText:"今日新增用户",
+    countSize: '30px',
+    countWeight: 700,
+    iconSize: 40,
+    introColor: '#C8C8C8',
+    introSize: '12px',
+    introWeight: 500
+}`;
+                        
 ChartTemplate.Line = `{
     title: {
         text: '折线图',

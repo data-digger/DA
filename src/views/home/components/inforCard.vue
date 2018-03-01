@@ -20,7 +20,7 @@
                         :countSize="countSize"
                         :countWeight="countWeight"
                     >
-                        <p class="infor-intro-text" slot="intro">{{ introText }}</p>
+                        <p class="infor-intro-text" :style="{color: introColor, fontSize: introSize, fontWeight: introWeight}" slot="intro">{{ introText }}</p>
                     </count-up>
                 </Row>
             </Col>
@@ -38,8 +38,11 @@ export default {
     },
     props: {
         idName: String,
-        endVal: Number,
-        color: String,
+        endVal: [String, Number],
+        color: {
+            type:String,
+            default:'#2d8cf0'
+        },
         iconType: String,
         introText: String,
         countSize: {
@@ -53,7 +56,19 @@ export default {
         iconSize: {
             type: Number,
             default: 40
-        }
+        },
+        introColor: {
+            type: String,
+            default: '#C8C8C8'
+        },
+        introSize: {
+            type: String,
+            default: '12px'
+        },
+        introWeight: {
+            type: Number,
+            default: 500
+        },
     }
 };
 </script>
