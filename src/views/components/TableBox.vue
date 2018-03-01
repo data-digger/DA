@@ -7,6 +7,7 @@
     </Card> 
     <Modal
       v-model="modalpreview"
+      width ="1200px"
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">

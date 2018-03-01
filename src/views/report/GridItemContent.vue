@@ -36,7 +36,7 @@
             </Tabs>                   
         </Modal>         
         <div :id="'chart-'+chartID+portletID" style='height:85%' v-if = 'chartShow'></div>
-        <Table border :columns="columns" :data="currentTableData" v-if = '!chartShow'></Table>
+        <Table style='margin:20px 10px' border :columns="columns" :data="currentTableData" v-if = '!chartShow'></Table>
         <div style="margin: 10px;overflow: hidden" v-if = '!chartShow'>
           <div style="float: right;">
             <Page :total="total" :current="1" :page-size='pageSize' @on-change="changePage"></Page>
@@ -188,6 +188,9 @@ export default {
 </script>
 
 <style scoped lang='less'>
+.vue-grid-layout {
+   height: 400px !important;
+}
 .griditem-title{
   height:35px;
   background-color:#2d8cf0;

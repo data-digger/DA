@@ -44,4 +44,7 @@ import {mapGetters} from 'vuex'
 </script>
 
 <style scoped>
+.vue-grid-layout {
+   height: 400px !important;
+}
 </style>

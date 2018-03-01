@@ -4,7 +4,7 @@
             <grid-item v-for="item in report.defineJSON.content.portlets":x="item.x":y="item.y":w="item.w":h="item.h":i="item.i":key='item.i'>
               <div class='griditem-title'>{{item.name+item.i}}</div>
               <div :id="'chart'+report.id+item.i" style='height:90%;' v-show='chartShow && item.tabs[0].objtype != "Table"'></div>  
-              <Table border :columns="columns" :data="currentTableData" v-show='tableShow && item.tabs[0].objtype == "Table"'></Table>
+              <Table style='margin:20px 10px'border :columns="columns" :data="currentTableData" v-show='tableShow && item.tabs[0].objtype == "Table"'></Table>
               <div style="margin: 10px;overflow: hidden" v-show='tableShow && item.tabs[0].objtype == "Table"'>
                 <div style="float: right;">
                   <Page :total="total" :current="1" :page-size='pageSize' @on-change="changePage"></Page>
@@ -21,13 +21,14 @@ import chartUtil from './../../libs/chartUtil.js'
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
 export default {
-  props:['report'],
+  /*props:['report'],*/
   components: {
       "GridLayout": GridLayout,
       "GridItem": GridItem
   },
   data(){
     return {
+      report:null,
       chartShow :true,
       tableShow : true,
       total:null,
@@ -98,13 +99,19 @@ export default {
       var _end = index * Vue.pageSize;
       Vue.currentTableData = Vue.historyData.slice(_start,_end);
    }
+  },
+  mounted(){
+    this.report = this.$route.params;
+    this.initReport();
   }
 }
 </script>
 
 
-<style scoped>
+<style scoped lang='less'>
 .griditem-title{
-    background-color:lightgray;
+  height:35px;
+  background-color:#2d8cf0;
+  color:white;
 }
 </style>

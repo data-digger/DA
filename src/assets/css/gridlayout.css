@@ -4,10 +4,8 @@
 }
 
 .vue-grid-layout {
-    height: 400px !important;
     background-color: white;
     box-shadow: 5px 5px 3px 8px lightgrey;
-    /*position: absolute;*/
     overflow-y: auto;
 }
 

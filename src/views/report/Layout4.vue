@@ -43,7 +43,7 @@ export default {
             this.index = this.index+1;
             var portlet ={ "portletID":""+this.index,
                            "name":"portleName",
-                           "x":0,"y":0,"w":6,"h":6,"i":""+this.index,
+                           "x":0,"y":0,"w":6,"h":8,"i":""+this.index,
                            "tabs":[{"id":this.index,"title":"","objtype":"","objid":""}]
                          };
             this.report.defineJSON.content.portlets.push(portlet);
@@ -61,7 +61,9 @@ export default {
 
 <style scoped lang='less'>
 @background-color:#2d8cf0;
-
+.vue-grid-layout {
+   height: 400px !important;
+}
 .toolbar{
     padding: 3px;
     margin: 3px;

@@ -3,9 +3,9 @@
     <Card style="margin-bottom:10px;height: 150px;">
         <p slot="title">{{reportbox.name}}</p>
         <p> {{reportbox.desc}}</p>
-        <button @click='preview()'>预览</button></p> 
+        <button @click='viewReport("/viewReport")'>查看</button></p> 
     </Card>
-    <Modal
+<!--     <Modal
       v-model="modalPreview"
       :title="reportbox.name"
       width ="900px"
@@ -13,36 +13,34 @@
       @on-ok="editOk"
       @on-cancel="cancel">
         <ReportForm :report='reportbox' ref='reportForm'></ReportForm>
-    </Modal>    
+    </Modal>  -->   
   </Col>
 </template>
 <script>
-import ReportForm from "./ReportForm.vue"
 export default {
   props:['reportbox'],
-  components: {
+/*  components: {
       ReportForm
-  },
+  },*/
   data(){
     return {
-      modalPreview:false,
+      /*modalPreview:false,*/
     }
   }, 
   methods:{
-    preview(){
-      var self = this;
+    viewReport(routerpath){
+      this.$router.push({
+        path:routerpath,
+        name:"viewReport",
+        params:this.reportbox
+      });
+/*      var self = this;
       self.modalPreview = true;
       self.$nextTick(function(){
         setTimeout(function(){
           self.$refs.reportForm.initReport();
         },500)
-     })     
-    },
-    editOk(){
-      
-    },
-    cancel(){
-      
+     })  */   
     },
   }
 }
