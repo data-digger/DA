@@ -100,9 +100,9 @@ export default {
       Vue.currentTableData = Vue.historyData.slice(_start,_end);
    }
   },
-  mounted(){
+  beforeMount(){
     this.report = this.$route.params;
-    this.initReport();
+    this.initReport();    
   }
 }
 </script>
