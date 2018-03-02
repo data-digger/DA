@@ -1,7 +1,7 @@
 <template>
     <div>
       <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="false":is-resizable="false":vertical-compact="true":use-css-transforms="true">
-            <grid-item v-for="item in report.defineJSON.content.portlets":x="item.x":y="item.y":w="item.w":h="item.h":i="item.i":key='item.i'>
+            <grid-item v-for="(item,itemIndex) in report.defineJSON.content.portlets":x="item.x":y="item.y":w="item.w":h="item.h":i="item.i":key='item.i'>
               <div class='griditem-title'>{{item.tabs[0].title}}</div>
               <!-- EChart容器 -->
               <div :id="'chart'+report.id+item.i" style='height:90%;' v-show='chartShow && item.tabs[0].objtype != "Table"&& item.tabs[0].objtype != "Card"'></div>  
@@ -18,16 +18,16 @@
               <div class='infoCard' v-if = "cardShow && item.tabs[0].objtype == 'Card'">
               <infoCard 
                   :id-name="'card'+report.id+item.i"
-                  :end-val="cardOption.data"
-                  :iconType="cardOption.iconType"
-                  :icon-size="cardOption.iconSize"
-                  :color="cardOption.color"
-                  :count-size="cardOption.countSize"
-                  :count-weight="cardOption.countWeight"
-                  :intro-text="cardOption.introText"
-                  :intro-color='cardOption.introColor'
-                  :intro-size='cardOption.introSize'
-                  :intro-weight='cardOption.introWeight'                         
+                  :end-val="cardOption[itemIndex].data"
+                  :iconType="cardOption[itemIndex].iconType"
+                  :icon-size="cardOption[itemIndex].iconSize"
+                  :color="cardOption[itemIndex].color"
+                  :count-size="cardOption[itemIndex].countSize"
+                  :count-weight="cardOption[itemIndex].countWeight"
+                  :intro-text="cardOption[itemIndex].introText"
+                  :intro-color='cardOption[itemIndex].introColor'
+                  :intro-size='cardOption[itemIndex].introSize'
+                  :intro-weight='cardOption[itemIndex].introWeight'                         
                 ></infoCard></div>                                   
             </grid-item>
          </grid-layout>
@@ -52,7 +52,7 @@ export default {
       chartShow :true,
       tableShow : true,
       cardShow:false,
-      cardOption:null,
+      cardOption:[],
       total:null,
       columns:[],
       pageSize:4,
@@ -122,7 +122,7 @@ export default {
    },
     drawCard(cardData){
       let Vue = this;
-      Vue.cardOption = eval("(" + cardData.defineJSON + ")");
+      Vue.cardOption.push(eval("(" + cardData.defineJSON + ")"));
       chartUtil.analysis(Vue.cardOption,cardData.type,cardData.gridData);        
     },   
    changePage(index){
@@ -148,15 +148,19 @@ export default {
 
 <style scoped lang='less'>
 .griditem-title{
-  height: 35px;
-  line-height: 35px;
-  background-color: #2d8cf0;
-  color: white;
-  font-size: 15px;
-  padding-left: 12px;
+  height: 40px;
+  line-height: 40px;
+  background-color: #f8f8f9;
+  border-bottom: 0.5px solid lightgray;
+  padding-left: 11px;
+  color: black;
+  font-size: 14px;
 }
 .infoCard{
   width: 80%;
   margin: 10px;
+}
+.grid-layout{
+  background-color:#f0f0f0 !important;
 }
 </style>

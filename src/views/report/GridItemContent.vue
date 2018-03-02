@@ -3,7 +3,7 @@
         <div class="no-drag">
         <div class='griditem-title'>
           <div @click='deletePortlet(portletID)'><Icon class='delete-portlet'type="android-close" v-if='isShowExtraIcon()'></Icon></div>
-          <div v-if='flag'><span @click='edit()'>{{portletTitle}}</span></div>
+          <div v-if='flag' style='display:inline-block'><span @click='edit()'>{{portletTitle}}</span></div>
           <input type="text" v-else v-model='portletTitle'@change='input()'>
           <div style='float:right;margin-right:5px;cursor:pointer' @click = "selectReportChart()"><Icon type="plus-round"></Icon></div>
         </div>
@@ -250,9 +250,14 @@ export default {
    overflow:auto !important;
 }
 .griditem-title{
-  height:35px;
-  background-color:#2d8cf0;
-  color:white;
+  height: 40px;
+  line-height: 40px;
+  text-align:left;
+  background-color: #f8f8f9;
+  border-bottom: 0.5px solid lightgray;
+  padding-left: 11px;
+  color: black;
+  font-size: 14px;
 }
 .delete-portlet{
   float: right;
