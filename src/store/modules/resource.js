@@ -104,6 +104,13 @@ const mutations = {
         state.report.defineJSON.content.portlets[index].tabs = param;
       }
     }
+  },
+  savePortletTitle(state,param){
+    for( let index in state.report.defineJSON.content.portlets){
+      if(state.report.defineJSON.content.portlets[index].portletID == param.portletID){
+        state.report.defineJSON.content.portlets[index].tabs[0].title= param.portletTitle;
+      }
+    }    
   }
 }
 

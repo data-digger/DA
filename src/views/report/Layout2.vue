@@ -70,6 +70,7 @@ export default {
 <style scoped>
 .vue-grid-layout {
    height: 400px !important;
+   overflow: auto;
 }
 .griditem-title{
  background-color:lightgray;

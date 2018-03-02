@@ -6,7 +6,6 @@
 .vue-grid-layout {
     background-color: white;
     box-shadow: 5px 5px 3px 8px lightgrey;
-    overflow-y: auto;
 }
 
 .layoutJSON {
@@ -62,7 +61,6 @@
     background: #cce;
 }
 .vue-grid-item{
-    overflow: auto;
     border: 1px solid lightgray;
     border-radius: 4px;
     box-shadow: 5px 5px 5px lightgray;
