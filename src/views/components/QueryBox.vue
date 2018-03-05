@@ -1,8 +1,8 @@
 <template >
   <Col :xs="8" :sm="8" :md="8" :lg="6">
-    <Card style="margin-bottom:10px;height: 150px;">
+    <Card class='box-card'>
         <p slot="title">{{querybox.name}}</p>
-        <p> {{querybox.desc}}</p>
+        <p class="box-desc" :title='querybox.desc'> {{querybox.desc}}</p>
         <p><button @click='edit()'>编辑</button>
         <button @click='preview()'>预览</button> </p>     
     </Card>

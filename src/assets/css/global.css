@@ -1,0 +1,9 @@
+.box-card{
+  margin-bottom:10px;
+  height: 150px;
+}
+.box-desc{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}

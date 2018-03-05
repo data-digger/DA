@@ -1,8 +1,8 @@
 <template>
   <Col :xs="8" :sm="8" :md="8" :lg="6">
-    <Card  @click='link(subpath)' style="margin-bottom:10px;height: 150px;">
+    <Card class='box-card'@click='link(subpath)'>
         <p slot="title">{{chartbox.alias}} ({{chartbox.type}})</p>
-        <p> {{chartbox.desc}}</p>
+        <p class="box-desc" :title='chartbox.desc'> {{chartbox.desc}}</p>
         <p><button @click='edit()'>编辑</button>
         <button @click='preview()'>预览</button> </p>        
     </Card>

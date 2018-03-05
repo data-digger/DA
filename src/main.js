@@ -13,6 +13,7 @@ import util from './libs/util';
 import 'iview/dist/styles/iview.css';
 import "codemirror/lib/codemirror.css";
 import "@/assets/css/gridlayout.css";
+import "@/assets/css/global.css";
 Vue.use(iView);
 
 new Vue({
