@@ -4,6 +4,7 @@ import * as types from '../mutation-types.js'
 
 const state = {
   datasourceList:null,
+  paramList:null,
   reportList:null,
   chartList:null,
   queryList:null,
@@ -20,24 +21,44 @@ const state = {
       },
       tail:{}
     }},
+  param:{
+    id:'',     
+    name:'',
+    alias:'',
+    desc:'This is param describe for create param',
+    defineJSON:{
+      componenttype:'',
+      valueSource:'',
+      defalutDefinedefine:{key:"boy",value:"1"},
+      standbyDefinedefine:"",
+      formattype:'',
+      valuetype:'',
+      date:''
+    }
+  },
   layoutSelected:"布局1"
 }
 
 // getters
 const getters = {
   datasourceList: state => state.datasourceList,
+  paramList: state => state.paramList,
   reportList: state=> state.reportList,
   chartList: state => state.chartList,
   queryList: state => state.queryList,
   tableList: state => state.tableList,
   layoutSelected: state => state.layoutSelected,
   report: state => state.report,
+  param:state => state.param,
 }
 
 // actions
 const actions = {
   getDatasourceBox({ commit, state }, param){
     commit('getDatasourceBox', param);  
+  },
+  getParamBox({ commit, state }, param){
+    commit('getParamBox', param);  
   },
   getQueryBox ({ commit, state }, param){   
     commit('getQueryBox', param);  
@@ -57,6 +78,9 @@ const actions = {
 const mutations = {
   getDatasourceBox(state,param){
     state.datasourceList = param.data;
+  },
+  getParamBox(state,param){
+    state.paramList = param.data;
   },
   getQueryBox(state,param){
     state.queryList = param.data;
@@ -111,6 +135,9 @@ const mutations = {
         state.report.defineJSON.content.portlets[index].tabs[0].title= param.portletTitle;
       }
     }    
+  },
+  saveParamDate(state,param){
+     state.param.defineJSON.date = param;
   }
 }
 

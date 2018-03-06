@@ -20,7 +20,8 @@
             </Select>
         </FormItem>
          <FormItem v-if="colNameShow" label="" prop="colNames">
-            <Tag type="border" color="blue" v-for= 'col in queryData.stringHeaders' :key="col">{{col}}</Tag>
+            <Tag  type="border" color="blue" v-for= 'col in queryData.stringHeaders' :key="col">{{col}}</Tag>
+            <!-- <div style='width:100%;height:30px;border:1px solid blue'@drop='drop($event)' @dragover='allowDrop($event)'>s</div> -->
         </FormItem>
         <FormItem label="Option:" prop="defineJSON">
             <textarea id='chartOption'></textarea>
@@ -60,12 +61,13 @@ import {mapGetters} from 'vuex'
 import ChartTemplate from './../../libs/ChartTemplate.js'
 import chartUtil from './../../libs/chartUtil.js'
 import infoCard from './../home/components/inforCard'
+
 export default {
   name: 'createChart',
   components:{
-   infoCard
+    infoCard
   },
-   data () {
+  data () {
     return {
       chartPreview:false,
       colNameShow:false,
@@ -74,6 +76,7 @@ export default {
       tableView:null,
       type:ChartTemplate.TYPE,
       eoption:null,
+      dom:null,
       myChart:{
         name:'',
         alias:'myChartAlias',
@@ -95,7 +98,8 @@ export default {
         bizViewId: [
             { required: true, message: 'Please select the bizView', trigger: 'change' }
         ],
-      }    
+      },
+      
     }
   },
    computed: {
@@ -218,7 +222,19 @@ export default {
       Vue.optionEditor.getDoc().setValue(ChartTemplate.Line)
       Vue.chartPreview = false;
       Vue.eoption = null;
-    }
+    },
+    allowDrop(event) {
+      event.preventDefault();
+    },
+    drag(event){
+      let Vue = this;
+      Vue.dom = event.currentTarget;
+    },
+    drop(event) {
+      let Vue = this;
+      event.preventDefault();
+      event.target.appendChild(Vue.dom);
+    },
   }
 }
 </script>
@@ -234,5 +250,11 @@ export default {
 }
 .CodeMirror-lines{
   text-align: left;
+}
+.tag{
+  width: 60px;
+  height: 20px;
+  border:1px solid black;
+  display: inline-block;
 }
 </style>

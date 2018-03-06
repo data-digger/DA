@@ -11,7 +11,7 @@
       :title='"编辑"+datasource.name'
       @on-ok="editOk"
       @on-cancel="cancel"
-      width='630px'>
+      width ="1200px">
       <DatasourceForm ref="datasourcedit" :datasource='datasource'></DatasourceForm>
     </Modal>
      <Modal
@@ -19,7 +19,7 @@
       :title='"管理"+datasource.name'
       @on-ok="editOk"
       @on-cancel="cancel"
-      width='500px'>
+      width ="1200px">
       <DatasourceMng ref="datasourcemng" :datasource='datasource'></DatasourceMng>
     </Modal>
   </Col>

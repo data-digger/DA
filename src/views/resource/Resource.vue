@@ -9,9 +9,21 @@
        </div>
        <div class="row box">
           <DatasourceBox v-for="ds in datasourceList" :key='ds.id' :datasource = 'ds'></DatasourceBox>
-          <Creator :routerpath="createdatasource"></Creator>
+          <Creator :routerpath="createDatasource"></Creator>
        </div>
     </div>
+    <div class="row param">
+       <div class="note note-param">
+          <h4 class="block">参数管理</h4>
+          <p>
+             Duis mollis, est non commodo luctus, nisi erat mattis consectetur purus sit amet porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.
+          </p> 
+       </div>
+       <div class="row box">
+        <ParamBox v-for="pr in paramList" :key='pr.id' :parambox = 'pr'></ParamBox>
+        <Creator :routerpath='createParam'></Creator>
+       </div>       
+    </div>    
     <div class="row query">
      <div class="note note-query">
         <h4 class="block">查询器</h4>
@@ -21,7 +33,7 @@
      </div>
      <div class="row box">
         <QueryBox  v-for="(q,index) in queryList" :key='q.id':querybox='q' :index='index'></QueryBox>
-        <Creator :routerpath='createquery'></Creator>
+        <Creator :routerpath='createQuery'></Creator>
      </div>
     </div> 
     <div class="row chart">
@@ -33,7 +45,7 @@
        </div>
        <div class="row box">
           <ChartBox v-for="(chart,index) in chartList" :key='chart.id' :chartbox='chart' :index='index'></ChartBox>
-          <Creator :routerpath='createchart'></Creator>
+          <Creator :routerpath='creatEchart'></Creator>
        </div>
     </div>
     <div class="row table">
@@ -45,7 +57,7 @@
        </div>
        <div class="row box">
           <TableBox v-for="(tb,index) in tableList" :key='tb.id' :tablebox='tb' :index='index'></TableBox>
-          <Creator :routerpath='createtable' ></Creator>
+          <Creator :routerpath='createTable' ></Creator>
        </div>
     </div>    
     <div class="row report">
@@ -57,7 +69,7 @@
        </div>
        <div class="row box">
           <ReportBox v-for="(rp,index) in reportList" :key='rp.id' :reportbox='rp' :index='index'></ReportBox>
-          <Creator :routerpath='createreport'></Creator>
+          <Creator :routerpath='createReport'></Creator>
        </div>
     </div>
 </div>
@@ -65,6 +77,7 @@
 
 <script>
 import DatasourceBox from './../components/DatasourceBox'
+import ParamBox from './../components/ParamBox'
 import Creator from './../components/Creator'
 import ReportBox from './../components/ReportBox'
 import ChartBox from './../components/ChartBox'
@@ -75,11 +88,12 @@ export default {
   name: 'Resource',
   data(){
     return {
-      createdatasource:'/createDatasource',
-      createchart:'/createChart',
-      createquery:'/createquery',
-      createreport:'/createreport',
-      createtable:'/createtable',
+      createDatasource:'/createDatasource',
+      creatEchart:'/createChart',
+      createQuery:'/createQuery',
+      createReport:'/createReport',
+      createTable:'/createTable',
+      createParam:'/createParam'
     }
   },
   components:{
@@ -88,11 +102,13 @@ export default {
     ReportBox,
     QueryBox,
     ChartBox,
-    TableBox
+    TableBox,
+    ParamBox
   },
   computed: {
     ...mapGetters({
       datasourceList: 'datasourceList',
+      paramList: 'paramList',
       reportList:'reportList',
       chartList:'chartList',
       queryList:'queryList',
@@ -104,8 +120,15 @@ export default {
       let Vue = this;
       Vue.AxiosPost("getDatasourceList",'',
         function(response){
-          console.log($(".block").html());
           Vue.$store.dispatch('getDatasourceBox',response);
+        }
+      );   
+    },
+    getParamBox(){
+      let Vue = this;
+      Vue.AxiosPost("getParamList",'',
+        function(response){
+          Vue.$store.dispatch('getParamBox',response);
         }
       );   
     },
@@ -144,6 +167,7 @@ export default {
   },
   mounted (){
      this.getDatasourceBox();
+     this.getParamBox();
      this.getReportBox();
      this.getQueryBox();
      this.getChartBox();
@@ -163,7 +187,7 @@ export default {
   width: 100%;
   margin:20px;
 }
-.datasource,.report,.chart,.query,.table{
+.datasource,.param,.report,.chart,.query,.table{
   border: 1px solid #f5f3f3;
   padding-right: 30px;
 }
@@ -171,7 +195,8 @@ export default {
 .note.note-report,
 .note.note-chart,
 .note.note-query,
-.note.note-table{
+.note.note-table,
+.note.note-param{
   color: #3c763d, 80%;
   margin-bottom: 0px;
   float: left;
@@ -180,6 +205,10 @@ export default {
 .note.note-datasource{
   background-color: #eef7ea;
   border-color: #bbdba1;
+}
+.note.note-param{
+  background-color: #f1bec1;
+  border-color: #dca7b0;
 }
 .note.note-report{
   background-color: #eef7fb;

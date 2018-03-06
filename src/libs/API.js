@@ -7,6 +7,7 @@ window.urlConf = {
     list: `${window.uri}/datasource/list`,
     new: `${window.uri}/datasource/new`,
   },
+  
   bizview: {
     list:`${window.uri}/bizview/list`,
     new: `${window.uri}/bizview/new`,
@@ -28,6 +29,10 @@ window.urlConf = {
     new: `${window.uri}/report/new`,
     getone: `${window.uri}/report/getone`,
     getdata: `${window.uri}/report/getdata`,
+  },
+  param: {
+    list:`${window.uri}/parameter/list`,
+    new: `${window.uri}/parameter/new`,
   },
 }
 
@@ -111,5 +116,13 @@ export default {
     /*获取单张报表数据*/
     getReportData(params){
       return axios.post(urlConf.report.getdata, params); 
-    }
+    },
+    /*新建参数*/
+    createParam(params){
+      return axios.post(urlConf.param.new, params); 
+    },
+    /*获取参数列表*/
+    getParamList(params){
+      return axios.post(urlConf.param.list, params); 
+    },
 };
