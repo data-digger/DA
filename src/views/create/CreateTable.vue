@@ -60,7 +60,7 @@ export default {
              Vue.AxiosPost("createTable",
               Vue.table,
                function(){
-                  Vue.$Message.success('Success!');
+                  Vue.$Message.success('新建成功!');
                });
         } else {
             Vue.$Message.error('Fail!');

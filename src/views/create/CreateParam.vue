@@ -76,19 +76,28 @@
 </template>
 <script>
 import DatePicker from "./../components/DatePicker"
-import {mapGetters} from 'vuex'
 export default {
      name:'createDatasource',
      components:{
        "datePicker":DatePicker
      },
-    computed:{
-      ...mapGetters({
-        param:'param'
-       })
-      },    
     data () {
         return {
+            param:{
+                id:'',     
+                name:'',
+                alias:'',
+                desc:'This is param describe for create param',
+                defineJSON:{
+                  componenttype:'',
+                  valueSource:'',
+                  defalutDefinedefine:{key:"boy",value:"1"},
+                  standbyDefinedefine:"",
+                  formattype:'',
+                  valuetype:'',
+                  date:''
+            }
+        },
         standby:[{key:"girl",value:"2"},{key:"boy",value:"1"}],
         ruleValidate:{
             name: [
@@ -111,7 +120,7 @@ export default {
              Vue.AxiosPost("createParam",
               Vue.param,
                function(){
-                  alert("新建成功！");
+                  Vue.$Message.success('新建成功!');
                   console.log(Vue.param);
                });
         } else {

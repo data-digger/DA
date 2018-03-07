@@ -116,7 +116,7 @@
                     if (valid) {
                         Vue.AxiosPost("createDatasource",Vue.datasource,
                           function(){
-                             alert("新建数据源成功!")
+                             Vue.$Message.success('新建成功!');
                         })
                     } else {
                         Vue.$Message.error('Fail!');
