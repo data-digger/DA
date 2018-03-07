@@ -40,7 +40,7 @@
                 <FormItem label="参数源类型" prop="valueSource">
                     <Select v-model="param.defineJSON.valueSource" placeholder="Select ...">
                        <Option value="static">static</Option>
-                       <Option value="SQL ">SQL </Option>
+                       <Option value="SQL">SQL </Option>
                     </Select>
                 </FormItem>
                 <FormItem label="数据类型" prop="valuetype">
@@ -51,21 +51,30 @@
                     </Select>
                  </FormItem>
                 <FormItem label="候选值" prop="standbyDefine">
-                    <Col><Tag v-for='el in param.defineJSON.standbyDefine' checkable closable type='dot'color="green" :key='el.key'>{{el.value}}/{{el.key}}</Tag></Col>
-                    <Col span='10'><Input size="small" v-model = 'standbyData.value'><span slot="prepend">值</span>standbyData.standbyValue</Input></Col>
-                    <Col span='10'><Input size="small" v-model = 'standbyData.key'><span slot="prepend">码值</span>standbyData.standbyKey</Input></Col>
-                    <Col span='4' style='padding-bottom:3px'><Button type="primary" size="small" @click='addStandByValue()'>添加</Button></Col>
+                    <div v-if = 'param.defineJSON.valueSource == "static"?true:false'>
+                        <Col><Tag v-for='el in param.defineJSON.standbyDefine' checkable closable type='dot'color="green" :key='el.key'>{{el.value}}/{{el.key}}</Tag></Col>
+                        <Col span='10'><Input size="small" v-model = 'standbyData.value'><span slot="prepend">值</span>standbyData.standbyValue</Input></Col>
+                        <Col span='10'><Input size="small" v-model = 'standbyData.key'><span slot="prepend">码值</span>standbyData.standbyKey</Input></Col>
+                        <Col span='4' style='padding-bottom:3px'><Button type="primary" size="small" @click='addStandByValue()'>添加</Button></Col>
+                    </div>
+                    <div v-if = 'param.defineJSON.valueSource == "SQL"?true:false'>
+                        <textarea id='standbyDefineEditor'></textarea>
+                    </div>
                 </FormItem>
                 <FormItem label="缺省值" prop="defalutDefine">
-                  <Col span='12'>
-                   <!--    <Select v-model = 'defaultData.value' placeholder="Select ..." label-in-value>
-                          <Option v-for ='el in param.defineJSON.standbyDefine' :key='el.value' :value ='el.value'>
-                              {{el.value}}
-                          </Option>
-                      </Select> -->
-                      <Input size="small" v-model = 'param.defineJSON.defalutDefine.value'><span slot="prepend">值</span></Input>
-                      <Input size="small" v-model = 'param.defineJSON.defalutDefine.key'><span slot="prepend">码值</span></Input>
-                  </Col> 
+                    <div v-if = 'param.defineJSON.valueSource == "static"?true:false'>
+                        <Col span='12'>
+                          <Select v-model = 'defaultData.value' placeholder="Select ...">
+                              <Option v-for ='el in param.defineJSON.standbyDefine' :key='el.value' :value ='el.value'>
+                                  {{el.value}}
+
+                              </Option>
+                          </Select>
+                        </Col> 
+                    </div>
+                    <div v-if = 'param.defineJSON.valueSource == "SQL"?true:false'>
+                       <textarea id='defaultDefineEditor' ></textarea>
+                    </div>
                 </FormItem>
             </Col>
             <Col span="24" v-if = 'param.defineJSON.componenttype == "tree"?true:false'>
@@ -84,6 +93,8 @@
 </template>
 <script>
 import DatePicker from "./../components/DatePicker"
+import CodeMirror from "codemirror/lib/codemirror.js"
+import "codemirror/mode/sql/sql.js"
 export default {
      name:'createDatasource',
      components:{
@@ -97,7 +108,7 @@ export default {
             desc:'This is param describe for creating param',
             defineJSON:{
               componenttype:'',
-              valueSource:'',
+              valueSource:'static',
               defalutDefine:{key:"",value:""},
               standbyDefine:[],
               formattype:'',
@@ -109,10 +120,9 @@ export default {
             value:null,
             key:null
         },
-       /* defaultData:{
-            value:null,
-            key:null
-        },*/
+       editor1:null,
+       editor2:null,
+       defaultData:'',
         ruleValidate:{
             name: [
                 { required: true, message: 'The name cannot be empty', trigger: 'blur' }
@@ -162,8 +172,40 @@ export default {
         Vue.param.defineJSON.standbyDefine.push(sdbData);
         Vue.standbyData.key = null;
         Vue.standbyData.value = null
+    },
+    initEditor(myTextarea1,myTextarea2){
+        this.editor1 = CodeMirror.fromTextArea(myTextarea1,{
+            lineNumbers: true, 
+            mode: "text/x-mysql", 
+            width: '50%',//设置宽度
+            height: '50%',
+            extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
+        }); 
+        this.editor2 = CodeMirror.fromTextArea(myTextarea2,{
+            lineNumbers: true, 
+            mode: "text/x-mysql", 
+            width: '50%',//设置宽度
+            height: '50%',
+            extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
+        });      
+    },
+    changeValueSource(){
+        if(this.param.defineJSON.valueSource == "SQL"){
+            var myTextarea1 = $("#standbyDefineEditor")[0];
+            var myTextarea2 = $("#defaultDefineEditor")[0];
+            this.initEditor(myTextarea1,myTextarea2);
+        }else{
+            if(this.editor1 != null && this.editor2 != null){
+                this.editor1.undo();
+               this.editor2.undo();
+            }
+            
+        }
     }
-  }
+  },
+   updated(){
+    this.changeValueSource();
+   }
 }
 </script>
 
