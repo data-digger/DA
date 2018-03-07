@@ -1,10 +1,10 @@
 <template>
     <Row>
         <Col span="12">
-            <DatePicker v-if='monthShow' type="date" :options="options1" placeholder="Select date" style="width: 200px" @on-open-change='save' @on-change="handleChange"></DatePicker>
+            <DatePicker v-if='monthShow' type="month" placeholder="Select month" style="width: 200px"@on-open-change='save' @on-change="handleChange"></DatePicker>
         </Col>
         <Col span="12">
-            <DatePicker v-if='DaterangeShow' type="daterange" :options="options2" placement="bottom-start" placeholder="Select date" style="width: 200px"  @on-open-change='save' @on-change="handleChange"></DatePicker>
+            <DatePicker v-if='DaterangeShow' type="date" :options="options1" placement="bottom-start" placeholder="Select date" style="width: 200px"  @on-open-change='save' @on-change="handleChange"></DatePicker>
         </Col>
     </Row>
 </template>
@@ -48,8 +48,8 @@
                             }
                         }
                     ]
-                },
-                options2: {
+                },             
+/*                options2: {
                     shortcuts: [
                         {
                             text: 'A week',
@@ -79,7 +79,7 @@
                             }
                         }
                     ]
-                }
+                }*/
             }
         },
         methods:{
@@ -89,7 +89,8 @@
             save(DatePicker){
                let Vue = this;
                if(DatePicker == false){
-                  Vue.$store.commit("saveParamDate",Vue.dataValue); 
+                  /*Vue.$store.commit("saveParamDate",Vue.dataValue); */
+                  Vue.$emit("sentDate",Vue.dataValue);
                }
             }
         }

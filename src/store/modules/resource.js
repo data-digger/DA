@@ -21,21 +21,7 @@ const state = {
       },
       tail:{}
     }},
-  param:{
-    id:'',     
-    name:'',
-    alias:'',
-    desc:'This is param describe for create param',
-    defineJSON:{
-      componenttype:'',
-      valueSource:'',
-      defalutDefinedefine:{key:"boy",value:"1"},
-      standbyDefinedefine:"",
-      formattype:'',
-      valuetype:'',
-      date:''
-    }
-  },
+  /*paramData:'',*/
   layoutSelected:"布局1"
 }
 
@@ -49,7 +35,7 @@ const getters = {
   tableList: state => state.tableList,
   layoutSelected: state => state.layoutSelected,
   report: state => state.report,
-  param:state => state.param,
+ /* paramData:state => state.paramData,*/
 }
 
 // actions
@@ -136,9 +122,6 @@ const mutations = {
       }
     }    
   },
-  saveParamDate(state,param){
-     state.param.defineJSON.date = param;
-  }
 }
 
 export default {
