@@ -14,6 +14,9 @@
                 <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
             </Select>
         </FormItem>
+        <FormItem label="参数">
+             <span id='param1' style='width:50px;height:30px;border:1px solid blue' draggable="true">sssss</span>
+        </FormItem>
         <FormItem label="SQL定义:" prop="defineJSON">
             <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
         </FormItem>
@@ -81,12 +84,38 @@ export default {
       Vue.$refs[bizView].resetFields();
     },     
     initSqlEdit(){
+      let Vue = this;
       var myTextarea = $("#defineJSON")[0];
       this.sqlEditor = CodeMirror.fromTextArea(myTextarea,{
         lineNumbers: true,  
         extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
         mode: {name: "text/x-mysql"},  
+        dragDrop: true,
       });
+       this.sqlEditor.on("drop",function(editor,e){
+       // console.log(e.dataTransfer.files[0]);
+       if(!(e.dataTransfer&&e.dataTransfer.files)){
+           alert("该浏览器不支持操作");
+           return;
+       }
+       e.target.ondrop = function(e){
+         //var id = e.dataTransfer.getData("Text");
+          var span=document.createElement('span');
+          var name = document.getElementById('param1').innerHTML;
+          var $span = $(`<span style='width:50px;height:30px;border:1px solid blue'>${name}</span>`);
+          let l = Vue.sqlEditor.getCursor().line;
+          let c = Vue.sqlEditor.getCursor().ch;
+          Vue.sqlEditor.replaceSelection("^param1^");
+         
+         Vue.sqlEditor.doc.setBookmark({line:l, ch:c},{widget:$span.get(0)});
+         alert(Vue.sqlEditor.doc.getValue());
+         
+      }
+      //e.preventDefault();
+    });
+    },
+    drag(ev){
+      ev.dataTransfer.setData("Text",ev.target.id);
     }
   },
   mounted:function(){
@@ -96,4 +125,9 @@ export default {
 </script>
 
 <style scoped>
+  .param-span{
+    width:50px;
+    height:30px;
+    border:1px solid blue
+  }
 </style>
