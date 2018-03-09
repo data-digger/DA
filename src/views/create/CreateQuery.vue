@@ -15,7 +15,7 @@
             </Select>
         </FormItem>
         <FormItem label="参数">
-             <span id='param1' style='width:50px;height:30px;border:1px solid blue' draggable="true">sssss</span>
+             <span id='param1' style='width:50px;height:30px;border:1px solid blue' draggable="true" @dragstart="drag">sssss</span>
         </FormItem>
         <FormItem label="SQL定义:" prop="defineJSON">
             <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
@@ -85,6 +85,7 @@ export default {
     },     
     initSqlEdit(){
       let Vue = this;
+      var Market = {};
       var myTextarea = $("#defineJSON")[0];
       this.sqlEditor = CodeMirror.fromTextArea(myTextarea,{
         lineNumbers: true,  
@@ -92,31 +93,36 @@ export default {
         mode: {name: "text/x-mysql"},  
         dragDrop: true,
       });
-       this.sqlEditor.on("drop",function(editor,e){
-       // console.log(e.dataTransfer.files[0]);
-       if(!(e.dataTransfer&&e.dataTransfer.files)){
-           alert("该浏览器不支持操作");
-           return;
-       }
-       e.target.ondrop = function(e){
-         //var id = e.dataTransfer.getData("Text");
-          var span=document.createElement('span');
-          var name = document.getElementById('param1').innerHTML;
-          var $span = $(`<span style='width:50px;height:30px;border:1px solid blue'>${name}</span>`);
-          let l = Vue.sqlEditor.getCursor().line;
-          let c = Vue.sqlEditor.getCursor().ch;
-          Vue.sqlEditor.replaceSelection("^param1^");
+
+    //    this.sqlEditor.on("drop",function(editor,e){
+    //    // console.log(e.dataTransfer.files[0]);
+    //    e.preventDefault();
+    //    if(!(e.dataTransfer&&e.dataTransfer.files)){
+    //        alert("该浏览器不支持操作");
+    //        return;
+    //    }
+    //    e.target.ondrop = function(e){
+    //       //e.preventDefault();
+          
+    //       var id = e.dataTransfer.getData("Text");
+    //       var span=document.createElement('span');
+    //       var name = document.getElementById(id).innerHTML;
+    //       var $span = $(`<span style='width:50px;height:30px;border:1px solid blue'>${name}</span>`);
+    //       let l = Vue.sqlEditor.getCursor().line;
+    //       let c = Vue.sqlEditor.getCursor().ch;
+    //       Vue.sqlEditor.replaceSelection(`^${id}^`);        
+
+    //       alert(Vue.sqlEditor.doc.getValue());
          
-         Vue.sqlEditor.doc.setBookmark({line:l, ch:c},{widget:$span.get(0)});
-         alert(Vue.sqlEditor.doc.getValue());
-         
-      }
-      //e.preventDefault();
-    });
+    //   }
+    // });
     },
     drag(ev){
-      ev.dataTransfer.setData("Text",ev.target.id);
-    }
+      ev.dataTransfer.setData("Text",`^${ev.target.id}^`);
+    },
+    getValue(){
+
+    },
   },
   mounted:function(){
     this.initSqlEdit();
