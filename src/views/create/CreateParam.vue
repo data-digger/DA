@@ -42,32 +42,32 @@
                     </Select>
                  </FormItem>
                 <FormItem label="参数源类型" prop="valueSource">
-                    <Select v-model="param.defineJSON.valueSource" @on-change="changeValueSource" placeholder="Select ...">
+                    <Select v-model="param.defineJSON.standbyDefine.valueSource" @on-change="changeValueSource" placeholder="Select ...">
                        <Option value="static">static</Option>
                        <Option value="SQL">SQL </Option>
                     </Select>
                 </FormItem>                 
-                <FormItem label="候选值" prop="standbyDefine" v-if = 'param.defineJSON.valueSource == "static"?true:false'>
-                    <Col><Tag v-for='el in param.defineJSON.standbyDefine' checkable closable type='dot'color="green" :key='el.key'>{{el.value}}/{{el.key}}</Tag></Col>
+                <FormItem label="候选值" prop="standbyDefine" v-if = 'param.defineJSON.standbyDefine.valueSource == "static"?true:false'>
+                    <Col><Tag v-for='el in param.defineJSON.standbyDefine.values' checkable closable type='dot'color="green" :key='el.key'>{{el.value}}/{{el.key}}</Tag></Col>
                     <Col span='10'><Input size="small" v-model = 'standbyData.value'><span slot="prepend">值</span>standbyData.standbyValue</Input></Col>
                     <Col span='10'><Input size="small" v-model = 'standbyData.key'><span slot="prepend">码值</span>standbyData.standbyKey</Input></Col>
                     <Col span='4' style='padding-bottom:3px'><Button type="primary" size="small" @click='addStandByValue()'>添加</Button></Col>
                 </FormItem>
-                <FormItem label="候选值" prop="standbyDefine" v-if = 'param.defineJSON.valueSource == "SQL"?true:false'>
+                <FormItem label="候选值" prop="standbyDefine" v-if = 'param.defineJSON.standbyDefine.valueSource == "SQL"?true:false'>
                     <textarea id='standbyDefineEditor'></textarea>
                 </FormItem>
-                <FormItem label="缺省值" prop="defalutDefine"v-if = 'param.defineJSON.valueSource == "static"?true:false'>
+                <FormItem label="缺省值" prop="defalutDefine"v-if = 'param.defineJSON.standbyDefine.valueSource == "static"?true:false'>
                     <Col span='12'>
-                      <Select v-model = 'defaultData.value' placeholder="Select ...">
-                          <Option v-for ='el in param.defineJSON.standbyDefine' :key='el.value' :value ='el.key'>
+                      <Select v-model = 'param.defineJSON.defalutDefine.key' placeholder="Select ...">
+                          <Option v-for ='el in param.defineJSON.standbyDefine.values' :key='el.value' :value ='el.key'>
                               {{el.value}}
                           </Option>
                       </Select>
                     </Col> 
                 </FormItem>
-                <FormItem label="缺省值" prop="defalutDefine"v-if = 'param.defineJSON.valueSource == "SQL"?true:false'>
-                    <Col span='10'><Input size="small" ><span slot="prepend">值</span></Input></Col>
-                    <Col span='10'><Input size="small" ><span slot="prepend">码值</span></Input></Col>
+                <FormItem label="缺省值" prop="defalutDefine"v-if = 'param.defineJSON.standbyDefine.valueSource == "SQL"?true:false'>
+                    <Col span='10'><Input size="small" v-model = 'param.defineJSON.defalutDefine.value'><span slot="prepend">值</span></Input></Col>
+                    <Col span='10'><Input size="small" v-model = 'param.defineJSON.defalutDefine.key'><span slot="prepend">码值</span></Input></Col>
                 </FormItem>
             </Col>
             <Col span="24" v-if = 'param.defineJSON.componenttype == "tree"?true:false'>
@@ -101,21 +101,22 @@ export default {
             desc:'This is param describe for creating param',
             defineJSON:{
               componenttype:'',
-              valueSource:'',
+              valuetype:'',              
               defalutDefine:{key:"",value:""},
-              standbyDefine:[],
+              standbyDefine:{
+                valueSource:'',
+                values:[]
+              },
               formattype:'',
-              valuetype:'',
-              date:''
+              
+              datetime:''
             }
         },
         standbyData:{
             value:null,
             key:null
         },
-       editor1:null,
-       editor2:null,
-       defaultData:'',
+        editor1:null,
         ruleValidate:{
             name: [
                 { required: true, message: 'The name cannot be empty', trigger: 'blur' }
@@ -150,7 +151,9 @@ export default {
   methods: {      
     createParam(param){
       let Vue = this;
-      console.log(Vue.defaultData);
+      if(Vue.param.defineJSON.standbyDefine.valueSource == 'SQL'){
+        Vue.param.defineJSON.standbyDefine.values.push(Vue.standbyData);
+      }        
       var ClonedParam = JSON.parse(JSON.stringify(Vue.param));
       var defineJSON = JSON.stringify(ClonedParam.defineJSON);
       ClonedParam.defineJSON = defineJSON;
@@ -173,26 +176,27 @@ export default {
     },
     getDate(date){
         let Vue = this;
-        Vue.param.defineJSON.date = date;
+        Vue.param.defineJSON.datetime = date;
     },
     addStandByValue(){
         let Vue = this;
         let sdbData = {};
         sdbData.key = Vue.standbyData.key;
         sdbData.value = Vue.standbyData.value;
-        Vue.param.defineJSON.standbyDefine.push(sdbData);
+        Vue.param.defineJSON.standbyDefine.values.push(sdbData);
         Vue.standbyData.key = null;
         Vue.standbyData.value = null
     },
     initEditor(myTextarea1){
-        this.editor1 = CodeMirror.fromTextArea(myTextarea1,{
+        let Vue = this;
+        Vue.editor1 = CodeMirror.fromTextArea(myTextarea1,{
             lineNumbers: true, 
             mode: "text/x-mysql", 
             dragDrop:true,
             extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项 ,
         }); 
-        this.editor1.on("change",function(){
-            
+        Vue.editor1.on("change",function(){
+            Vue.standbyData.value = Vue.editor1.getValue();
         });   
     },
     changeValueSource(currentValueSource){
