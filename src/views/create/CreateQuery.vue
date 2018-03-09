@@ -82,7 +82,7 @@ export default {
     handleReset(bizView){
       let Vue = this;
       Vue.$refs[bizView].resetFields();
-    },     
+    },       
     initSqlEdit(){
       let Vue = this;
       var myTextarea = $("#defineJSON")[0];
@@ -108,7 +108,9 @@ export default {
           Vue.sqlEditor.replaceSelection("^param1^");
          
          Vue.sqlEditor.doc.setBookmark({line:l, ch:c},{widget:$span.get(0)});
-         alert(Vue.sqlEditor.doc.getValue());
+         var se = Vue.sqlEditor;
+         var d = se.doc;
+         var v = d.getValue();
          
       }
       //e.preventDefault();
