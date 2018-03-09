@@ -15,7 +15,7 @@
             </Select>
         </FormItem>
         <FormItem label="参数">
-             <span id='param1' style='width:50px;height:30px;border:1px solid blue' draggable="true" @dragstart="drag">sssss</span>
+             <span v-for="p in paramList"  :id='p.id' :key="p.id" class='param-span' draggable="true" @dragstart="drag">{{p.name}}</span>
         </FormItem>
         <FormItem label="SQL定义:" prop="defineJSON">
             <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
@@ -35,7 +35,8 @@ export default {
   name:"createQuery",
   computed:{
   ...mapGetters({
-    datasourceList:'datasourceList'
+    datasourceList:'datasourceList',
+    paramList:'paramList'
    })
   },
   data(){
@@ -132,8 +133,12 @@ export default {
 
 <style scoped>
   .param-span{
-    width:50px;
-    height:30px;
-    border:1px solid blue
+    border: 1px solid #2d8cf0;
+    font-size: 13px;
+    color: #2d8cf0;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    margin-right:3px
   }
 </style>
