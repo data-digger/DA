@@ -82,7 +82,7 @@ export default {
     handleReset(bizView){
       let Vue = this;
       Vue.$refs[bizView].resetFields();
-    },     
+    },       
     initSqlEdit(){
       let Vue = this;
       var Market = {};
