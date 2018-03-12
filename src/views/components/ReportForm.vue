@@ -18,18 +18,23 @@
               <div class='infoCard' v-if = "cardShow && item.tabs[0].objtype == 'Card'">
               <infoCard 
                   :id-name="'card'+report.id+item.i"
-                  :end-val="cardOption[itemIndex].data"
-                  :iconType="cardOption[itemIndex].iconType"
-                  :icon-size="cardOption[itemIndex].iconSize"
-                  :color="cardOption[itemIndex].color"
-                  :count-size="cardOption[itemIndex].countSize"
-                  :count-weight="cardOption[itemIndex].countWeight"
-                  :intro-text="cardOption[itemIndex].introText"
-                  :intro-color='cardOption[itemIndex].introColor'
-                  :intro-size='cardOption[itemIndex].introSize'
-                  :intro-weight='cardOption[itemIndex].introWeight'                         
+                  :end-val="cardOption.data"
+                  :iconType="cardOption.iconType"
+                  :icon-size="cardOption.iconSize"
+                  :color="cardOption.color"
+                  :count-size="cardOption.countSize"
+                  :count-weight="cardOption.countWeight"
+                  :intro-text="cardOption.introText"
+                  :intro-color='cardOption.introColor'
+                  :intro-size='cardOption.introSize'
+                  :intro-weight='cardOption.introWeight'                         
                 ></infoCard></div>                                   
             </grid-item>
+            <ButtonGroup vertical class="demo-affix" style='right:10px;position:fixed'>
+                  <Button type="warning" icon="arrow-expand"></Button>
+                   <Poptip title="提示标题" content="提示内容" placement="left"><Button type="warning" icon="funnel"></Button></Poptip>
+                  <Button type="warning" icon="android-more-horizontal"></Button>
+            </ButtonGroup>
          </grid-layout>
     </div>    
 </template>
@@ -38,13 +43,15 @@ import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
 import echarts from 'echarts'
 import chartUtil from './../../libs/chartUtil.js'
 import infoCard from './../home/components/inforCard'
+import CircleMenu from 'vue-circle-menu'
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
 export default {
   components: {
       "GridLayout": GridLayout,
       "GridItem": GridItem,
-      infoCard
+      infoCard,
+      CircleMenu
   },
   data(){
     return {
@@ -122,8 +129,8 @@ export default {
    },
     drawCard(cardData){
       let Vue = this;
-      Vue.cardOption.push(eval("(" + cardData.defineJSON + ")"));
-      chartUtil.analysis(Vue.cardOption,cardData.type,cardData.gridData);        
+      Vue.cardOption=eval("(" + cardData.defineJSON + ")");
+      chartUtil.analysis(Vue.cardOption,cardData.type,cardData.gridData);
     },   
    changePage(index){
       let Vue = this;

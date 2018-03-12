@@ -116,9 +116,9 @@ export default {
       //e.preventDefault();
     });
     },
-    drag(ev){
+  /*  drag(ev){
       ev.dataTransfer.setData("Text",ev.target.id);
-    }
+    }*/
   },
   mounted:function(){
     this.initSqlEdit();
