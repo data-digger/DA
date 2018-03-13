@@ -27,10 +27,10 @@
                     </Select>
                  </FormItem>                 
                  <FormItem prop="formattype"v-if = "param.defineJSON.formattype =='yyyy-MM-dd'?true:false" >
-                    <datePicker :DaterangeShow = 'true'@sentDate = 'getDate'></datePicker>
+                    <datePicker :dateType = 'dateType.date' @sentDate = 'getDate'></datePicker>           
                  </FormItem>
                  <FormItem prop="formattype"v-if = "param.defineJSON.formattype =='yyyy-MM'?true:false"  >
-                    <datePicker :monthShow = 'true'@sentDate = 'getDate'></datePicker>
+                    <datePicker :dateType = 'dateType.month' @sentDate = 'getDate'></datePicker>
                  </FormItem>                   
             </Col>
             <Col span="24" v-if = 'param.defineJSON.componenttype == "list"?true:false'>
@@ -49,7 +49,7 @@
                 </FormItem>
                 <FormItem label="数据源" prop="dataSource" v-if = 'param.defineJSON.standbyDefine.valueSource == "SQL"?true:false'>
                     <Select v-model="param.defineJSON.standbyDefine.dataSourceID"  placeholder="Select ...">
-                       <Option v-for='dataSource in datasourceList' :value="dataSource.id">{{dataSource.name}}</Option>
+                       <Option v-for='dataSource in datasourceList' :value="dataSource.id" :key='dataSource.id'>{{dataSource.name}}</Option>
                     </Select>
                 </FormItem>                                 
                 <FormItem label="候选值" prop="standbyDefine" v-if = 'param.defineJSON.standbyDefine.valueSource == "static"?true:false'>
@@ -127,6 +127,10 @@ export default {
             value:null,
             key:null
         },
+        dateType:{
+          date:"DaterangeShow",
+          month:"monthShow"
+        },
         editor1:null,
         ruleValidate:{
             name: [
@@ -138,24 +142,6 @@ export default {
             desc: [
                 {required: true, message: 'The name cannot be empty', trigger: 'blur' }
             ],
-/*            componenttype: [
-                { required: true, message: 'Please select the componenttype', trigger: 'change' }
-            ],
-            valueSource: [
-                { required: true, message: 'Please select the valueSource', trigger: 'change' }
-            ],
-            defalutDefine: [
-                { required: true, message: 'Please select the defalutDefine', trigger: 'change' }
-            ],
-            standbyDefine: [
-                { required: true, message: 'Please select the standbyDefine', trigger: 'change' }
-            ],
-            formattype: [
-                { required: true, message: 'Please select the formattype', trigger: 'change' }
-            ],
-            valuetype: [
-                { required: true, message: 'Please select the bizView', trigger: 'change' }
-            ],*/
         }
     }
   },

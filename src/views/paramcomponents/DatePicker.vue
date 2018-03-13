@@ -10,10 +10,12 @@
 </template>
 <script>
     export default {
-        props:["DaterangeShow","monthShow",'cmpContent'],
+        props:["dateType",'cmpContent'],
         data () {
             return {
                 dataValue:null,
+                monthShow:false,
+                DaterangeShow:false,
                 options1: {
                     shortcuts: [
                         {
@@ -58,21 +60,33 @@
             save(DatePicker){
                let Vue = this;
                if(DatePicker == false){
-                  /*Vue.$store.commit("saveParamDate",Vue.dataValue); */
                   Vue.$emit("sentDate",Vue.dataValue);
                }
             }
         },
         beforeMount(){
            let Vue = this;
-           if(Vue.cmpContent.paramType == 'date' && Vue.cmpContent.defaultDate.format == "yyyy-MM-dd"){
-              Vue.DaterangeShow = true;
-              Vue.monthShow = false;
+           if(Vue.cmpContent){
+               if(Vue.cmpContent.paramType == 'date' && Vue.cmpContent.defaultDate.format == "yyyy-MM-dd"){
+                  Vue.DaterangeShow = true;
+                  Vue.monthShow = false;
+               }
+               if(Vue.cmpContent.paramType == 'date' && Vue.cmpContent.defaultDate.format == "yyyy-MM"){
+                  Vue.monthShow = true;
+                  Vue.DaterangeShow = false;
+               }            
            }
-           if(Vue.cmpContent.paramType == 'date' && Vue.cmpContent.defaultDate.format == "yyyy-MM"){
-              Vue.monthShow = true;
-              Vue.DaterangeShow = false;
-           }           
-        }
+           if(Vue.dateType){
+               if(Vue.dateType == 'DaterangeShow'){
+                  Vue.DaterangeShow = true;
+                  Vue.monthShow = false;
+               } 
+               if(Vue.dateType == 'monthShow'){
+                  Vue.monthShow = true;
+                  Vue.DaterangeShow = false;            
+               }             
+           }
+
+        },
     }
 </script>

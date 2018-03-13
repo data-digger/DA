@@ -131,7 +131,7 @@ export default {
 </script>
 <style scoped>
 .paramcomponent{
-    display: inline-block;
-    margin: 10px auto;
+  display: inline-block;
+  margin: 10px auto;
 }
 </style>
