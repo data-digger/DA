@@ -78,6 +78,7 @@ export default {
   methods:{
     preview (){ 
       let Vue = this;
+      Vue.paramComponent = [];
        Vue.AxiosPost("previewBizView",{'bizViewId':Vue.chartbox.bizViewId},
         function(response){
           for(var i in response.data.defaultParameters){

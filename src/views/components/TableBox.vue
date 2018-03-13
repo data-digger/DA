@@ -46,6 +46,7 @@ export default {
     preview(){
       let Vue = this;
       Vue.modalpreview = true;
+      Vue.paramComponent = [];
       Vue.AxiosPost("previewBizView",{'bizViewId':Vue.tablebox.bizViewId},
         function(response){
           for(var i in response.data.defaultParameters){

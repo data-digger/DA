@@ -33,6 +33,7 @@ window.urlConf = {
   param: {
     list:`${window.uri}/parameter/list`,
     new: `${window.uri}/parameter/new`,
+    getstandbyvalue: `${window.uri}/parameter/getValue`,
   },
 }
 
@@ -125,4 +126,8 @@ export default {
     getParamList(params){
       return axios.post(urlConf.param.list, params); 
     },
+    /*获取参数候选值*/
+    getStandByValue(params){
+      return axios.post(urlConf.param.getstandbyvalue, params); 
+    }
 };
