@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Select class='select'v-model = "defaultDefine" style="width:200px" placeholder="Select ..." >
+        <Select v-model = "defaultDefine" style="width:200px" placeholder="Select ..." >
             <Option :value='cmpContent.defaultListValue.key'>{{cmpContent.defaultListValue.key}}</Option>
         </Select>
     </div>
@@ -19,8 +19,5 @@
     }
 </script>
 <style scoped>
-    .select{
-        display: inline-block;
-        margin: 10px auto;
-    }
+
 </style>

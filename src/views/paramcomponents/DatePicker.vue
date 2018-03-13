@@ -64,7 +64,15 @@
             }
         },
         beforeMount(){
-            
+           let Vue = this;
+           if(Vue.cmpContent.paramType == 'date' && Vue.cmpContent.defaultDate.format == "yyyy-MM-dd"){
+              Vue.DaterangeShow = true;
+              Vue.monthShow = false;
+           }
+           if(Vue.cmpContent.paramType == 'date' && Vue.cmpContent.defaultDate.format == "yyyy-MM"){
+              Vue.monthShow = true;
+              Vue.DaterangeShow = false;
+           }           
         }
     }
 </script>
