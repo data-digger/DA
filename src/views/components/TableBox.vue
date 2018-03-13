@@ -41,7 +41,7 @@ export default {
       Vue.modalpreview = true;
       Vue.AxiosPost("previewBizView",{'bizViewId':Vue.tablebox.bizViewId},
         function(response){
-          Vue.initPreviewTable(response.data);
+          Vue.initPreviewTable(response.data.gridData);
         }
       );
     },

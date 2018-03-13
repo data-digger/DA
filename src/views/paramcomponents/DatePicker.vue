@@ -10,7 +10,7 @@
 </template>
 <script>
     export default {
-        props:["DaterangeShow","monthShow"],
+        props:["DaterangeShow","monthShow",'cmpContent'],
         data () {
             return {
                 dataValue:null,
@@ -49,37 +49,6 @@
                         }
                     ]
                 },             
-/*                options2: {
-                    shortcuts: [
-                        {
-                            text: 'A week',
-                            value () {
-                                const end = new Date();
-                                const start = new Date();
-                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                                return [start, end];
-                            }
-                        },
-                        {
-                            text: 'A month',
-                            value () {
-                                const end = new Date();
-                                const start = new Date();
-                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                                return [start, end];
-                            }
-                        },
-                        {
-                            text: '3 month',
-                            value () {
-                                const end = new Date();
-                                const start = new Date();
-                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                                return [start, end];
-                            }
-                        }
-                    ]
-                }*/
             }
         },
         methods:{
@@ -93,6 +62,9 @@
                   Vue.$emit("sentDate",Vue.dataValue);
                }
             }
+        },
+        beforeMount(){
+            
         }
     }
 </script>

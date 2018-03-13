@@ -153,7 +153,7 @@ export default {
        if (Vue.myChart.bizViewId != ''){
            Vue.AxiosPost("previewBizView",{'bizViewId':Vue.myChart.bizViewId},
             function(response){
-              Vue.queryData = response.data;
+              Vue.queryData = response.data.gridData;
               Vue.colNameShow = true;
             }
         ); 

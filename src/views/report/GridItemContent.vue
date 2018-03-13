@@ -166,7 +166,7 @@ export default {
         let Vue = this;
         let eoption = eval("(" + chart.defineJSON + ")");
         //解析option
-        chartUtil.analysis(eoption,chart.type,chartData.data);
+        chartUtil.analysis(eoption,chart.type,chartData.data.gridData);
         // 基于准备好的dom，初始化echarts实例
         Vue.chartView = echarts.init(document.getElementById("chart-"+Vue.chartID+Vue.portletID));
         // 绘制图表
@@ -174,7 +174,7 @@ export default {
       },
       drawTable(chart,tableData){
         let Vue = this;
-        var header = tableData.data.stringHeaders;
+        var header = tableData.data.gridData.stringHeaders;
         var cols = [];
         for(let c in header){
            cols.push({
@@ -183,7 +183,7 @@ export default {
            })
         };
         var rows = [];
-        var rowData = tableData.data.data;
+        var rowData = tableData.data.gridData.data;
          for(let r in rowData){
             let row = {};
             let curRow = rowData[r];
@@ -204,7 +204,7 @@ export default {
       drawCard(chart,cardData){
         let Vue = this;
         Vue.cardOption = eval("(" + chart.defineJSON + ")");
-        chartUtil.analysis(Vue.cardOption,chart.type,cardData.data);        
+        chartUtil.analysis(Vue.cardOption,chart.type,cardData.data.gridData);        
       },
       resized(){
         let Vue = this;

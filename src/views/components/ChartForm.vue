@@ -83,7 +83,7 @@ export default {
                     }
                 })
     },  
-     initOptionEdit: function(){
+    initOptionEdit: function(){
         var myTextarea = $("#chartOption")[0];
         this.optionEditor = CodeMirror.fromTextArea(myTextarea,{
             lineNumbers: true, 
@@ -96,7 +96,7 @@ export default {
        let Vue = this;
         Vue.AxiosPost("previewBizView",{'bizViewId':Vue.myChart.bizViewId},
         function(response){
-          Vue.queryData = response.data;
+          Vue.queryData = response.data.gridData;
           Vue.colShow = true;
         }
       ); 

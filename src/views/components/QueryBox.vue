@@ -20,6 +20,7 @@
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
+      <component v-for='(cmp,index) in paramComponent' :is="cmp" :key='index' :cmpContent='cmpContent'></component>
       <Table border :columns="columns" :data="currentTableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
@@ -32,15 +33,21 @@
 
 <script>
 import QueryForm from './../components/QueryForm'
+import datepicker from "./../paramcomponents/DatePicker"
+import list from "./../paramcomponents/List"
 export default {
   name: 'query',
   components:{
-    QueryForm
+    QueryForm,
+    datepicker,
+    list
   },
   data(){
     return {
       modaledit:false,
       modalpreview:false,
+      paramComponent:[],
+      cmpContent:"",
       total:null,
       pageSize:4,
       columns:[],
@@ -53,9 +60,20 @@ export default {
     preview (){ 
       let Vue = this;
       Vue.modalpreview = true;
+      Vue.paramComponent = [];
       Vue.AxiosPost("previewBizView",{'bizViewId':Vue.querybox.id},
         function(response){
-          Vue.initPreviewTable(response.data);
+          for(var i in response.data.defaultParameters){
+            if(response.data.defaultParameters[i].paramType == 'list'){
+              Vue.paramComponent.push(list);
+              Vue.cmpContent = response.data.defaultParameters[i];
+            };
+            if(response.data.defaultParameters[i].paramType == 'date'){
+              Vue.paramComponent.push(datepicker);
+              Vue.cmpContent = response.data.defaultParameters[i];
+            }
+          }          
+          Vue.initPreviewTable(response.data.gridData);
         }
       );
     },

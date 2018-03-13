@@ -63,7 +63,8 @@ export default {
       chartView:null,
       cardShow:false,
       cardOption:null,
-      showOptions:{date:true}
+      showOptions:{date:true},
+      queryData:null,
     }
   },
   props:['chartbox','index'],
@@ -72,7 +73,7 @@ export default {
       let Vue = this;
        Vue.AxiosPost("previewBizView",{'bizViewId':Vue.chartbox.bizViewId},
         function(response){
-          Vue.queryData = response.data;
+          Vue.queryData = response.data.gridData;
           Vue.modalpreview = true;
           if(Vue.chartbox.type=='Card'){
               Vue.drawCard();

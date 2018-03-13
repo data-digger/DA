@@ -46,25 +46,30 @@
                        <Option value="static">static</Option>
                        <Option value="SQL">SQL </Option>
                     </Select>
-                </FormItem>                 
+                </FormItem>
+                <FormItem label="数据源" prop="dataSource" v-if = 'param.defineJSON.standbyDefine.valueSource == "SQL"?true:false'>
+                    <Select v-model="param.defineJSON.standbyDefine.dataSourceID"  placeholder="Select ...">
+                       <Option v-for='dataSource in datasourceList' :value="dataSource.id">{{dataSource.name}}</Option>
+                    </Select>
+                </FormItem>                                 
                 <FormItem label="候选值" prop="standbyDefine" v-if = 'param.defineJSON.standbyDefine.valueSource == "static"?true:false'>
                     <Col><Tag v-for='el in param.defineJSON.standbyDefine.values' checkable closable type='dot'color="green" :key='el.key'>{{el.value}}/{{el.key}}</Tag></Col>
                     <Col span='10'><Input size="small" v-model = 'standbyData.value'><span slot="prepend">值</span>standbyData.standbyValue</Input></Col>
                     <Col span='10'><Input size="small" v-model = 'standbyData.key'><span slot="prepend">码值</span>standbyData.standbyKey</Input></Col>
                     <Col span='4' style='padding-bottom:3px'><Button type="primary" size="small" @click='addStandByValue()'>添加</Button></Col>
                 </FormItem>
-                <FormItem label="候选值" prop="standbyDefine" v-if = 'param.defineJSON.standbyDefine.valueSource == "SQL"?true:false'>
-                    <textarea id='standbyDefineEditor'></textarea>
-                </FormItem>
                 <FormItem label="缺省值" prop="defalutDefine"v-if = 'param.defineJSON.standbyDefine.valueSource == "static"?true:false'>
                     <Col span='12'>
                       <Select v-model = 'param.defineJSON.defalutDefine.key' placeholder="Select ...">
-                          <Option v-for ='el in param.defineJSON.standbyDefine.values' :key='el.value' :value ='el.key'>
+                          <Option v-for ='el in param.defineJSON.standbyDefine.values' :key='el.value' :value='el.key'>
                               {{el.value}}
-                          </Option>
+                          </Option>                
                       </Select>
                     </Col> 
                 </FormItem>
+                <FormItem label="候选值" prop="standbyDefine" v-if = 'param.defineJSON.standbyDefine.valueSource == "SQL"?true:false'>
+                    <textarea id='standbyDefineEditor'></textarea>
+                </FormItem>                
                 <FormItem label="缺省值" prop="defalutDefine"v-if = 'param.defineJSON.standbyDefine.valueSource == "SQL"?true:false'>
                     <Col span='10'><Input size="small" v-model = 'param.defineJSON.defalutDefine.value'><span slot="prepend">值</span></Input></Col>
                     <Col span='10'><Input size="small" v-model = 'param.defineJSON.defalutDefine.key'><span slot="prepend">码值</span></Input></Col>
@@ -85,15 +90,21 @@
   </Form>
 </template>
 <script>
-import DatePicker from "./../components/DatePicker"
+import DatePicker from "./../paramcomponents/DatePicker"
 import CodeMirror from "codemirror/lib/codemirror.js"
 import "codemirror/mode/sql/sql.js"
+import {mapGetters} from 'vuex'
 export default {
      name:'createDatasource',
      components:{
        "datePicker":DatePicker
      },
-    data () {
+    computed: {
+      ...mapGetters({
+        datasourceList: 'datasourceList',
+      })
+    },
+     data () {
         return {
         param:{   
             name:'',
@@ -105,10 +116,10 @@ export default {
               defalutDefine:{key:"",value:""},
               standbyDefine:{
                 valueSource:'',
-                values:[]
+                values:[],
+                dataSourceID:'',
               },
               formattype:'',
-              
               datetime:''
             }
         },

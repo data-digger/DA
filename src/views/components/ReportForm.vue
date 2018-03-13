@@ -1,6 +1,14 @@
 <template>
     <div>
       <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="false":is-resizable="false":vertical-compact="true":use-css-transforms="true">
+
+            <Collapse :active-key="activeKey" accordion>
+                <Panel key="1">
+                   <p slot="content">你可以选择参数了</p>
+                </Panel>
+            </Collapse>
+
+            <div class='header' v-if='false'></div>
             <grid-item v-for="(item,itemIndex) in report.defineJSON.content.portlets":x="item.x":y="item.y":w="item.w":h="item.h":i="item.i":key='item.i'>
               <div class='griditem-title'>{{item.tabs[0].title}}</div>
               <!-- EChart容器 -->
@@ -30,10 +38,27 @@
                   :intro-weight='cardOption.introWeight'                         
                 ></infoCard></div>                                   
             </grid-item>
-            <ButtonGroup vertical class="demo-affix" style='right:10px;position:fixed'>
-                  <Button type="warning" icon="arrow-expand"></Button>
-                   <Poptip title="提示标题" content="提示内容" placement="left"><Button type="warning" icon="funnel"></Button></Poptip>
-                  <Button type="warning" icon="android-more-horizontal"></Button>
+            <ButtonGroup vertical class="demo-affix" style='right:18px;position:fixed;top:35%;'>
+                  <div class='monitor'><Icon type="arrow-expand"></Icon></div>
+                  <div class='monitor' @click='selectParam()'><Icon type="funnel"></Icon></div>
+                  <Poptip placement="left" trigger='hover'>
+                    <div class='monitor'><Icon type="more"></Icon></div>
+                    <div class="api" slot="content">
+                        {{report.desc}}
+                    </div>                      
+                  </Poptip>
+<!--              <Poptip content="提示内容" placement="left" width='400' title='选择参数' trigger='hover'>
+                    <Button type="warning" icon="funnel"></Button>
+                      <div class="api" slot="content">
+                          <Tag v-for='param in paramList' :key='param.id' color="yellow">{{param.name}}</Tag>
+                       </div>
+                  </Poptip>
+                  <Poptip placement="left" title='报表描述'  trigger='hover'>
+                      <Button type="warning" icon="android-more-horizontal"></Button>
+                      <div class="api" slot="content">
+                          {{report.desc}}
+                      </div>                     
+                  </Poptip>    -->   
             </ButtonGroup>
          </grid-layout>
     </div>    
@@ -44,6 +69,7 @@ import echarts from 'echarts'
 import chartUtil from './../../libs/chartUtil.js'
 import infoCard from './../home/components/inforCard'
 import CircleMenu from 'vue-circle-menu'
+import {mapGetters} from 'vuex'
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
 export default {
@@ -53,8 +79,14 @@ export default {
       infoCard,
       CircleMenu
   },
+  computed:{
+  ...mapGetters({
+    paramList:'paramList'
+   })
+  },
   data(){
     return {
+      activeKey:1,
       report:null,
       chartShow :true,
       tableShow : true,
@@ -68,13 +100,17 @@ export default {
     }
   }, 
   methods:{
+    selectParam(){
+      let Vue = this;
+     /* Vue.*/
+    },
     initReport(){
       let Vue = this;
       Vue.AxiosPost("getReportData",{'reportID':Vue.report.id},
       function(response){
         var portlets = JSON.parse(response.data.defineJSON).content.portlets;
-        var chartData = response.data.chartData;
-        var tableData = response.data.tableData;   
+        var chartData = response.data.gridData.chartData;
+        var tableData = response.data.gridData.tableData;   
         for (var i in chartData){
           if(chartData[i].type == 'Card'){
             Vue.drawCard(chartData[i]);
@@ -154,6 +190,15 @@ export default {
 
 
 <style scoped lang='less'>
+.header{
+  width: 99%;
+  margin: 0px 10px;
+  height: 45px;
+  background-color: #f8f8f9;
+  border-radius: 4px;
+  border: 1px solid lightgray;
+  box-shadow: 3px 6px 3px -2px lightgrey;
+}
 .griditem-title{
   height: 40px;
   line-height: 40px;
@@ -169,5 +214,21 @@ export default {
 }
 .grid-layout{
   background-color:#f0f0f0 !important;
+}
+.ivu-tooltip,.ivu-poptip{
+  display:block !important;
+}
+.monitor{
+  width: 60px;
+  height: 60px;
+  background: rgba(163,166,167,.63);
+  text-align: center;
+  cursor: pointer;
+  line-height:60px;
+  margin-bottom:2px;
+  font-size: 30px;
+}
+.monitor:hover{
+  background-color:#2d8cf0;
 }
 </style>
