@@ -20,7 +20,8 @@
       title="图表预览"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <Condition :showOptions='showOptions'></Condition>
+      <!-- <Condition :showOptions='showOptions'></Condition> -->
+      <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp" :key='index' :cmpContent='cmpContent'></component>
       <div v-if="chartbox.type != 'Card'" class="previewChart" :id="'previewChart'+chartbox.id"></div>
       <div v-if="chartbox.type == 'Card'" class="previewCard">
         <infoCard 
@@ -45,15 +46,19 @@
 <script>
 import echarts from 'echarts'
 import ChartForm from './../components/ChartForm'
-import Condition from './../components/Condition'
+/*import Condition from './../components/Condition'*/
 import chartUtil from './../../libs/chartUtil.js'
 import infoCard from './../home/components/inforCard'
+import datepicker from "./../paramcomponents/DatePicker"
+import list from "./../paramcomponents/List"
 export default {
   name: 'ChartBox',
   components:{
     ChartForm,
-    Condition,
-    infoCard
+/*    Condition,*/
+    infoCard,
+    datepicker,
+    list
   },
   data(){
     return {
@@ -65,6 +70,8 @@ export default {
       cardOption:null,
       showOptions:{date:true},
       queryData:null,
+      paramComponent:[],
+      cmpContent:null,
     }
   },
   props:['chartbox','index'],
@@ -73,6 +80,16 @@ export default {
       let Vue = this;
        Vue.AxiosPost("previewBizView",{'bizViewId':Vue.chartbox.bizViewId},
         function(response){
+          for(var i in response.data.defaultParameters){
+            if(response.data.defaultParameters[i].paramType == 'list'){
+              Vue.paramComponent.push(list);
+              Vue.cmpContent = response.data.defaultParameters[i];
+            };
+            if(response.data.defaultParameters[i].paramType == 'date'){
+              Vue.paramComponent.push(datepicker);
+              Vue.cmpContent = response.data.defaultParameters[i];
+            }
+          }          
           Vue.queryData = response.data.gridData;
           Vue.modalpreview = true;
           if(Vue.chartbox.type=='Card'){
@@ -131,4 +148,8 @@ export default {
     height: 150px;
     margin: auto;
   }
+  .paramcomponent{
+  display: inline-block;
+  margin: 10px auto;
+ }
 </style>

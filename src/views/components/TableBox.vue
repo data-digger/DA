@@ -11,6 +11,7 @@
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
+      <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp" :key='index' :cmpContent='cmpContent'></component>
       <Table border :columns="columns" :data="currentTableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
@@ -21,9 +22,13 @@
   </Col>
 </template>
 <script>
+import datepicker from "./../paramcomponents/DatePicker"
+import list from "./../paramcomponents/List"
 export default {
   props:['tablebox','index'],
   components: {
+    datepicker,
+    list
   },
   data(){
     return {
@@ -33,6 +38,8 @@ export default {
       pageSize:4,
       historyData:[],
       currentTableData:[], 
+      paramComponent:[],
+      cmpContent:null,
     }
   }, 
   methods:{
@@ -41,6 +48,16 @@ export default {
       Vue.modalpreview = true;
       Vue.AxiosPost("previewBizView",{'bizViewId':Vue.tablebox.bizViewId},
         function(response){
+          for(var i in response.data.defaultParameters){
+            if(response.data.defaultParameters[i].paramType == 'list'){
+              Vue.paramComponent.push(list);
+              Vue.cmpContent = response.data.defaultParameters[i];
+            };
+            if(response.data.defaultParameters[i].paramType == 'date'){
+              Vue.paramComponent.push(datepicker);
+              Vue.cmpContent = response.data.defaultParameters[i];
+            }
+          }
           Vue.initPreviewTable(response.data.gridData);
         }
       );
@@ -92,5 +109,8 @@ export default {
 
 
 <style scoped>
-
+  .paramcomponent{
+  display: inline-block;
+  margin: 10px auto;
+ }
 </style>
