@@ -68,16 +68,19 @@
         beforeMount(){
            let Vue = this;
            if(Vue.cmpContent){
-               if(Vue.cmpContent.paramType == 'date' && Vue.cmpContent.defaultDate.format == "yyyy-MM-dd"){
-                  Vue.DaterangeShow = true;
-                  Vue.monthShow = false;
-                  Vue.defaultDate = Vue.cmpContent.defaultDate.date;
-               }
-               if(Vue.cmpContent.paramType == 'date' && Vue.cmpContent.defaultDate.format == "yyyy-MM"){
-                  Vue.monthShow = true;
-                  Vue.DaterangeShow = false;
-                  Vue.defaultDate = Vue.cmpContent.defaultDate.date;
-               }            
+              for(var i in Vue.cmpContent){
+                 if(Vue.cmpContent[i].paramType == 'date' && Vue.cmpContent[i].defaultDate.format == "yyyy-MM-dd"){
+                    Vue.DaterangeShow = true;
+                    Vue.monthShow = false;
+                    Vue.defaultDate = Vue.cmpContent[i].defaultDate.date;
+                 }
+                 if(Vue.cmpContent[i].paramType == 'date' && Vue.cmpContent[i].defaultDate.format == "yyyy-MM"){
+                    Vue.monthShow = true;
+                    Vue.DaterangeShow = false;
+                    Vue.defaultDate = Vue.cmpContent[i].defaultDate.date;
+                 }                  
+              }
+           
            }
            if(Vue.dateType){
                if(Vue.dateType == 'DaterangeShow'){

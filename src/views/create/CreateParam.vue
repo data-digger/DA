@@ -60,8 +60,8 @@
                 </FormItem>
                 <FormItem label="缺省值" prop="defalutDefine"v-if = 'param.defineJSON.standbyDefine.valueSource == "static"?true:false'>
                     <Col span='12'>
-                      <Select v-model = 'param.defineJSON.defalutDefine' placeholder="Select ...">
-                          <Option v-for ='el in param.defineJSON.standbyDefine.values' :key='el.value' :value='el'>
+                      <Select v-model = 'param.defineJSON.defalutDefine.key' placeholder="Select ...">
+                          <Option v-for ='el in param.defineJSON.standbyDefine.values' :key='el.value' :value='el.key'>
                               {{el.value}}
                           </Option>                
                       </Select>
@@ -126,8 +126,8 @@ export default {
             defineJSON:{
               componenttype:'',
               valuetype:'',              
-              /*defalutDefine:{key:"",value:""},*/
-              defalutDefine:'',
+              defalutDefine:{key:"",value:""},
+              /*defalutDefine:'',*/
               standbyDefine:{
                 valueSource:'',
                 values:[],

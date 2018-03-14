@@ -39,7 +39,7 @@ export default {
       historyData:[],
       currentTableData:[], 
       paramComponent:[],
-      cmpContent:null,
+      cmpContent:[],
     }
   }, 
   methods:{
@@ -52,11 +52,11 @@ export default {
           for(var i in response.data.defaultParameters){
             if(response.data.defaultParameters[i].paramType == 'list'){
               Vue.paramComponent.push(list);
-              Vue.cmpContent = response.data.defaultParameters[i];
+              Vue.cmpContent.push(response.data.defaultParameters[i]);
             };
             if(response.data.defaultParameters[i].paramType == 'date'){
               Vue.paramComponent.push(datepicker);
-              Vue.cmpContent = response.data.defaultParameters[i];
+              Vue.cmpContent.push(response.data.defaultParameters[i]);
             }
           }
           Vue.initPreviewTable(response.data.gridData);
@@ -111,7 +111,7 @@ export default {
 
 <style scoped>
   .paramcomponent{
-  display: inline-block;
-  margin: 10px auto;
- }
+   display: inline-block;
+   margin: 0px 3px;
+  }
 </style>

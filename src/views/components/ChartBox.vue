@@ -71,7 +71,7 @@ export default {
       showOptions:{date:true},
       queryData:null,
       paramComponent:[],
-      cmpContent:null,
+      cmpContent:[],
     }
   },
   props:['chartbox','index'],
@@ -84,11 +84,11 @@ export default {
           for(var i in response.data.defaultParameters){
             if(response.data.defaultParameters[i].paramType == 'list'){
               Vue.paramComponent.push(list);
-              Vue.cmpContent = response.data.defaultParameters[i];
+              Vue.cmpContent.push(response.data.defaultParameters[i]);
             };
             if(response.data.defaultParameters[i].paramType == 'date'){
               Vue.paramComponent.push(datepicker);
-              Vue.cmpContent = response.data.defaultParameters[i];
+              Vue.cmpContent.push(response.data.defaultParameters[i]);
             }
           }          
           Vue.queryData = response.data.gridData;
@@ -150,7 +150,7 @@ export default {
     margin: auto;
   }
   .paramcomponent{
-  display: inline-block;
-  margin: 10px auto;
- }
-</style>
+   display: inline-block;
+   margin: 0px 3px;
+  }
+  </style>

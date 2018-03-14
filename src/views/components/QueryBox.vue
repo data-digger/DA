@@ -20,7 +20,8 @@
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp" :key='index' :cmpContent='cmpContent' @sentParam = 'refreshQueryData'></component>
+      <Row><component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp" :key='index' :cmpContent='cmpContent' @sentParam = 'refreshQueryData'></component></Row>
+      
       <Table border :columns="columns" :data="currentTableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
@@ -47,7 +48,7 @@ export default {
       modaledit:false,
       modalpreview:false,
       paramComponent:[],
-      cmpContent:"",
+      cmpContent:[],
       total:null,
       pageSize:4,
       columns:[],
@@ -70,11 +71,11 @@ export default {
           for(var i in response.data.defaultParameters){
             if(response.data.defaultParameters[i].paramType == 'list'){
               Vue.paramComponent.push(list);
-              Vue.cmpContent = response.data.defaultParameters[i];
+              Vue.cmpContent.push(response.data.defaultParameters[i]);
             };
             if(response.data.defaultParameters[i].paramType == 'date'){
               Vue.paramComponent.push(datepicker);
-              Vue.cmpContent = response.data.defaultParameters[i];
+              Vue.cmpContent.push(response.data.defaultParameters[i]);
             }
           }          
           Vue.initPreviewTable(response.data.gridData);
@@ -147,6 +148,6 @@ export default {
 <style scoped>
 .paramcomponent{
   display: inline-block;
-  margin: 10px auto;
+  margin: 0px 3px;
 }
 </style>
