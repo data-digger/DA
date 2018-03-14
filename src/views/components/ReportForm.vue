@@ -1,23 +1,16 @@
 <template>
     <div>
       <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="false":is-resizable="false":vertical-compact="true":use-css-transforms="true">
-
-            <Collapse :active-key="activeKey" accordion>
-                <Panel :key="activeKey" name='1'>
-                  <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp" :key='index' :cmpContent='cmpContent'></component>
-                  <p slot="content">
-                    
-                  </p>
-                </Panel>
-            </Collapse>
-
+          <Row>
+            <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component>
+          </Row>
             <div class='header' v-if='false'></div>
             <grid-item v-for="(item,itemIndex) in report.defineJSON.content.portlets":x="item.x":y="item.y":w="item.w":h="item.h":i="item.i":key='item.i'>
               <div class='griditem-title'>{{item.tabs[0].title}}</div>
               <!-- EChart容器 -->
               <div :id="'chart'+report.id+item.i" style='height:90%;' v-show='chartShow && item.tabs[0].objtype != "Table"&& item.tabs[0].objtype != "Card"'></div>  
               <!-- 表格容器 -->
-              <Table style='margin:20px 10px'border :columns="columns" :data="currentTableData" v-show='tableShow && item.tabs[0].objtype == "Table"' ref='table'>   
+              <Table style='margin:20px 10px'border :columns="columns" :data="currentTableData[item.i]" v-show='tableShow && item.tabs[0].objtype == "Table"' ref='table'>   
               </Table>
               <div style="margin: 10px;overflow: hidden" v-show='tableShow && item.tabs[0].objtype == "Table"'>        
                 <div style="float: right;">
@@ -82,8 +75,8 @@ export default {
       "GridLayout": GridLayout,
       "GridItem": GridItem,
       infoCard,
-/*      datepicker,
-      list*/
+      datepicker,
+      list
   },
   computed:{
   ...mapGetters({
@@ -102,50 +95,54 @@ export default {
       columns:[],
       pageSize:4,
       historyData:[],
-      currentTableData:[],  
-/*      paramComponent:[],
-      cmpContent:"",*/
+      currentTableData:{},  
+      paramComponent:[],
+      paramSelected:null
     }
   }, 
   methods:{
-    selectParam(){
-      let Vue = this;
-      Vue.activeKey = 1;
-    },
     initReport(){
       let Vue = this;
       Vue.paramComponent = [];
       Vue.AxiosPost("getReportData",{'reportID':Vue.report.id},
       function(response){
-/*        for(var i in response.data.defaultParameters){
-          if(response.data.defaultParameters[i].paramType == 'list'){
-            Vue.paramComponent.push(list);
-            Vue.cmpContent = response.data.defaultParameters[i];
+        for(var i in response.data.parameterSet){
+          if(response.data.parameterSet[i].paramType == 'list'){
+            var cmpObj = {};
+            cmpObj.component = list;
+            cmpObj.content = response.data.parameterSet[i];
+            Vue.paramComponent.push(cmpObj);
           };
-          if(response.data.defaultParameters[i].paramType == 'date'){
-            Vue.paramComponent.push(datepicker);
-            Vue.cmpContent = response.data.defaultParameters[i];
+          if(response.data.parameterSet[i].paramType == 'date'){
+            var cmpObj = {};
+            cmpObj.component = datepicker;
+            cmpObj.content = response.data.parameterSet[i];
+            Vue.paramComponent.push(cmpObj);
           }
-        };*/        
-        var portlets = JSON.parse(response.data.defineJSON).content.portlets;
-        var chartData = response.data.chartData;
-        var tableData = response.data.tableData;   
-        for (var i in chartData){
-          if(chartData[i].type == 'Card'){
-            Vue.drawCard(chartData[i]);
-            Vue.cardShow = true;
-          }else{
-            Vue.drawEChart(chartData[i]);
-          }
-        }
-        for(var j in tableData){
-            Vue.drawTable(tableData[j]); 
-        }         
+        }        
+        Vue.refreshReport(response);
       })         
      },
+    refreshReport(response){
+      let Vue = this;
+      var portlets = JSON.parse(response.data.defineJSON).content.portlets;
+      var chartData = response.data.chartData;
+      var tableData = response.data.tableData;   
+      for (var i in chartData){
+        if(chartData[i].type == 'Card'){
+          Vue.drawCard(chartData[i]);
+          Vue.cardShow = true;
+        }else{
+          Vue.drawEChart(chartData[i]);
+        }
+      }
+      for(var j in tableData){
+          Vue.drawTable(tableData[j]); 
+      } 
+    },
     drawTable (tableData){
       let Vue = this;
-      var header = tableData.gridData.stringHeaders;
+      var header = tableData.data.gridData.stringHeaders;
       var cols = [];
       for(let c in header){
          cols.push({
@@ -154,7 +151,7 @@ export default {
          })
       };
       var rows = [];
-      var rowData = tableData.gridData.data;
+      var rowData = tableData.data.gridData.data;
        for(let r in rowData){
           let row = {};
           let curRow = rowData[r];
@@ -167,14 +164,14 @@ export default {
       Vue.total = rows.length;
       Vue.historyData = rows;
       if(Vue.total<Vue.pageSize){
-        Vue.currentTableData = Vue.historyData;
+        Vue.currentTableData[tableData.portletID]= Vue.historyData;
       }else{
-        Vue.currentTableData = Vue.historyData.slice(0,this.pageSize);
+        Vue.currentTableData[tableData.portletID] = Vue.historyData.slice(0,this.pageSize);
       }         
    },
    drawEChart (chartData) {
     let Vue = this;
-    var gridData = chartData.gridData;
+    var gridData = chartData.data.gridData;
     var chartDefineJSON = chartData.defineJSON;
     var type = chartData.type;
     var eoption = eval('(' + chartDefineJSON + ')');
@@ -185,20 +182,30 @@ export default {
     drawCard(cardData){
       let Vue = this;
       Vue.cardOption=eval("(" + cardData.defineJSON + ")");
-      chartUtil.analysis(Vue.cardOption,cardData.type,cardData.gridData);
+      chartUtil.analysis(Vue.cardOption,cardData.type,cardData.data.gridData);
     },   
    changePage(index){
       let Vue = this;
       var _start = ( index - 1 ) * Vue.pageSize;
       var _end = index * Vue.pageSize;
-      Vue.currentTableData = Vue.historyData.slice(_start,_end);
+      Vue.currentTableData[tableData.portletID] = Vue.historyData.slice(_start,_end);
    },
    exportData(dataName){
     let Vue = this;
     Vue.$refs.table[0].exportCsv({
       filename: dataName
     });    
-   }
+   },
+    refreshQueryData(param){
+      let Vue = this;
+      Vue.paramSelected = $.extend(Vue.paramSelected,param);
+      console.log(Vue.param);
+      let JSONParam = JSON.stringify(Vue.paramSelected);
+/*      Vue.AxiosPost("updateBizView",{"bizViewId":Vue.report.id,"JSONParam":JSONParam},
+        function(response){
+        
+      });  */    
+    }
   },
   beforeMount(){
     this.report = this.$route.params;
@@ -249,5 +256,8 @@ export default {
 }
 .monitor:hover{
   background-color:#2d8cf0;
+}
+.paramcomponent{
+  display: inline-block;
 }
 </style>

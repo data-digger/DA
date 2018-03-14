@@ -71,10 +71,7 @@ export default {
       showOptions:{date:true},
       queryData:null,
       paramComponent:[],
-      param:{
-        bizViewId:null,
-        paramSelected:null
-      } 
+      paramSelected:null
     }
   },
   props:['chartbox','index'],
@@ -98,17 +95,20 @@ export default {
               Vue.paramComponent.push(cmpObj);
             }
           }           
-          Vue.queryData = response.data.gridData;
-          Vue.modalpreview = true;
-          if(Vue.chartbox.type=='Card'){
-              Vue.drawCard();
-          }else{
-              Vue.$nextTick(function(){
-              Vue.drawEChart();
-            })
-          }
-         
+          Vue.refreshChartData(response);         
       });
+    },
+    refreshChartData(){
+      let Vue = this;
+      Vue.queryData = response.data.gridData;
+      Vue.modalpreview = true;
+      if(Vue.chartbox.type=='Card'){
+          Vue.drawCard();
+      }else{
+          Vue.$nextTick(function(){
+          Vue.drawEChart();
+        })
+      }      
     },
     edit (){
       this.modaledit = true;
@@ -144,21 +144,12 @@ export default {
     },
     refreshQueryData(param){
       let Vue = this;
-      Vue.param.paramSelected = $.extend(Vue.param.paramSelected,param);
-      Vue.param.bizViewId = Vue.chartbox.bizViewId;
+      Vue.paramSelected = $.extend(Vue.paramSelected,param);
       console.log(Vue.param);
-      let JSONParam = JSON.stringify(Vue.param);
+      let JSONParam = JSON.stringify(Vue.paramSelected);
       Vue.AxiosPost("updateBizView",{"JSONParam":JSONParam},
         function(response){
-        /*Vue.initPreviewTable(response.data);*/
-/*        Vue.queryData = response.data.gridData;
-        if(Vue.chartbox.type=='Card'){
-            Vue.drawCard();
-        }else{
-            Vue.$nextTick(function(){
-            Vue.drawEChart();
-          })
-        }*/
+
       });      
     }    
   }
