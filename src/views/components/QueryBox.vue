@@ -137,10 +137,10 @@ export default {
       Vue.param.bizViewId = Vue.querybox.id;
       console.log(Vue.param);
       let JSONParam = JSON.stringify(Vue.param);
-  /*    Vue.AxiosPost("",JSONParam,
+      Vue.AxiosPost("updateBizView",{'JSONParam':JSONParam},
         function(response){
         Vue.initPreviewTable(response.data);
-      });  */    
+      });      
     }
    }
 }
