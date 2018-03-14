@@ -11,7 +11,8 @@ window.urlConf = {
   bizview: {
     list:`${window.uri}/bizview/list`,
     new: `${window.uri}/bizview/new`,
-    preview:`${window.uri}/bizview/preview`
+    preview:`${window.uri}/bizview/preview`,
+    update: `${window.uri}/bizview/update`,
   },
   chart: {
     list:`${window.uri}/chart/list`,
@@ -74,6 +75,10 @@ export default {
     previewBizView(params){
      return axios.post(urlConf.bizview.preview, params); 
     },
+     /*根据参数值更新查询器数据*/
+     updateBizView(params){
+      return axios.post(urlConf.bizview.update, params); 
+     },
     /*创建仪表*/
     createChart(params){
       return axios.post(urlConf.chart.new, params); 
