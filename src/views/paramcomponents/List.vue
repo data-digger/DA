@@ -27,12 +27,17 @@
         },
         created(){
             let Vue = this;
-            Vue.defaultDefine = Vue.cmpContent.defaultListValue.key;
-            Vue.AxiosPost("getStandByValue",
-                {"paramId":Vue.cmpContent.paramId},
-                function(response){
-                   Vue.getStandByValue = response.data.standByList;
-            });
+            for(var i in Vue.cmpContent){
+                if(Vue.cmpContent[i].paramType == "list"){
+                    Vue.defaultDefine = Vue.cmpContent[i].defaultListValue.key;
+                    Vue.AxiosPost("getStandByValue",
+                        {"paramId":Vue.cmpContent[i].paramId},
+                        function(response){
+                           Vue.getStandByValue = response.data.standByList;
+                    });                    
+                }
+            }  
+
         }
     }
 </script>

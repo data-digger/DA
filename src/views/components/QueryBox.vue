@@ -66,6 +66,7 @@ export default {
       let Vue = this;
       Vue.modalpreview = true;
       Vue.paramComponent = [];
+      Vue.cmpContent = [];
       Vue.AxiosPost("previewBizView",{'bizViewId':Vue.querybox.id},
         function(response){
           for(var i in response.data.defaultParameters){
