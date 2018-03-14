@@ -14,6 +14,17 @@
             getStandByValue:''
            }
         },
+        watch:{
+        　　　'defaultDefine': 'sentListParam',
+        　},
+        methods:{
+            sentListParam(){
+                let Vue = this;
+                let paramSelected = {};
+                paramSelected[Vue.cmpContent.paramId] = Vue.defaultDefine;
+                Vue.$emit("sentParam",paramSelected);
+            }
+        },
         created(){
             let Vue = this;
             Vue.defaultDefine = Vue.cmpContent.defaultListValue.key;

@@ -20,7 +20,8 @@ const state = {
         portlets:[]
       },
       tail:{}
-    }},
+    }
+  },
   /*paramData:'',*/
   layoutSelected:"布局1"
 }

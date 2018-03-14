@@ -20,7 +20,7 @@
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp" :key='index' :cmpContent='cmpContent'></component>
+      <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp" :key='index' :cmpContent='cmpContent' @sentParam = 'refreshQueryData'></component>
       <Table border :columns="columns" :data="currentTableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
@@ -52,7 +52,11 @@ export default {
       pageSize:4,
       columns:[],
       historyData:[],
-      currentTableData:[],      
+      currentTableData:[],
+      param:{
+        bizViewId:null,
+        paramSelected:null
+      }      
     }
   },
   props:['querybox','index'],
@@ -125,6 +129,17 @@ export default {
       var _start = ( index - 1 ) * Vue.pageSize;
       var _end = index * Vue.pageSize;
       Vue.currentTableData = Vue.historyData.slice(_start,_end);
+    },
+    refreshQueryData(param){
+      let Vue = this;
+      Vue.param.paramSelected = param;
+      Vue.param.bizViewId = Vue.querybox.id;
+      console.log(Vue.param);
+      let JSONParam = JSON.stringify(Vue.param);
+  /*    Vue.AxiosPost("",JSONParam,
+        function(response){
+        Vue.initPreviewTable(response.data);
+      });  */    
     }
    }
 }

@@ -3,8 +3,11 @@
       <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="false":is-resizable="false":vertical-compact="true":use-css-transforms="true">
 
             <Collapse :active-key="activeKey" accordion>
-                <Panel key="1">
-                   <p slot="content">你可以选择参数了</p>
+                <Panel :key="activeKey" name='1'>
+                  <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp" :key='index' :cmpContent='cmpContent'></component>
+                  <p slot="content">
+                    
+                  </p>
                 </Panel>
             </Collapse>
 
@@ -68,8 +71,10 @@ import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
 import echarts from 'echarts'
 import chartUtil from './../../libs/chartUtil.js'
 import infoCard from './../home/components/inforCard'
-import CircleMenu from 'vue-circle-menu'
 import {mapGetters} from 'vuex'
+import datepicker from "./../paramcomponents/DatePicker"
+import list from "./../paramcomponents/List"
+
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
 export default {
@@ -77,7 +82,8 @@ export default {
       "GridLayout": GridLayout,
       "GridItem": GridItem,
       infoCard,
-      CircleMenu
+/*      datepicker,
+      list*/
   },
   computed:{
   ...mapGetters({
@@ -86,7 +92,7 @@ export default {
   },
   data(){
     return {
-      activeKey:1,
+      activeKey:null,
       report:null,
       chartShow :true,
       tableShow : true,
@@ -97,20 +103,33 @@ export default {
       pageSize:4,
       historyData:[],
       currentTableData:[],  
+/*      paramComponent:[],
+      cmpContent:"",*/
     }
   }, 
   methods:{
     selectParam(){
       let Vue = this;
-     /* Vue.*/
+      Vue.activeKey = 1;
     },
     initReport(){
       let Vue = this;
+      Vue.paramComponent = [];
       Vue.AxiosPost("getReportData",{'reportID':Vue.report.id},
       function(response){
+/*        for(var i in response.data.defaultParameters){
+          if(response.data.defaultParameters[i].paramType == 'list'){
+            Vue.paramComponent.push(list);
+            Vue.cmpContent = response.data.defaultParameters[i];
+          };
+          if(response.data.defaultParameters[i].paramType == 'date'){
+            Vue.paramComponent.push(datepicker);
+            Vue.cmpContent = response.data.defaultParameters[i];
+          }
+        };*/        
         var portlets = JSON.parse(response.data.defineJSON).content.portlets;
-        var chartData = response.data.gridData.chartData;
-        var tableData = response.data.gridData.tableData;   
+        var chartData = response.data.chartData;
+        var tableData = response.data.tableData;   
         for (var i in chartData){
           if(chartData[i].type == 'Card'){
             Vue.drawCard(chartData[i]);
