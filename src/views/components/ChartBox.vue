@@ -21,7 +21,7 @@
       @on-ok="previewOk"
       @on-cancel="cancel">
       <!-- <Condition :showOptions='showOptions'></Condition> -->
-      <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp" :key='index' :cmpContent='cmpContent'></component>
+      <Row><component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component></Row>
       <div v-if="chartbox.type != 'Card'" class="previewChart" :id="'previewChart'+chartbox.id"></div>
       <div v-if="chartbox.type == 'Card'" class="previewCard">
         <infoCard 
@@ -71,7 +71,10 @@ export default {
       showOptions:{date:true},
       queryData:null,
       paramComponent:[],
-      cmpContent:[],
+      param:{
+        bizViewId:null,
+        paramSelected:null
+      } 
     }
   },
   props:['chartbox','index'],
@@ -83,14 +86,18 @@ export default {
         function(response){
           for(var i in response.data.defaultParameters){
             if(response.data.defaultParameters[i].paramType == 'list'){
-              Vue.paramComponent.push(list);
-              Vue.cmpContent.push(response.data.defaultParameters[i]);
+              var cmpObj = {};
+              cmpObj.component = list;
+              cmpObj.content = response.data.defaultParameters[i];
+              Vue.paramComponent.push(cmpObj);
             };
             if(response.data.defaultParameters[i].paramType == 'date'){
-              Vue.paramComponent.push(datepicker);
-              Vue.cmpContent.push(response.data.defaultParameters[i]);
+              var cmpObj = {};
+              cmpObj.component = datepicker;
+              cmpObj.content = response.data.defaultParameters[i];
+              Vue.paramComponent.push(cmpObj);
             }
-          }          
+          }           
           Vue.queryData = response.data.gridData;
           Vue.modalpreview = true;
           if(Vue.chartbox.type=='Card'){
@@ -135,6 +142,25 @@ export default {
           // 绘制图表
           chartView.setOption(eoption); 
     },
+    refreshQueryData(param){
+      let Vue = this;
+      Vue.param.paramSelected = $.extend(Vue.param.paramSelected,param);
+      Vue.param.bizViewId = Vue.chartbox.bizViewId;
+      console.log(Vue.param);
+      let JSONParam = JSON.stringify(Vue.param);
+      Vue.AxiosPost("updateBizView",{"JSONParam":JSONParam},
+        function(response){
+        /*Vue.initPreviewTable(response.data);*/
+/*        Vue.queryData = response.data.gridData;
+        if(Vue.chartbox.type=='Card'){
+            Vue.drawCard();
+        }else{
+            Vue.$nextTick(function(){
+            Vue.drawEChart();
+          })
+        }*/
+      });      
+    }    
   }
 }
 </script>

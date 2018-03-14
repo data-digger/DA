@@ -20,8 +20,7 @@
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <Row><component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp" :key='index' :cmpContent='cmpContent' @sentParam = 'refreshQueryData'></component></Row>
-      
+      <Row><component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component></Row>
       <Table border :columns="columns" :data="currentTableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
@@ -48,16 +47,12 @@ export default {
       modaledit:false,
       modalpreview:false,
       paramComponent:[],
-      cmpContent:[],
       total:null,
       pageSize:4,
       columns:[],
       historyData:[],
       currentTableData:[],
-      param:{
-        bizViewId:null,
-        paramSelected:null
-      }      
+      paramSelected:null    
     }
   },
   props:['querybox','index'],
@@ -66,17 +61,20 @@ export default {
       let Vue = this;
       Vue.modalpreview = true;
       Vue.paramComponent = [];
-      Vue.cmpContent = [];
       Vue.AxiosPost("previewBizView",{'bizViewId':Vue.querybox.id},
         function(response){
           for(var i in response.data.defaultParameters){
             if(response.data.defaultParameters[i].paramType == 'list'){
-              Vue.paramComponent.push(list);
-              Vue.cmpContent.push(response.data.defaultParameters[i]);
+              var cmpObj = {};
+              cmpObj.component = list;
+              cmpObj.content = response.data.defaultParameters[i];
+              Vue.paramComponent.push(cmpObj);
             };
             if(response.data.defaultParameters[i].paramType == 'date'){
-              Vue.paramComponent.push(datepicker);
-              Vue.cmpContent.push(response.data.defaultParameters[i]);
+              var cmpObj = {};
+              cmpObj.component = datepicker;
+              cmpObj.content = response.data.defaultParameters[i];
+              Vue.paramComponent.push(cmpObj);
             }
           }          
           Vue.initPreviewTable(response.data.gridData);
@@ -134,11 +132,10 @@ export default {
     },
     refreshQueryData(param){
       let Vue = this;
-      Vue.param.paramSelected = param;
-      Vue.param.bizViewId = Vue.querybox.id;
+      Vue.paramSelected = $.extend(Vue.paramSelected,param);
       console.log(Vue.param);
-      let JSONParam = JSON.stringify(Vue.param);
-      Vue.AxiosPost("updateBizView",{'JSONParam':JSONParam},
+      let JSONParam = JSON.stringify(Vue.paramSelected);
+      Vue.AxiosPost("updateBizView",{"bizViewId":Vue.querybox.id,"JSONParam":JSONParam},
         function(response){
         Vue.initPreviewTable(response.data);
       });      
@@ -149,6 +146,6 @@ export default {
 <style scoped>
 .paramcomponent{
   display: inline-block;
-  margin: 0px 3px;
+  margin: 10px auto;
 }
 </style>

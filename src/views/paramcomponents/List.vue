@@ -21,23 +21,22 @@
             sentListParam(){
                 let Vue = this;
                 let paramSelected = {};
-                paramSelected[Vue.cmpContent.paramId] = Vue.defaultDefine;
+                if(Vue.cmpContent.content.paramType == 'list'){
+                    paramSelected[Vue.cmpContent.content.paramId] = Vue.defaultDefine; 
+                }
                 Vue.$emit("sentParam",paramSelected);
             }
         },
-        created(){
+        beforeMount(){
             let Vue = this;
-            for(var i in Vue.cmpContent){
-                if(Vue.cmpContent[i].paramType == "list"){
-                    Vue.defaultDefine = Vue.cmpContent[i].defaultListValue.key;
-                    Vue.AxiosPost("getStandByValue",
-                        {"paramId":Vue.cmpContent[i].paramId},
-                        function(response){
-                           Vue.getStandByValue = response.data.standByList;
-                    });                    
-                }
-            }  
-
+            if(Vue.cmpContent){  
+                Vue.AxiosPost("getStandByValue",
+                    {"paramId":Vue.cmpContent.content.paramId},
+                    function(response){
+                       Vue.getStandByValue = response.data.standByList;
+                }); 
+                Vue.defaultDefine = Vue.cmpContent.content.defaultListValue.key;              
+            }
         }
     }
 </script>

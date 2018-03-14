@@ -1,20 +1,23 @@
 <template>
     <Row>
         <Col span="12">
-            <DatePicker v-if='monthShow' type="month" placeholder="Select month" style="width: 200px"@on-open-change='save' @on-change="handleChange" :value='defaultDate'></DatePicker>
+            <DatePicker v-if='monthShow' type="month" placeholder="Select month" style="width: 200px" @on-change="handleChange" :value='defaultDate' @on-open-change ='closeDatePicker'></DatePicker>
         </Col>
         <Col span="12">
-            <DatePicker v-if='DaterangeShow' type="date" :options="options1" placement="bottom-start" placeholder="Select date" style="width: 200px"  @on-open-change='save' @on-change="handleChange" :value='defaultDate'></DatePicker>
+            <DatePicker v-if='DaterangeShow' type="date" :options="options1" placement="bottom-start" placeholder="Select date" style="width: 200px"  @on-change="handleChange" @on-open-change ='closeDatePicker' :value='defaultDate'></DatePicker>
         </Col>
     </Row>
 </template>
 <script>
     export default {
         props:["dateType",'cmpContent'],
+        watch:{
+          'defaultDate':'sentDateParam'
+        },
         data () {
             return {
-                selectedDate:null,
-                defaultDate:null,
+                selectedDate:'2018-3-14',
+                defaultDate:'2018-3-14',
                 monthShow:false,
                 DaterangeShow:false,
                 options1: {
@@ -58,29 +61,38 @@
             handleChange(dateData){
               this.selectedDate = dateData;
             },
-            save(DatePicker){
-               let Vue = this;
-               if(DatePicker == false){
-                  Vue.$emit("sentDate",Vue.selectedDate);
-               }
+            closeDatePicker(DatePicker){
+              let Vue = this;
+              if(DatePicker == false){
+                Vue.sentDateParam();
+              }
+            },
+            sentDateParam(){
+              let Vue = this;
+              Vue.$emit("sentDate",Vue.selectedDate);
+              let paramSelected = {};
+              if(Vue.cmpContent.content.paramType == 'date'){
+                paramSelected[Vue.cmpContent.content.paramId] = Vue.selectedDate;  
+              }
+              Vue.$emit("sentParam",paramSelected);
             }
         },
+
         beforeMount(){
            let Vue = this;
            if(Vue.cmpContent){
-              for(var i in Vue.cmpContent){
-                 if(Vue.cmpContent[i].paramType == 'date' && Vue.cmpContent[i].defaultDate.format == "yyyy-MM-dd"){
+                 if(Vue.cmpContent.content.paramType == 'date' && Vue.cmpContent.content.defaultDate.format == "yyyy-MM-dd"){
                     Vue.DaterangeShow = true;
                     Vue.monthShow = false;
-                    Vue.defaultDate = Vue.cmpContent[i].defaultDate.date;
+                    Vue.defaultDate = Vue.cmpContent.content.defaultDate.date;
+                    Vue.selectedDate = Vue.cmpContent.content.defaultDate.date;
                  }
-                 if(Vue.cmpContent[i].paramType == 'date' && Vue.cmpContent[i].defaultDate.format == "yyyy-MM"){
+                 if(Vue.cmpContent.content.paramType == 'date' && Vue.cmpContent.content.defaultDate.format == "yyyy-MM"){
                     Vue.monthShow = true;
                     Vue.DaterangeShow = false;
-                    Vue.defaultDate = Vue.cmpContent[i].defaultDate.date;
-                 }                  
-              }
-           
+                    Vue.defaultDate = Vue.cmpContent.content.defaultDate.date;
+                    Vue.selectedDate = Vue.cmpContent.content.defaultDate.date;
+                 }                            
            }
            if(Vue.dateType){
                if(Vue.dateType == 'DaterangeShow'){
