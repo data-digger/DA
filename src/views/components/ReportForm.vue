@@ -201,10 +201,11 @@ export default {
       Vue.paramSelected = $.extend(Vue.paramSelected,param);
       console.log(Vue.param);
       let JSONParam = JSON.stringify(Vue.paramSelected);
-/*      Vue.AxiosPost("updateBizView",{"bizViewId":Vue.report.id,"JSONParam":JSONParam},
+      Vue.AxiosPost("updateReport",{"reportID":Vue.report.id,"JSONparam":JSONParam},
         function(response){
-        
-      });  */    
+          console.log(response);
+          Vue.refreshReport(response);
+      });     
     }
   },
   beforeMount(){

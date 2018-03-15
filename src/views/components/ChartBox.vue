@@ -98,7 +98,7 @@ export default {
           Vue.refreshChartData(response);         
       });
     },
-    refreshChartData(){
+    refreshChartData(response){
       let Vue = this;
       Vue.queryData = response.data.gridData;
       Vue.modalpreview = true;
@@ -147,9 +147,9 @@ export default {
       Vue.paramSelected = $.extend(Vue.paramSelected,param);
       console.log(Vue.param);
       let JSONParam = JSON.stringify(Vue.paramSelected);
-      Vue.AxiosPost("updateBizView",{"JSONParam":JSONParam},
+      Vue.AxiosPost("updateBizView",{"bizViewId":Vue.chartbox.bizViewId,"JSONParam":JSONParam},
         function(response){
-
+         Vue.refreshChartData(response.data);
       });      
     }    
   }

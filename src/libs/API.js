@@ -30,6 +30,7 @@ window.urlConf = {
     new: `${window.uri}/report/new`,
     getone: `${window.uri}/report/getone`,
     getdata: `${window.uri}/report/getdata`,
+    update: `${window.uri}/report/update`,
   },
   param: {
     list:`${window.uri}/parameter/list`,
@@ -123,6 +124,10 @@ export default {
     getReportData(params){
       return axios.post(urlConf.report.getdata, params); 
     },
+     /*根据参数值更新报表数据*/
+     updateReport(params){
+      return axios.post(urlConf.report.update, params); 
+     },
     /*新建参数*/
     createParam(params){
       return axios.post(urlConf.param.new, params); 
