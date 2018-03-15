@@ -63,7 +63,7 @@ export default {
               Vue.paramComponent.push(cmpObj);
             }
           } 
-          Vue.initPreviewTable(response.data.gridData);
+          /*Vue.initPreviewTable(response.data.gridData);*/
         }
       );
     },
@@ -73,9 +73,9 @@ export default {
     previewOk(){
 
     },
-    initPreviewTable:function(gridData){
+    initPreviewTable:function(response){
       let Vue = this;
-      var header = gridData.stringHeaders;
+      var header = response.data.gridData.stringHeaders;
       var cols = [];
       for(let c in header){
          cols.push({
@@ -84,7 +84,7 @@ export default {
          })
       };
       var rows = [];
-      var rowData = gridData.data;
+      var rowData = response.data.gridData.data;
        for(let r in rowData){
           let row = {};
           let curRow = rowData[r];
@@ -115,7 +115,7 @@ export default {
       let JSONParam = JSON.stringify(Vue.paramSelected);
       Vue.AxiosPost("updateBizView",{"bizViewId":Vue.tablebox.bizViewId,"JSONParam":JSONParam},
         function(response){
-        Vue.initPreviewTable(response.data);
+        Vue.initPreviewTable(response);
       });      
     }
   }

@@ -120,7 +120,7 @@ export default {
             Vue.paramComponent.push(cmpObj);
           }
         }        
-        Vue.refreshReport(response);
+        /*Vue.refreshReport(response);*/
       })         
      },
     refreshReport(response){

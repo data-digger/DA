@@ -95,7 +95,7 @@ export default {
               Vue.paramComponent.push(cmpObj);
             }
           }           
-          Vue.refreshChartData(response);         
+          /*Vue.refreshChartData(response);  */       
       });
     },
     refreshChartData(response){
@@ -149,7 +149,7 @@ export default {
       let JSONParam = JSON.stringify(Vue.paramSelected);
       Vue.AxiosPost("updateBizView",{"bizViewId":Vue.chartbox.bizViewId,"JSONParam":JSONParam},
         function(response){
-         Vue.refreshChartData(response.data);
+         Vue.refreshChartData(response);
       });      
     }    
   }

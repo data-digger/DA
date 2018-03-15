@@ -59,10 +59,10 @@ export default {
                  Vue.AxiosPost("createQuery",
                   Vue.bizView,
                    function(){
-                      alert("提交成功！")
+                      Vue.$Message.success("成功！")
                    });
             } else {
-                Vue.$Message.error('Fail!');
+                Vue.$Message.error('失败!');
             }
         })
     },   
