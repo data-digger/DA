@@ -49,21 +49,24 @@ export default {
       Vue.paramComponent = [];
       Vue.AxiosPost("previewBizView",{'bizViewId':Vue.tablebox.bizViewId},
         function(response){
-          for(var i in response.data.defaultParameters){
-            if(response.data.defaultParameters[i].paramType == 'list'){
-              var cmpObj = {};
-              cmpObj.component = list;
-              cmpObj.content = response.data.defaultParameters[i];
-              Vue.paramComponent.push(cmpObj);
-            };
-            if(response.data.defaultParameters[i].paramType == 'date'){
-              var cmpObj = {};
-              cmpObj.component = datepicker;
-              cmpObj.content = response.data.defaultParameters[i];
-              Vue.paramComponent.push(cmpObj);
-            }
-          } 
-          /*Vue.initPreviewTable(response.data.gridData);*/
+          if(response.data.defaultParameters.length != 0){
+            for(var i in response.data.defaultParameters){
+              if(response.data.defaultParameters[i].paramType == 'list'){
+                var cmpObj = {};
+                cmpObj.component = list;
+                cmpObj.content = response.data.defaultParameters[i];
+                Vue.paramComponent.push(cmpObj);
+              };
+              if(response.data.defaultParameters[i].paramType == 'date'){
+                var cmpObj = {};
+                cmpObj.component = datepicker;
+                cmpObj.content = response.data.defaultParameters[i];
+                Vue.paramComponent.push(cmpObj);
+              }
+            }             
+          }else{
+            Vue.initPreviewTable(response);
+          }        
         }
       );
     },

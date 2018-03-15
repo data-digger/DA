@@ -60,7 +60,7 @@
                 </FormItem>
                 <FormItem label="缺省值" prop="defalutDefine"v-if = 'param.defineJSON.standbyDefine.valueSource == "static"?true:false'>
                     <Col span='12'>
-                      <Select v-model = 'param.defineJSON.defalutDefine.key' placeholder="Select ...">
+                      <Select v-model = 'param.defineJSON.defalutDefine.key' placeholder="Select ..." @on-change='addDefaultDefine'>
                           <Option v-for ='el in param.defineJSON.standbyDefine.values' :key='el.value' :value='el.key'>
                               {{el.value}}
                           </Option>                
@@ -95,14 +95,7 @@ import CodeMirror from "codemirror/lib/codemirror.js"
 import "codemirror/mode/sql/sql.js"
 import {mapGetters} from 'vuex'
 
-// string 转 object
-const stringToObject = str => {
-  return JSON.stringify(str)
-}
-// object 转 string
-const objectToString = obj => {
-  return JSON.parse(obj)
-}
+
 export default {
      name:'createDatasource',
      components:{
@@ -112,10 +105,6 @@ export default {
       ...mapGetters({
         datasourceList: 'datasourceList',
       })
-    },
-    filters: {
-      stringToObject,
-      objectToString
     },
      data () {
         return {
@@ -127,7 +116,6 @@ export default {
               componenttype:'',
               valuetype:'',              
               defalutDefine:{key:"",value:""},
-              /*defalutDefine:'',*/
               standbyDefine:{
                 valueSource:'',
                 values:[],
@@ -159,10 +147,7 @@ export default {
         }
     }
   },
-  methods: {    
-    // onChange(){
-    //   this.$emit('input', stringToObject(this.param.defineJSON.defalutDefine))
-    // },  
+  methods: {      
     createParam(param){
       let Vue = this;
       if(Vue.param.defineJSON.standbyDefine.valueSource == 'SQL'){
@@ -191,6 +176,15 @@ export default {
     getDate(date){
         let Vue = this;
         Vue.param.defineJSON.datetime = date;
+    },
+    addDefaultDefine(key){
+      let Vue = this;
+      let stdValues = Vue.param.defineJSON.standbyDefine.values;
+      for(var i in stdValues){
+         if(stdValues[i].key == key){
+           Vue.param.defineJSON.defalutDefine.value = stdValues[i].value;
+         }
+      }
     },
     addStandByValue(){
         let Vue = this;

@@ -70,11 +70,14 @@
             sentDateParam(){
               let Vue = this;
               Vue.$emit("sentDate",Vue.selectedDate);
-              let paramSelected = {};
-              if(Vue.cmpContent.content.paramType == 'date'){
-                paramSelected[Vue.cmpContent.content.paramId] = Vue.selectedDate;  
+              if(Vue.cmpContent){
+                let paramSelected = {};
+                if(Vue.cmpContent.content.paramType == 'date'){
+                  paramSelected[Vue.cmpContent.content.paramId] = Vue.selectedDate;  
+                }
+                Vue.$emit("sentParam",paramSelected);                
               }
-              Vue.$emit("sentParam",paramSelected);
+
             }
         },
 
