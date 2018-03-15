@@ -182,17 +182,15 @@ export default {
     },
     drawEChart(){
       let Vue = this;
-       //Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
-       //Vue.eoption = eval("(" + Vue.myChart.defineJSON + ")");
-       if(Vue.chartView != null){
-            Vue.chartView.dispose();
-       }
-       //根据类型和字段解析option
+        //根据类型和字段解析option
       chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
+      if(Vue.chartView != null){
+            Vue.chartView.dispose();             
+       }
       // 基于准备好的dom，初始化echarts实例
-      Vue.chartView = echarts.init(document.getElementById('myChart')); 
+      Vue.chartView = echarts.init(document.getElementById('myChart'));
       // 绘制图表
-      Vue.chartView.setOption(this.eoption);   
+      Vue.chartView.setOption(this.eoption);  
     },
     saveChart:function(){
       let Vue = this;
