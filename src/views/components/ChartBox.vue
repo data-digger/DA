@@ -74,7 +74,6 @@ export default {
       Vue.paramComponent = [];
        Vue.AxiosPost("previewBizView",{'bizViewId':Vue.chartbox.bizViewId},
         function(response){
-          if(response.data.defaultParameters.length != 0){
             for(var i in response.data.defaultParameters){
               if(response.data.defaultParameters[i].paramType == 'list'){
                 var cmpObj = {};
@@ -89,9 +88,7 @@ export default {
                 Vue.paramComponent.push(cmpObj);
               }
             }
-          }else{
             Vue.refreshChartData(response); 
-          }
       });
     },
     refreshChartData(response){

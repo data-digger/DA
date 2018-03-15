@@ -1,7 +1,7 @@
 <template>
     <div>
         <Select v-model = "defaultDefine" style="width:200px" placeholder="Select ..." class='select'>
-            <Option v-for='(stbValue,index) in getStandByValue' :value='stbValue.value' :key='index'>{{stbValue.value}}</Option>
+            <Option v-for='(stbValue,index) in getStandByValue' :value='stbValue.key' :key='index'>{{stbValue.value}}</Option>
         </Select>
     </div>
 </template>
