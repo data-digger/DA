@@ -106,21 +106,24 @@ export default {
       Vue.paramComponent = [];
       Vue.AxiosPost("getReportData",{'reportID':Vue.report.id},
       function(response){
-        for(var i in response.data.parameterSet){
-          if(response.data.parameterSet[i].paramType == 'list'){
-            var cmpObj = {};
-            cmpObj.component = list;
-            cmpObj.content = response.data.parameterSet[i];
-            Vue.paramComponent.push(cmpObj);
-          };
-          if(response.data.parameterSet[i].paramType == 'date'){
-            var cmpObj = {};
-            cmpObj.component = datepicker;
-            cmpObj.content = response.data.parameterSet[i];
-            Vue.paramComponent.push(cmpObj);
-          }
-        }        
-        /*Vue.refreshReport(response);*/
+        if(response.data.parameterSet.length != 0){
+          for(var i in response.data.parameterSet){
+            if(response.data.parameterSet[i].paramType == 'list'){
+              var cmpObj = {};
+              cmpObj.component = list;
+              cmpObj.content = response.data.parameterSet[i];
+              Vue.paramComponent.push(cmpObj);
+            };
+            if(response.data.parameterSet[i].paramType == 'date'){
+              var cmpObj = {};
+              cmpObj.component = datepicker;
+              cmpObj.content = response.data.parameterSet[i];
+              Vue.paramComponent.push(cmpObj);
+            }
+          } 
+        }else{
+          Vue.refreshReport(response);
+        }
       })         
      },
     refreshReport(response){
