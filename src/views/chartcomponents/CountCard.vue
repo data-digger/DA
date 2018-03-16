@@ -2,7 +2,7 @@
    <div class="previewCard">
         <infoCard
               v-if="cardShow" 
-              :id-name="chartbox.id"
+              :id-name="chartId"
               :end-val="option.data"
               :iconType="option.iconType"
               :icon-size="option.iconSize"
@@ -19,7 +19,7 @@
 <script>
 import infoCard from './../home/components/inforCard'
 export default {
-    props:["chartbox",'option'],
+    props:["chartId",'option'],
     components:{
         infoCard
     },

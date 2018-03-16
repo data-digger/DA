@@ -1,86 +1,70 @@
 <template>
-  <Form id="createChart" ref="myChart" :model="myChart" :rules="ruleValidate" :label-width="80">
-        <FormItem label="名称" prop="name">
-            <Input v-model="myChart.name" placeholder="输入名称"></Input>
-        </FormItem>
-        <FormItem label="别名" prop="alias">
-            <Input v-model="myChart.alias" placeholder="输入别名"></Input>
-        </FormItem>
-        <FormItem label="类型" prop="type">
-           <Select class="form-control" v-model='myChart.type'>               
-                <Option v-for = 't in type' :key='t' :value="t" >{{t}}</Option>
-           </Select>
-        </FormItem>
-        <FormItem label="描述" prop="desc">
-            <Input v-model="myChart.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter chart descript..."></Input>
-        </FormItem>
-        <FormItem label="查询器" prop="bizViewId">
-            <Select class="form-control" v-model='myChart.bizViewId'>               
-                <Option v-for = 'q in queryList' :key='q.id' :name='q.name' :value="q.id" >{{q.name}}</option>
-            </Select>
-        </FormItem>
-         <FormItem v-if="colNameShow" label="" prop="colNames">
-            <Tag  type="border" color="blue" v-for= 'col in queryData.stringHeaders' :key="col">{{col}}</Tag>
-            <!-- <div style='width:100%;height:30px;border:1px solid blue'@drop='drop($event)' @dragover='allowDrop($event)'>s</div> -->
-        </FormItem>
-        <FormItem label="Option:" prop="defineJSON">
-            <textarea id='chartOption'></textarea>
-        </FormItem>
-        <FormItem>
-            <Button type="ghost" shape="circle" icon="ios-search" :disabled='!colNameShow'  @click="previewChart"></Button>
-            <Button type="primary" :disabled='!chartPreview' @click="saveChart">Save</Button>
-            <Button type="ghost" style="margin-left: 8px" @click="handleReset">Reset</Button>
-        </FormItem> 
-        <FormItem>
-          <div id="myChart" v-if="chartPreview && myChart.type != 'Card'"></div>
-          <div id="myCard" v-if="chartPreview && myChart.type == 'Card'">  
-            <infoCard               
-                :id-name="eoption.name"
-                :end-val="eoption.data"
-                :iconType="eoption.iconType"
-                :icon-size="eoption.iconSize"
-                :color="eoption.color"
-                :count-size="eoption.countSize"
-                :count-weight="eoption.countWeight"
-                :intro-text="eoption.introText"
-                :intro-color='eoption.introColor'
-                :intro-size='eoption.introSize'
-                :intro-weight='eoption.introWeight'                         
-            ></infoCard>
-          </div>
-        </FormItem>
-    </Form>  
+    <Row style="padding:20px">
+        <Col span="7">
+            <Form id="createChart" ref="myChart" :model="myChart" :rules="ruleValidate" :label-width="80">
+              <FormItem label="名称" prop="name">
+                  <Input v-model="myChart.name" placeholder="输入名称"></Input>
+              </FormItem>
+              <FormItem label="别名" prop="alias">
+                  <Input v-model="myChart.alias" placeholder="输入别名"></Input>
+              </FormItem>
+              <FormItem label="描述" prop="desc">
+                  <Input v-model="myChart.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter chart descript..."></Input>
+              </FormItem>
+              <FormItem label="查询器" prop="bizViewId">
+                  <Select class="form-control" v-model='myChart.bizViewId'>               
+                      <Option v-for = 'q in queryList' :key='q.id' :name='q.name' :value="q.id" >{{q.name}}</option>
+                  </Select>
+              </FormItem>
+               <FormItem label="类型" prop="type">
+                <Select class="form-control" v-model='myChart.type'>               
+                      <Option v-for = 't in type' :key='t' :value="t" >{{t}}</Option>
+                </Select>
+              </FormItem>
+              <FormItem label="Option" prop="defineJSON">
+                  <component ref='optionSelected' :is="chartComponent" :data="colNames" @getSelectedOption = 'analyzeOption'></component>
+              </FormItem>
+              <FormItem>
+                  <Button type="ghost" shape="circle" icon="ios-search"  @click="previewChart"></Button>
+                  <Button type="primary" @click="saveChart">Save</Button>
+                  <Button type="ghost" style="margin-left: 8px" @click="handleReset">Reset</Button>
+              </FormItem> 
+          </Form>
+        </Col>
+        <Col span="14" offset="1">   
+          <component ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption'></component>    
+        </Col>
+    </Row>
 </template>
 
 <script>
 import echarts from 'echarts'
 import JSON5 from 'json5'
-import CodeMirror from "codemirror/lib/codemirror.js"
-import "codemirror/mode/javascript/javascript.js"
 import {mapGetters} from 'vuex'
 import ChartTemplate from './../../libs/ChartTemplate.js'
 import chartUtil from './../../libs/chartUtil.js'
-import infoCard from './../home/components/inforCard'
+import Chart from './../chartcomponents/Chart'
+import CountCard from './../chartcomponents/CountCard'
+import BarOption from './../chartcomponents/BarOption'
 
 export default {
   name: 'createChart',
   components:{
-    infoCard
+    BarOption,
+    Chart,
+    CountCard
   },
   data () {
     return {
       chartPreview:false,
-      colNameShow:false,
+      colNames:[],
       queryData:null,
-      chartView:null,
-      tableView:null,
-      type:ChartTemplate.TYPE,
       eoption:null,
-      dom:null,
+      type:ChartTemplate.TYPE,
       myChart:{
         name:'',
         alias:'myChartAlias',
-        type:'Line',
+        type:'Bar',
         bizViewId:'',
         desc:'this is my desc',
         defineJSON:'',
@@ -106,40 +90,23 @@ export default {
     ...mapGetters({
       queryList:'queryList',
     }),
+      chartComponent:function(){
+        if (this.myChart.type == 'Bar'){
+          return BarOption
+        }
+      },
+      chartContainer: function(){
+        if(this.myChart.type == 'Card'){
+          return CountCard
+        } else {
+          return Chart
+        }
+      }
   },
   　watch:{
 　　　'myChart.bizViewId': 'getQueryData',
-     'myChart.type':function(curType){
-         /*this.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate[curType])
-                                            .replace(/},/g, "},\n").replace(/],/g, "],\n"));*/
-        this.chartPreview = false;
-        this.optionEditor.getDoc().setValue(ChartTemplate[curType]);
-        //this.eoption = eval("(" + ChartTemplate[curType] + ")");
-        //$('#chartOption').val(ChartTemplate[curType]);
-     }
 　},
-  mounted:function(){
-    let Vue = this;
-     Vue.initOptionEdit();
-     window.addEventListener('resize', function () {
-                if(Vue.chartView != null){
-                  Vue.chartView.resize();
-                }
-            });
-    //this.getQueryList();
-  },
   methods:{
-   initOptionEdit: function(){
-      /*初始化option编辑器*/
-    var myTextarea = $("#chartOption")[0];
-    this.optionEditor = CodeMirror.fromTextArea(myTextarea,{
-        lineNumbers: true, 
-        mode: "text/javascript", 
-        content: myTextarea.value,
-        extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
-    });
-    this.optionEditor.getDoc().setValue(ChartTemplate.Line)
-   },
    getQueryList:function(){
       let Vue = this;
       Vue.AxiosPost("getQuery",'',
@@ -154,25 +121,24 @@ export default {
            Vue.AxiosPost("previewBizView",{'bizViewId':Vue.myChart.bizViewId},
             function(response){
               Vue.queryData = response.data.gridData;
-              Vue.colNameShow = true;
+              Vue.colNames = Vue.queryData.stringHeaders;
             }
         ); 
        }
       
     },
+    analyzeOption:function(selectdOption){
+      let Vue = this;
+      Vue.myChart.defineJSON = JSON.stringify(selectdOption);
+      Vue.eoption = $.extend(true, {}, selectdOption);
+      chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
+    },
     previewChart:function(){
         let Vue = this;
-        Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
-        Vue.eoption = eval("(" + Vue.myChart.defineJSON + ")");
-        if(Vue.myChart.type == 'Card'){
-          Vue.drawCard();
-        }else{
-           Vue.chartPreview=true;
-           this.$nextTick(function(){
-           Vue.drawEChart();
-        })    
-        }
-       
+        Vue.$refs['optionSelected'].sentOption();
+        Vue.$nextTick(function(){
+         Vue.$refs['chartContainer'].show();
+       })
     },
     drawCard(){
       let Vue = this;      
@@ -194,7 +160,6 @@ export default {
     },
     saveChart:function(){
       let Vue = this;
-      Vue.myChart.defineJSON = Vue.optionEditor.doc.getValue();
       Vue.$refs["myChart"].validate((valid) => {
                     if (valid) {
                          Vue.AxiosPost("createChart",
@@ -216,22 +181,8 @@ export default {
       Vue.myChart.desc =  'this is my desc';
       $('#chartOption').empty();
 		  $('#chartOption').text('');
-      //Vue.optionEditor.getDoc().setValue(JSON.stringify(ChartTemplate.Line).replace(/},/g, "},\n").replace(/],/g, "],\n"));
-      Vue.optionEditor.getDoc().setValue(ChartTemplate.Line)
       Vue.chartPreview = false;
       Vue.eoption = null;
-    },
-    allowDrop(event) {
-      event.preventDefault();
-    },
-    drag(event){
-      let Vue = this;
-      Vue.dom = event.currentTarget;
-    },
-    drop(event) {
-      let Vue = this;
-      event.preventDefault();
-      event.target.appendChild(Vue.dom);
     },
   }
 }

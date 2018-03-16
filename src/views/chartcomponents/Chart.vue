@@ -1,11 +1,11 @@
 <template>
-   <div class="previewChart" :id="'previewChart'+chartbox.id"></div>
+   <div class="previewChart" :id="'previewChart'+chartId"></div>
 </template>
 <script>
 import echarts from 'echarts'
 import chartUtil from './../../libs/chartUtil.js'
 export default {
-    props:["chartbox","option"],
+    props:["chartId","option"],
     data () {
         return {
             chartView:null
@@ -17,7 +17,7 @@ export default {
         if(Vue.chartView != null){
             Vue.chartView.dispose();
         }    
-        Vue.chartView = echarts.init(document.getElementById('previewChart'+Vue.chartbox.id));       
+        Vue.chartView = echarts.init(document.getElementById('previewChart'+Vue.chartId));       
         Vue.chartView.setOption(Vue.option); 
 },
     },
