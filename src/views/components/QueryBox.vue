@@ -136,7 +136,6 @@ export default {
     refreshQueryData(param){
       let Vue = this;
       Vue.paramSelected = $.extend(Vue.paramSelected,param);
-      console.log(Vue.param);
       let JSONParam = JSON.stringify(Vue.paramSelected);
       Vue.AxiosPost("updateBizView",{"bizViewId":Vue.querybox.id,"JSONParam":JSONParam},
         function(response){

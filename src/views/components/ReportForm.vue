@@ -14,7 +14,7 @@
               </Table>
               <div style="margin: 10px;overflow: hidden" v-show='tableShow && item.tabs[0].objtype == "Table"'>        
                 <div style="float: right;">
-                  <Page :total="total" :current="1" :page-size='pageSize' @on-change="changePage"></Page>
+                  <Page :total="total" :current="1" :page-size='pageSize'  @on-change="changePage"></Page>
                 </div>
                 <Button style='background-color:#2d8cf0;color:white'@click="exportData(item.name)">导出表数据</Button>
               </div>  
@@ -42,19 +42,7 @@
                     <div class="api" slot="content">
                         {{report.desc}}
                     </div>                      
-                  </Poptip>
-<!--              <Poptip content="提示内容" placement="left" width='400' title='选择参数' trigger='hover'>
-                    <Button type="warning" icon="funnel"></Button>
-                      <div class="api" slot="content">
-                          <Tag v-for='param in paramList' :key='param.id' color="yellow">{{param.name}}</Tag>
-                       </div>
-                  </Poptip>
-                  <Poptip placement="left" title='报表描述'  trigger='hover'>
-                      <Button type="warning" icon="android-more-horizontal"></Button>
-                      <div class="api" slot="content">
-                          {{report.desc}}
-                      </div>                     
-                  </Poptip>    -->   
+                  </Poptip> 
             </ButtonGroup>
          </grid-layout>
     </div>    
@@ -95,7 +83,8 @@ export default {
       columns:[],
       pageSize:4,
       historyData:[],
-      currentTableData:{},  
+      currentTableData:{},
+      tableDataPortletID:null,
       paramComponent:[],
       paramSelected:null
     }
@@ -146,6 +135,8 @@ export default {
     drawTable (tableData){
       let Vue = this;
       var header = tableData.data.gridData.stringHeaders;
+      Vue.tableDataPortletID = tableData.portletID;
+      Vue.currentPagePortletID = tableData.portletID;
       var cols = [];
       for(let c in header){
          cols.push({
@@ -172,37 +163,36 @@ export default {
         Vue.currentTableData[tableData.portletID] = Vue.historyData.slice(0,this.pageSize);
       }         
    },
-   drawEChart (chartData) {
-    let Vue = this;
-    var gridData = chartData.data.gridData;
-    var chartDefineJSON = chartData.defineJSON;
-    var type = chartData.type;
-    var eoption = eval('(' + chartDefineJSON + ')');
-    chartUtil.analysis(eoption,type,gridData);
-    let chartView = echarts.init(document.getElementById("chart"+Vue.report.id +chartData.portletID));
-    chartView.setOption(eoption);           
-   },
+    drawEChart (chartData) {
+      let Vue = this;
+      var gridData = chartData.data.gridData;
+      var chartDefineJSON = chartData.defineJSON;
+      var type = chartData.type;
+      var eoption = eval('(' + chartDefineJSON + ')');
+      chartUtil.analysis(eoption,type,gridData);
+      let chartView = echarts.init(document.getElementById("chart"+Vue.report.id +chartData.portletID));
+      chartView.setOption(eoption);           
+    },
     drawCard(cardData){
       let Vue = this;
       Vue.cardOption=eval("(" + cardData.defineJSON + ")");
       chartUtil.analysis(Vue.cardOption,cardData.type,cardData.data.gridData);
     },   
-   changePage(index){
+    changePage(index){
       let Vue = this;
       var _start = ( index - 1 ) * Vue.pageSize;
       var _end = index * Vue.pageSize;
-      Vue.currentTableData[tableData.portletID] = Vue.historyData.slice(_start,_end);
-   },
-   exportData(dataName){
-    let Vue = this;
-    Vue.$refs.table[0].exportCsv({
-      filename: dataName
-    });    
-   },
+      Vue.currentTableData[Vue.tableDataPortletID] = Vue.historyData.slice(_start,_end);
+    },
+    exportData(dataName){
+      let Vue = this;
+      Vue.$refs.table[0].exportCsv({
+        filename: dataName
+      });    
+    },
     refreshQueryData(param){
       let Vue = this;
       Vue.paramSelected = $.extend(Vue.paramSelected,param);
-      console.log(Vue.param);
       let JSONParam = JSON.stringify(Vue.paramSelected);
       Vue.AxiosPost("updateReport",{"reportID":Vue.report.id,"JSONparam":JSONParam},
         function(response){
