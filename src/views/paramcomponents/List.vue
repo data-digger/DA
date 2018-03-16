@@ -1,7 +1,7 @@
 <template>
     <div>
         <Select v-model = "defaultDefine" style="width:200px" placeholder="Select ..." class='select'>
-            <Option v-for='(stbValue,index) in getStandByValue' :value='stbValue.key' :key='index'>{{stbValue.value}}</Option>
+            <Option v-for='(stbValue,index) in getStandByValue' :value='stbValue.value' :key='index'>{{stbValue.value}}</Option>
         </Select>
     </div>
 </template>
@@ -22,7 +22,12 @@
                 let Vue = this;
                 let paramSelected = {};
                 if(Vue.cmpContent.content.paramType == 'list'){
-                    paramSelected[Vue.cmpContent.content.paramId] = Vue.defaultDefine; 
+                    for(var i in Vue.getStandByValue){
+                        if(Vue.getStandByValue[i].value == Vue.defaultDefine){
+                            paramSelected[Vue.cmpContent.content.paramId] = Vue.getStandByValue[i].key; 
+                        }
+                    }
+                    
                 }
                 Vue.$emit("sentParam",paramSelected);
             }
@@ -34,8 +39,8 @@
                     {"paramId":Vue.cmpContent.content.paramId},
                     function(response){
                        Vue.getStandByValue = response.data.standByList;
-                }); 
-                Vue.defaultDefine = Vue.cmpContent.content.defaultListValue.value;              
+                       Vue.defaultDefine = Vue.cmpContent.content.defaultListValue.value;
+                });                               
             }
         }
     }
