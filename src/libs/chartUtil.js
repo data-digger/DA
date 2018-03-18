@@ -40,7 +40,7 @@ function getColData(colName,data){
     let header = data.stringHeaders;
     let tdata = data.data;
     let cid = header.indexOf(colName);
-    if(cid < 0){ //所给的列名不存在，返回null值
+    if(cid < 0){ //所给的列名不存在，返回空数组
         return [];
     }else {
         let re=[];
@@ -53,8 +53,11 @@ function getColData(colName,data){
                 case 'INTEGER':
                     re.push(ndata.null ? 0:ndata.intValue);
                     break;
-                default:
+                case 'DOUBLE':
                     re.push(ndata.null ? 0:ndata.doubleValue);
+                    break;
+                default:
+                    re.push(ndata.null ? 0:ndata.displayValue);
                     break;
 
             }
@@ -64,17 +67,15 @@ function getColData(colName,data){
 
 }
 function analysisGridChart(option,data){
-    let xName = validColName(option.xAxis.data);
-    let yName = [];
-    for(let s in option.series){
-        yName.push(validColName(option.series[s].name))
-    }
-    option.legend.data = yName;
+    let xName = option.xAxis.data;
+    let series = [];
     option.xAxis.data = getColData(xName,data);
-    for(let i = 0; i<yName.length; i++){
-        option.series[i].name = yName[i];
-        option.series[i].data = getColData(yName[i],data);
+    for(let i = 0; i<option.series.length; i++){
+        let sName = option.series[i];
+        let sDate = getColData(sName,data);
+        series.push({data:sDate,type: 'bar'});
     }
+    option.series = series;
 }
 function analysisHbarChart(option,data){
     let yName = validColName(option.yAxis.data);

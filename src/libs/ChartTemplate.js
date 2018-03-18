@@ -57,10 +57,8 @@ ChartTemplate.Line = `{
         },
     ]
 }`;
-ChartTemplate.Bar = `{
-    title : {
-        text: '柱状图',
-    },
+ChartTemplate.Bar = {
+    color:[],
     tooltip : {
         trigger: 'axis'
     },
@@ -76,7 +74,7 @@ ChartTemplate.Bar = `{
     calculable : true,
     xAxis : {
             type : 'category',
-            data : '@colName1'
+            data : '',
         },
     yAxis : [
         {
@@ -84,38 +82,8 @@ ChartTemplate.Bar = `{
         }
     ],
     series : [
-        {
-            name:'@colName2',
-            type:'bar',
-            markPoint : {
-                data : [
-                    {type : 'max', name: '最大值'},
-                    {type : 'min', name: '最小值'}
-                ]
-            },
-            markLine : {
-                data : [
-                    {type : 'average', name: '平均值'}
-                ]
-            }
-        },
-        {
-            name:'@colName2',
-            type:'bar',
-            markPoint : {
-                data : [
-                    {type : 'max', name: '最大值'},
-                    {type : 'min', name: '最小值'}
-                ]
-            },
-            markLine : {
-                data : [
-                    {type : 'average', name : '平均值'}
-                ]
-            }
-        }
     ]
-}`,
+},
 ChartTemplate.Pie = `{
     title : {
         text: '饼图',

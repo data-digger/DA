@@ -22,7 +22,7 @@
       @on-cancel="cancel">
       <!-- <Condition :showOptions='showOptions'></Condition> -->
         <Row><component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component></Row>
-        <Row><component :ref="'chart'+chartbox.id" :is="chartComponent" :chartbox='chartbox' :option='eoption'></component></Row>
+        <Row><component :ref="'chart'+chartbox.id" :is="chartComponent" :chartId='chartbox.id' :option='eoption'></component></Row>
     </Modal>
   </Col>
 </template>
