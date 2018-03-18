@@ -1,9 +1,15 @@
 <template>
     <div>
       <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="false":is-resizable="false":vertical-compact="true":use-css-transforms="true">
-          <Row>
-            <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component>
-          </Row>
+          <Collapse accordion >
+              <Panel name="1" ref='collapse'>
+
+                <Row slot="content">
+                 <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component>
+               </Row>
+              </Panel>
+            </Collapse>        
+
             <div class='header' v-if='false'></div>
             <grid-item v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h":i="item.i" :key='item.i'>
               <div class='griditem-title'>{{item.tabs[0].title}}</div>
@@ -11,7 +17,7 @@
               <div :id="'chart'+report.id+item.i" style='height:90%;' v-show='chartShow && item.tabs[0].objtype != "Table"&& item.tabs[0].objtype != "Card"'></div>  
 
 
-               <component :chartCmpContent='chartCmpContent[item.i]' :is='chartComponent' ></component> 
+                <component :chartCmpContent='chartCmpContent[item.i]' :is='item.component' ></component> 
 
 
 
@@ -40,7 +46,7 @@
                       {{report.desc}}
                   </div>                      
                 </Poptip> 
-            </ButtonGroup>
+            </ButtonGroup>          
          </grid-layout>
     </div>    
 </template>
@@ -63,26 +69,12 @@ export default {
       iviewtable,
       infoCard,
       datepicker,
-      list
+      list,      
   },
   computed:{
     ...mapGetters({
       paramList:'paramList'
      }),
-    chartComponent(){
-      let Vue = this;
-      //初始化图形控件
-      let portlets = Vue.report.defineJSON.content.portlets;
-      for(var i in portlets){
-        if(portlets[i].tabs[0].objtype == 'Table'){
-          return iviewtable;
-        }else if(portlets[i].tabs[0].objtype == 'Card'){
-
-        }else{
-
-        }
-      };
-    }
   },
   data(){
     return {
@@ -92,13 +84,27 @@ export default {
       cardOption:[],
       paramComponent:[],
       chartCmpContent:{'0':null,'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null,'9':null},
-      paramSelected:null
+      paramSelected:null,
     }
   }, 
   methods:{
+    //初始化图形组件
+    initChartComponent(){
+      let Vue = this;
+      let portlets = Vue.report.defineJSON.content.portlets;
+      for(var i in portlets){
+        if(portlets[i].tabs[0].objtype == 'Table'){
+          portlets[i].component = 'iviewtable';
+        }else if(portlets[i].tabs[0].objtype == 'Card'){
+          /*portlets[i].component = 'card'*/
+        }else{
+          /*portlets[i].component = 'echart'*/
+        }
+      };
+    },
     initReport(){
       let Vue = this;
-      Vue.paramComponent = [];
+      Vue.paramComponent = [];  
       //初始化参数控件          
       Vue.AxiosPost("getReportData",{'reportID':Vue.report.id},
       function(response){
@@ -139,6 +145,13 @@ export default {
       if(tableDataArray.length != 0){
         for(var j in tableDataArray){
           Vue.chartCmpContent[tableDataArray[j].portletID] = tableDataArray[j].data;
+/*          let portlets = Vue.report.defineJSON.content.portlets;
+          for(var k in portlets){
+            if(portlets[k].portletID == tableDataArray[j].portletID){
+              portlets[k].cmpData = tableDataArray[j].data;
+              console.log(Vue.report)
+            }
+          }; */         
         }
       }
     },
@@ -167,12 +180,17 @@ export default {
           function(response){
             Vue.refreshReport(response);
         });        
-      }        
+      }
+    },
+    selectParam(){
+      let Vue = this;
+      Vue.$refs.collapse.toggle();
     }
   },
   beforeMount(){
     let Vue =this;
     Vue.report = Vue.$route.params;
+    Vue.initChartComponent();
     Vue.initReport();    
   }
 }
@@ -223,5 +241,6 @@ export default {
 }
 .paramcomponent{
   display: inline-block;
+  margin:0 3px;
 }
 </style>

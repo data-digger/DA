@@ -106,8 +106,8 @@ export default {
 }
 </script>
 <style scoped>
-.paramcomponent{
-  display: inline-block;
-  margin: 10px auto;
-}
+  .paramcomponent{
+   display: inline-block;
+   margin: 0px 3px;
+  }
 </style>
