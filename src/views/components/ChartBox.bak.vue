@@ -149,12 +149,15 @@ export default {
     refreshQueryData(param){
       let Vue = this;
       Vue.paramSelected = $.extend(Vue.paramSelected,param);
+      let paramLength = Object.keys(Vue.paramSelected).length;
       console.log(Vue.param);
       let JSONParam = JSON.stringify(Vue.paramSelected);
-      Vue.AxiosPost("updateBizView",{"bizViewId":Vue.chartbox.bizViewId,"JSONParam":JSONParam},
-        function(response){
-         Vue.refreshChartData(response);
-      });      
+      if(paramLength == Vue.paramComponent.length){
+        Vue.AxiosPost("updateBizView",{"bizViewId":Vue.chartbox.bizViewId,"JSONParam":JSONParam},
+          function(response){
+           Vue.refreshChartData(response);
+        });         
+      }
     }    
   }
 }

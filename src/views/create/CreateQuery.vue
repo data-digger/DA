@@ -94,35 +94,7 @@ export default {
         mode: {name: "text/x-mysql"},  
         dragDrop: true,
       });
-
-    //    this.sqlEditor.on("drop",function(editor,e){
-    //    // console.log(e.dataTransfer.files[0]);
-    //    e.preventDefault();
-    //    if(!(e.dataTransfer&&e.dataTransfer.files)){
-    //        alert("该浏览器不支持操作");
-    //        return;
-    //    }
-    //    e.target.ondrop = function(e){
-    //       //e.preventDefault();
-          
-    //       var id = e.dataTransfer.getData("Text");
-    //       var span=document.createElement('span');
-    //       var name = document.getElementById(id).innerHTML;
-    //       var $span = $(`<span style='width:50px;height:30px;border:1px solid blue'>${name}</span>`);
-    //       let l = Vue.sqlEditor.getCursor().line;
-    //       let c = Vue.sqlEditor.getCursor().ch;
-    //       Vue.sqlEditor.replaceSelection(`^${id}^`);        
-
-    //       alert(Vue.sqlEditor.doc.getValue());
-         
-    //   }
-    // });
     },
-
-  /*  drag(ev){
-      ev.dataTransfer.setData("Text",ev.target.id);
-    }*/
-
     drag(ev){
       ev.dataTransfer.setData("Text",`^${ev.target.id}^`);
     },

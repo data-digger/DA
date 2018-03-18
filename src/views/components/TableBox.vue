@@ -12,32 +12,25 @@
       @on-ok="previewOk"
       @on-cancel="cancel">
       <Row><component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component></Row>
-      <Table border :columns="columns" :data="currentTableData"></Table>
-      <div style="margin: 10px;overflow: hidden">
-        <div style="float: right;">
-            <Page :total="total" :current="1" :page-size='pageSize' @on-change="changePage" ></Page>
-        </div>
-      </div>
+      <iviewtable :chartCmpContent='currentTableData'></iviewtable> 
     </Modal>  
   </Col>
 </template>
 <script>
 import datepicker from "./../paramcomponents/DatePicker"
 import list from "./../paramcomponents/List"
+import iviewtable from './../chartcomponents/Table'
 export default {
   props:['tablebox','index'],
   components: {
     datepicker,
-    list
+    list,
+    iviewtable
   },
   data(){
     return {
       modalpreview:false,
-      total:null,
-      columns:[],
-      pageSize:4,
-      historyData:[],
-      currentTableData:[], 
+      currentTableData:null, 
       paramComponent:[],
       paramSelected:null
     }
@@ -65,7 +58,7 @@ export default {
               }
             }             
           }else{
-            Vue.initPreviewTable(response);
+            Vue.currentTableData = response.data;
           }        
         }
       );
@@ -76,50 +69,18 @@ export default {
     previewOk(){
 
     },
-    initPreviewTable:function(response){
-      let Vue = this;
-      var header = response.data.gridData.stringHeaders;
-      var cols = [];
-      for(let c in header){
-         cols.push({
-          "title":header[c],
-          "key":header[c]
-         })
-      };
-      var rows = [];
-      var rowData = response.data.gridData.data;
-       for(let r in rowData){
-          let row = {};
-          let curRow = rowData[r];
-           for(let col in header){
-             row[header[col]] = curRow[col].displayValue;
-          };
-          rows.push(row);
-      }
-      Vue.columns = cols; 
-      Vue.total = rows.length;
-      Vue.historyData = rows;
-      if(Vue.total<Vue.pageSize){
-        Vue.currentTableData = Vue.historyData;
-      }else{
-        Vue.currentTableData = Vue.historyData.slice(0,this.pageSize);
-      }
-    },
-    changePage(index){
-      let Vue = this;
-      var _start = ( index - 1 ) * Vue.pageSize;
-      var _end = index * Vue.pageSize;
-      Vue.currentTableData = Vue.historyData.slice(_start,_end);
-    },
     refreshQueryData(param){
       let Vue = this;
       Vue.paramSelected = $.extend(Vue.paramSelected,param);
-      console.log(Vue.param);
+      let paramLength = Object.keys(Vue.paramSelected).length;
       let JSONParam = JSON.stringify(Vue.paramSelected);
-      Vue.AxiosPost("updateBizView",{"bizViewId":Vue.tablebox.bizViewId,"JSONParam":JSONParam},
-        function(response){
-        Vue.initPreviewTable(response);
-      });      
+      if(paramLength == Vue.paramComponent.length){
+        Vue.AxiosPost("updateBizView",{"bizViewId":Vue.tablebox.bizViewId,"JSONParam":JSONParam},
+          function(response){
+          Vue.currentTableData = response.data;
+        });         
+      }
+     
     }
   }
 }
