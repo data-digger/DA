@@ -49,6 +49,7 @@ import BarOption from './../chartcomponents/BarOption'
 import PieOption from './../chartcomponents/PieOption'
 import LineOption from './../chartcomponents/LineOption'
 import HBarOption from './../chartcomponents/HBarOption'
+import CardOption from './../chartcomponents/CardOption'
 
 export default {
   name: 'createChart',
@@ -57,6 +58,7 @@ export default {
     PieOption,
     LineOption,
     HBarOption,
+    CardOption,
     Chart,
     CountCard,
   },
@@ -105,6 +107,8 @@ export default {
           return LineOption
         } else if (this.myChart.type == 'HBar'){
           return HBarOption
+        } else if (this.myChart.type == 'Card'){
+          return CardOption
         }
       },
       chartContainer: function(){

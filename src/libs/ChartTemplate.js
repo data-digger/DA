@@ -5,7 +5,8 @@ ChartTemplate.TYPE = ['Line','Bar','HBar','Pie','Card'];
 ChartTemplate.COLORS = {'bule':['#006699','#1e90ff','#4770d8','#4bafe9','#24c9f2','#66e5f4'],
                         'colorful':['#ef475d','#fa9717','#f2d215','#24c9f2','#4770d8','#49577c']};
 
-
+ChartTemplate.ICONS = ['person-add','stats-bars','pie-graph','arrow-graph-up-right','clock',
+                        'paper-airplane'];
 ChartTemplate.Card = `{
     data:"@colName",
     iconType:"android-person-add",
