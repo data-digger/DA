@@ -47,14 +47,18 @@ import Chart from './../chartcomponents/Chart'
 import CountCard from './../chartcomponents/CountCard'
 import BarOption from './../chartcomponents/BarOption'
 import PieOption from './../chartcomponents/PieOption'
+import LineOption from './../chartcomponents/LineOption'
+import HBarOption from './../chartcomponents/HBarOption'
 
 export default {
   name: 'createChart',
   components:{
     BarOption,
     PieOption,
+    LineOption,
+    HBarOption,
     Chart,
-    CountCard
+    CountCard,
   },
   data () {
     return {
@@ -97,6 +101,10 @@ export default {
           return BarOption
         } else if (this.myChart.type == 'Pie'){
           return PieOption
+        } else if (this.myChart.type == 'Line'){
+          return LineOption
+        } else if (this.myChart.type == 'HBar'){
+          return HBarOption
         }
       },
       chartContainer: function(){
@@ -143,24 +151,6 @@ export default {
         Vue.$nextTick(function(){
          Vue.$refs['chartContainer'].show();
        })
-    },
-    drawCard(){
-      let Vue = this;      
-       chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
-       Vue.eoption.name = "cardName";
-       Vue.chartPreview=true;
-    },
-    drawEChart(){
-      let Vue = this;
-        //根据类型和字段解析option
-      chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
-      if(Vue.chartView != null){
-            Vue.chartView.dispose();             
-       }
-      // 基于准备好的dom，初始化echarts实例
-      Vue.chartView = echarts.init(document.getElementById('myChart'));
-      // 绘制图表
-      Vue.chartView.setOption(this.eoption);  
     },
     saveChart:function(){
       let Vue = this;

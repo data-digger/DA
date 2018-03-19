@@ -76,7 +76,7 @@ export default {
            Vue.selectdOption.series = [];
            for (let i in Vue.selectedY){
 
-               Vue.selectdOption.series.push({name:Vue.selectedY[i],data:Vue.selectedY[i],type: 'bar'})
+               Vue.selectdOption.series.push({name:Vue.selectedY[i],data:Vue.selectedY[i],type: 'line'})
            }
            Vue.$emit('getSelectedOption',Vue.selectdOption);
        }

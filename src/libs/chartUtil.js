@@ -77,16 +77,12 @@ function analysisGridChart(option,data){
     }
 }
 function analysisHbarChart(option,data){
-    let yName = validColName(option.yAxis.data);
-    let xName = [];
-    for(let s in option.series){
-        xName.push(validColName(option.series[s].name))
-    }
-    option.legend.data = xName;
+    let yName = option.yAxis.data;
     option.yAxis.data = getColData(yName,data);
-    for(let i = 0; i<xName.length; i++){
-        option.series[i].name = xName[i];
-        option.series[i].data = getColData(xName[i],data);
+    for(let i = 0; i<option.series.length; i++){
+        let sName = option.series[i].data;
+        let sDate = getColData(sName,data);
+        option.series[i].data = sDate;
     }
 }
 

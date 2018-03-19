@@ -3,16 +3,16 @@
        <Col span='10'>
             <FormItem prop="xAxis">
                 XAxis
-                <Select class="form-control" v-model='selectdOption.xAxis.data'>               
-                    <Option v-for='item in data' :key='item' :value="item" >{{item}}</Option>
-                </Select>
+                <Select v-model="selectedX" multiple>
+                    <Option v-for='item in data' :key='item' :value="item">{{item}}</Option>
+                </Select>               
             </FormItem>
         </Col>
         <Col span='13' offset='1'>
             <FormItem prop="yAxis">
                 YAxis
-                <Select v-model="selectedY" multiple>
-                    <Option v-for='item in data' :key='item' :value="item">{{item}}</Option>
+                <Select class="form-control" v-model='selectdOption.yAxis.data'>               
+                    <Option v-for='item in data' :key='item' :value="item" >{{item}}</Option>
                 </Select>
             </FormItem>
         </Col> 
@@ -52,19 +52,19 @@ export default {
                         }
                     },
                     calculable : true,
-                    xAxis : {
-                            type : 'category',
-                            data : '',
-                        },
-                    yAxis : [
+                    xAxis : [{
+                            type: 'value',
+                            boundaryGap: [0, 0.01]
+                        }],
+                    yAxis : 
                         {
-                            type : 'value'
-                        }
-                    ],
+                            type: 'category',
+                            data: ''
+                        },
                     series : [
                     ]
                 },
-                selectedY:[],                
+                selectedX:[],                
                 colorSelected:'blue',
             }
     },
@@ -72,11 +72,11 @@ export default {
        sentOption:function(){
            let Vue = this;
            Vue.selectdOption.color = ChartTemplate.COLORS[Vue.colorSelected];
-           Vue.selectdOption.legend.data = Vue.selectedY;
+           Vue.selectdOption.legend.data = Vue.selectedX;
            Vue.selectdOption.series = [];
-           for (let i in Vue.selectedY){
+           for (let i in Vue.selectedX){
 
-               Vue.selectdOption.series.push({name:Vue.selectedY[i],data:Vue.selectedY[i],type: 'bar'})
+               Vue.selectdOption.series.push({name:Vue.selectedX[i],data:Vue.selectedX[i],type: 'bar'})
            }
            Vue.$emit('getSelectedOption',Vue.selectdOption);
        }
