@@ -21,7 +21,7 @@
                       <Option v-for = 't in type' :key='t' :value="t" >{{t}}</Option>
                 </Select>
               </FormItem>
-              <FormItem label="Option" prop="defineJSON">
+              <FormItem label="图表选项" prop="defineJSON">
                   <component ref='optionSelected' :is="chartComponent" :data="colNames" @getSelectedOption = 'analyzeOption'></component>
               </FormItem>
               <FormItem>
@@ -46,11 +46,13 @@ import chartUtil from './../../libs/chartUtil.js'
 import Chart from './../chartcomponents/Chart'
 import CountCard from './../chartcomponents/CountCard'
 import BarOption from './../chartcomponents/BarOption'
+import PieOption from './../chartcomponents/PieOption'
 
 export default {
   name: 'createChart',
   components:{
     BarOption,
+    PieOption,
     Chart,
     CountCard
   },
@@ -93,6 +95,8 @@ export default {
       chartComponent:function(){
         if (this.myChart.type == 'Bar'){
           return BarOption
+        } else if (this.myChart.type == 'Pie'){
+          return PieOption
         }
       },
       chartContainer: function(){

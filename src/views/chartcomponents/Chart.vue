@@ -19,8 +19,15 @@ export default {
         }    
         Vue.chartView = echarts.init(document.getElementById('previewChart'+Vue.chartId));       
         Vue.chartView.setOption(Vue.option); 
-},
+        },
     },
+    beforeMount(){
+        $(window).resize(function() {
+            if(this.chartView != null){
+                this.chartView.resize();
+            }
+        });
+    }
 }
 </script>
 

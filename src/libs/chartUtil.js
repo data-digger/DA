@@ -71,11 +71,10 @@ function analysisGridChart(option,data){
     let series = [];
     option.xAxis.data = getColData(xName,data);
     for(let i = 0; i<option.series.length; i++){
-        let sName = option.series[i];
+        let sName = option.series[i].data;
         let sDate = getColData(sName,data);
-        series.push({data:sDate,type: 'bar'});
+        option.series[i].data = sDate;
     }
-    option.series = series;
 }
 function analysisHbarChart(option,data){
     let yName = validColName(option.yAxis.data);
@@ -93,8 +92,8 @@ function analysisHbarChart(option,data){
 
 function analysisCirChart(option,data){
     for(let s in option.series){
-        let nameCol = validColName(option.series[s].data[0].name);
-        let valueCol = validColName(option.series[s].data[0].value);
+        let nameCol = option.series[s].data.name;
+        let valueCol = option.series[s].data.value;
         let nameList= getColData(nameCol,data);
         let valueList = getColData(valueCol,data);
         option.series[s].data = [];

@@ -1,17 +1,17 @@
 <template>
    <Row>
-       <Col span='10'>
+       <Col span='11'>
             <FormItem prop="xAxis">
-                XAxis
-                <Select class="form-control" v-model='selectdOption.xAxis.data'>               
+                NameSeries
+                <Select class="form-control" v-model='selectdOption.series[0].data.name'>               
                     <Option v-for='item in data' :key='item' :value="item" >{{item}}</Option>
                 </Select>
             </FormItem>
         </Col>
-        <Col span='13' offset='1'>
+        <Col span='11' offset='2'>
             <FormItem prop="yAxis">
-                YAxis
-                <Select v-model="selectedY" multiple>
+                ValueSeries
+                <Select class="form-control" v-model="selectdOption.series[0].data.value">
                     <Option v-for='item in data' :key='item' :value="item">{{item}}</Option>
                 </Select>
             </FormItem>
@@ -40,31 +40,30 @@ export default {
                 selectdOption:{
                     color:ChartTemplate.COLORS['blue'],
                     tooltip : {
-                        trigger: 'axis'
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
                     },
                     legend: {
-                        show:true
+                        show: true,
+                        orient: 'vertical',
+                        left: 'right',
                     },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    xAxis : {
-                            type : 'category',
-                            data : '',
-                        },
-                    yAxis : [
-                        {
-                            type : 'value'
-                        }
-                    ],
                     series : [
+                        {
+                            type: 'pie',
+                            radius : '75%',
+                            center: ['50%', '50%'],
+                            data:{name:'',value:''},
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
                     ]
-                },
-                selectedY:[],                
+                },              
                 colorSelected:'blue',
             }
     },
@@ -72,11 +71,6 @@ export default {
        sentOption:function(){
            let Vue = this;
            Vue.selectdOption.color = ChartTemplate.COLORS[Vue.colorSelected];
-           Vue.selectdOption.series = [];
-           for (let i in Vue.selectedY){
-
-               Vue.selectdOption.series.push({data:Vue.selectedY[i],type: 'bar'})
-           }
            Vue.$emit('getSelectedOption',Vue.selectdOption);
        }
     },
