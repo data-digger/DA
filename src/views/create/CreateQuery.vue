@@ -1,7 +1,7 @@
 <template>
   <Form id="createQuery" ref="bizView" :model="bizView" :rules="ruleValidate" :label-width="80">
         <FormItem label="名称" prop="name">
-            <Input v-model="bizView.name" placeholder="输入名称"></Input>
+            <Input v-model="bizView.name" placeholder="输入名称" :disabled ='nameEdit'></Input>
         </FormItem>
         <FormItem label="别名" prop="alias">
             <Input v-model="bizView.alias" placeholder="输入别名"></Input>
@@ -37,31 +37,41 @@ export default {
   ...mapGetters({
     datasourceList:'datasourceList',
     paramList:'paramList'
-   })
+   }),
+  nameEdit(){
+    let Vue = this;  
+    if(Vue.isCreate){
+        return false;
+    }else{
+      return true;
+    }
+   }
+  },
+  watch: {
+    '$route' (to, from) {
+      let Vue = this;
+      Vue.initBizViewData(to);
+    }
   },
   data(){
     return {
-      bizView: {
-        name:'',
-        alias:'',
-        desc:'',
-        dataSourceId:'',
-        defineJSON:'select * from dual'
-      },
+      bizView: null,
       ruleValidate:{
-        name: [
+/*        name: [
             { required: true, message: 'The name cannot be empty', trigger: 'blur' }
-        ],
+        ],*/
         alias: [
             { required: true, message: 'alias cannot be empty', trigger: 'blur' }
         ],
-        dataSourceId: [
+       /* dataSourceId: [
             { required: true, message: 'Please select the dataSourceId', trigger: 'change' }
-        ],
+        ],*/
         defineJSON: [
             { required: true, message: 'sql define cannot be empty', trigger: 'blur' }
         ]
-      }
+      },
+      route:null,
+      isCreate:true,
     }
   },
   methods:{
@@ -73,7 +83,7 @@ export default {
              Vue.AxiosPost("createQuery",
               Vue.bizView,
                function(){
-                  Vue.$Message.success('新建成功!');
+                  Vue.$Message.success('success!');
                });
         } else {
             Vue.$Message.error('Fail!');
@@ -98,12 +108,36 @@ export default {
     drag(ev){
       ev.dataTransfer.setData("Text",`^${ev.target.id}^`);
     },
-    getValue(){
-
-    },
+    initBizViewData(to){
+      let Vue = this;
+      Vue.isCreate =  $.isEmptyObject(to.params)
+      if(!Vue.isCreate){        
+        let bizViewInfo = Vue.$route.params;
+        if(bizViewInfo != null){
+          Vue.bizView = bizViewInfo;          
+        }
+      }
+      if(Vue.isCreate){
+        Vue.bizView = {
+          name:'',
+          alias:'',
+          desc:'',
+          dataSourceId:'',
+          defineJSON:'select * from ...'
+        } 
+      } 
+      if(Vue.sqlEditor){
+        Vue.sqlEditor.setValue(Vue.bizView.defineJSON);
+      }     
+    }
   },
-  mounted:function(){
-    this.initSqlEdit();
+  mounted(){
+    let Vue = this;
+    Vue.initSqlEdit();
+  },
+  beforeMount(){
+    let Vue = this;
+    Vue.initBizViewData(Vue.$route);
   }
 }
 </script>

@@ -3,7 +3,7 @@
       <Row>
             <Col span="24"> 
              <FormItem label="参数名称" prop="name">
-                <Input v-model="param.name" placeholder="输入名称"></Input>
+                <Input v-model="param.name" placeholder="输入名称" :disabled ='nameEdit'></Input>
              </FormItem>
              <FormItem label="参数别名" prop="alias">
                 <Input v-model="param.alias" placeholder="输入别名"></Input>
@@ -26,10 +26,10 @@
                        <Option value="yyyy-MM">yyyy-MM</Option>
                     </Select>
                  </FormItem>                 
-                 <FormItem prop="formattype"v-if = "param.defineJSON.formattype =='yyyy-MM-dd'?true:false" >
+                 <FormItem prop="formattype" v-if = "param.defineJSON.formattype == 'yyyy-MM-dd'?true:false">
                     <datePicker :dateType = 'dateType.date' @sentDate = 'getDate'></datePicker>           
                  </FormItem>
-                 <FormItem prop="formattype"v-if = "param.defineJSON.formattype =='yyyy-MM'?true:false"  >
+                 <FormItem prop="formattype" v-if = "param.defineJSON.formattype == 'yyyy-MM'?true:false">
                     <datePicker :dateType = 'dateType.month' @sentDate = 'getDate'></datePicker>
                  </FormItem>                   
             </Col>
@@ -104,27 +104,25 @@ export default {
     computed: {
       ...mapGetters({
         datasourceList: 'datasourceList',
-      })
+      }),
+      nameEdit(){
+        let Vue = this;  
+        if(Vue.isCreate){
+            return false;
+        }else{
+          return true;
+        }
+       }
+    },
+    watch: {
+      '$route' (to, from) {
+        let Vue = this;
+        Vue.initParamData(to);
+      }
     },
      data () {
         return {
-        param:{   
-            name:'',
-            alias:'',
-            desc:'This is param describe for creating param',
-            defineJSON:{
-              componenttype:'',
-              valuetype:'',              
-              defalutDefine:{key:"",value:""},
-              standbyDefine:{
-                valueSource:'',
-                values:[],
-                dataSourceID:'',
-              },
-              formattype:'',
-              datetime:''
-            }
-        },
+        param:null,
         standbyData:{
             value:null,
             key:null
@@ -134,6 +132,7 @@ export default {
           month:"monthShow"
         },
         editor1:null,
+        isCreate:true,
         ruleValidate:{
             name: [
                 { required: true, message: 'The name cannot be empty', trigger: 'blur' }
@@ -222,8 +221,41 @@ export default {
             }
             
         }
+    },
+    initParamData(to){
+      let Vue = this;
+      Vue.isCreate =  $.isEmptyObject(to.params)
+      if(!Vue.isCreate){        
+        let paramInfo = Vue.$route.params;
+        if(paramInfo != null){
+          Vue.param = paramInfo;          
+        }
+      }
+      if(Vue.isCreate){
+        Vue.param = {   
+            name:'',
+            alias:'',
+            desc:'This is param describe for creating param',
+            defineJSON:{
+              componenttype:'',
+              valuetype:'',              
+              defalutDefine:{key:"",value:""},
+              standbyDefine:{
+                valueSource:'',
+                values:[],
+                dataSourceID:'',
+              },
+              formattype:'',
+              datetime:''
+            }
+        } 
+      }   
     }
   },
+  beforeMount(){
+    let Vue = this;
+    Vue.initParamData(Vue.$route);
+  }
 }
 </script>
 

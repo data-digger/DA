@@ -22,7 +22,7 @@ export const page404 = {
 export const page403 = {
     path: '/403',
     meta: {
-        title: '403-权限不足'
+       title: '403-权限不足'
     },
     name: 'error-403',
     component: () => import('@//views/error-page/403.vue')

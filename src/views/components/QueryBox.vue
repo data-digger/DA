@@ -1,47 +1,38 @@
-<template >
+	<template >
   <Col :xs="8" :sm="8" :md="8" :lg="6">
     <Card class='box-card'>
         <p slot="title">{{querybox.name}}</p>
         <p class="box-desc" :title='querybox.desc'> {{querybox.desc}}</p>
-        <p><button @click='edit()'>编辑</button>
+        <p><button @click='edit("/createQuery")'>编辑</button>
         <button @click='preview()'>预览</button> </p>     
     </Card>
-    <Modal
-      v-model="modaledit"
-      width ="1200px"
-      title="Common Modal dialog box title"
-      @on-ok="editOk"
-      @on-cancel="cancel">
-      <QueryForm ref="queryedit" :bizView='querybox'></QueryForm>
-    </Modal>
     <Modal
       v-model="modalpreview"
       width ="1200px"
       title="Common Modal dialog box title"
       @on-ok="previewOk"
       @on-cancel="cancel">
-      <Row><component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component></Row>
+      <Row>
+        <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component>
+      </Row>
       <iviewtable :chartCmpContent='currentTableData'></iviewtable>       
     </Modal>
   </Col>
 </template>
 
 <script>
-import QueryForm from './../components/QueryForm'
 import datepicker from "./../paramcomponents/DatePicker"
 import list from "./../paramcomponents/List"
 import iviewtable from './../chartcomponents/Table'
 export default {
   name: 'query',
   components:{
-    QueryForm,
     datepicker,
     list,
     iviewtable
   },
   data(){
     return {
-      modaledit:false,
       modalpreview:false,
       currentTableData:null,
       paramComponent:[],
@@ -77,11 +68,16 @@ export default {
         }
       );
     },
-    edit (){
-      this.modaledit = true;
-    },
-    editOk(){
-      this.$refs.queryedit.createQuery();
+    edit (routerpath){
+      let Vue = this; 
+      this.$router.push({
+        path:routerpath,
+        name:"createQuery",
+        query:{
+          random:Math.random()
+        },
+        params:Vue.querybox
+      });
     },
     previewOk(){
 

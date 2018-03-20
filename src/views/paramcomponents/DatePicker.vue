@@ -12,7 +12,8 @@
     export default {
         props:["dateType",'cmpContent'],
         watch:{
-          'defaultDate':'sentDateParam'
+          'defaultDate':'sentDateParam',
+          'dateType':'dateTypeSelect'
         },
         data () {
             return {
@@ -77,12 +78,25 @@
                 }
                 Vue.$emit("sentParam",paramSelected);                
               }
-
+            },
+            dateTypeSelect(){
+              let Vue = this;
+              if(Vue.dateType){
+                if(Vue.dateType == 'DaterangeShow'){
+                  Vue.DaterangeShow = true;
+                  Vue.monthShow = false;
+                } 
+                if(Vue.dateType == 'monthShow'){
+                  Vue.monthShow = true;
+                  Vue.DaterangeShow = false;            
+                }             
+           }
             }
         },
 
         beforeMount(){
            let Vue = this;
+           Vue.dateTypeSelect();
            if(Vue.cmpContent){
                  if(Vue.cmpContent.content.paramType == 'date' && Vue.cmpContent.content.defaultDate.format == "yyyy-MM-dd"){
                     Vue.DaterangeShow = true;
@@ -97,17 +111,6 @@
                     Vue.selectedDate = Vue.cmpContent.content.defaultDate.date;
                  }                            
            }
-           if(Vue.dateType){
-               if(Vue.dateType == 'DaterangeShow'){
-                  Vue.DaterangeShow = true;
-                  Vue.monthShow = false;
-               } 
-               if(Vue.dateType == 'monthShow'){
-                  Vue.monthShow = true;
-                  Vue.DaterangeShow = false;            
-               }             
-           }
-
         },
     }
 </script>

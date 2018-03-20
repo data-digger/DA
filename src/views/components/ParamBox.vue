@@ -3,15 +3,8 @@
     <Card class='box-card'>
         <p slot="title">{{parambox.name}}</p>
         <p class="box-desc">{{parambox.desc}}</p>
-        <p><button @click='edit()'>编辑</button></p> 
+        <p><button @click='edit("/createParam")'>编辑</button></p> 
     </Card>
-    <Modal
-      v-model="modaledit"
-      width ="1200px"
-      title="Common Modal dialog box title"
-      @on-ok="previewOk"
-      @on-cancel="cancel">   
-    </Modal>
   </Col>
 </template>
 
@@ -24,14 +17,20 @@ export default {
   },
   data(){
     return {
-      modaledit:false
+
     }
   },
   methods:{
-    previewOk(){},
-    cancel(){},
-    edit(){
-      this.modaledit = true;
+    edit(routerpath ){
+      let Vue = this; 
+      this.$router.push({
+        path:routerpath,
+        name:"createParam",
+        query:{
+          random:Math.random()
+        },
+        params:Vue.parambox
+      });      
     }
    }
 }

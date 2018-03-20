@@ -1,7 +1,7 @@
 <template>
     <Form id="createDatasource" ref="datasource" :model="datasource" :rules="ruleValidate" :label-width="120">
         <FormItem label="名称" prop="name">
-            <Input v-model="datasource.name" placeholder="输入名称"></Input>
+            <Input v-model="datasource.name" :disabled ='nameEdit' placeholder="输入名称"></Input>
         </FormItem>
         <FormItem label="别名" prop="alias">
             <Input v-model="datasource.alias" placeholder="输入别名"></Input>
@@ -15,7 +15,7 @@
         <FormItem label="驱动程序类" prop="driver">
             <Input v-model="datasource.driver" placeholder="输入驱动程序类"></Input>
         </FormItem>
-        <FormItem label="连接字符串" prop="alias">
+        <FormItem label="连接字符串" prop="url">
             <Input v-model="datasource.url" placeholder="输入连接字符串"></Input>
         </FormItem>
         <FormItem label="数据库字符集" prop="dbCharset">
@@ -37,9 +37,10 @@
             <Input v-model="datasource.password" placeholder="输入密码"></Input>
         </FormItem>
         <FormItem label="事物隔离级别" prop="transactionIsolation">
-            <Select v-model="datasource.transactionIsolation" placeholder="Select ...">
+    <!--         <Select v-model="datasource.transactionIsolation" placeholder="Select ...">
                <Option value="-1">-1</Option>
-            </Select>
+            </Select> -->
+            <Input v-model="datasource.transactionIsolation" placeholder="输入事物隔离级别"></Input>
         </FormItem>  
         <FormItem label="描述" prop="desc">
             <Input v-model="datasource.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
@@ -53,28 +54,32 @@
 <script>
     export default {
         name:'createDatasource',
+        computed:{
+            nameEdit(){
+                let Vue = this;  
+                if(Vue.isCreate){
+                    return false;
+                }else{
+                  return true;
+                }
+            }
+        },        
+        watch: {
+            '$route' (to, from) {
+              let Vue = this;
+              Vue.initDatasourceData(to);
+            }
+        },
         data () {
             return {
-                datasource:{     
-                  name:'',
-                  alias:'',
-                  driverType:'MySQL',
-                  driver:'com.mysql.jdbc.Driver',
-                  url:'jdbc:mysql://localhost:3306/datadigger?useUnicode=true&characterEncoding=GBK&useSSL=false',
-                  dbCharset:'UTF-8',
-                  maxConnection:100,
-                  validationQuery:'SELECT 1 FROM DUAL',
-                  user:'root',
-                  password:'admin',
-                  transactionIsolation:"-1",
-                  desc:'This is DataSource for create Business View Query'
-                },
+                datasource:null,
+                isCreate:true,
                 ruleValidate:{
                     name: [
                         { required: true, message: 'The name cannot be empty', trigger: 'blur' }
                     ],
                     alias: [
-                        { required: true, message: 'Mailbox cannot be empty', trigger: 'blur' }
+                        { required: true, message: 'alias cannot be empty', trigger: 'blur' }
                     ],
                     driverType: [
                         { required: true, message: 'Please select the driverType', trigger: 'change' }
@@ -100,9 +105,9 @@
                     password: [
                         { required: true, message: 'The name cannot be empty', trigger: 'blur' }
                     ],
-                    transactionIsolation: [
-                        { required: true,message: 'Please select the transactionIsolation', trigger: 'change' }
-                    ],
+          /*          transactionIsolation: [
+                        { required: true,message: 'The transactionIsolation cannot be empty', trigger: 'blur' }
+                    ],*/
                     desc: [
                         {required: true, message: 'The name cannot be empty', trigger: 'blur' }
                     ]
@@ -126,7 +131,37 @@
             handleReset (datasource) {
                 let Vue = this;
                 Vue.$refs[datasource].resetFields();
+            },
+            initDatasourceData(to){
+              let Vue = this;
+              Vue.isCreate =  $.isEmptyObject(to.params)
+              if(!Vue.isCreate){        
+                let datasourceInfo = Vue.$route.params;
+                if(datasourceInfo != null){
+                  Vue.datasource = datasourceInfo;          
+                }
+              }
+              if(Vue.isCreate){
+                Vue.datasource = {     
+                  name:'',
+                  alias:'',
+                  driverType:'MySQL',
+                  driver:'com.mysql.jdbc.Driver',
+                  url:'jdbc:mysql://localhost:3306/请输入表名?useUnicode=true&characterEncoding=UTF-8&useSSL=false',
+                  dbCharset:'UTF-8',
+                  maxConnection:100,
+                  validationQuery:'SELECT 1 FROM DUAL',
+                  user:'root',
+                  password:'admin',
+                  transactionIsolation:"-1",
+                  desc:'This is DataSource for create Business View Query'
+                } 
             }
+           }
+        },
+        beforeMount(){
+            let Vue = this;
+            Vue.initDatasourceData(Vue.$route);
         }
     }
 </script>

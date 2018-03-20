@@ -13,11 +13,13 @@
             <div class='header' v-if='false'></div>
             <grid-item v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h":i="item.i" :key='item.i'>
               <div class='griditem-title'>{{item.tabs[0].title}}</div>
+
+
               <!-- EChart容器 -->
               <div :id="'chart'+report.id+item.i" style='height:90%;' v-show='chartShow && item.tabs[0].objtype != "Table"&& item.tabs[0].objtype != "Card"'></div>  
 
 
-                <component :chartCmpContent='chartCmpContent[item.i]' :is='item.component' ></component> 
+              <component :chartCmpContent='chartCmpContent[item.i]' :is='item.component' ></component> 
 
 
 
@@ -35,7 +37,10 @@
                   :intro-color='cardOption.introColor'
                   :intro-size='cardOption.introSize'
                   :intro-weight='cardOption.introWeight'                         
-                ></infoCard></div>                                   
+                ></infoCard></div>     
+
+
+
             </grid-item>
             <ButtonGroup vertical class="demo-affix" style='right:18px;position:fixed;top:35%;'>
                 <div class='monitor'><Icon type="arrow-expand"></Icon></div>
@@ -59,6 +64,9 @@ import {mapGetters} from 'vuex'
 import iviewtable from './../chartcomponents/Table'
 import datepicker from "./../paramcomponents/DatePicker"
 import list from "./../paramcomponents/List"
+import Chart from "./../chartcomponents/Chart"
+import CountCard from "./../chartcomponents/CountCard"
+
 
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
@@ -69,12 +77,14 @@ export default {
       iviewtable,
       infoCard,
       datepicker,
-      list,      
+      list,
+      Chart,
+      CountCard     
   },
   computed:{
     ...mapGetters({
       paramList:'paramList'
-     }),
+    }),
   },
   data(){
     return {
@@ -96,12 +106,13 @@ export default {
         if(portlets[i].tabs[0].objtype == 'Table'){
           portlets[i].component = 'iviewtable';
         }else if(portlets[i].tabs[0].objtype == 'Card'){
-          /*portlets[i].component = 'card'*/
+          /*portlets[i].component = 'CountCard'*/
         }else{
-          /*portlets[i].component = 'echart'*/
+          /*portlets[i].component = 'Chart'*/
         }
       };
     },
+
     initReport(){
       let Vue = this;
       Vue.paramComponent = [];  
@@ -128,6 +139,7 @@ export default {
         }
       })         
     },
+
     refreshReport(response){
       let Vue = this;
       var chartDataArray = response.data.chartData;
@@ -155,6 +167,7 @@ export default {
         }
       }
     },
+
     drawEChart (chartData) {
       let Vue = this;
       var gridData = chartData.data.gridData;
@@ -165,11 +178,13 @@ export default {
       let chartView = echarts.init(document.getElementById("chart"+Vue.report.id +chartData.portletID));
       chartView.setOption(eoption);           
     },
+
     drawCard(cardData){
       let Vue = this;
       Vue.cardOption=eval("(" + cardData.defineJSON + ")");
       chartUtil.analysis(Vue.cardOption,cardData.type,cardData.data.gridData);
     },   
+
     refreshQueryData(param){
       let Vue = this;
       Vue.paramSelected = $.extend(Vue.paramSelected,param);
@@ -182,11 +197,13 @@ export default {
         });        
       }
     },
+
     selectParam(){
       let Vue = this;
       Vue.$refs.collapse.toggle();
     }
   },
+
   beforeMount(){
     let Vue =this;
     Vue.report = Vue.$route.params;

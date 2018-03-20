@@ -15,7 +15,7 @@
 export default {
   props:['chartCmpContent'],
   watch:{
-    'chartCmpContent':'chartContentChange'
+    'chartCmpContent':'refreshChartContent'
   },
   data(){
     return {
@@ -70,7 +70,7 @@ export default {
         filename: "当前表数据"
       });   
     },
-    chartContentChange(){
+    refreshChartContent(){
       let Vue = this;
       Vue.drawTable();
     }
