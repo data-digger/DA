@@ -17,9 +17,13 @@
                   </Select>
               </FormItem>
                <FormItem label="类型" prop="type">
-                <Select class="form-control" v-model='myChart.type'>               
-                      <Option v-for = 't in type' :key='t' :value="t" >{{t}}</Option>
-                </Select>
+                <RadioGroup v-model="myChart.type" type="button">
+                  <Tooltip v-for="T in chartType" :content="T.desc" :key="T.type" placement="top">
+                      <Radio :label="T.type">
+                          <img v-bind:src="T.src">
+                      </Radio>
+                  </Tooltip> 
+                </RadioGroup>
               </FormItem>
               <FormItem label="图表选项" prop="defineJSON">
                   <component ref='optionSelected' :is="chartComponent" :data="colNames" @getSelectedOption = 'analyzeOption'></component>
@@ -32,7 +36,7 @@
           </Form>
         </Col>
         <Col span="14" offset="1">   
-          <component ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption'></component>    
+          <component ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption' :styles='styles'></component>    
         </Col>
     </Row>
 </template>
@@ -68,7 +72,7 @@ export default {
       colNames:[],
       queryData:null,
       eoption:null,
-      type:ChartTemplate.TYPE,
+      chartType:ChartTemplate.TYPE,
       myChart:{
         name:'',
         alias:'myChartAlias',
@@ -117,7 +121,14 @@ export default {
         } else {
           return Chart
         }
-      }
+      },
+    styles: function(){
+      if(this.myChart.type == 'Card'){
+          return {}
+        } else {
+          return {height:400+'px'}
+        }
+    }
   },
   　watch:{
 　　　'myChart.bizViewId': 'getQueryData',
@@ -158,6 +169,7 @@ export default {
     },
     saveChart:function(){
       let Vue = this;
+      Vue.$refs['optionSelected'].sentOption();
       Vue.$refs["myChart"].validate((valid) => {
                     if (valid) {
                          Vue.AxiosPost("createChart",
@@ -172,15 +184,13 @@ export default {
     },
     handleReset:function(){
       let Vue = this;
-      Vue.colNameShow = false;
       Vue.myChart.name = '';
       Vue.myChart.alias = 'myChartAlias';
       Vue.myChart.bizViewId = '';
       Vue.myChart.desc =  'this is my desc';
-      $('#chartOption').empty();
-		  $('#chartOption').text('');
       Vue.chartPreview = false;
       Vue.eoption = null;
+      Vue.$refs['optionSelected'].reset();
     },
   }
 }
@@ -203,5 +213,9 @@ export default {
   height: 20px;
   border:1px solid black;
   display: inline-block;
+}
+.ivu-radio-group-button .ivu-radio-wrapper{
+  padding: 0 10px;
+  height:28px !important;
 }
 </style>

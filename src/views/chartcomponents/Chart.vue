@@ -1,11 +1,11 @@
 <template>
-   <div class="previewChart" :id="'previewChart'+chartId"></div>
+   <div :style="styles" class="previewChart" :id="'previewChart'+chartId"></div>
 </template>
 <script>
 import echarts from 'echarts'
 import chartUtil from './../../libs/chartUtil.js'
 export default {
-    props:["chartId","option"],
+    props:["chartId","option","styles"],
     data () {
         return {
             chartView:null
