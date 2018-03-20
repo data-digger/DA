@@ -34,4 +34,14 @@ html,body{
     width: 100%;
     height: 100%;
 }
+.ivu-notice {
+    width: 366px;
+    top: 152px !important;
+    margin-right: 65px;
+    position: fixed;
+    z-index: 1010;
+}
+/*.ivu-notice-notice-content{
+    height: 300px !important;
+}*/
 </style>

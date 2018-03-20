@@ -1,38 +1,46 @@
 <template>
-  <Form id="createQuery" ref="bizView" :model="bizView" :rules="ruleValidate" :label-width="80">
-        <FormItem label="名称" prop="name">
-            <Input v-model="bizView.name" placeholder="输入名称" :disabled ='nameEdit'></Input>
-        </FormItem>
-        <FormItem label="别名" prop="alias">
-            <Input v-model="bizView.alias" placeholder="输入别名"></Input>
-        </FormItem>
-        <FormItem label="描述" prop="desc">
-            <Input v-model="bizView.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
-        </FormItem>
-        <FormItem label="数据源" prop="dataSourceId">
-            <Select class="form-control" v-model='bizView.dataSourceId'>               
-                <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
-            </Select>
-        </FormItem>
-        <FormItem label="参数">
-             <span v-for="p in paramList"  :id='p.id' :key="p.id" class='param-span' draggable="true" @dragstart="drag">{{p.name}}</span>
-        </FormItem>
-        <FormItem label="SQL定义:" prop="defineJSON">
-            <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
-        </FormItem>
-        <FormItem>
-            <Button type="primary" @click="createQuery('bizView')">Submit</Button>
-            <Button type="ghost" @click="handleReset('bizView')" style="margin-left: 8px">Reset</Button>
-        </FormItem>
-    </Form>
+  <Row>
+    <Col :xs="15" :sm="15" :md="15" :lg="15">
+      <Form id="createQuery" ref="bizView" :model="bizView" :rules="ruleValidate" :label-width="80">
+          <FormItem label="名称" prop="name">
+              <Input v-model="bizView.name" placeholder="输入名称" :disabled ='nameEdit'></Input>
+          </FormItem>
+          <FormItem label="别名" prop="alias">
+              <Input v-model="bizView.alias" placeholder="输入别名"></Input>
+          </FormItem>
+          <FormItem label="描述" prop="desc">
+              <Input v-model="bizView.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
+          </FormItem>
+          <FormItem label="数据源" prop="dataSourceId">
+              <Select class="form-control" v-model='bizView.dataSourceId' @on-change='selectTableFields'>               
+                  <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
+              </Select>
+          </FormItem>
+          <FormItem label="参数">
+               <span v-for="p in paramList"  :id='p.id' :key="p.id" class='param-span' draggable="true" @dragstart="drag">{{p.name}}</span>
+          </FormItem>
+          <FormItem label="SQL定义:" prop="defineJSON">
+              <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
+          </FormItem>
+          <FormItem>
+              <Button type="primary" @click="createQuery('bizView')">Submit</Button>
+              <Button type="ghost" @click="handleReset('bizView')" style="margin-left: 8px">Reset</Button>
+          </FormItem>
+      </Form>
+    </Col>
+  </Row>
 </template>
 
 <script>
 import CodeMirror from "codemirror/lib/codemirror.js"
 import "codemirror/mode/sql/sql.js"
 import {mapGetters} from 'vuex'
+import treeBox from './../paramcomponents/Tree'
 export default {
   name:"createQuery",
+  components:{
+    treeBox
+  },
   computed:{
   ...mapGetters({
     datasourceList:'datasourceList',
@@ -124,11 +132,26 @@ export default {
           desc:'',
           dataSourceId:'',
           defineJSON:'select * from ...'
-        } 
+        }
       } 
       if(Vue.sqlEditor){
         Vue.sqlEditor.setValue(Vue.bizView.defineJSON);
       }     
+    },
+    selectTableFields(){
+      let Vue = this;
+      Vue.$Notice.destroy();
+      if(Vue.bizView.dataSourceId != ""){
+        Vue.$Notice.open({
+          name:'treeBox',        
+          title: '数据表(展开可以查看表字段)',
+          render: h => {
+              return h(treeBox)
+          },        
+          duration: 0
+      });
+      }
+/*      */
     }
   },
   mounted(){
@@ -152,4 +175,5 @@ export default {
     background-color: #ffffff;
     margin-right:3px
   }
+
 </style>

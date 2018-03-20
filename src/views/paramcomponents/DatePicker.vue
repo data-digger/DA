@@ -13,7 +13,8 @@
         props:["dateType",'cmpContent'],
         watch:{
           'defaultDate':'sentDateParam',
-          'dateType':'dateTypeSelect'
+          'dateType':'dateTypeSelect',
+          'cmpContent':'dateTypeSelect'
         },
         data () {
             return {
@@ -90,27 +91,28 @@
                   Vue.monthShow = true;
                   Vue.DaterangeShow = false;            
                 }             
-           }
+              }
+              if(Vue.cmpContent){
+                if(Vue.cmpContent.content.paramType == 'date' && Vue.cmpContent.content.defaultDate.format == "yyyy-MM-dd"){
+                  Vue.DaterangeShow = true;
+                  Vue.monthShow = false;
+                  Vue.defaultDate = Vue.cmpContent.content.defaultDate.date;
+                  Vue.selectedDate = Vue.cmpContent.content.defaultDate.date;
+                }
+                if(Vue.cmpContent.content.paramType == 'date' && Vue.cmpContent.content.defaultDate.format == "yyyy-MM"){
+                  Vue.monthShow = true;
+                  Vue.DaterangeShow = false;
+                  Vue.defaultDate = Vue.cmpContent.content.defaultDate.date;
+                  Vue.selectedDate = Vue.cmpContent.content.defaultDate.date;
+                }                            
+              }    
+
             }
         },
 
         beforeMount(){
            let Vue = this;
-           Vue.dateTypeSelect();
-           if(Vue.cmpContent){
-                 if(Vue.cmpContent.content.paramType == 'date' && Vue.cmpContent.content.defaultDate.format == "yyyy-MM-dd"){
-                    Vue.DaterangeShow = true;
-                    Vue.monthShow = false;
-                    Vue.defaultDate = Vue.cmpContent.content.defaultDate.date;
-                    Vue.selectedDate = Vue.cmpContent.content.defaultDate.date;
-                 }
-                 if(Vue.cmpContent.content.paramType == 'date' && Vue.cmpContent.content.defaultDate.format == "yyyy-MM"){
-                    Vue.monthShow = true;
-                    Vue.DaterangeShow = false;
-                    Vue.defaultDate = Vue.cmpContent.content.defaultDate.date;
-                    Vue.selectedDate = Vue.cmpContent.content.defaultDate.date;
-                 }                            
-           }
+           Vue.dateTypeSelect();    
         },
     }
 </script>
