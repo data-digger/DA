@@ -7,14 +7,6 @@
         <button @click='preview()'>预览</button> </p>        
     </Card>
     <Modal
-      v-model="modaledit"
-      width ="1200px"
-      title="编辑图表"
-      @on-ok="editOk"
-      @on-cancel="cancel">
-      <ChartForm ref="chartedit" :myChart='chartbox'></ChartForm>
-    </Modal>
-    <Modal
       v-model="modalpreview"
       width ="1200px"
       title="图表预览"
@@ -97,7 +89,11 @@ export default {
       Vue.drawChart();     
     },
     edit (){
-      this.modaledit = true;
+      let Vue = this; 
+      this.$router.push({
+        name:"editChart",
+        params:Vue.chartbox
+      });
     },
     editOk(){
       this.$refs.chartedit.saveChart();
@@ -116,7 +112,7 @@ export default {
       Vue.modalpreview = true;
       //Vue.$refs['chart'+Vue.chartbox.id].show();
       Vue.$nextTick(function(){
-         Vue.$refs['chart'+Vue.chartbox.id].show();
+         Vue.$refs['chart'+Vue.chartbox.id].show(Vue.eoption);
        })
     },
     refreshQueryData(param){

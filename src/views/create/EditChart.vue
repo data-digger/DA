@@ -68,7 +68,7 @@ export default {
   },
   data () {
     return {
-      chartPreview:false,
+      isInit:true,
       colNames:[],
       queryData:null,
       eoption:null,
@@ -131,13 +131,22 @@ export default {
     }
   },
   　watch:{
-      // '$route' (to, from) {
-      //   let Vue = this;
-      //   Vue.initChartData(to,from);
-      // },
 　　　'myChart.bizViewId': 'getQueryData',
+     '$route' (to, from) {
+              let Vue = this;
+              Vue.initChartData(to);
+            }
 　},
   methods:{
+    initChartData:function(to){
+      let Vue = this;
+      Vue.isInit = true;
+      Vue.myChart = to.params;
+      Vue.$nextTick(function(){
+         Vue.$refs['optionSelected'].setData(to.params.defineJSON)
+         Vue.getQueryData();
+       }) 
+    },
     getQueryList:function(){
         let Vue = this;
         Vue.AxiosPost("getQuery",'',
@@ -153,6 +162,10 @@ export default {
               function(response){
                 Vue.queryData = response.data.gridData;
                 Vue.colNames = Vue.queryData.stringHeaders;
+                if(Vue.isInit){
+                  Vue.previewChart();
+                  Vue.isInit = false;
+                }
               }
           ); 
         }
@@ -197,6 +210,10 @@ export default {
       Vue.eoption = null;
       Vue.$refs['optionSelected'].reset();
     },
+  },
+  mounted(){
+    let Vue = this;
+    Vue.initChartData(Vue.$route);
   }
 }
 </script>

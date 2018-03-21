@@ -102,6 +102,24 @@ export default {
             }
     },
     methods:{
+         setData:function(JSONOption){
+            let Vue = this;
+            
+                let option = (JSONOption == null)?Vue.JSONOption:JSONOption
+                Vue.selectdOption = JSON.parse(option);
+                Vue.selectedY = [];
+                let colorFirst = Vue.selectdOption.color[0];
+                for(let i in Vue.selectdOption.series){
+                    Vue.selectedY.push(Vue.selectdOption.series[i].data);
+                }
+                for (let j in ChartTemplate.COLORS){
+                    if(ChartTemplate.COLORS[j].color[0] == colorFirst){
+                        Vue.colorSelected = j;
+                        break;
+                    }
+                }
+           // Vue.$store.commit('getInitOption',Vue.selectdOption);
+        },
        sentOption:function(){
            let Vue = this;
            Vue.selectdOption.color = ChartTemplate.COLORS[Vue.colorSelected].color;
@@ -126,7 +144,7 @@ export default {
            Vue.selectdOption.grid.bottom = '3%',
            Vue.colorSelected = 0
        }
-    },
+    }
 }
 </script>
 

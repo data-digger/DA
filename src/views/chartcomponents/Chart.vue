@@ -12,13 +12,13 @@ export default {
         }
     },
     methods:{
-        show(){
+        show(option){
         let Vue = this;
         if(Vue.chartView != null){
             Vue.chartView.dispose();
         }    
         Vue.chartView = echarts.init(document.getElementById('previewChart'+Vue.chartId));       
-        Vue.chartView.setOption(Vue.option); 
+        Vue.chartView.setOption(option); 
         },
     },
     beforeMount(){
