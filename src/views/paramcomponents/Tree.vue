@@ -1,79 +1,25 @@
 <template>
-    <Tree :data="data1"></Tree>
+    <Tree  :data="data" show-checkbox @on-check-change='getCheckedNodes'></Tree>
 </template>
 <script>
     export default {
+        props:['datasourceId'],
         data () {
             return {
-                data1: [
-                    {
-                        title: 'parent 1',
-                        expand: true,
-                        children: [
-                            {
-                                title: 'parent 1-1',
-                                expand: true,
-                                children: [
-                                    {
-                                        title: 'leaf 1-1-1'
-                                    },
-                                    {
-                                        title: 'leaf 1-1-2'
-                                    }
-                                ]
-                            },
-                            {
-                                title: 'parent 1-2',
-                                expand: true,
-                                children: [
-                                    {
-                                        title: 'leaf 1-2-1'
-                                    },
-                                    {
-                                        title: 'leaf 1-2-1'
-                                    }
-                                ]
-                            },
-                            {
-                                title: 'parent 1-2',
-                                expand: true,
-                                children: [
-                                    {
-                                        title: 'leaf 1-2-1'
-                                    },
-                                    {
-                                        title: 'leaf 1-2-1'
-                                    }
-                                ]
-                            },
-                            {
-                                title: 'parent 1-2',
-                                expand: true,
-                                children: [
-                                    {
-                                        title: 'leaf 1-2-1'
-                                    },
-                                    {
-                                        title: 'leaf 1-2-1'
-                                    }
-                                ]
-                            },
-                            {
-                                title: 'parent 1-2',
-                                expand: true,
-                                children: [
-                                    {
-                                        title: 'leaf 1-2-1'
-                                    },
-                                    {
-                                        title: 'leaf 1-2-1'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
+                data: []
             }
+        },
+        methods:{
+           getCheckedNodes(){
+              console.log(this.getCheckedNodes());
+           }
+        },
+        mounted(){
+            let Vue = this;
+            Vue.AxiosPost("getTablesTree",{'dsId':Vue.datasourceId},
+              function(response){
+                Vue.data = response.data;    
+            })
         }
     }
 </script>

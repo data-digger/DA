@@ -142,16 +142,22 @@ export default {
       let Vue = this;
       Vue.$Notice.destroy();
       if(Vue.bizView.dataSourceId != ""){
+        var datasourceName = null;
+        for(var i in Vue.datasourceList){
+          if(Vue.datasourceList[i].id == Vue.bizView.dataSourceId){
+            datasourceName = Vue.datasourceList[i].name;
+            break;
+          }
+        }
         Vue.$Notice.open({
           name:'treeBox',        
-          title: '数据表(展开可以查看表字段)',
-          render: h => {
-              return h(treeBox)
+          title: datasourceName+'的数据表(展开可以查看表字段)',
+          render: function(createElement){
+            return createElement(treeBox,{props:{datasourceId:Vue.bizView.dataSourceId}})
           },        
           duration: 0
-      });
+        });
       }
-/*      */
     }
   },
   mounted(){

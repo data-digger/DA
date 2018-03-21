@@ -5,36 +5,37 @@ window.uri = 'http://localhost:8080'
 window.urlConf = {
   datasource: {
     list: `${window.uri}/datasource/list`,
-    new: `${window.uri}/datasource/new`,
+    save: `${window.uri}/datasource/save`,
+    gettables: `${window.uri}/datasource/gettables`,
   },
   
   bizview: {
     list:`${window.uri}/bizview/list`,
-    new: `${window.uri}/bizview/new`,
+    save: `${window.uri}/bizview/save`,
     preview:`${window.uri}/bizview/preview`,
     update: `${window.uri}/bizview/update`,
   },
   chart: {
     list:`${window.uri}/chart/list`,
-    new: `${window.uri}/chart/new`,
+    save: `${window.uri}/chart/save`,
     getone:`${window.uri}/chart/getone`,
     getdata:`${window.uri}/chart/getdata`,
   },
   table: {
     list: `${window.uri}/table/list`,
-    new: `${window.uri}/table/new`,
+    save: `${window.uri}/table/save`,
     preview:`${window.uri}/table/preview`
   },
   report: {
     list:`${window.uri}/report/list`,
-    new: `${window.uri}/report/new`,
+    save: `${window.uri}/report/save`,
     getone: `${window.uri}/report/getone`,
     getdata: `${window.uri}/report/getdata`,
     update: `${window.uri}/report/update`,
   },
   param: {
     list:`${window.uri}/parameter/list`,
-    new: `${window.uri}/parameter/new`,
+    save: `${window.uri}/parameter/save`,
     getstandbyvalue: `${window.uri}/parameter/getValue`,
   },
 }
@@ -58,15 +59,19 @@ axios.defaults.transformRequest = function(obj) {
 export default {
    /*创建数据源*/
    createDatasource(params){
-     return axios.post(urlConf.datasource.new, params);  
+     return axios.post(urlConf.datasource.save, params);  
    },
    /*获取数据源列表*/
     getDatasourceList(params){
    	 return axios.post(urlConf.datasource.list, params); 
    },
+   /*获取数据表和字段*/
+    getTablesTree(params){
+     return axios.post(urlConf.datasource.gettables, params); 
+   },
    /*创建查询器*/
     createQuery(params){
-   	 return axios.post(urlConf.bizview.new, params); 
+   	 return axios.post(urlConf.bizview.save, params); 
    },
    /*获取查询器列表*/
     getQueryList(params){
@@ -76,13 +81,13 @@ export default {
     previewBizView(params){
      return axios.post(urlConf.bizview.preview, params); 
     },
-     /*根据参数值更新查询器数据*/
-     updateBizView(params){
-      return axios.post(urlConf.bizview.update, params); 
-     },
+    /*根据参数值更新查询器数据*/
+    updateBizView(params){
+    return axios.post(urlConf.bizview.update, params); 
+   },
     /*创建仪表*/
     createChart(params){
-      return axios.post(urlConf.chart.new, params); 
+      return axios.post(urlConf.chart.save, params); 
     },
     /*获取仪表列表*/
     getChartList(params){
@@ -98,7 +103,7 @@ export default {
     },
     /*创建表格*/
     createTable(params){
-      return axios.post(urlConf.table.new, params); 
+      return axios.post(urlConf.table.save, params); 
     },
     /*预览表格数据*/
     previewTable(params){
@@ -110,7 +115,7 @@ export default {
     },
     /*创建报表*/
     createReport(params){
-      return axios.post(urlConf.report.new, params); 
+      return axios.post(urlConf.report.save, params); 
     },
     /*获取报表列表*/
     getReportList(params){
@@ -130,7 +135,7 @@ export default {
      },
     /*新建参数*/
     createParam(params){
-      return axios.post(urlConf.param.new, params); 
+      return axios.post(urlConf.param.save, params); 
     },
     /*获取参数列表*/
     getParamList(params){
