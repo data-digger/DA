@@ -36,12 +36,12 @@ html,body{
 }
 .ivu-notice {
     width: 366px;
-    top: 152px !important;
+    top: 132px !important;
     margin-right: 65px;
     position: fixed;
     z-index: 1010;
 }
-/*.ivu-notice-notice-content{
-    height: 300px !important;
+/*.ivu-collapse-content-box{
+    overflow: visible;
 }*/
 </style>

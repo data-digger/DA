@@ -226,6 +226,7 @@ export default {
       let Vue = this;
       Vue.isCreate =  $.isEmptyObject(to.params)
       if(!Vue.isCreate){        
+        Vue.$route.params.defineJSON =JSON.parse(Vue.$route.params.defineJSON);
         let paramInfo = Vue.$route.params;
         if(paramInfo != null){
           Vue.param = paramInfo;          

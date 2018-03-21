@@ -18,7 +18,7 @@
           </FormItem>
           <FormItem label="参数">
                <span v-for="p in paramList"  :id='p.id' :key="p.id" class='param-span' draggable="true" @dragstart="drag">{{p.name}}</span>
-          </FormItem>
+          </FormItem>       
           <FormItem label="SQL定义:" prop="defineJSON">
               <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
           </FormItem>
