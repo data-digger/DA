@@ -70,7 +70,7 @@ export default {
     },
     edit (routerpath){
       let Vue = this; 
-      this.$router.push({
+      Vue.$router.push({
         path:routerpath,
         name:"createQuery",
         params:Vue.querybox

@@ -23,7 +23,7 @@ export default {
   methods:{
     edit(routerpath ){
       let Vue = this; 
-      this.$router.push({
+      Vue.$router.push({
         path:routerpath,
         name:"createParam",
         params:Vue.parambox
