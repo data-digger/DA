@@ -11,7 +11,7 @@ ChartTemplate.COLORS =[ {color:['#63c5d0','#ff9b4f','#4ac6ff','#58b0e8','#b39ddb
                         src:require('./../views/chartcomponents/ChartColors/color1.png')},
                         {color:['#0293d6','#ff9000','#01c98e','#f6cd4b','#466e9d','#e16b96','#bbb0ab','#887875','#94cceb'],
                         src:require('./../views/chartcomponents/ChartColors/color2.png')},
-                        {color:['#fcdb00','#99d166','#feac97','#e4664f','#ee9b35','#ffea43','#cf6490','#e779b8','#fa9078'],
+                        {color:['#fa9078','#fcdb00','#99d166','#feac97','#e4664f','#ee9b35','#ffea43','#cf6490','#e779b8'],
                         src:require('./../views/chartcomponents/ChartColors/color3.png')},
                         {color:['#0039b3','#1857de','#0476d9','#3b68b2','#5d89d3','#5475e0','#6298ed','#97b7fc','#bed0f7'],
                         src:require('./../views/chartcomponents/ChartColors/color4.png')},

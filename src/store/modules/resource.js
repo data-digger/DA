@@ -24,7 +24,6 @@ const state = {
   },
   /*paramData:'',*/
   layoutSelected:"布局1",
-  chartInitOption:null,
 }
 
 // getters
@@ -38,7 +37,6 @@ const getters = {
   layoutSelected: state => state.layoutSelected,
   report: state => state.report,
  /* paramData:state => state.paramData,*/
- chartInitOption: state => state.chartInitOption,
 }
 
 // actions
@@ -125,9 +123,6 @@ const mutations = {
       }
     }    
   },
-  getInitOption(state,param){
-    state.chartInitOption = param;
-  }
 }
 
 export default {

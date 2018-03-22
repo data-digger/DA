@@ -20,8 +20,15 @@ export default {
         Vue.chartView = echarts.init(document.getElementById('previewChart'+Vue.chartId));       
         Vue.chartView.setOption(option); 
         },
+        reset(){
+            let Vue = this;
+            if(Vue.chartView != null){
+                Vue.chartView.dispose();
+                Vue.chartView = null;
+            }
+        }
     },
-    beforeMount(){
+    mounted(){
         $(window).resize(function() {
             if(this.chartView != null){
                 this.chartView.resize();

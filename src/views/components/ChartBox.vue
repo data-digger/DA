@@ -91,7 +91,7 @@ export default {
     edit (){
       let Vue = this; 
       this.$router.push({
-        name:"editChart",
+        name:"createChart",
         params:Vue.chartbox
       });
     },

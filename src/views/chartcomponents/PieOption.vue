@@ -90,6 +90,19 @@ export default {
             }
     },
     methods:{
+          setData:function(JSONOption){
+            let Vue = this;
+                Vue.selectdOption = JSON.parse(JSONOption);
+                Vue.selectedX = [];
+                let colorFirst = Vue.selectdOption.color[0];
+                for (let j in ChartTemplate.COLORS){
+                    if(ChartTemplate.COLORS[j].color[0] == colorFirst){
+                        Vue.colorSelected = j;
+                        break;
+                    }
+                }
+           // Vue.$store.commit('getInitOption',Vue.selectdOption);
+        },
        sentOption:function(){
            let Vue = this;
            Vue.selectdOption.color = ChartTemplate.COLORS[Vue.colorSelected].color;

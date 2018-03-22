@@ -3,7 +3,7 @@
         <Col span="7">
             <Form id="createChart" ref="myChart" :model="myChart" :rules="ruleValidate" :label-width="80">
               <FormItem label="名称" prop="name">
-                  <Input v-model="myChart.name" placeholder="输入名称"></Input>
+                  <Input v-model="myChart.name" placeholder="输入名称" :disabled="!isNew"></Input>
               </FormItem>
               <FormItem label="别名" prop="alias">
                   <Input v-model="myChart.alias" placeholder="输入别名"></Input>
@@ -26,7 +26,7 @@
                 </RadioGroup>
               </FormItem>
               <FormItem label="图表选项" prop="defineJSON">
-                  <component ref='optionSelected' :is="chartComponent" :data="colNames" @getSelectedOption = 'analyzeOption'></component>
+                  <component ref='optionSelected' :is="chartComponent" :data="colNames" @getSelectedOption = 'setOption'></component>
               </FormItem>
               <FormItem>
                   <Button type="ghost" shape="circle" icon="ios-search"  @click="previewChart"></Button>
@@ -68,6 +68,8 @@ export default {
   },
   data () {
     return {
+      isNew:true,
+      isInit:true,
       chartPreview:false,
       colNames:[],
       queryData:null,
@@ -131,13 +133,35 @@ export default {
     }
   },
   　watch:{
-      // '$route' (to, from) {
-      //   let Vue = this;
-      //   Vue.initChartData(to,from);
-      // },
+      '$route' (to, from) {
+          let Vue = this;
+          Vue.initChartData(to,from);
+      },
 　　　'myChart.bizViewId': 'getQueryData',
 　},
   methods:{
+     initChartData:function(to,from){
+      let regex = /^\/createChart/;
+      if(regex.test(from.fullPath)){
+        return;
+      }
+      if(!regex.test(to.fullPath)){
+        return;
+      }
+      let Vue = this;
+      Vue.isInit = true;
+      Vue.isNew =  $.isEmptyObject(to.params);
+      if(Vue.isNew){
+        Vue.handleReset();
+      } else {
+        Vue.myChart = to.params;
+        Vue.$nextTick(function(){
+        Vue.$refs['optionSelected'].setData(to.params.defineJSON)
+         //Vue.getQueryData();
+       }) 
+      }
+      
+    },
     getQueryList:function(){
         let Vue = this;
         Vue.AxiosPost("getQuery",'',
@@ -153,21 +177,29 @@ export default {
               function(response){
                 Vue.queryData = response.data.gridData;
                 Vue.colNames = Vue.queryData.stringHeaders;
+                 if(!Vue.isNew && Vue.isInit){ //编辑状态并且初始化状态需要在获取数据后初始化图表
+                  Vue.previewChart();
+                  Vue.isInit = false;
+                }
               }
           ); 
         }
         
       },
-    analyzeOption:function(selectdOption){
+    setOption(selectdOption){
       let Vue = this;
       Vue.myChart.defineJSON = JSON.stringify(selectdOption);
       Vue.eoption = $.extend(true, {}, selectdOption);
+    },
+    analyzeOption:function(){  
+      let Vue = this;
       chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
     },
     previewChart:function(){
         let Vue = this;
         Vue.chartPreview = true;
         Vue.$refs['optionSelected'].sentOption();
+        Vue.analyzeOption();
         Vue.$nextTick(function(){
          Vue.$refs['chartContainer'].show(Vue.eoption);
        })
@@ -193,10 +225,20 @@ export default {
       Vue.myChart.alias = '';
       Vue.myChart.bizViewId = '';
       Vue.myChart.desc =  '';
+      Vue.myChart.type = 'Bar',
+      Vue.myChart.defineJSON = '';
       Vue.chartPreview = false;
       Vue.eoption = null;
       Vue.$refs['optionSelected'].reset();
+      Vue.$refs['chartContainer'].reset();
     },
+  },
+  mounted(){
+    let Vue = this;
+     Vue.$nextTick(function(){
+         Vue.initChartData(Vue.$route,{fullPath:'/*'});
+    })
+    
   }
 }
 </script>

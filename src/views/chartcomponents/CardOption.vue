@@ -79,6 +79,12 @@ export default {
             }
     },
     methods:{
+        setData:function(JSONOption){
+            let Vue = this;
+            Vue.selectdOption = JSON.parse(JSONOption);
+            Vue.iconSearch = false
+           // Vue.$store.commit('getInitOption',Vue.selectdOption);
+        },
        sentOption:function(){
            let Vue = this;
            Vue.$emit('getSelectedOption',Vue.selectdOption);
