@@ -118,6 +118,7 @@ export default {
     },
     initBizViewData(to,from){
       let Vue = this;
+      Vue.$Notice.destroy();
       let regex = /^\/createQuery/;
       if(regex.test(from.fullPath)){
         return;
