@@ -67,7 +67,7 @@
         watch: {
             '$route' (to, from) {
               let Vue = this;
-              Vue.initDatasourceData(to);
+                Vue.initDatasourceData(to,from); 
             }
         },
         data () {
@@ -132,16 +132,23 @@
                 let Vue = this;
                 Vue.$refs[datasource].resetFields();
             },
-            initDatasourceData(to){
+            initDatasourceData(to,from){
               let Vue = this;
-              Vue.isCreate =  $.isEmptyObject(to.params)
-              if(!Vue.isCreate){        
-                let datasourceInfo = Vue.$route.params;
+              let regex = /^\/createDatasource/;
+              if(regex.test(from.fullPath)){
+                return;
+              }
+              if(!regex.test(to.fullPath)){
+                return;
+              }              
+              Vue.isCreate =  $.isEmptyObject(to.params);
+              if(Vue.isCreate == false){     
+                let datasourceInfo = to.params;
                 if(datasourceInfo != null){
                   Vue.datasource = datasourceInfo;          
                 }
               }
-              if(Vue.isCreate){
+              if(Vue.isCreate == true){
                 Vue.datasource = {     
                   name:'',
                   alias:'',
@@ -161,7 +168,7 @@
         },
         beforeMount(){
             let Vue = this;
-            Vue.initDatasourceData(Vue.$route);
+            Vue.initDatasourceData(Vue.$route,{fullPath:'/*'});//第一次从上一个页面（resource.vue）进来，默认执行一次
         }
     }
 </script>

@@ -26,9 +26,6 @@ export default {
       this.$router.push({
         path:routerpath,
         name:"createParam",
-        query:{
-          random:Math.random()
-        },
         params:Vue.parambox
       });      
     }

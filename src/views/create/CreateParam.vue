@@ -117,7 +117,7 @@ export default {
     watch: {
       '$route' (to, from) {
         let Vue = this;
-        Vue.initParamData(to);
+        Vue.initParamData(to,from);
       }
     },
      data () {
@@ -222,12 +222,19 @@ export default {
             
         }
     },
-    initParamData(to){
+    initParamData(to,from){
       let Vue = this;
+      let regex = /^\/createParam/;
+      if(regex.test(from.fullPath)){
+        return;
+      }
+      if(!regex.test(to.fullPath)){
+        return;
+      };       
       Vue.isCreate =  $.isEmptyObject(to.params)
       if(!Vue.isCreate){        
-        Vue.$route.params.defineJSON =JSON.parse(Vue.$route.params.defineJSON);
-        let paramInfo = Vue.$route.params;
+        to.params.defineJSON =JSON.parse(to.params.defineJSON);
+        let paramInfo = to.params;
         if(paramInfo != null){
           Vue.param = paramInfo;          
         }
@@ -255,7 +262,7 @@ export default {
   },
   beforeMount(){
     let Vue = this;
-    Vue.initParamData(Vue.$route);
+    Vue.initParamData(Vue.$route,{fullPath:'/*'});
   }
 }
 </script>

@@ -19,10 +19,6 @@ export default {
     create:function(routerpath){
       this.$router.push({
         path:routerpath,
-        param:null,
-        query:{
-          random:Math.random()
-        }
       });
     }
   }

@@ -73,9 +73,6 @@ export default {
       this.$router.push({
         path:routerpath,
         name:"createQuery",
-        query:{
-          random:Math.random()
-        },
         params:Vue.querybox
       });
     },

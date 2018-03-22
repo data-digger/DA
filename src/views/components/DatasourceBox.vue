@@ -24,9 +24,6 @@ export default {
       this.$router.push({
         path:routerpath,
         name:"createDatasource",
-        query:{
-          random:Math.random()
-        },
         params:Vue.datasource
       });      
     }

@@ -55,12 +55,12 @@ export default {
     }
    }
   },
-  watch: {
-    '$route' (to, from) {
-      let Vue = this;
-      Vue.initBizViewData(to);
-    }
-  },
+    watch: {
+      '$route' (to, from) {
+        let Vue = this;
+        Vue.initBizViewData(to,from);
+      }
+    },
   data(){
     return {
       bizView: null,
@@ -116,16 +116,24 @@ export default {
     drag(ev){
       ev.dataTransfer.setData("Text",`^${ev.target.id}^`);
     },
-    initBizViewData(to){
+    initBizViewData(to,from){
       let Vue = this;
+      let regex = /^\/createQuery/;
+      if(regex.test(from.fullPath)){
+        return;
+      }
+      if(!regex.test(to.fullPath)){
+        return;
+      }
       Vue.isCreate =  $.isEmptyObject(to.params)
-      if(!Vue.isCreate){        
-        let bizViewInfo = Vue.$route.params;
+      if(Vue.isCreate == false){    
+          
+        let bizViewInfo = to.params;
         if(bizViewInfo != null){
           Vue.bizView = bizViewInfo;          
         }
       }
-      if(Vue.isCreate){
+      if(Vue.isCreate == true){
         Vue.bizView = {
           name:'',
           alias:'',
@@ -166,7 +174,8 @@ export default {
   },
   beforeMount(){
     let Vue = this;
-    Vue.initBizViewData(Vue.$route);
+    Vue.initBizViewData(Vue.$route,{fullPath:'/*'});
+    Vue.selectTableFields();//selectTableFields是在数据源发生了变化时才可以出发，默认进来的时候强制性执行一次； 
   }
 }
 </script>
