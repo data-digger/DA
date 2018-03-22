@@ -131,7 +131,8 @@ export default {
           
         let bizViewInfo = to.params;
         if(bizViewInfo != null){
-          Vue.bizView = bizViewInfo;          
+          Vue.bizView = bizViewInfo; 
+          Vue.selectTableFields();         
         }
       }
       if(Vue.isCreate == true){
