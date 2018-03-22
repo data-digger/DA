@@ -4,8 +4,11 @@ let  ChartTemplate= {
 ChartTemplate.TYPE = [  {type:'Bar',src:require('./../views/chartcomponents/ChartIcon/Bar.png'),desc:'柱状图'},
                         {type:'HBar',src:require('./../views/chartcomponents/ChartIcon/HBar.png'),desc:'条形图'},
                         {type:'Line',src:require('./../views/chartcomponents/ChartIcon/Line.png'),desc:'折线图'},
+                        {type:'Stack',src:require('./../views/chartcomponents/ChartIcon/Stack.png'),desc:'区域堆叠图'},
                         {type:'Pie',src:require('./../views/chartcomponents/ChartIcon/Pie.png'),desc:'饼图'},
-                        {type:'Card',src:require('./../views/chartcomponents/ChartIcon/Card.png'),desc:'统计卡'},];
+                        {type:'Ring',src:require('./../views/chartcomponents/ChartIcon/Ring.png'),desc:'环图'},
+                        {type:'Card',src:require('./../views/chartcomponents/ChartIcon/Card.png'),desc:'统计卡'},
+                        {type:'ChinaMap',src:require('./../views/chartcomponents/ChartIcon/Ring.png'),desc:'中国地图'},];
 
 ChartTemplate.COLORS =[ {color:['#63c5d0','#ff9b4f','#4ac6ff','#58b0e8','#b39ddb','#ffc400','#8dc93f','#8294e3','#e089be'],
                         src:require('./../views/chartcomponents/ChartColors/color1.png')},

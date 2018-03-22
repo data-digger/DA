@@ -4,6 +4,7 @@
 <script>
 import echarts from 'echarts'
 import chartUtil from './../../libs/chartUtil.js'
+import 'echarts/map/js/china.js';
 export default {
     props:["chartId","option","styles"],
     data () {
@@ -29,9 +30,11 @@ export default {
         }
     },
     mounted(){
+        var Vue = this;
         $(window).resize(function() {
-            if(this.chartView != null){
-                this.chartView.resize();
+            
+            if(Vue.chartView != null){
+                Vue.chartView.resize();
             }
         });
     }

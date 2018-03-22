@@ -100,15 +100,27 @@ function analysisCirChart(option,data){
 }
 
 function analysisCardChart(option,data){
-    let colName = validColName(option.data);
-    let cntData = getColData(colName,data);
+    let cntData = getColData(option.data,data);
     if(cntData.length>0){
         option.data = parseInt(cntData[0]);
     } else {
         option.data = 0;
     }
 }
-
+function analysisMapChart(option,data){
+    let nameCol = option.series[0].data.name;
+    let valueCol = option.series[0].data.value;
+    let nameList= getColData(nameCol,data);
+    let valueList = getColData(valueCol,data);
+    let sortValueList = valueList.slice(0);
+    sortValueList.sort(function(a,b){return b-a});
+    option.visualMap.min = sortValueList[sortValueList.length-1];
+    option.visualMap.max = sortValueList[0];
+    option.series[0].data = [];
+    for (let i in nameList){
+        option.series[0].data.push({name:nameList[i],value:valueList[i]})
+    }
+}
 let chartUtil = {
 
 };
@@ -119,6 +131,9 @@ chartUtil.analysis = function (option,type,data) {
    if(type == 'Line'){
     analysisGridChart(option,data)
    }
+   if(type == 'Stack'){
+    analysisGridChart(option,data)
+   }
    if(type == 'Bar'){
     analysisGridChart(option,data)
    }
@@ -127,6 +142,12 @@ chartUtil.analysis = function (option,type,data) {
    }
    if(type == 'HBar'){
     analysisHbarChart(option,data)
+   }
+   if(type == 'Ring'){
+    analysisCirChart(option,data)
+   }
+   if(type == 'ChinaMap'){
+    analysisMapChart(option,data)
    }
 };
 

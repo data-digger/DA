@@ -47,16 +47,9 @@
                 </Radio>
             </RadioGroup>                
         </FormItem>
-        <Col span='6'>
-            <FormItem prop="legend">
-                Legend<i-switch v-model="selectdOption.legend.show"></i-switch>            
-            </FormItem>
-        </Col> 
-        <Col span='6' offset='1'>  
-            <FormItem prop="area">
-                AreaShow<i-switch v-model="areaShow"></i-switch>            
-            </FormItem>
-        </Col>         
+        <FormItem prop="legend">
+            <span class="legend-area">Legend&nbsp;</span><i-switch v-model="selectdOption.legend.show"></i-switch>            
+        </FormItem>        
     </Row>
 </template>
 <script>
@@ -72,8 +65,14 @@ export default {
         return {
                 selectdOption:{
                     color:ChartTemplate.COLORS[0].color,
-                    tooltip : {
-                        trigger: 'axis'
+                     tooltip : {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            label: {
+                                backgroundColor: '#6a7985'
+                            }
+                        }
                     },
                     legend: {
                         show:true
@@ -94,6 +93,7 @@ export default {
                     calculable : true,
                     xAxis : {
                             type : 'category',
+                            boundaryGap : false,
                             data : '',
                         },
                     yAxis : [
@@ -104,8 +104,7 @@ export default {
                     series : [
                     ]
                 },
-                selectedY:[],
-                areaShow:false,                
+                selectedY:[],              
                 colorSelected:0,
             }
     },
@@ -115,11 +114,6 @@ export default {
                 Vue.selectdOption = JSON.parse(JSONOption);
                 Vue.selectedY = [];
                 let colorFirst = Vue.selectdOption.color[0];
-                if(Vue.selectdOption.series[0].areaStyle){
-                    Vue.areaShow = true;
-                } else {
-                    Vue.areaShow = false;
-                }
                 for(let i in Vue.selectdOption.series){
                     Vue.selectedY.push(Vue.selectdOption.series[i].data);
                 }
@@ -137,12 +131,11 @@ export default {
            Vue.selectdOption.legend.data = Vue.selectedY;
            Vue.selectdOption.series = [];
            for (let i in Vue.selectedY){
-               if(Vue.areaShow){
-                   Vue.selectdOption.series.push({name:Vue.selectedY[i],data:Vue.selectedY[i],type: 'line',areaStyle: {}})
-               } else {
-                   Vue.selectdOption.series.push({name:Vue.selectedY[i],data:Vue.selectedY[i],type: 'line'})
-               }
-               
+               Vue.selectdOption.series.push({name:Vue.selectedY[i],
+                                              data:Vue.selectedY[i],
+                                              type: 'line',
+                                              areaStyle: {},
+                                              stack: '总量',})
            }
            Vue.$emit('getSelectedOption',Vue.selectdOption);
        },
@@ -157,7 +150,6 @@ export default {
            Vue.selectdOption.grid.right = '4%',
            Vue.selectdOption.grid.top = '10%',
            Vue.selectdOption.grid.bottom = '3%',
-           Vue.areaShow = false;
            Vue.colorSelected = 0
        }
     }

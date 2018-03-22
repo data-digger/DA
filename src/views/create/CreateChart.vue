@@ -54,6 +54,9 @@ import PieOption from './../chartcomponents/PieOption'
 import LineOption from './../chartcomponents/LineOption'
 import HBarOption from './../chartcomponents/HBarOption'
 import CardOption from './../chartcomponents/CardOption'
+import RingOption from './../chartcomponents/RingOption'
+import StackOption from './../chartcomponents/StackOption'
+import ChinaMapOption from './../chartcomponents/ChinaOption'
 
 export default {
   name: 'createChart',
@@ -65,6 +68,9 @@ export default {
     CardOption,
     Chart,
     CountCard,
+    RingOption,
+    StackOption,
+    ChinaMapOption
   },
   data () {
     return {
@@ -115,6 +121,12 @@ export default {
           return HBarOption
         } else if (this.myChart.type == 'Card'){
           return CardOption
+        } else if (this.myChart.type == 'Ring'){
+          return RingOption
+        } else if (this.myChart.type == 'Stack'){
+          return StackOption
+        } else if (this.myChart.type == 'ChinaMap'){
+          return ChinaMapOption
         }
       },
       chartContainer: function(){

@@ -19,16 +19,22 @@
                 </Select>
             </FormItem>
         </Col>
-         <FormItem prop="Position">
-            <Col span='8'>
-                Radius
-                <Input v-model="selectdOption.series[0].radius"></Input>                    
+         <FormItem prop="Radius">
+            <Col span='11'>
+                InnerRadius
+                <Input v-model="selectdOption.series[0].radius[0]"></Input>                    
             </Col>
-            <Col span='7' offset='1'>
+            <Col span='11' offset='2'>
+                OuterRadius
+                <Input v-model="selectdOption.series[0].radius[1]"></Input>                    
+            </Col>
+        </FormItem>   
+         <FormItem prop="Position">
+            <Col span='11'>
                 Center-X
                 <Input v-model="selectdOption.series[0].center[0]"></Input>                    
             </Col>
-            <Col span='7' offset='1'>
+            <Col span='11' offset='2'>
                 Center-Y
                 <Input v-model="selectdOption.series[0].center[1]"></Input>                    
             </Col>
@@ -61,28 +67,40 @@ export default {
         return {
                 selectdOption:{
                     color:ChartTemplate.COLORS[0].color,
-                    tooltip : {
+                    tooltip: {
                         trigger: 'item',
-                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        formatter: "{b}: {c} ({d}%)"
                     },
                     legend: {
-                        show: true,
+                        show:true,
                         orient: 'vertical',
-                        left: 'right',
+                        x: 'right',
                     },
-                    series : [
+                    series: [
                         {
-                            type: 'pie',
-                            radius : '60%',
+                            type:'pie',
+                            radius: ['50%', '70%'],
                             center: ['50%', '50%'],
-                            data:{name:'',value:''},
-                            itemStyle: {
+                            avoidLabelOverlap: false,
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'outer'
+                                },
                                 emphasis: {
-                                    shadowBlur: 10,
-                                    shadowOffsetX: 0,
-                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    show: true,
+                                    textStyle: {
+                                        fontSize: '30',
+                                        fontWeight: 'bold'
+                                    }
                                 }
-                            }
+                            },
+                            labelLine: {
+                                normal: {
+                                    show: true
+                                }
+                            },
+                            data:{name:'',value:''},
                         }
                     ]
                 },              
@@ -112,7 +130,8 @@ export default {
            Vue.selectdOption.color = ChartTemplate.COLORS[0].color;
            Vue.selectdOption.series[0].data.name = '';
            Vue.selectdOption.series[0].data.value = '';
-           Vue.selectdOption.series[0].radius = '60%';
+           Vue.selectdOption.series[0].radius[0] = '50%';
+           Vue.selectdOption.series[0].radius[1] = '70%';
            Vue.selectdOption.series[0].center[0]='50%';
            Vue.selectdOption.series[0].center[1]='50%';
            Vue.colorSelected = 0
