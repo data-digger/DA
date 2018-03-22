@@ -177,7 +177,6 @@ export default {
   beforeMount(){
     let Vue = this;
     Vue.initBizViewData(Vue.$route,{fullPath:'/*'});
-    Vue.selectTableFields();//selectTableFields是在数据源发生了变化时才可以出发，默认进来的时候强制性执行一次； 
   }
 }
 </script>
