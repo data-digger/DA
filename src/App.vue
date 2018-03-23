@@ -41,7 +41,11 @@ html,body{
     position: fixed;
     z-index: 1010;
 }
-/*.ivu-collapse-content-box{
+.ivu-checkbox-indeterminate .ivu-checkbox-inner {
+   background-color: #fff;
+   border-color:1px solid #dddee1;
+}
+.ivu-collapse-content-box{
     overflow: visible;
-}*/
+}
 </style>
