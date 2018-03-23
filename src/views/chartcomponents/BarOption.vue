@@ -87,13 +87,17 @@ export default {
                     calculable : true,
                     xAxis : {
                             type : 'category',
+                            axisLabel: {  
+                                interval:0,  
+                                rotate:40  
+                            },
                             data : '',
                         },
                     yAxis : [
                         {
                             type : 'value'
                         }
-                    ],
+                    ],                    
                     series : [
                     ]
                 },
