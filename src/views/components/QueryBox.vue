@@ -1,7 +1,7 @@
 	<template >
   <Col :xs="8" :sm="8" :md="8" :lg="6">
     <Card class='box-card'>
-        <p slot="title">{{querybox.name}}</p>
+        <p slot="title">{{querybox.alias}}</p>
         <p class="box-desc" :title='querybox.desc'> {{querybox.desc}}</p>
         <p><button @click='edit("/createQuery")'>编辑</button>
         <button @click='preview()'>预览</button> </p>     

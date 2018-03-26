@@ -154,7 +154,7 @@
                   alias:'',
                   driverType:'MySQL',
                   driver:'com.mysql.jdbc.Driver',
-                  url:'jdbc:mysql://localhost:3306/请输入表名?useUnicode=true&characterEncoding=UTF-8&useSSL=false',
+                  url:'jdbc:mysql://localhost:3306/请输入数据库名?useUnicode=true&characterEncoding=UTF-8&useSSL=false',
                   dbCharset:'UTF-8',
                   maxConnection:100,
                   validationQuery:'SELECT 1 FROM DUAL',
