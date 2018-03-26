@@ -48,4 +48,7 @@ html,body{
 .ivu-collapse-content-box{
     overflow: visible;
 }
+.ivu-collapse-content{
+    overflow: visible !important; 
+}
 </style>

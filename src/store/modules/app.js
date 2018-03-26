@@ -15,14 +15,20 @@ const app = {
             title: '首页',
             path: '',
             name: 'home_index'
-        }],
+        },
+        {
+            title: '资源页面',
+            path: '/resource',
+            name: 'resource_index'
+        }
+    ],
         currentPageName: '',
         currentPath: [
             {
                 title: '首页',
                 path: '',
                 name: 'home_index'
-            }
+            },
         ], // 面包屑数组
         menuList: [],
         routers: [

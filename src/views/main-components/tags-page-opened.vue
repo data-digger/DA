@@ -26,7 +26,7 @@
                     :name="item.name" 
                     @on-close="closePage"
                     @click.native="linkTo(item)"
-                    :closable="item.name==='home_index'?false:true"
+                    :closable="(item.name==='home_index'|| item.name==='resource_index')?false:true"
                     :color="item.children?(item.children[0].name===currentPageName?'blue':'default'):(item.name===currentPageName?'blue':'default')"
                 >{{ itemTitle(item) }}</Tag>
             </transition-group>
@@ -75,23 +75,23 @@ export default {
         },
         closePage (event, name) {
             let pageOpenedList = this.$store.state.app.pageOpenedList;
-            let lastPageObj = pageOpenedList[0];
-            if (this.currentPageName === name) {
-                let len = pageOpenedList.length;
-                for (let i = 1; i < len; i++) {
-                    if (pageOpenedList[i].name === name) {
-                        if (i < (len - 1)) {
-                            lastPageObj = pageOpenedList[i + 1];
-                        } else {
-                            lastPageObj = pageOpenedList[i - 1];
-                        }
-                        break;
-                    }
-                }
-            } else {
-                let tagWidth = event.target.parentNode.offsetWidth;
-                this.tagBodyLeft = Math.min(this.tagBodyLeft + tagWidth, 0);
-            }
+            let lastPageObj = pageOpenedList[1];
+            // if (this.currentPageName === name) {
+            //     let len = pageOpenedList.length;
+            //     for (let i = 1; i < len; i++) {
+            //         if (pageOpenedList[i].name === name) {
+            //             if (i < (len - 1)) {
+            //                 lastPageObj = pageOpenedList[i + 1];
+            //             } else {
+            //                 lastPageObj = pageOpenedList[i - 1];
+            //             }
+            //             break;
+            //         }
+            //     }
+            // } else {
+            //     let tagWidth = event.target.parentNode.offsetWidth;
+            //     this.tagBodyLeft = Math.min(this.tagBodyLeft + tagWidth, 0);
+            // }
             this.$store.commit('removeTag', name);
             this.$store.commit('closePage', name);
             pageOpenedList = this.$store.state.app.pageOpenedList;
