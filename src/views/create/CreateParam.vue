@@ -53,7 +53,17 @@
                     </Select>
                 </FormItem>                                 
                 <FormItem label="候选值" prop="standbyDefine" v-if = 'param.defineJSON.standbyDefine.valueSource == "static"?true:false'>
-                    <Col><Tag v-for='el in param.defineJSON.standbyDefine.values' checkable closable type='dot'color="green" :key='el.key'>{{el.value}}/{{el.key}}</Tag></Col>
+                    <Col>
+                      <Tag  @on-close="closePage" 
+                            v-for='el in param.defineJSON.standbyDefine.values'
+                            checkable
+                            closable 
+                            type='dot'
+                            color="green" 
+                            :key='el.key'
+                            :name='el.key'>
+                          {{el.value}}/{{el.key}}
+                      </Tag></Col>
                     <Col span='10'><Input size="small" v-model = 'standbyData.value'><span slot="prepend">值</span>standbyData.standbyValue</Input></Col>
                     <Col span='10'><Input size="small" v-model = 'standbyData.key'><span slot="prepend">码值</span>standbyData.standbyKey</Input></Col>
                     <Col span='4' style='padding-bottom:3px'><Button type="primary" size="small" @click='addStandByValue()'>添加</Button></Col>
@@ -186,13 +196,23 @@ export default {
       }
     },
     addStandByValue(){
-        let Vue = this;
-        let sdbData = {};
-        sdbData.key = Vue.standbyData.key;
-        sdbData.value = Vue.standbyData.value;
-        Vue.param.defineJSON.standbyDefine.values.push(sdbData);
-        Vue.standbyData.key = null;
-        Vue.standbyData.value = null
+      let Vue = this;
+      let sdbData = {};
+      sdbData.key = Vue.standbyData.key;
+      sdbData.value = Vue.standbyData.value;
+      Vue.param.defineJSON.standbyDefine.values.push(sdbData);
+      Vue.standbyData.key = null;
+      Vue.standbyData.value = null
+    },
+    closePage(event, name){
+      let Vue = this;
+      let standbyArray = Vue.param.defineJSON.standbyDefine.values;
+      for(var i in standbyArray){
+        if(standbyArray[i].key == name){
+          standbyArray.splice(i,1);
+          break;          
+        }
+      }
     },
     initEditor(myTextarea1){
         let Vue = this;

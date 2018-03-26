@@ -52,6 +52,7 @@
     </Form>
 </template>
 <script>
+import bus from './../../libs/bus.js'
     export default {
         name:'createDatasource',
         computed:{
@@ -122,6 +123,7 @@
                         Vue.AxiosPost("createDatasource",Vue.datasource,
                           function(){
                              Vue.$Message.success('新建成功!');
+                             bus.$emit('close-tag');
                         })
                     } else {
                         Vue.$Message.error('Fail!');
