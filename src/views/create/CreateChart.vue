@@ -35,8 +35,9 @@
               </FormItem> 
           </Form>
         </Col>
-        <Col span="14" offset="1">   
-          <component ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption' :styles='styles'></component>    
+        <Col span="14" offset="1">
+          <Row><component v-show='paramShow'  class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component></Row>   
+          <Row><component v-show='chartPreview' ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption' :styles='styles'></component></Row>  
         </Col>
     </Row>
 </template>
@@ -45,6 +46,8 @@
 import echarts from 'echarts'
 import JSON5 from 'json5'
 import {mapGetters} from 'vuex'
+import datepicker from "./../paramcomponents/DatePicker"
+import list from "./../paramcomponents/List"
 import ChartTemplate from './../../libs/ChartTemplate.js'
 import chartUtil from './../../libs/chartUtil.js'
 import Chart from './../chartcomponents/Chart'
@@ -61,6 +64,8 @@ import ChinaMapOption from './../chartcomponents/ChinaOption'
 export default {
   name: 'createChart',
   components:{
+    datepicker,
+    list,
     BarOption,
     PieOption,
     LineOption,
@@ -76,6 +81,9 @@ export default {
     return {
       isNew:true,
       isInit:true,
+      paramComponent:[],
+      paramSelected:null,
+      paramShow:false,
       chartPreview:false,
       colNames:[],
       queryData:null,
@@ -163,13 +171,17 @@ export default {
       let Vue = this;
       Vue.isInit = true;
       Vue.isNew =  $.isEmptyObject(to.params);
-      if(Vue.isNew){
+      if(Vue.isNew){  //新建图表
+        Vue.paramShow = false;
+        Vue.chartPreview = false;
         Vue.handleReset();
-      } else {
+      } else {  //编辑图表图表
+        Vue.paramShow = true;
+        Vue.chartPreview = true;
         Vue.myChart = to.params;
         Vue.$nextTick(function(){
         Vue.$refs['optionSelected'].setData(to.params.defineJSON)
-         //Vue.getQueryData();
+        Vue.getQueryData();
        }) 
       }
       
@@ -189,6 +201,7 @@ export default {
               function(response){
                 Vue.queryData = response.data.gridData;
                 Vue.colNames = Vue.queryData.stringHeaders;
+                Vue.initParameters(response);
                  if(!Vue.isNew && Vue.isInit){ //编辑状态并且初始化状态需要在获取数据后初始化图表
                   Vue.previewChart();
                   Vue.isInit = false;
@@ -198,6 +211,39 @@ export default {
         }
         
       },
+    initParameters(response){
+      let Vue = this;
+      Vue.paramComponent = [];
+       for(var i in response.data.defaultParameters){
+              if(response.data.defaultParameters[i].paramType == 'list'){
+                var cmpObj = {};
+                cmpObj.component = list;
+                cmpObj.content = response.data.defaultParameters[i];
+                Vue.paramComponent.push(cmpObj);
+              };
+              if(response.data.defaultParameters[i].paramType == 'date'){
+                var cmpObj = {};
+                cmpObj.component = datepicker;
+                cmpObj.content = response.data.defaultParameters[i];
+                Vue.paramComponent.push(cmpObj);
+              }
+            }
+    },
+    refreshQueryData(param){
+      let Vue = this;
+      Vue.paramSelected = $.extend(Vue.paramSelected,param);
+      let paramLength = Object.keys(Vue.paramSelected).length;
+      let JSONParam = JSON.stringify(Vue.paramSelected);
+      if(paramLength == Vue.paramComponent.length){
+        Vue.AxiosPost("updateBizView",{"bizViewId":Vue.myChart.bizViewId,"JSONParam":JSONParam},
+          function(response){
+           Vue.queryData = response.data.gridData;
+           if(Vue.chartPreview){
+             Vue.previewChart();
+           }   
+        });         
+      }     
+    }, 
     setOption(selectdOption){
       let Vue = this;
       Vue.myChart.defineJSON = JSON.stringify(selectdOption);
@@ -210,6 +256,7 @@ export default {
     previewChart:function(){
         let Vue = this;
         Vue.chartPreview = true;
+        Vue.paramShow = true;
         Vue.$refs['optionSelected'].sentOption();
         Vue.analyzeOption();
         Vue.$nextTick(function(){
@@ -225,6 +272,7 @@ export default {
                           Vue.myChart,
                            function(){
                               Vue.$Message.success('Success!');
+                              Vue.closePage('createChart');
                            });
                     } else {
                         Vue.$Message.error('Fail!');
@@ -243,6 +291,28 @@ export default {
       Vue.eoption = null;
       Vue.$refs['optionSelected'].reset();
       Vue.$refs['chartContainer'].reset();
+    },
+    closePage(name){
+      let pageOpenedList = this.$store.state.app.pageOpenedList;
+      let lastPageObj = pageOpenedList[1];
+      this.$store.commit('removeTag', name);
+      this.$store.commit('closePage', name);
+      pageOpenedList = this.$store.state.app.pageOpenedList;
+      localStorage.pageOpenedList = JSON.stringify(pageOpenedList);    
+      this.linkTo(lastPageObj);          
+    },
+    linkTo (item) {
+        let routerObj = {};
+        routerObj.name = item.name;
+        if (item.argu) {
+            routerObj.params = item.argu;
+        }
+        if (item.query) {
+            routerObj.query = item.query;
+        }
+        /*if (this.beforePush(item)) {*/
+            this.$router.push(routerObj);
+        /*}*/
     },
   },
   mounted(){
@@ -264,9 +334,6 @@ export default {
   height: 350px;
   margin: auto;
 }
-.CodeMirror-lines{
-  text-align: left;
-}
 .tag{
   width: 60px;
   height: 20px;
@@ -277,4 +344,8 @@ export default {
   padding: 0 10px;
   height:28px !important;
 }
+.paramcomponent{
+   display: inline-block;
+   margin: 0px 3px;
+  }
 </style>
