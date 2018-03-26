@@ -54,7 +54,7 @@
                 </FormItem>                                 
                 <FormItem label="候选值" prop="standbyDefine" v-if = 'param.defineJSON.standbyDefine.valueSource == "static"?true:false'>
                     <Col>
-                      <Tag  @on-close="closePage" 
+                      <Tag  @on-close="closeTag" 
                             v-for='el in param.defineJSON.standbyDefine.values'
                             checkable
                             closable 
@@ -170,14 +170,36 @@ export default {
              Vue.AxiosPost("createParam",
               ClonedParam,
                function(){
-                  Vue.$Message.success('新建成功!');
-                  console.log(Vue.param);
+                 Vue.$Message.success('新建成功!');
+                 Vue.closePage(event,'createParam');
                });
         } else {
             Vue.$Message.error('Fail!');
         }
       })   
     },
+    closePage(event, name){
+      let pageOpenedList = this.$store.state.app.pageOpenedList;
+      let lastPageObj = pageOpenedList[1];
+      this.$store.commit('removeTag', name);
+      this.$store.commit('closePage', name);
+      pageOpenedList = this.$store.state.app.pageOpenedList;
+      localStorage.pageOpenedList = JSON.stringify(pageOpenedList); 
+      this.linkTo(lastPageObj);             
+    },
+    linkTo (item) {
+        let routerObj = {};
+        routerObj.name = item.name;
+        if (item.argu) {
+            routerObj.params = item.argu;
+        }
+        if (item.query) {
+            routerObj.query = item.query;
+        }
+        /*if (this.beforePush(item)) {*/
+            this.$router.push(routerObj);
+        /*}*/
+    }, 
     handleReset (param) {
          let Vue = this;
          Vue.$refs[param].resetFields();
@@ -204,7 +226,7 @@ export default {
       Vue.standbyData.key = null;
       Vue.standbyData.value = null
     },
-    closePage(event, name){
+    closeTag(event, name){
       let Vue = this;
       let standbyArray = Vue.param.defineJSON.standbyDefine.values;
       for(var i in standbyArray){

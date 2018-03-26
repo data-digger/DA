@@ -123,13 +123,36 @@ import bus from './../../libs/bus.js'
                         Vue.AxiosPost("createDatasource",Vue.datasource,
                           function(){
                              Vue.$Message.success('新建成功!');
-                             bus.$emit('close-tag');
+                             Vue.closePage(event,'createDatasource');
                         })
                     } else {
                         Vue.$Message.error('Fail!');
+                        
                     }
                 })
-            },          
+            },     
+            closePage(event, name){
+              let pageOpenedList = this.$store.state.app.pageOpenedList;
+              let lastPageObj = pageOpenedList[1];
+              this.$store.commit('removeTag', name);
+              this.$store.commit('closePage', name);
+              pageOpenedList = this.$store.state.app.pageOpenedList;
+              localStorage.pageOpenedList = JSON.stringify(pageOpenedList);  
+              this.linkTo(lastPageObj);            
+            }, 
+            linkTo (item) {
+                let routerObj = {};
+                routerObj.name = item.name;
+                if (item.argu) {
+                    routerObj.params = item.argu;
+                }
+                if (item.query) {
+                    routerObj.query = item.query;
+                }
+                /*if (this.beforePush(item)) {*/
+                    this.$router.push(routerObj);
+                /*}*/
+            },    
             handleReset (datasource) {
                 let Vue = this;
                 Vue.$refs[datasource].resetFields();

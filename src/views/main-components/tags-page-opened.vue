@@ -37,7 +37,6 @@
 <script>
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
-import bus from './../../libs/bus.js'
 Vue.use(VueI18n);
 export default {
     name: 'tagsPageOpened',
@@ -75,7 +74,6 @@ export default {
             }
         },
         closePage (event, name) {
-            alert(1);
             let pageOpenedList = this.$store.state.app.pageOpenedList;
             let lastPageObj = pageOpenedList[1];
             // if (this.currentPageName === name) {
@@ -173,11 +171,6 @@ export default {
         }, 1); // 这里不设定时器就会有偏移bug
         this.tagsCount = this.tagsList.length;
     },
-    created() {  
-        bus.$on('getTarget',function(){
-          this.closePage();
-        });  
-    }, 
     watch: {
         '$route' (to) {
             this.currentPageName = to.name;

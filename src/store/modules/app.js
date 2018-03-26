@@ -21,7 +21,7 @@ const app = {
             path: '/resource',
             name: 'resource_index'
         }
-    ],
+        ],
         currentPageName: '',
         currentPath: [
             {

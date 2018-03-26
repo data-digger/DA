@@ -60,18 +60,41 @@ export default {
              Vue.AxiosPost("createTable",
               Vue.table,
                function(){
-                  Vue.$Message.success('新建成功!');
+                 Vue.$Message.success('新建成功!');
+                 Vue.closePage(event,'createTable');
                });
         } else {
             Vue.$Message.error('Fail!');
         }
       })      
     },
+    closePage(event, name){
+      let pageOpenedList = this.$store.state.app.pageOpenedList;
+      let lastPageObj = pageOpenedList[1];
+      this.$store.commit('removeTag', name);
+      this.$store.commit('closePage', name);
+      pageOpenedList = this.$store.state.app.pageOpenedList;
+      localStorage.pageOpenedList = JSON.stringify(pageOpenedList);  
+      this.linkTo(lastPageObj);            
+    },
+    linkTo (item) {
+        let routerObj = {};
+        routerObj.name = item.name;
+        if (item.argu) {
+            routerObj.params = item.argu;
+        }
+        if (item.query) {
+            routerObj.query = item.query;
+        }
+        /*if (this.beforePush(item)) {*/
+            this.$router.push(routerObj);
+        /*}*/
+    },
     handleReset(table){
       let Vue = this;
       Vue.$refs[table].resetFields();
     }
-  },
+   },
   mounted:function(){
 
   }
