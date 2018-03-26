@@ -1,7 +1,7 @@
 <template >
   <Col :xs="8" :sm="8" :md="8" :lg="6">
     <Card class='box-card'>
-        <p slot="title">{{parambox.name}}</p>
+        <p slot="title">{{parambox.alias}}</p>
         <p class="box-desc">{{parambox.desc}}</p>
         <p><button @click='edit("/createParam")'>编辑</button></p> 
     </Card>

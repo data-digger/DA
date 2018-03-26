@@ -233,10 +233,10 @@ export default {
       };       
       Vue.isCreate =  $.isEmptyObject(to.params)
       if(!Vue.isCreate){        
-        to.params.defineJSON =JSON.parse(to.params.defineJSON);
-        let paramInfo = to.params;
-        if(paramInfo != null){
-          Vue.param = paramInfo;          
+        if(to.params != null){
+          Vue.param = to.params;
+          let paramsJSON = Vue.param.defineJSON;
+          Vue.param.defineJSON = JSON.parse(paramsJSON);
         }
       }
       if(Vue.isCreate){
