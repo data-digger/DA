@@ -207,8 +207,8 @@ export default {
   beforeMount(){
     let Vue =this;
     Vue.report = Vue.$route.params;
-    Vue.initChartComponent();
-    Vue.initReport();    
+    Vue.initChartComponent();//初始化图形控件
+    Vue.initReport();//初始化报表  
   }
 }
 </script>
