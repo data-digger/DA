@@ -1,5 +1,8 @@
 <template>
     <Row style="padding:20px">
+      <Col span="4">
+          <FieldList :colNames="colNames"></FieldList>
+        </Col>
         <Col span="7">
             <Form id="createChart" ref="myChart" :model="myChart" :rules="ruleValidate" :label-width="80">
               <FormItem label="名称" prop="name">
@@ -35,7 +38,8 @@
               </FormItem> 
           </Form>
         </Col>
-        <Col span="14" offset="1">
+        <Col span="12" offset="1">
+          <Row>筛选器<FilterOption :filters="filters"></FilterOption></Row>
           <Row><component v-show='paramShow'  class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component></Row>   
           <Row><component v-show='chartPreview' ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption' :styles='styles'></component></Row>  
         </Col>
@@ -60,6 +64,8 @@ import CardOption from './../chartcomponents/CardOption'
 import RingOption from './../chartcomponents/RingOption'
 import StackOption from './../chartcomponents/StackOption'
 import ChinaMapOption from './../chartcomponents/ChinaOption'
+import FieldList from './../chartcomponents/FieldList'
+import FilterOption from './../chartcomponents/Filter'
 
 export default {
   name: 'createChart',
@@ -75,7 +81,9 @@ export default {
     CountCard,
     RingOption,
     StackOption,
-    ChinaMapOption
+    ChinaMapOption,
+    FieldList,
+    FilterOption
   },
   data () {
     return {
@@ -86,6 +94,7 @@ export default {
       paramShow:false,
       chartPreview:false,
       colNames:[],
+      filters:[{name:'',defineJSON:''}],
       queryData:null,
       eoption:null,
       chartType:ChartTemplate.TYPE,
