@@ -15,8 +15,8 @@
             </Select>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="createTable('table')">Submit</Button>
-            <Button type="ghost" @click="handleReset('table')" style="margin-left: 8px">Reset</Button>
+            <Button type="primary" @click="createTable('table')">提交</Button>
+            <Button type="ghost" @click="handleReset('table')" style="margin-left: 8px">重置</Button>
         </FormItem>     
     </Form>
 </template>

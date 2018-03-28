@@ -92,8 +92,8 @@
         <Row>
             <Col span="24" style='text-align:center'>
                 <FormItem>
-                    <Button type="primary" @click="createParam('param')">Submit</Button>
-                    <Button type="ghost" @click="handleReset('param')" style="margin-left: 8px">Reset</Button>
+                    <Button type="primary" @click="createParam('param')">提交</Button>
+                    <Button type="ghost" @click="handleReset('param')" style="margin-left: 8px">重置</Button>
                 </FormItem>                
             </Col>
         </Row>     
