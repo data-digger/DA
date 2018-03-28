@@ -126,5 +126,7 @@ export default {
 <style scope>
   .button {
     text-align: center;
+    margin-top: 0;
   }
+
 </style>

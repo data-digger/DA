@@ -1,22 +1,30 @@
 <template>
   <RadioGroup v-model="layoutSelected" :on-change ='layoutselected()'>
      <Radio label="布局1">
-        <Card style="margin-bottom:10px;width:200px;height:200px">布局1样图</Card>
+        <Card style="margin-bottom:10px;width:200px;height:200px">
+          <img class='layoutImg' src="./../../assets/img/default_layout_1.png">
+        </Card>
      </Radio >
      <Radio label="布局2">
-        <Card style="margin-bottom:10px;width:200px;height:200px">布局2样图</Card>
+        <Card style="margin-bottom:10px;width:200px;height:200px">
+          <img class='layoutImg' src="./../../assets/img/default_layout_2.png">
+        </Card>
      </Radio >
      <Radio label="布局3">
-        <Card style="margin-bottom:10px;width:200px;height:200px">布局3样图</Card>
+        <Card style="margin-bottom:10px;width:200px;height:200px">
+          <img class='layoutImg' src="./../../assets/img/default_layout_3.png">
+        </Card>
      </Radio >
     <Radio label="自定义">
-        <Card style="margin-bottom:10px;width:200px;height:200px">自定义</Card>
+        <Card style="margin-bottom:10px;width:200px;height:200px">
+          <img class='layoutImg' src="./../../assets/img/diy.png">
+        </Card>
      </Radio >
   </RadioGroup>
 </template>
 
 <script>
- export default {
+ export default { 
     data(){
        return {
           layoutSelected:"布局1"
@@ -33,6 +41,12 @@
 
 <style scoped>
 .vue-grid-layout {
-   height: 400px !important;
+   height: 100px !important;
+   margin-bottom: 10px;
+   overflow: auto;
+}
+.layoutImg{
+  width: 100%;
+  height: 100%;
 }
 </style>

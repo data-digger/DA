@@ -65,16 +65,6 @@ export const otherRouter = {
 // 作为Main组件的子页面展示并且在左侧菜单显示的路由写在appRouter里
 export const appRouter = [
     {
-        path: '/access',
-        icon: 'key',
-        name: 'access',
-        title: '权限管理',
-        component: Main,
-        children: [
-            { path: 'index', title: '权限管理', name: 'access_index', component: () => import('@/views/access/access.vue') }
-        ]
-    },
-    {
         path: '/resource',
         icon: 'android-sad',
         title: '资源',
@@ -84,16 +74,6 @@ export const appRouter = [
             { path: 'index', title: '资源页面', name: 'resource_index', component: () => import('@/views/resource/Resource.vue') }
         ]
     },
-    {
-        path: '/error-page',
-        icon: 'android-sad',
-        title: '错误页面',
-        name: 'errorpage',
-        component: Main,
-        children: [
-            { path: 'index', title: '错误页面', name: 'errorpage_index', component: () => import('@/views/error-page/error-page.vue') }
-        ]
-    }
 ];
 
 // 所有上面定义的路由都要写在下面的routers里

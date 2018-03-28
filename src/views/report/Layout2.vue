@@ -37,28 +37,18 @@ export default {
         return{
           portlets:[{"portletID":"0",
                    "name":"",
-                   "x":0,"y":0,"w":12,"h":10,"i":"0",
+                   "x":0,"y":0,"w":6,"h":12,"i":"0",
                    "tabs":[{"id":"0","title":"","objtype":"","objid":""}]
                   },
                   {"portletID":"1",
                    "name":"",
-                   "x":0,"y":8,"w":6,"h":10,"i":"1",
+                   "x":6,"y":8,"w":6,"h":6,"i":"1",
                    "tabs":[{"id":"1","title":"","objtype":"","objid":""}]
                   } ,
                   {"portletID":"2",
                    "name":"",
-                   "x":6,"y":8,"w":6,"h":10,"i":"2",
+                   "x":6,"y":8,"w":6,"h":6,"i":"2",
                    "tabs":[{"id":"2","title":"","objtype":"","objid":""}]
-                  },
-                  {"portletID":"3",
-                   "name":"",
-                   "x":0,"y":16,"w":6,"h":10,"i":"3",
-                   "tabs":[{"id":"3","title":"","objtype":"","objid":""}]
-                  },
-                  {"portletID":"4",
-                   "name":"",
-                   "x":6,"y":16,"w":6,"h":10,"i":"4",
-                   "tabs":[{"id":"4","title":"","objtype":"","objid":""}]
                   }]                    
         }
     },
@@ -69,8 +59,7 @@ export default {
 </script>
 <style scoped>
 .vue-grid-layout {
-   height: 400px !important;
-   overflow: auto;
+   height: 520px !important;
 }
 .griditem-title{
  background-color:lightgray;

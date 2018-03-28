@@ -118,7 +118,7 @@ export default {
       nameEdit(){
         let Vue = this;  
         if(Vue.isCreate){
-            return false;
+          return false;
         }else{
           return true;
         }

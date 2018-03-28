@@ -52,7 +52,6 @@
     </Form>
 </template>
 <script>
-import bus from './../../libs/bus.js'
     export default {
         name:'createDatasource',
         computed:{
