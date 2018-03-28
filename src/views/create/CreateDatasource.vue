@@ -46,8 +46,8 @@
             <Input v-model="datasource.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="createDatasource('datasource')">Submit</Button>
-            <Button type="ghost" @click="handleReset('datasource')" style="margin-left: 8px">Reset</Button>
+            <Button type="primary" @click="createDatasource('datasource')">提交</Button>
+            <Button type="ghost" @click="handleReset('datasource')" style="margin-left: 8px">重置</Button>
         </FormItem>
     </Form>
 </template>

@@ -204,6 +204,7 @@ export default {
 }
 .datasource,.report,.chart,.query,.table,.param{
    margin:15px;
+   padding-top:10px;
 }
 .note.note-datasource,
 .note.note-report,

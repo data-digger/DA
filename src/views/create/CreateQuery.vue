@@ -23,8 +23,8 @@
               <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
           </FormItem>
           <FormItem>
-              <Button type="primary" @click="createQuery('bizView')">Submit</Button>
-              <Button type="ghost" @click="handleReset('bizView')" style="margin-left: 8px">Reset</Button>
+              <Button type="primary" @click="createQuery('bizView')">提交</Button>
+              <Button type="ghost" @click="handleReset('bizView')" style="margin-left: 8px">重置</Button>
           </FormItem>
       </Form>
     </Col>
@@ -92,7 +92,7 @@ export default {
               Vue.bizView,
                function(){
                  Vue.$Message.success('success!');
-                 Vue.closePage(event,'createQuery');              
+                 Vue.closePage(event,'createQuery');             
                });
         } else {
             Vue.$Message.error('Fail!');
@@ -100,13 +100,14 @@ export default {
       })
     },  
     closePage(event, name){
+      this.$Notice.destroy(); //关闭当前查询器页面前，销毁字段树提示卡
       let pageOpenedList = this.$store.state.app.pageOpenedList;
       let lastPageObj = pageOpenedList[1];
       this.$store.commit('removeTag', name);
       this.$store.commit('closePage', name);
       pageOpenedList = this.$store.state.app.pageOpenedList;
       localStorage.pageOpenedList = JSON.stringify(pageOpenedList);  
-      this.linkTo(lastPageObj);            
+      this.linkTo(lastPageObj); 
     },
     linkTo (item) {
         let routerObj = {};
@@ -118,6 +119,7 @@ export default {
             routerObj.query = item.query;
         }
         /*if (this.beforePush(item)) {*/
+            /*this.$router.push(routerObj);*/
             this.$router.push(routerObj);
         /*}*/
     },
@@ -141,7 +143,7 @@ export default {
     },
     initBizViewData(to,from){
       let Vue = this;
-      Vue.$Notice.destroy();
+      /*Vue.$Notice.destroy();*/
       let regex = /^\/createQuery/;
       if(regex.test(from.fullPath)){
         return;
@@ -173,7 +175,7 @@ export default {
     },
     selectTableFields(){
       let Vue = this;
-      Vue.$Notice.destroy();
+      Vue.$Notice.destroy();//重绘字段树之前，先销毁之前的
       if(Vue.bizView.dataSourceId != ""){
         var datasourceName = null;
         for(var i in Vue.datasourceList){

@@ -30,8 +30,8 @@
               </FormItem>
               <FormItem>
                   <Button type="ghost" shape="circle" icon="ios-search"  @click="previewChart"></Button>
-                  <Button type="primary" @click="saveChart">Save</Button>
-                  <Button type="ghost" style="margin-left: 8px" @click="handleReset">Reset</Button>
+                  <Button type="primary" @click="saveChart">保存</Button>
+                  <Button type="ghost" style="margin-left: 8px" @click="handleReset">重置</Button>
               </FormItem> 
           </Form>
         </Col>
