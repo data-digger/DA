@@ -19,7 +19,7 @@
               <div :id="'chart'+report.id+item.i" style='height:90%;' v-show='chartShow && item.tabs[0].objtype != "Table"&& item.tabs[0].objtype != "Card"'></div>  
 
 
-              <component :chartCmpContent='chartCmpContent[item.i]' :is='item.component' ></component> 
+              <component :chartCmpContent='chartCmpContent[item.i]' :is='item.component' :ifPage='true'></component> 
 
 
 

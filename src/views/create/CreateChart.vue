@@ -90,13 +90,13 @@ export default {
       eoption:null,
       chartType:ChartTemplate.TYPE,
       myChart:{
-                name:'',
-                alias:'',
-                type:'Bar',
-                bizViewId:'',
-                desc:'',
-                defineJSON:'',
-              },
+        name:'',
+        alias:'',
+        type:'Bar',
+        bizViewId:'',
+        desc:'',
+        defineJSON:'',
+      },
       ruleValidate:{
         name: [
             { required: true, message: 'The name cannot be empty', trigger: 'blur' }
@@ -153,21 +153,10 @@ export default {
     }
   },
   　watch:{
-      '$route' (to, from) {
-          let Vue = this;
-          Vue.initChartData(to,from);
-      },
 　　　'myChart.bizViewId': 'getQueryData',
 　},
   methods:{
      initChartData:function(to,from){
-      let regex = /^\/createChart/;
-      if(regex.test(from.fullPath)){
-        return;
-      }
-      if(!regex.test(to.fullPath)){
-        return;
-      }
       let Vue = this;
       Vue.isInit = true;
       Vue.isNew =  $.isEmptyObject(to.params);
@@ -302,23 +291,21 @@ export default {
       this.linkTo(lastPageObj);          
     },
     linkTo (item) {
-        let routerObj = {};
-        routerObj.name = item.name;
-        if (item.argu) {
-            routerObj.params = item.argu;
-        }
-        if (item.query) {
-            routerObj.query = item.query;
-        }
-        /*if (this.beforePush(item)) {*/
-            this.$router.push(routerObj);
-        /*}*/
+      let routerObj = {};
+      routerObj.name = item.name;
+      if (item.argu) {
+          routerObj.params = item.argu;
+      }
+      if (item.query) {
+          routerObj.query = item.query;
+      }
+      this.$router.push(routerObj);
     },
   },
   mounted(){
     let Vue = this;
      Vue.$nextTick(function(){
-         Vue.initChartData(Vue.$route,{fullPath:'/*'});
+         Vue.initChartData(Vue.$route/*,{fullPath:'/*'}*/);
     })
     
   }

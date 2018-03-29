@@ -1,13 +1,7 @@
 <template>
   <div>
-    <Table style='margin:20px 10px'border :columns="columns" :data="currentTableData" ref='table'>   
+    <Table :loading="loading" height='500' style='margin:20px 10px'border :columns="columns" :data="currentTableData" ref='table'>   
     </Table>
-    <div style="margin: 10px;overflow: hidden" v-if='ifPage == true?true:false'>        
-      <div style="float: right;">
-        <Page :total="total" :current="1" :page-size='pageSize' @on-change="changePage"></Page>
-      </div>
-      <Button style='background-color:#2d8cf0;color:white' @click="exportData()">导出表数据</Button>
-    </div> 
   </div>
 </template>
 <script>
@@ -19,6 +13,7 @@ export default {
   },
   data(){
     return {
+      loading:false,
       columns:[],
       currentTableData:[],
       total:null,
@@ -34,8 +29,19 @@ export default {
       var cols = [];
       for(let c in header){
          cols.push({
-          "title":header[c],
+          /*"title":header[c],*/
           "key":header[c],
+          "align":"center",
+          renderHeader :(h, params) => {
+            return h('div',
+                    {style:{color: 'red'},
+                     domProps: {innerHTML:header[c]+"<button>SS</button>"},
+                                /*on:{
+                                  click:Vue.changeField()
+                                }*/},
+                     []
+                    );           
+          }
          })
       };
       var rows = [];
@@ -51,15 +57,7 @@ export default {
       Vue.columns = cols; 
       Vue.total = rows.length;
       Vue.historyData = rows;
-      if(Vue.ifPage == false){
-        Vue.currentTableData = Vue.historyData;  
-        return;
-      }
-      if(Vue.total<Vue.pageSize){
-        Vue.currentTableData = Vue.historyData;        
-      }else{
-        Vue.currentTableData = Vue.historyData.slice(0,this.pageSize);
-      }  
+      Vue.currentTableData = Vue.historyData;   
     }       
     },
     changePage(index){
@@ -77,6 +75,9 @@ export default {
     refreshChartContent(){
       let Vue = this;
       Vue.drawTable();
+    },
+    changeField(){
+      alert(1);
     }
   },
   beforeMount(){

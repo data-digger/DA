@@ -124,12 +124,6 @@ export default {
         }
        }
     },
-    watch: {
-      '$route' (to, from) {
-        let Vue = this;
-        Vue.initParamData(to,from);
-      }
-    },
      data () {
         return {
         param:null,
@@ -145,14 +139,14 @@ export default {
         isCreate:true,
         ruleValidate:{
             name: [
-                { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+              { required: true, message: '名称不能为空'}
             ],
             alias: [
-                { required: true, message: 'Mailbox cannot be empty', trigger: 'blur' }
+              { required: true, message: '别名不能为空'}
             ],
-            desc: [
-                {required: true, message: 'The name cannot be empty', trigger: 'blur' }
-            ],
+            componenttype:[
+              { required :true, message:'不能为空',trigger:'change'}
+            ]
         }
     }
   },
@@ -196,9 +190,7 @@ export default {
         if (item.query) {
             routerObj.query = item.query;
         }
-        /*if (this.beforePush(item)) {*/
-            this.$router.push(routerObj);
-        /*}*/
+        this.$router.push(routerObj);
     }, 
     handleReset (param) {
          let Vue = this;
@@ -265,14 +257,7 @@ export default {
         }
     },
     initParamData(to,from){
-      let Vue = this;
-      let regex = /^\/createParam/;
-      if(regex.test(from.fullPath)){
-        return;
-      }
-      if(!regex.test(to.fullPath)){
-        return;
-      };       
+      let Vue = this;      
       Vue.isCreate =  $.isEmptyObject(to.params)
       if(!Vue.isCreate){        
         if(to.params != null){
@@ -285,7 +270,7 @@ export default {
         Vue.param = {   
             name:'',
             alias:'',
-            desc:'This is param describe for creating param',
+            desc:'...',
             defineJSON:{
               componenttype:'',
               valuetype:'',              
@@ -304,7 +289,7 @@ export default {
   },
   beforeMount(){
     let Vue = this;
-    Vue.initParamData(Vue.$route,{fullPath:'/*'});
+    Vue.initParamData(Vue.$route/*,{fullPath:'/*'}*/);
   }
 }
 </script>

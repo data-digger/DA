@@ -1,6 +1,6 @@
 <template>
-  <Row>
-    <Col :xs="15" :sm="15" :md="15" :lg="15">
+  <Row  style="padding:20px 0px">
+    <Col span="7">
       <Form id="createQuery" ref="bizView" :model="bizView" :rules="ruleValidate" :label-width="80">
           <FormItem label="名称" prop="name">
               <Input v-model="bizView.name" placeholder="输入名称" :disabled ='nameEdit'></Input>
@@ -23,10 +23,15 @@
               <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
           </FormItem>
           <FormItem>
-              <Button type="primary" @click="createQuery('bizView')">提交</Button>
-              <Button type="ghost" @click="handleReset('bizView')" style="margin-left: 8px">重置</Button>
+            <Tooltip content="点击生成工作表" placement="top-end" always>
+              <Button type="ghost" shape="circle" icon="ios-search" @click='previewTable'></Button></Tooltip>
+            <Button type="primary" @click="createQuery('bizView')">提交</Button>
+            <Button type="ghost" @click="handleReset('bizView')" style="margin-left: 8px">重置</Button>
           </FormItem>
       </Form>
+    </Col>
+    <Col span='16' class='tableBox'>
+      <querytable :chartCmpContent='currentTableData'></querytable>
     </Col>
   </Row>
 </template>
@@ -36,10 +41,12 @@ import CodeMirror from "codemirror/lib/codemirror.js"
 import "codemirror/mode/sql/sql.js"
 import {mapGetters} from 'vuex'
 import treeBox from './../paramcomponents/Tree'
+import querytable from './../chartcomponents/QueryTable'
 export default {
   name:"createQuery",
   components:{
-    treeBox
+    treeBox,
+    querytable
   },
   computed:{
   ...mapGetters({
@@ -55,31 +62,14 @@ export default {
     }
    }
   },
-    watch: {
-      '$route' (to, from) {
-        let Vue = this;
-        Vue.initBizViewData(to,from);
-      }
-    },
   data(){
     return {
       bizView: null,
       ruleValidate:{
-/*        name: [
-            { required: true, message: 'The name cannot be empty', trigger: 'blur' }
-        ],*/
-        alias: [
-            { required: true, message: 'alias cannot be empty', trigger: 'blur' }
-        ],
-       /* dataSourceId: [
-            { required: true, message: 'Please select the dataSourceId', trigger: 'change' }
-        ],*/
-        defineJSON: [
-            { required: true, message: 'sql define cannot be empty', trigger: 'blur' }
-        ]
       },
       route:null,
       isCreate:true,
+      currentTableData:null
     }
   },
   methods:{
@@ -110,18 +100,15 @@ export default {
       this.linkTo(lastPageObj); 
     },
     linkTo (item) {
-        let routerObj = {};
-        routerObj.name = item.name;
-        if (item.argu) {
-            routerObj.params = item.argu;
-        }
-        if (item.query) {
-            routerObj.query = item.query;
-        }
-        /*if (this.beforePush(item)) {*/
-            /*this.$router.push(routerObj);*/
-            this.$router.push(routerObj);
-        /*}*/
+      let routerObj = {};
+      routerObj.name = item.name;
+      if (item.argu) {
+          routerObj.params = item.argu;
+      }
+      if (item.query) {
+          routerObj.query = item.query;
+      }
+      this.$router.push(routerObj);
     },
     handleReset(bizView){
       let Vue = this;
@@ -144,13 +131,13 @@ export default {
     initBizViewData(to,from){
       let Vue = this;
       /*Vue.$Notice.destroy();*/
-      let regex = /^\/createQuery/;
+/*      let regex = /^\/createQuery/;
       if(regex.test(from.fullPath)){
         return;
       }
       if(!regex.test(to.fullPath)){
         return;
-      }
+      }*/
       Vue.isCreate =  $.isEmptyObject(to.params)
       if(Vue.isCreate == false){    
           
@@ -193,6 +180,15 @@ export default {
           duration: 0
         });
       }
+    },
+    previewTable(){
+      let Vue = this;
+      Vue.AxiosPost("previewBizView",{'bizViewId':"BZ.goodPrice"},
+        function(response){
+         console.log(response);
+         Vue.$Notice.destroy();
+         Vue.currentTableData = response.data;
+      })       
     }
   },
   mounted(){
@@ -201,7 +197,7 @@ export default {
   },
   beforeMount(){
     let Vue = this;
-    Vue.initBizViewData(Vue.$route,{fullPath:'/*'});
+    Vue.initBizViewData(Vue.$route/*,{fullPath:'/*'}*/);
   }
 }
 </script>
@@ -216,5 +212,7 @@ export default {
     background-color: #ffffff;
     margin-right:3px
   }
-
+.tableBox{
+  margin: -15px 25px;
+}
 </style>

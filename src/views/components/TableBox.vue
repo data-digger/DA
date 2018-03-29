@@ -14,7 +14,7 @@
       <Row>
         <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component>
       </Row>
-      <iviewtable :chartCmpContent='currentTableData'></iviewtable> 
+      <iviewtable :chartCmpContent='currentTableData' :ifPage='true'></iviewtable> 
     </Modal>  
   </Col>
 </template>

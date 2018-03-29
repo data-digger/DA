@@ -86,9 +86,7 @@ export default {
         if (item.query) {
             routerObj.query = item.query;
         }
-        /*if (this.beforePush(item)) {*/
-            this.$router.push(routerObj);
-        /*}*/
+        this.$router.push(routerObj);
     },
     handleReset(table){
       let Vue = this;

@@ -179,7 +179,7 @@ export default {
     },
     scroll(id){
       document.getElementById(id).scrollIntoView();
-     /* $('#resource').animate({scrollTop:$('#'+id).offset().top-100}, 300)*/
+     /*$('html,body').animate({scrollTop:$('#'+id).offset().top}, 300)*/
     }
   },
   mounted (){
@@ -193,12 +193,6 @@ export default {
 }
 </script>
 <style scoped>
-#resource{
-  /*width: 87%;*/
-  height: 1000px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
 .cardBox{
   margin:10px 20px;
 }

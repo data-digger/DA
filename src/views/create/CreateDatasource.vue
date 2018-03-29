@@ -52,149 +52,128 @@
     </Form>
 </template>
 <script>
-    export default {
-        name:'createDatasource',
-        computed:{
-            nameEdit(){
-                let Vue = this;  
-                if(Vue.isCreate){
-                    return false;
-                }else{
-                  return true;
-                }
-            }
-        },        
-        watch: {
-            '$route' (to, from) {
-              let Vue = this;
-                Vue.initDatasourceData(to,from); 
-            }
-        },
-        data () {
-            return {
-                datasource:null,
-                isCreate:true,
-                ruleValidate:{
-                    name: [
-                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
-                    ],
-                    alias: [
-                        { required: true, message: 'alias cannot be empty', trigger: 'blur' }
-                    ],
-                    driverType: [
-                        { required: true, message: 'Please select the driverType', trigger: 'change' }
-                    ],
-                    driver: [
-                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
-                    ],
-                    url: [
-                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
-                    ],
-                    dbCharset: [
-                        { required: true, message: 'Please select the dbCharset', trigger: 'change'}
-                    ],
-                    maxConnection: [
-                        { required: true, type:"number", message: 'The name cannot be empty', trigger: 'blur'}
-                    ],
-                    validationQuery: [
-                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
-                    ],
-                    user: [
-                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
-                    ],
-                    password: [
-                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
-                    ],
-          /*          transactionIsolation: [
-                        { required: true,message: 'The transactionIsolation cannot be empty', trigger: 'blur' }
-                    ],*/
-                    desc: [
-                        {required: true, message: 'The name cannot be empty', trigger: 'blur' }
-                    ]
-                }
-            }
-        },
-        methods: {
-            createDatasource(datasource){
-               let Vue = this;
-               Vue.$refs[datasource].validate((valid) => {
-                    if (valid) {
-                        Vue.AxiosPost("createDatasource",Vue.datasource,
-                          function(){
-                             Vue.$Message.success('新建成功!');
-                             Vue.closePage(event,'createDatasource');
-                        })
-                    } else {
-                        Vue.$Message.error('Fail!');
-                        
-                    }
-                })
-            },     
-            closePage(event, name){
-              let pageOpenedList = this.$store.state.app.pageOpenedList;
-              let lastPageObj = pageOpenedList[1];
-              this.$store.commit('removeTag', name);
-              this.$store.commit('closePage', name);
-              pageOpenedList = this.$store.state.app.pageOpenedList;
-              localStorage.pageOpenedList = JSON.stringify(pageOpenedList);  
-              this.linkTo(lastPageObj);            
-            }, 
-            linkTo (item) {
-                let routerObj = {};
-                routerObj.name = item.name;
-                if (item.argu) {
-                    routerObj.params = item.argu;
-                }
-                if (item.query) {
-                    routerObj.query = item.query;
-                }
-                /*if (this.beforePush(item)) {*/
-                    this.$router.push(routerObj);
-                /*}*/
-            },    
-            handleReset (datasource) {
-                let Vue = this;
-                Vue.$refs[datasource].resetFields();
-            },
-            initDatasourceData(to,from){
-              let Vue = this;
-              let regex = /^\/createDatasource/;
-              if(regex.test(from.fullPath)){
-                return;
-              }
-              if(!regex.test(to.fullPath)){
-                return;
-              }              
-              Vue.isCreate =  $.isEmptyObject(to.params);
-              if(Vue.isCreate == false){     
-                let datasourceInfo = to.params;
-                if(datasourceInfo != null){
-                  Vue.datasource = datasourceInfo;          
-                }
-              }
-              if(Vue.isCreate == true){
-                Vue.datasource = {     
-                  name:'',
-                  alias:'',
-                  driverType:'MySQL',
-                  driver:'com.mysql.jdbc.Driver',
-                  url:'jdbc:mysql://localhost:3306/请输入数据库名?useUnicode=true&characterEncoding=UTF-8&useSSL=false',
-                  dbCharset:'UTF-8',
-                  maxConnection:100,
-                  validationQuery:'SELECT 1 FROM DUAL',
-                  user:'root',
-                  password:'admin',
-                  transactionIsolation:"-1",
-                  desc:'This is DataSource for create Business View Query'
-                } 
-            }
-           }
-        },
-        beforeMount(){
-            let Vue = this;
-            Vue.initDatasourceData(Vue.$route,{fullPath:'/*'});//第一次从上一个页面（resource.vue）进来，默认执行一次
+  export default {
+    name:'createDatasource',
+    computed:{
+      nameEdit(){
+        let Vue = this;  
+        if(Vue.isCreate){
+            return false;
+        }else{
+          return true;
         }
+      }
+    },        
+    data () {
+      return {
+        datasource:null,
+        isCreate:true,
+        ruleValidate:{
+          name: [
+              { required: true, message: '名称不能为空', trigger: 'blur' }
+          ],
+          alias: [
+              { required: true, message: '别名不能为空', trigger: 'blur' }
+          ],
+          driverType: [
+              { required: true, message: '驱动程序类型不能为空', trigger: 'change' }
+          ],
+          driver: [
+              { required: true, message: '驱动程序类不能为空', trigger: 'blur' }
+          ],
+          url: [
+              { required: true, message: '链接字符串不能为空', trigger: 'blur' }
+          ],
+          dbCharset: [
+              { required: true, message: '数据库字符集不能为空', trigger: 'change'}
+          ],
+          maxConnection: [
+              { required: true, type:"number", message: '最大连接数不能为空', trigger: 'blur'}
+          ],
+          validationQuery: [
+              { required: true, message: '校验语句不能为空', trigger: 'blur' }
+          ],
+          user: [
+              { required: true, message: '用户名不能为空', trigger: 'blur' }
+          ],
+          password: [
+              { required: true, message: '密码不能为空', trigger: 'blur' }
+          ],
+          transactionIsolation: [
+              { required: true, message: '事务隔离级别不能为空', trigger: 'blur' }
+          ]
+        }
+      }
+    },
+    methods: {
+      createDatasource(datasource){
+         let Vue = this;
+         Vue.$refs[datasource].validate((valid) => {
+              if (valid) {
+                  Vue.AxiosPost("createDatasource",Vue.datasource,
+                    function(){
+                       Vue.$Message.success('新建成功!');
+                       Vue.closePage(event,'createDatasource');
+                  })
+              } else {
+                  Vue.$Message.error('Fail!');
+                  
+              }
+          })
+      },     
+      closePage(event, name){
+        let pageOpenedList = this.$store.state.app.pageOpenedList;
+        let lastPageObj = pageOpenedList[1];
+        this.$store.commit('removeTag', name);
+        this.$store.commit('closePage', name);
+        pageOpenedList = this.$store.state.app.pageOpenedList;
+        localStorage.pageOpenedList = JSON.stringify(pageOpenedList);  
+        this.linkTo(lastPageObj);            
+      }, 
+      linkTo (item) {
+          let routerObj = {};
+          routerObj.name = item.name;
+          if (item.argu) {
+              routerObj.params = item.argu;
+          }
+          if (item.query) {
+              routerObj.query = item.query;
+          }
+          this.$router.push(routerObj);
+      },    
+      handleReset (datasource) {
+          let Vue = this;
+          Vue.$refs[datasource].resetFields();
+      },
+      initDatasourceData(to,from){
+        let Vue = this;             
+        Vue.isCreate =  $.isEmptyObject(to.params);
+        if(Vue.isCreate == false){     
+          Vue.datasource = to.params;
+        }
+        if(Vue.isCreate == true){
+          Vue.datasource = {     
+            name:'',
+            alias:'',
+            driverType:'MySQL',
+            driver:'com.mysql.jdbc.Driver',
+            url:'jdbc:mysql://localhost:3306/请输入数据库名?useUnicode=true&characterEncoding=UTF-8&useSSL=false',
+            dbCharset:'UTF-8',
+            maxConnection:100,
+            validationQuery:'SELECT 1 FROM DUAL',
+            user:'root',
+            password:'admin',
+            transactionIsolation:'-1',
+            desc:'...'
+          } 
+        }
+      }
+    },
+    beforeMount(){
+      let Vue = this;
+      Vue.initDatasourceData(Vue.$route/*,{fullPath:'/*'}*/);//第一次从上一个页面（resource.vue）进来，默认执行一次
     }
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
