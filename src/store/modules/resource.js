@@ -64,22 +64,22 @@ const actions = {
 // mutations
 const mutations = {
   getDatasourceBox(state,param){
-    state.datasourceList = param.data;
+    state.datasourceList = param.data.content;
   },
   getParamBox(state,param){
-    state.paramList = param.data;
+    state.paramList = param.data.content;
   },
   getQueryBox(state,param){
-    state.queryList = param.data;
+    state.queryList = param.data.content;
   },
   getChartBox(state,param){
-    state.chartList = param.data;
+    state.chartList = param.data.content;
   },
   getTableBox(state,param){
-    state.tableList = param.data;
+    state.tableList = param.data.content;
   },
   getReportBox(state,param){
-    var paramData = param.data;
+    var paramData = param.data.content;
     for (var i in paramData) {
            var defineJSON = JSON.parse(paramData[i].defineJSON);
            paramData[i].defineJSON = defineJSON;
