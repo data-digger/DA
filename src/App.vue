@@ -52,6 +52,6 @@ html,body{
     overflow: visible !important; 
 }
  .CodeMirror{
-    height: 450px !important;
+    height: 395px !important;
   }
 </style>

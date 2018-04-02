@@ -2,14 +2,14 @@
     <div>
 <!--         <div class='treeTitle'>{{treeName}}表字段</div>
         <Tree :data="data" show-checkbox  @on-check-change='getCheckedNodes' ref='jj'></Tree> -->
-        <Card  style='margin: 10px;height:250px'>
+        <Card  style='margin: 10px;height:220px'>
             <p slot="title">{{treeName}}表字段</p>
             <Tree class='tree' :data="data" show-checkbox  @on-check-change='getCheckedNodes' ref='jj'></Tree>
         </Card>
-        <Card  style='margin: 10px;height:250px'>
+        <Card  style='margin: 10px;height:230px'>
             <p slot="title">参考sql</p><!-- <button @click="copyHtml()">copy</button> -->
             <!-- <p v-html="sql" class='sqlBox' style='overflow-y: auto;height:170px'></p> -->
-            <p v-html="sql" class='sqlBox' id="text" style='overflow-y: auto;height:170px'></p>
+            <p v-html="sql" class='sqlBox' id="text"></p>
             <!-- <textarea id="input"></textarea> -->
         </Card>
     </div>
@@ -59,12 +59,12 @@
             //遍历数组,去重
             for(var i = 0;i<t_name_bak.length;i++){
                 if(t_name.indexOf(t_name_bak[i]) == -1){  //判断在t_name数组中是否存在，不存在则push到t_name数组中
-                    t_name.push(t_name_bak[i]);
+                  t_name.push(t_name_bak[i]);
                 }
             }
             t_name = t_name.toString();
 
-            if(t_field != null && t_name != null){
+            if(t_field != "" && t_name != ""){
               t_field = t_field.substring(0,t_field.length-6); 
               Vue.sql = "select</br>" + t_field + "<br/>from"+ t_name+"<br/>where<br/>..."; 
             }else{
@@ -85,11 +85,12 @@
 </script>
 <style scoped>
   .tree{
-    height: 150px;
+    height: 120px;
     overflow-y: auto;
   }
   .sqlBox{
-    height: 150px;
+    height: 120px;
+    overflow-y: auto;
   }
   #input {
     position: absolute;

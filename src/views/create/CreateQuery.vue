@@ -40,30 +40,33 @@
 
       <CarouselItem>
         <div class="demo-carousel">
-          <Row style="padding:15px 0px 0px 0px">
-            <Col span='12'>
-              <Form :label-width="80" style='margin-top: 10px;'>
+          <Row style="padding:15px 0px 0px 20px">
+            <Col span='11'>
+              <Form :label-width="60" style='margin:5px 5px 0px 0px;'>
                 <FormItem label="数据源" prop="dataSourceId">
                     <Select class="form-control" v-model='bizView.dataSourceId' @on-change='selectTableFields'>         
                         <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="SQL定义:">
-                  <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
+              </Form>
+              <treeBox :datasourceId ='bizView.dataSourceId' :treeName='datasourceName'></treeBox>             
+            </Col>
+            <Col span='12'>
+              <Card  style='margin:10px'>
+                <p slot="title">sql定义</p><!-- <button @click="copyHtml()">copy</button> -->
+                <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
+                <p style='padding-left: 95%;'>
                   <Tooltip content="预览表数据" placement="top-end" always>
                     <Button type="ghost" shape="circle" icon="ios-search" @click='previewTable()'></Button>
                   </Tooltip>
-                  <Modal
-                  v-model="modalPreview"
-                  width ="1200px"
-                  title="Common Modal dialog box title">
-                     <iviewtable :chartCmpContent='currentTableData' :pageSize='pageSize'></iviewtable>        
-                  </Modal>
-                </FormItem>
-              </Form>
-            </Col>
-            <Col span='12'>
-              <treeBox :datasourceId ='bizView.dataSourceId' :treeName='datasourceName'></treeBox>
+                </p>
+              </Card>
+              <Modal
+              v-model="modalPreview"
+              width ="1200px"
+              title="数据预览">
+                 <iviewtable :chartCmpContent='currentTableData' :pageSize='pageSize'></iviewtable>        
+              </Modal>
             </Col>
           </Row>
         </div>
@@ -73,7 +76,12 @@
 
       <CarouselItem>
         <div class="demo-carousel">
-          <editquerytable :tableData ='currentTableData'></editquerytable>
+           <Row>
+            <Col span="24">
+            <editquerytable :tableData ='currentTableData'></editquerytable>
+            </Col>
+           </Row>
+          
         </div>
       </CarouselItem>
 
@@ -81,7 +89,7 @@
       <CarouselItem>
         <div class="demo-carousel">
           <Row  style="padding:20px 20px">
-              <Col span="22">
+              <Col span="24">
                 <Form id="createQuery" ref="bizView" :model="bizView" :rules="ruleValidate" :label-width="80">
                     <FormItem label="名称" prop="name">
                         <Input v-model="bizView.name" placeholder="输入名称" :disabled ='nameEdit'></Input>
@@ -199,11 +207,9 @@ export default {
     //创建查询器
     save(bizView){
       let Vue = this;
-      let params = {};
       //保存查询器表。包含查询器名称，别名,描述，数据源id,sql;
       //保存字段编辑表。包含查询器id，字段名称，别名，类型...
       Vue.bizView.defineJSON = Vue.sqlEditor.doc.getValue();
-      params.bizView = Vue.bizView;
       let bizViewColum = [];
       for(var c in Vue.query_fieldEdit_table){
         let field_obj = {};
@@ -218,17 +224,16 @@ export default {
         field_obj.max = Vue.query_fieldEdit_table[c].max;
         bizViewColum.push(field_obj);        
       }
-      params.bizViewColum = JSON.stringify(bizViewColum);
-     
+      let columsJSON = JSON.stringify(bizViewColum);
+      let bizViewJSON = JSON.stringify(Vue.bizView)
       Vue.$refs[bizView].validate((valid) => {
         if (valid) {
-             Vue.AxiosPost("createQuery",
-              params,
-              function(){
-                Vue.$Message.success('成功!');
-                Vue.closePage(event,'createQuery')});             
-         }else{
-           Vue.$Message.error('失败!');
+          Vue.AxiosPost("createQuery",{'bizViewJSON':bizViewJSON,'columsJSON':columsJSON},
+            function(){
+              Vue.$Message.success('成功!');
+              Vue.closePage(event,'createQuery')});             
+        }else{
+          Vue.$Message.error('失败!');
         }
       })
     }, 
@@ -259,12 +264,6 @@ export default {
       this.$router.push(routerObj);
     },
 
-    //重置表单
-    handleReset(bizView){
-      let Vue = this;
-      Vue.$refs[bizView].resetFields();
-    },
-
 
     //初始化sql编辑器       
     initSqlEdit(){
@@ -278,11 +277,11 @@ export default {
         dragDrop: true,
       });
     },
-
+/*
 
     drag(ev){
       ev.dataTransfer.setData("Text",`^${ev.target.id}^`);
-    },
+    },*/
 
     initBizViewData(to,from){
       let Vue = this;
@@ -331,7 +330,7 @@ export default {
     //获取预览表的数据，包括字段编辑表数据
     getpreviewData(){
       let Vue = this;
-      Vue.pageSize = 5;
+      Vue.pageSize = 3;
       let params = {
         'dateSourceId':Vue.bizView.dataSourceId,
         'sqlStament':Vue.sqlEditor.doc.getValue(),
@@ -375,5 +374,8 @@ export default {
   .button {
     text-align: center;
     margin-top: 0;
+  }
+  .ivu-carousel{
+    height: 550px;
   }
 </style>

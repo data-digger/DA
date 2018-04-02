@@ -1,6 +1,14 @@
 <template>
   <div>
-    <Table :loading="loading" height='500' style='margin:20px 10px'border :columns="columns" :data="currentTableData" ref='table' >   
+    <Table 
+      :loading="loading" 
+      height='500' 
+      style='margin:20px 10px'
+      border 
+      :columns="columns" 
+      :data="currentTableData" 
+      ref='table'
+      :row-class-name="rowClassName" >   
     </Table>
   </div>
 </template>
@@ -45,10 +53,11 @@ export default {
           return h('Input',{
             props:{
               type:'text',
-              value:Vue.currentTableData[params.index].columnsAlias 
+              value:params.row.columnNames
             },
             on:{
               'on-blur':(event) => {
+                event.stopPropagation();
                 Vue.currentTableData[params.index].columnsAlias = event.target.value;
                 Vue.saveEdit();
               }
@@ -62,8 +71,10 @@ export default {
         'render':(h,params)=>{
           return h('Checkbox',
              {props:{'true-value':1,'false-value':0},
-              on:{'on-change':(event)=>{
-                Vue.currentTableData[params.index].GroupBy = event;
+              on:{'on-change':(value)=>{
+                event.stopPropagation();
+                Vue.currentTableData[params.index].GroupBy = value;
+                
                 Vue.saveEdit();
               }
              }})
@@ -75,8 +86,10 @@ export default {
         'render':(h,params)=>{
           return h('Checkbox',
             {props:{'true-value':1,'false-value':0},
-             on:{'on-change':(event)=>{
-               Vue.currentTableData[params.index].Filterable = event;
+             on:{'on-change':(value)=>{
+              event.stopPropagation();
+               Vue.currentTableData[params.index].Filterable = value;
+               
                Vue.saveEdit();
              }
             }})
@@ -88,8 +101,10 @@ export default {
         'render':(h,params)=>{
           return h('Checkbox',
             {props:{'true-value':1,'false-value':0},
-             on:{'on-change':(event)=>{
-               Vue.currentTableData[params.index].CountDistinct = event;
+             on:{'on-change':(value)=>{
+              event.stopPropagation();
+               Vue.currentTableData[params.index].CountDistinct = value;
+               
                Vue.saveEdit();
              }
             }})
@@ -101,8 +116,9 @@ export default {
         'render':(h,params)=>{
           return h('Checkbox',
             {props:{'true-value':1,'false-value':0},
-             on:{'on-change':(event)=>{
-               Vue.currentTableData[params.index].sum = event;
+             on:{'on-change':(value)=>{
+              event.stopPropagetion();
+               Vue.currentTableData[params.index].sum = value;
                Vue.saveEdit();
              }
             }})
@@ -114,8 +130,9 @@ export default {
         'render':(h,params)=>{
           return h('Checkbox',
             {props:{'true-value':1,'false-value':0},
-             on:{'on-change':(event)=>{
-               Vue.currentTableData[params.index].max = event;
+             on:{'on-change':(value)=>{
+              event.stopPropagetion()
+               Vue.currentTableData[params.index].max = value;
                Vue.saveEdit();
              }
             }})
@@ -127,8 +144,9 @@ export default {
         'render':(h,params)=>{
           return h('Checkbox',
             {props:{'true-value':1,'false-value':0},
-             on:{'on-change':(event)=>{
-               Vue.currentTableData[params.index].min = event;
+             on:{'on-change':(value)=>{
+              event.stopPropagetion()
+               Vue.currentTableData[params.index].min = value;
                Vue.saveEdit();
              }
             }})
@@ -178,6 +196,11 @@ export default {
       let Vue = this;
       Vue.drawTable();
     },
+    rowClassName (row, index){
+      if(index == 0){
+        return 'headRow';
+      }
+    }
   },
 /*  beforeMount(){
     this.drawTable();
@@ -186,6 +209,8 @@ export default {
 </script>
 
 
-<style scoped lang='less'>
-
+<style scoped>
+/*.ivu-table .headRow td{
+  background-color: black !important;
+}*/
 </style>
