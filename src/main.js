@@ -50,9 +50,10 @@ new Vue({
  * fun 获取操作接口函数
  * data 需要传入的参数
  * success 成功回调函数
- * faild 失败回调函数
+ * failed 失败回调函数
 */
-Vue.prototype.AxiosPost = function (fun, data, success,faild) {
+Vue.prototype.AxiosPost = function (fun, data, success,failed) {
+  let V = this;
   API[fun](data)
     .then(function (response) {
       if (response) {
@@ -61,7 +62,10 @@ Vue.prototype.AxiosPost = function (fun, data, success,faild) {
     })
     .catch(function (error) {
         console.log(error);
-        /*faild();*/
-        /*error();*/
+        if(failed){
+            failed(error);
+        }else{
+            V.$Message.error(error.response.data.content);
+        }
     });
 }
