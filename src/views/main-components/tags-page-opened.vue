@@ -74,9 +74,6 @@ export default {
             }
         },
         closePage (event, name) {
-            if(name == 'createQuery'){
-                this.$Notice.destroy();
-            }
             let pageOpenedList = this.$store.state.app.pageOpenedList;
             let lastPageObj = pageOpenedList[1];
             // if (this.currentPageName === name) {

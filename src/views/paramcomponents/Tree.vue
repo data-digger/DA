@@ -1,20 +1,24 @@
 <template>
     <div>
+        <div class='treeTitle'>{{treeName}}表字段</div>
         <Tree :data="data" show-checkbox  @on-check-change='getCheckedNodes' ref='jj'></Tree>
-        <Card  :bordered="false">
+        <Card  style='margin: 10px;height:250px'>
             <p slot="title">参考sql</p>
-            <p v-html="sql" class='sqlBox' style='overflow-y: auto;'></p>
+            <p v-html="sql" class='sqlBox' style='overflow-y: auto;height:170px'></p>
         </Card>
     </div>
 </template>
 <script>
     export default {
-        props:['datasourceId'],
+        props:['datasourceId','treeName'],
         data () {
             return {
                 data: [],
                 sql:null,
             }
+        },
+        watch:{
+          'datasourceId':'getTablesTree'
         },
         methods:{
           getTablesTree(){
@@ -30,8 +34,6 @@
             let t_field_array = [];
             let t_name = [];
             let t_field = '';
-
-            
 
             for(var i in CheckedNodes){
               var parentNodes = Vue.$refs.jj.getParentNode(CheckedNodes[i].nodeKey);
@@ -65,18 +67,23 @@
             
           }
         },
-        mounted(){
-          let Vue = this;
-          Vue.getTablesTree();
-        }
     }
 </script>
 <style scoped>
   .ivu-tree{
-    height: 250px;
+    height: 230px;
     overflow-y: auto;
+    border: 1px solid lightgray;
+    margin: 0px 10px 10px 10px;
+    background-color: white;
+    padding: 5px;
   }
   .sqlBox{
-    height: 100px;
+    height: 150px;
+  }
+  .treeTitle{
+    margin: 0px 10px;
+    font-size: 14px;
+    font-weight: bold;
   }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <Row  style="padding:20px 0px">
+<!--   <Row  style="padding:20px 0px">
     <Col span="7">
       <Form id="createQuery" ref="bizView" :model="bizView" :rules="ruleValidate" :label-width="80">
           <FormItem label="名称" prop="name">
@@ -33,7 +33,79 @@
     <Col span='16' class='tableBox'>
       <querytable :chartCmpContent='currentTableData'></querytable>
     </Col>
-  </Row>
+  </Row> -->
+  <div>
+    <Carousel v-model="value" :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
+
+
+      <CarouselItem>
+        <div class="demo-carousel">
+          <Row style="padding:15px 0px 0px 0px">
+            <Col span='12'>
+              <Form :label-width="80">
+                <FormItem label="数据源" prop="dataSourceId">
+                    <Select class="form-control" v-model='bizView.dataSourceId' @on-change='selectTableFields'>         
+                        <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="SQL定义:">
+                  <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
+                  <Tooltip content="预览表数据" placement="top-end" always>
+                    <Button type="ghost" shape="circle" icon="ios-search" @click='previewTable()'></Button>
+                  </Tooltip>
+                  <Modal
+                  v-model="modalPreview"
+                  width ="1200px"
+                  title="Common Modal dialog box title">
+                     <iviewtable :chartCmpContent='currentTableData' :pageSize='pageSize'></iviewtable>        
+                  </Modal>
+                </FormItem>
+              </Form>
+            </Col>
+            <Col span='12'>
+              <treeBox :datasourceId ='bizView.dataSourceId' :treeName='datasourceName'></treeBox>
+            </Col>
+          </Row>
+        </div>
+      </CarouselItem>
+
+
+
+      <CarouselItem>
+        <div class="demo-carousel">
+          <editquerytable :tableData ='currentTableData'></editquerytable>
+        </div>
+      </CarouselItem>
+
+
+      <CarouselItem>
+        <div class="demo-carousel">
+          <Row  style="padding:20px 20px">
+              <Col span="22">
+                <Form id="createQuery" ref="bizView" :model="bizView" :rules="ruleValidate" :label-width="80">
+                    <FormItem label="名称" prop="name">
+                        <Input v-model="bizView.name" placeholder="输入名称" :disabled ='nameEdit'></Input>
+                    </FormItem>
+                    <FormItem label="别名" prop="alias">
+                        <Input v-model="bizView.alias" placeholder="输入别名"></Input>
+                    </FormItem>
+                    <FormItem label="描述" prop="desc">
+                        <Input v-model="bizView.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
+                    </FormItem>
+                </Form>
+              </Col>
+            </Row>
+        </div>
+      </CarouselItem>
+
+
+    </Carousel>
+    <Row  class='button'>
+      <Button type="primary" @click='pre()'>上一步</Button>
+      <Button v-if="!finished" type="primary" @click='next()'>下一步</Button>
+      <Button v-if="finished" type="primary" @click='save("bizView")'>保存</Button>
+    </Row> 
+  </div>
 </template>
 
 <script>
@@ -41,22 +113,25 @@ import CodeMirror from "codemirror/lib/codemirror.js"
 import "codemirror/mode/sql/sql.js"
 import {mapGetters} from 'vuex'
 import treeBox from './../paramcomponents/Tree'
-import querytable from './../chartcomponents/QueryTable'
+import editquerytable from './../chartcomponents/QueryTable'
+import iviewtable from './../chartcomponents/Table'
 export default {
   name:"createQuery",
   components:{
     treeBox,
-    querytable
+    editquerytable,
+    iviewtable
   },
   computed:{
   ...mapGetters({
     datasourceList:'datasourceList',
-    paramList:'paramList'
+    paramList:'paramList',
+    query_fieldEdit_table:'query_fieldEdit_table'
    }),
   nameEdit(){
     let Vue = this;  
     if(Vue.isCreate){
-        return false;
+      return false;
     }else{
       return true;
     }
@@ -64,8 +139,24 @@ export default {
   },
   data(){
     return {
+      finished:false,
+      value:0,
+      pageSize:null,
+      modalPreview:false,
+      datasourceName:null,
+      setting: {
+        height:"200",
+        dots:"none",
+        arrow:"never",
+      },
       bizView: null,
       ruleValidate:{
+        name: [
+          { required: true, message: '名称不能为空'}
+        ],
+        alias: [
+          { required: true, message: '别名不能为空'}
+        ]
       },
       route:null,
       isCreate:true,
@@ -73,22 +164,72 @@ export default {
     }
   },
   methods:{
-    createQuery(bizView){
+    //后一步操作
+    next() {
       let Vue = this;
+      if(Vue.value <3){
+        Vue.$refs.slide.arrowEvent(1);
+        if(Vue.value == 1){
+          //如果用户已经预览了表格，下一步直接查看编辑表
+          if(Vue.currentTableData){
+            return;
+          }else{//如果用户没有预览表格，下一步需要先获取预览表数据，才能查看编辑表数据
+            Vue.getpreviewData();      
+          }           
+        }
+        if(Vue.value == 2){
+          console.log(Vue.query_fieldEdit_table);
+          Vue.finished = true;
+        }
+      }
+    },
+
+    //前一步操作
+    pre() {
+      if(this.value !=0){
+        this.$refs.slide.arrowEvent(-1);
+        this.finished = false;
+      }
+    },
+
+    //创建查询器
+    save(bizView){
+      let Vue = this;
+      let params = {};
+      //保存查询器表。包含查询器名称，别名,描述，数据源id,sql;
+      //保存字段编辑表。包含查询器id，字段名称，别名，类型...
       Vue.bizView.defineJSON = Vue.sqlEditor.doc.getValue();
+      params.bizView = Vue.bizView;
+      let bizViewColum = [];
+      for(var c in Vue.query_fieldEdit_table){
+        let field_obj = {};
+        field_obj.columnName = Vue.query_fieldEdit_table[c].columnNames;
+        field_obj.columnAlias = null;
+        field_obj.columnType = Vue.query_fieldEdit_table[c].Type;
+        field_obj.groupby = Vue.query_fieldEdit_table[c].GroupBy;
+        field_obj.filterable = Vue.query_fieldEdit_table[c].Filterable;
+        field_obj.countDistinct = Vue.query_fieldEdit_table[c].CountDistinct;
+        field_obj.sum = Vue.query_fieldEdit_table[c].sum;
+        field_obj.min = Vue.query_fieldEdit_table[c].min;
+        field_obj.max = Vue.query_fieldEdit_table[c].max;
+        bizViewColum.push(field_obj);        
+      }
+      params.bizViewColum = bizViewColum;
+     
       Vue.$refs[bizView].validate((valid) => {
         if (valid) {
              Vue.AxiosPost("createQuery",
-              Vue.bizView,
-               function(){
-                 Vue.$Message.success('success!');
-                 Vue.closePage(event,'createQuery');             
-               });
-        } else {
-            Vue.$Message.error('Fail!');
+              params,
+              function(){
+                Vue.$Message.success('成功!');
+                Vue.closePage(event,'createQuery')});             
+         }else{
+           Vue.$Message.error('失败!');
         }
       })
-    },  
+    }, 
+
+    //关闭当前页面
     closePage(event, name){
       this.$Notice.destroy(); //关闭当前查询器页面前，销毁字段树提示卡
       let pageOpenedList = this.$store.state.app.pageOpenedList;
@@ -99,6 +240,9 @@ export default {
       localStorage.pageOpenedList = JSON.stringify(pageOpenedList);  
       this.linkTo(lastPageObj); 
     },
+
+
+    //关闭当前页面后，链接到资源页面
     linkTo (item) {
       let routerObj = {};
       routerObj.name = item.name;
@@ -110,10 +254,15 @@ export default {
       }
       this.$router.push(routerObj);
     },
+
+    //重置表单
     handleReset(bizView){
       let Vue = this;
       Vue.$refs[bizView].resetFields();
-    },       
+    },
+
+
+    //初始化sql编辑器       
     initSqlEdit(){
       let Vue = this;
       var Market = {};
@@ -125,26 +274,19 @@ export default {
         dragDrop: true,
       });
     },
+
+
     drag(ev){
       ev.dataTransfer.setData("Text",`^${ev.target.id}^`);
     },
+
     initBizViewData(to,from){
       let Vue = this;
-      /*Vue.$Notice.destroy();*/
-/*      let regex = /^\/createQuery/;
-      if(regex.test(from.fullPath)){
-        return;
-      }
-      if(!regex.test(to.fullPath)){
-        return;
-      }*/
       Vue.isCreate =  $.isEmptyObject(to.params)
-      if(Vue.isCreate == false){    
-          
+      if(Vue.isCreate == false){     
         let bizViewInfo = to.params;
         if(bizViewInfo != null){
-          Vue.bizView = bizViewInfo; 
-          Vue.selectTableFields();         
+          Vue.bizView = bizViewInfo;       
         }
       }
       if(Vue.isCreate == true){
@@ -160,35 +302,46 @@ export default {
         Vue.sqlEditor.setValue(Vue.bizView.defineJSON);
       }     
     },
-    selectTableFields(){
+
+    //选择数据库表字段
+    selectTableFields(dataSourceId){
       let Vue = this;
-      Vue.$Notice.destroy();//重绘字段树之前，先销毁之前的
       if(Vue.bizView.dataSourceId != ""){
-        var datasourceName = null;
         for(var i in Vue.datasourceList){
           if(Vue.datasourceList[i].id == Vue.bizView.dataSourceId){
-            datasourceName = Vue.datasourceList[i].name;
+            Vue.datasourceName = Vue.datasourceList[i].name;
             break;
           }
         }
-        Vue.$Notice.open({
-          name:'treeBox',        
-          title: datasourceName+'的数据表(展开可以查看表字段)',
-          render: function(createElement){
-            return createElement(treeBox,{props:{datasourceId:Vue.bizView.dataSourceId}})
-          },        
-          duration: 0
-        });
+        Vue.bizView.dataSourceId = dataSourceId;
       }
     },
+
+    //预览表
     previewTable(){
       let Vue = this;
-      Vue.AxiosPost("previewBizView",{'bizViewId':"BZ.goodPrice"},
-        function(response){
-         console.log(response);
-         Vue.$Notice.destroy();
-         Vue.currentTableData = response.data;
-      })       
+      Vue.modalPreview = true;
+      Vue.getpreviewData();
+    },
+
+    //获取预览表的数据，包括字段编辑表数据
+    getpreviewData(){
+      let Vue = this;
+      Vue.pageSize = 5;
+      let params = {
+        'dateSourceId':Vue.bizView.dataSourceId,
+        'sqlStament':Vue.sqlEditor.doc.getValue(),
+        'pageSize':Vue.pageSize
+      };
+      Vue.AxiosPost("previewBizView",params,
+        function(response){         
+          Vue.currentTableData = response.data;
+        },
+        function(){
+          Vue.$Message.error('请输入正确sql!')
+        })  
+      ;
+         
     }
   },
   mounted(){
@@ -197,7 +350,7 @@ export default {
   },
   beforeMount(){
     let Vue = this;
-    Vue.initBizViewData(Vue.$route/*,{fullPath:'/*'}*/);
+    Vue.initBizViewData(Vue.$route);
   }
 }
 </script>
@@ -212,7 +365,11 @@ export default {
     background-color: #ffffff;
     margin-right:3px
   }
-.tableBox{
-  margin: -15px 25px;
-}
+  .tableBox{
+    margin: -17px 20px;
+  }
+  .button {
+    text-align: center;
+    margin-top: 0;
+  }
 </style>

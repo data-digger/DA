@@ -51,4 +51,7 @@ html,body{
 .ivu-collapse-content{
     overflow: visible !important; 
 }
+ .CodeMirror{
+    height: 450px !important;
+  }
 </style>

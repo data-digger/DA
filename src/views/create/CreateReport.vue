@@ -72,7 +72,6 @@ export default {
             this.finished = true;
           }         
         }
-
       },
       pre() {
         if(this.value !=0){
