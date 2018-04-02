@@ -22,8 +22,9 @@ const state = {
       tail:{}
     }
   },
-  /*paramData:'',*/
   layoutSelected:"布局1",
+  //查询器字段编辑表
+  query_fieldEdit_table:[]
 }
 
 // getters
@@ -36,7 +37,7 @@ const getters = {
   tableList: state => state.tableList,
   layoutSelected: state => state.layoutSelected,
   report: state => state.report,
- /* paramData:state => state.paramData,*/
+  query_fieldEdit_table: state => state.query_fieldEdit_table
 }
 
 // actions
@@ -123,6 +124,9 @@ const mutations = {
       }
     }    
   },
+  save_query_fieldEdit_table(state,param){
+    state.query_fieldEdit_table = param;
+  }
 }
 
 export default {
