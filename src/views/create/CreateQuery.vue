@@ -42,7 +42,7 @@
         <div class="demo-carousel">
           <Row style="padding:15px 0px 0px 0px">
             <Col span='12'>
-              <Form :label-width="80">
+              <Form :label-width="80" style='margin-top: 10px;'>
                 <FormItem label="数据源" prop="dataSourceId">
                     <Select class="form-control" v-model='bizView.dataSourceId' @on-change='selectTableFields'>         
                         <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
@@ -170,12 +170,14 @@ export default {
       if(Vue.value <3){
         Vue.$refs.slide.arrowEvent(1);
         if(Vue.value == 1){
-          //如果用户已经预览了表格，下一步直接查看编辑表
-          if(Vue.currentTableData){
+          //如果用户已经预览了表格
+          if(Vue.currentTableData != null){
             return;
-          }else{//如果用户没有预览表格，下一步需要先获取预览表数据，才能查看编辑表数据
+          }else{//如果用户没有预览表格
             Vue.getpreviewData();      
-          }           
+          } 
+          //将字段编辑表数据存储到store
+          Vue.$store.commit("save_query_fieldEdit_table",Vue.currentTableData);         
         }
         if(Vue.value == 2){
           console.log(Vue.query_fieldEdit_table);
@@ -186,9 +188,11 @@ export default {
 
     //前一步操作
     pre() {
-      if(this.value !=0){
-        this.$refs.slide.arrowEvent(-1);
-        this.finished = false;
+      let Vue = this;
+      if(Vue.value !=0){
+        Vue.$refs.slide.arrowEvent(-1);
+        Vue.finished = false;
+        Vue.currentTableData = null;
       }
     },
 
@@ -204,7 +208,7 @@ export default {
       for(var c in Vue.query_fieldEdit_table){
         let field_obj = {};
         field_obj.columnName = Vue.query_fieldEdit_table[c].columnNames;
-        field_obj.columnAlias = null;
+        field_obj.columnAlias = Vue.query_fieldEdit_table[c].columnsAlias;
         field_obj.columnType = Vue.query_fieldEdit_table[c].Type;
         field_obj.groupby = Vue.query_fieldEdit_table[c].GroupBy;
         field_obj.filterable = Vue.query_fieldEdit_table[c].Filterable;
@@ -214,7 +218,7 @@ export default {
         field_obj.max = Vue.query_fieldEdit_table[c].max;
         bizViewColum.push(field_obj);        
       }
-      params.bizViewColum = bizViewColum;
+      params.bizViewColum = JSON.stringify(bizViewColum);
      
       Vue.$refs[bizView].validate((valid) => {
         if (valid) {
@@ -335,7 +339,7 @@ export default {
       };
       Vue.AxiosPost("previewBizView",params,
         function(response){         
-          Vue.currentTableData = response.data;
+          Vue.currentTableData = response.data.content;
         },
         function(){
           Vue.$Message.error('请输入正确sql!')

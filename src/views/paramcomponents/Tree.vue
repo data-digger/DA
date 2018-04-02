@@ -1,10 +1,16 @@
 <template>
     <div>
-        <div class='treeTitle'>{{treeName}}表字段</div>
-        <Tree :data="data" show-checkbox  @on-check-change='getCheckedNodes' ref='jj'></Tree>
+<!--         <div class='treeTitle'>{{treeName}}表字段</div>
+        <Tree :data="data" show-checkbox  @on-check-change='getCheckedNodes' ref='jj'></Tree> -->
         <Card  style='margin: 10px;height:250px'>
-            <p slot="title">参考sql</p>
-            <p v-html="sql" class='sqlBox' style='overflow-y: auto;height:170px'></p>
+            <p slot="title">{{treeName}}表字段</p>
+            <Tree class='tree' :data="data" show-checkbox  @on-check-change='getCheckedNodes' ref='jj'></Tree>
+        </Card>
+        <Card  style='margin: 10px;height:250px'>
+            <p slot="title">参考sql</p><!-- <button @click="copyHtml()">copy</button> -->
+            <!-- <p v-html="sql" class='sqlBox' style='overflow-y: auto;height:170px'></p> -->
+            <p v-html="sql" class='sqlBox' id="text" style='overflow-y: auto;height:170px'></p>
+            <!-- <textarea id="input"></textarea> -->
         </Card>
     </div>
 </template>
@@ -25,7 +31,7 @@
             let Vue = this;
             Vue.AxiosPost("getTablesTree",{'dsId':Vue.datasourceId},
               function(response){
-                Vue.data = response.data;
+                Vue.data = response.data.content;
             })
           },
           getCheckedNodes(CheckedNodes){
@@ -65,25 +71,31 @@
               Vue.sql =null;
             }
             
+          },
+          copyHtml(){
+            var html = $("#text").html();
+            var input = document.getElementById("input");
+            input.value = html; // 修改文本框的内容
+            input.select(); // 选中文本
+            document.execCommand("copy"); // 执行浏览器复制命令
+            alert("复制成功");            
           }
         },
     }
 </script>
 <style scoped>
-  .ivu-tree{
-    height: 230px;
+  .tree{
+    height: 150px;
     overflow-y: auto;
-    border: 1px solid lightgray;
-    margin: 0px 10px 10px 10px;
-    background-color: white;
-    padding: 5px;
   }
   .sqlBox{
     height: 150px;
   }
-  .treeTitle{
-    margin: 0px 10px;
-    font-size: 14px;
-    font-weight: bold;
+  #input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: -10;
   }
 </style>

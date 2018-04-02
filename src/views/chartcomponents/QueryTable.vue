@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Table :loading="loading" height='500' style='margin:20px 10px'border :columns="columns" :data="currentTableData" ref='table'>   
+    <Table :loading="loading" height='500' style='margin:20px 10px'border :columns="columns" :data="currentTableData" ref='table' >   
     </Table>
   </div>
 </template>
@@ -35,16 +35,36 @@ export default {
         "title":'Type',
         "key":'Type',
         "align":"center",
+        'width':150,
         'sortable': true,        
+      },{
+        "title":'alias',
+        "key":'columnsAlias',
+        "align":"center",
+        'render':(h,params)=>{
+          return h('Input',{
+            props:{
+              type:'text',
+              value:Vue.currentTableData[params.index].columnsAlias 
+            },
+            on:{
+              'on-blur':(event) => {
+                Vue.currentTableData[params.index].columnsAlias = event.target.value;
+                Vue.saveEdit();
+              }
+            }
+          })
+        }      
       },{
         "title":'GroupBy',
         "key":'GroupBy',
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-             {props:{'checked':true},
-              on:{'on-change':()=>{
-               Vue.tableEdit(params);
+             {props:{'true-value':1,'false-value':0},
+              on:{'on-change':(event)=>{
+                Vue.currentTableData[params.index].GroupBy = event;
+                Vue.saveEdit();
               }
              }})
         }        
@@ -54,9 +74,10 @@ export default {
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'checked':true},
-             on:{'on-change':()=>{
-               Vue.tableEdit(params);
+            {props:{'true-value':1,'false-value':0},
+             on:{'on-change':(event)=>{
+               Vue.currentTableData[params.index].Filterable = event;
+               Vue.saveEdit();
              }
             }})
         }                  
@@ -66,9 +87,10 @@ export default {
         "align":"center", 
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'checked':true},
-             on:{'on-change':()=>{
-               Vue.tableEdit(params);
+            {props:{'true-value':1,'false-value':0},
+             on:{'on-change':(event)=>{
+               Vue.currentTableData[params.index].CountDistinct = event;
+               Vue.saveEdit();
              }
             }})
         }       
@@ -78,9 +100,10 @@ export default {
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'checked':true},
-             on:{'on-change':()=>{
-               Vue.tableEdit(params);
+            {props:{'true-value':1,'false-value':0},
+             on:{'on-change':(event)=>{
+               Vue.currentTableData[params.index].sum = event;
+               Vue.saveEdit();
              }
             }})
         }        
@@ -90,9 +113,10 @@ export default {
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'checked':true},
-             on:{'on-change':()=>{
-               Vue.tableEdit(params);
+            {props:{'true-value':1,'false-value':0},
+             on:{'on-change':(event)=>{
+               Vue.currentTableData[params.index].max = event;
+               Vue.saveEdit();
              }
             }})
         }         
@@ -102,9 +126,10 @@ export default {
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'checked':true},
-             on:{'on-change':()=>{
-               Vue.tableEdit(params);
+            {props:{'true-value':1,'false-value':0},
+             on:{'on-change':(event)=>{
+               Vue.currentTableData[params.index].min = event;
+               Vue.saveEdit();
              }
             }})
         }         
@@ -131,12 +156,11 @@ export default {
       Vue.currentTableData = Vue.historyData; 
     }       
     },
-    tableEdit(params){
+    //保存表编辑
+    saveEdit(){
       let Vue = this;
-      let editItem = params.column.key;
-      Vue.currentTableData[params.index][editItem] = 1;
       //将字段编辑表数据存储到store
-      Vue.$store.commit("save_query_fieldEdit_table",Vue.currentTableData);  
+      Vue.$store.commit("save_query_fieldEdit_table",Vue.currentTableData);        
     },
 /*    changePage(index){
       let Vue = this;
