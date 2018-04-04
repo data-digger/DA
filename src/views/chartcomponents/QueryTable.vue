@@ -53,11 +53,10 @@ export default {
           return h('Input',{
             props:{
               type:'text',
-              value:params.row.columnNames
+              value:params.row.columnsAlias
             },
             on:{
               'on-blur':(event) => {
-                event.stopPropagation();
                 Vue.currentTableData[params.index].columnsAlias = event.target.value;
                 Vue.saveEdit();
               }
@@ -70,27 +69,23 @@ export default {
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-             {props:{'true-value':1,'false-value':0},
-              on:{'on-change':(value)=>{
-                event.stopPropagation();
-                Vue.currentTableData[params.index].GroupBy = value;
-                
-                Vue.saveEdit();
-              }
-             }})
-        }        
+            {props:{'true-value':1,'false-value':0,value:params.row.GroupBy},
+             on:{'on-change':(value)=>{
+              Vue.currentTableData[params.index].GroupBy = value;             
+              Vue.saveEdit();
+             }
+            }})
+          }       
       },{
         "title":'Filterable',
         "key":'Filterable',
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'true-value':1,'false-value':0},
+            {props:{'true-value':1,'false-value':0,value:params.row.Filterable},
              on:{'on-change':(value)=>{
-              event.stopPropagation();
-               Vue.currentTableData[params.index].Filterable = value;
-               
-               Vue.saveEdit();
+              Vue.currentTableData[params.index].Filterable = value; 
+              Vue.saveEdit();
              }
             }})
         }                  
@@ -100,12 +95,10 @@ export default {
         "align":"center", 
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'true-value':1,'false-value':0},
+            {props:{'true-value':1,'false-value':0,value:params.row.CountDistinct},
              on:{'on-change':(value)=>{
-              event.stopPropagation();
-               Vue.currentTableData[params.index].CountDistinct = value;
-               
-               Vue.saveEdit();
+              Vue.currentTableData[params.index].CountDistinct = value;
+              Vue.saveEdit();
              }
             }})
         }       
@@ -115,11 +108,10 @@ export default {
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'true-value':1,'false-value':0},
+            {props:{'true-value':1,'false-value':0,value:params.row.sum},
              on:{'on-change':(value)=>{
-              event.stopPropagetion();
-               Vue.currentTableData[params.index].sum = value;
-               Vue.saveEdit();
+              Vue.currentTableData[params.index].sum = value;
+              Vue.saveEdit();
              }
             }})
         }        
@@ -129,11 +121,10 @@ export default {
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'true-value':1,'false-value':0},
+            {props:{'true-value':1,'false-value':0,value:params.row.max},
              on:{'on-change':(value)=>{
-              event.stopPropagetion()
-               Vue.currentTableData[params.index].max = value;
-               Vue.saveEdit();
+              Vue.currentTableData[params.index].max = value;
+              Vue.saveEdit();
              }
             }})
         }         
@@ -143,11 +134,10 @@ export default {
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'true-value':1,'false-value':0},
+            {props:{'true-value':1,'false-value':0,value:params.row.min},
              on:{'on-change':(value)=>{
-              event.stopPropagetion()
-               Vue.currentTableData[params.index].min = value;
-               Vue.saveEdit();
+              Vue.currentTableData[params.index].min = value;
+              Vue.saveEdit();
              }
             }})
         }         
@@ -160,6 +150,7 @@ export default {
         rows.push({
           'columnNames':stringHeaders[r],
           'Type':columnType[r],
+          'columnsAlias':stringHeaders[r],
           'GroupBy':0,
           'Filterable':0,
           'CountDistinct':0,

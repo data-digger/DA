@@ -9,9 +9,7 @@
     <Modal
       v-model="modalpreview"
       width ="1200px"
-      title="Common Modal dialog box title"
-      @on-ok="previewOk"
-      @on-cancel="cancel">
+      title="Common Modal dialog box title">
       <Row>
         <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component>
       </Row>
@@ -39,7 +37,7 @@ export default {
       paramSelected:null    
     }
   },
-  props:['querybox','index'],
+  props:['querybox'],
   methods:{
     preview (){ 
       let Vue = this;
@@ -75,12 +73,6 @@ export default {
         name:"createQuery",
         params:Vue.querybox
       });
-    },
-    previewOk(){
-
-    },
-    cancel(){
-      
     },
     refreshQueryData(param){
       let Vue = this;

@@ -1,39 +1,4 @@
 <template>
-<!--   <Row  style="padding:20px 0px">
-    <Col span="7">
-      <Form id="createQuery" ref="bizView" :model="bizView" :rules="ruleValidate" :label-width="80">
-          <FormItem label="名称" prop="name">
-              <Input v-model="bizView.name" placeholder="输入名称" :disabled ='nameEdit'></Input>
-          </FormItem>
-          <FormItem label="别名" prop="alias">
-              <Input v-model="bizView.alias" placeholder="输入别名"></Input>
-          </FormItem>
-          <FormItem label="描述" prop="desc">
-              <Input v-model="bizView.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
-          </FormItem>
-          <FormItem label="数据源" prop="dataSourceId">
-              <Select class="form-control" v-model='bizView.dataSourceId' @on-change='selectTableFields'>               
-                  <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
-              </Select>
-          </FormItem>
-          <FormItem label="参数">
-               <span v-for="p in paramList"  :id='p.id' :key="p.id" class='param-span' draggable="true" @dragstart="drag">{{p.name}}</span>
-          </FormItem>       
-          <FormItem label="SQL定义:" prop="defineJSON">
-              <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
-          </FormItem>
-          <FormItem>
-            <Tooltip content="点击生成工作表" placement="top-end" always>
-              <Button type="ghost" shape="circle" icon="ios-search" @click='previewTable'></Button></Tooltip>
-            <Button type="primary" @click="createQuery('bizView')">提交</Button>
-            <Button type="ghost" @click="handleReset('bizView')" style="margin-left: 8px">重置</Button>
-          </FormItem>
-      </Form>
-    </Col>
-    <Col span='16' class='tableBox'>
-      <querytable :chartCmpContent='currentTableData'></querytable>
-    </Col>
-  </Row> -->
   <div>
     <Carousel v-model="value" :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
 
@@ -49,7 +14,7 @@
                     </Select>
                 </FormItem>
               </Form>
-              <treeBox :datasourceId ='bizView.dataSourceId' :treeName='datasourceName'></treeBox>             
+              <treebox :datasourceId ='bizView.dataSourceId' :treeName='datasourceName'></treebox>             
             </Col>
             <Col span='12'>
               <Card  style='margin:10px'>
@@ -120,13 +85,13 @@
 import CodeMirror from "codemirror/lib/codemirror.js"
 import "codemirror/mode/sql/sql.js"
 import {mapGetters} from 'vuex'
-import treeBox from './../paramcomponents/Tree'
+import treebox from './../paramcomponents/Tree'
 import editquerytable from './../chartcomponents/QueryTable'
 import iviewtable from './../chartcomponents/Table'
 export default {
   name:"createQuery",
   components:{
-    treeBox,
+    treebox,
     editquerytable,
     iviewtable
   },
@@ -282,7 +247,7 @@ export default {
     drag(ev){
       ev.dataTransfer.setData("Text",`^${ev.target.id}^`);
     },*/
-
+    //初始化查询器数据，可用于分辨是新建还是编辑
     initBizViewData(to,from){
       let Vue = this;
       Vue.isCreate =  $.isEmptyObject(to.params)
