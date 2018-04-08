@@ -35,69 +35,75 @@ export default {
       if(Vue.tableData != null){
       var cols = [];
       cols.push({
-        "title":'columnNames',
-        "key":'columnNames',
+        "title":'columnName',
+        "key":'columnName',
         "align":"center",
         'sortable': true,
       },{
-        "title":'Type',
-        "key":'Type',
+        "title":'type',
+        "key":'columnType',
         "align":"center",
         'width':150,
         'sortable': true,        
       },{
         "title":'alias',
-        "key":'columnsAlias',
+        "key":'columnAlias',
         "align":"center",
         'render':(h,params)=>{
           return h('Input',{
             props:{
               type:'text',
-              value:params.row.columnsAlias
+              value:params.row.columnAlias
             },
             on:{
               'on-blur':(event) => {
-                Vue.currentTableData[params.index].columnsAlias = event.target.value;
+                Vue.currentTableData[params.index].columnAlias = event.target.value;
                 Vue.saveEdit();
               }
             }
           })
         }      
       },{
-        "title":'GroupBy',
-        "key":'GroupBy',
+        "title":'groupby',
+        "key":'groupby',
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'true-value':1,'false-value':0,value:params.row.GroupBy},
+            {props:{'value':params.row.groupby == 1?true:false},
              on:{'on-change':(value)=>{
-              Vue.currentTableData[params.index].GroupBy = value;             
+              if(value == true){
+                value = 1;
+              }else{
+                value = 0;
+              }
+              Vue.currentTableData[params.index].groupby = value;           
               Vue.saveEdit();
              }
-            }})
+            }}
+           )
           }       
       },{
-        "title":'Filterable',
-        "key":'Filterable',
+        "title":'filterable',
+        "key":'filterable',
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'true-value':1,'false-value':0,value:params.row.Filterable},
+            {props:{'true-value':1,'false-value':0,value:params.row.filterable},
              on:{'on-change':(value)=>{
-              Vue.currentTableData[params.index].Filterable = value; 
+              Vue.currentTableData[params.index].filterable = value; 
               Vue.saveEdit();
              }
             }})
         }                  
       },{
-        "title":'CountDistinct',
-        "key":'CountDistinct',
+        "title":'countDistinct',
+        "key":'countDistinct',
         "align":"center", 
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'true-value':1,'false-value':0,value:params.row.CountDistinct},
+            {props:{'true-value':1,'false-value':0,value:params.row.countDistinct},
              on:{'on-change':(value)=>{
-              Vue.currentTableData[params.index].CountDistinct = value;
+              Vue.currentTableData[params.index].countDistinct = value;
               Vue.saveEdit();
              }
             }})
@@ -142,27 +148,32 @@ export default {
             }})
         }         
       })
-      var rows = [];
+      
       var rowData = Vue.tableData;
-      var stringHeaders = rowData.stringHeaders;
-      var columnType = rowData.columsType;
-      for(let r in stringHeaders){
-        rows.push({
-          'columnNames':stringHeaders[r],
-          'Type':columnType[r],
-          'columnsAlias':stringHeaders[r],
-          'GroupBy':0,
-          'Filterable':0,
-          'CountDistinct':0,
-          'sum':0,
-          'max':0,
-          'min':0
-        });
+      if(!rowData.stringHeaders){
+        Vue.currentTableData = rowData; 
+      }else{
+        var rows = [];
+        var stringHeaders = rowData.stringHeaders;
+        var columnType = rowData.columsType;
+        for(let r in stringHeaders){
+          rows.push({
+            'columnName':stringHeaders[r],
+            'columnType':columnType[r],
+            'columnAlias':stringHeaders[r],
+            'groupby':0,
+            'filterable':0,
+            'countDistinct':0,
+            'sum':0,
+            'max':0,
+            'min':0
+          });
+        }
+        Vue.total = rows.length;
+        Vue.historyData = rows;
+        Vue.currentTableData = Vue.historyData;                 
       }
       Vue.columns = cols; 
-      Vue.total = rows.length;
-      Vue.historyData = rows;
-      Vue.currentTableData = Vue.historyData; 
     }       
     },
     //保存表编辑

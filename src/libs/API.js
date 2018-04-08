@@ -12,8 +12,10 @@ window.urlConf = {
   bizview: {
     list:`${window.uri}/bizview/list`,
     save: `${window.uri}/bizview/save`,
-    preview:`${window.uri}/bizview/preview`,
+    preview_extra:`${window.uri}/bizview/preview`,
+    preview:`${window.uri}/bizview/preview/id`,
     update: `${window.uri}/bizview/update`,
+    columnList:`${window.uri}/bizview/column/list`,
   },
   chart: {
     list:`${window.uri}/chart/list`,
@@ -77,14 +79,22 @@ export default {
     getQueryList(params){
    	 return axios.post(urlConf.bizview.list, params); 
     },
-    /*预览查询器数据*/
+    /*预览查询器中包含字段表的数据*/
+    previewBizView_extra(params){
+     return axios.post(urlConf.bizview.preview_extra, params); 
+    },
+    /*预览查询器*/
     previewBizView(params){
      return axios.post(urlConf.bizview.preview, params); 
     },
     /*根据参数值更新查询器数据*/
     updateBizView(params){
-    return axios.post(urlConf.bizview.update, params); 
-   },
+     return axios.post(urlConf.bizview.update, params); 
+    },
+    /*获取字段表*/
+    getFieldTable(params){
+      return axios.post(urlConf.bizview.columnList, params); 
+    },
     /*创建仪表*/
     createChart(params){
       return axios.post(urlConf.chart.save, params); 

@@ -1,8 +1,6 @@
 <template>
   <div>
     <Carousel v-model="value" :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
-
-
       <CarouselItem>
         <div class="demo-carousel">
           <Row style="padding:15px 0px 0px 20px">
@@ -36,9 +34,6 @@
           </Row>
         </div>
       </CarouselItem>
-
-
-
       <CarouselItem>
         <div class="demo-carousel">
            <Row>
@@ -49,8 +44,6 @@
           
         </div>
       </CarouselItem>
-
-
       <CarouselItem>
         <div class="demo-carousel">
           <Row  style="padding:20px 20px">
@@ -70,8 +63,6 @@
             </Row>
         </div>
       </CarouselItem>
-
-
     </Carousel>
     <Row  class='button'>
       <Button type="primary" @click='pre()'>上一步</Button>
@@ -133,7 +124,8 @@ export default {
       },
       route:null,
       isCreate:true,
-      currentTableData:null
+      currentTableData:null,
+      edit_currentTableData:null
     }
   },
   methods:{
@@ -242,19 +234,18 @@ export default {
         dragDrop: true,
       });
     },
-/*
-
-    drag(ev){
+    /*drag(ev){
       ev.dataTransfer.setData("Text",`^${ev.target.id}^`);
     },*/
-    //初始化查询器数据，可用于分辨是新建还是编辑
-    initBizViewData(to,from){
+    //初始化编辑查询器数据
+    initEditBizViewData(to,from){
       let Vue = this;
-      Vue.isCreate =  $.isEmptyObject(to.params)
+      Vue.isCreate =  $.isEmptyObject(to.params);
       if(Vue.isCreate == false){     
-        let bizViewInfo = to.params;
+        let bizViewInfo = to.params.querybox;
+        Vue.edit_currentTableData = to.params.fieldTableData;
         if(bizViewInfo != null){
-          Vue.bizView = bizViewInfo;       
+          Vue.bizView = bizViewInfo;   
         }
       }
       if(Vue.isCreate == true){
@@ -296,21 +287,24 @@ export default {
     getpreviewData(){
       let Vue = this;
       Vue.pageSize = 3;
-      let params = {
-        'dateSourceId':Vue.bizView.dataSourceId,
-        'sqlStament':Vue.sqlEditor.doc.getValue(),
-        'pageSize':Vue.pageSize
-      };
-      Vue.AxiosPost("previewBizView",params,
-        function(response){         
-          Vue.currentTableData = response.data.content;
-        },
-        function(){
-          Vue.$Message.error('请输入正确sql!')
-        })  
-      ;
-         
+      if(Vue.isCreate == true){
+        let params = {
+          'dateSourceId':Vue.bizView.dataSourceId,
+          'sqlStament':Vue.sqlEditor.doc.getValue(),
+          'pageSize':Vue.pageSize
+        };
+        Vue.AxiosPost("previewBizView_extra",params,
+          function(response){         
+            Vue.currentTableData = response.data.content;
+          },
+          function(){
+            Vue.$Message.error('请输入正确sql!')
+        });        
+      }else{
+        Vue.currentTableData = Vue.edit_currentTableData;
+      }
     }
+      
   },
   mounted(){
     let Vue = this;
@@ -318,7 +312,7 @@ export default {
   },
   beforeMount(){
     let Vue = this;
-    Vue.initBizViewData(Vue.$route);
+    Vue.initEditBizViewData(Vue.$route);
   }
 }
 </script>

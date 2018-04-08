@@ -11,7 +11,7 @@
       width ="1200px"
       title="Common Modal dialog box title">
       <Row>
-        <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component>
+        <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'currentTableData'></component>
       </Row>
       <iviewtable :chartCmpContent='currentTableData' :ifPage='true'></iviewtable>       
     </Modal>
@@ -43,9 +43,10 @@ export default {
       let Vue = this;
       Vue.modalpreview = true;
       Vue.paramComponent = [];
-      Vue.AxiosPost("previewBizView",{'bizViewId':Vue.querybox.id},
+      Vue.AxiosPost("previewBizView",{'bizViewId':Vue.querybox.id,'pageSize':6},
         function(response){
-          if(response.data.defaultParameters.length != 0){
+          Vue.currentTableData = response.data.content;
+/*          if(response.data.defaultParameters.length != 0){
             for(var i in response.data.defaultParameters){
               if(response.data.defaultParameters[i].paramType == 'list'){
                 var cmpObj = {};
@@ -62,19 +63,23 @@ export default {
             }            
           }else{
             Vue.currentTableData = response.data;
-          }          
+          } */         
         }
       );
     },
     edit (routerpath){
       let Vue = this; 
-      Vue.$router.push({
-        path:routerpath,
-        name:"createQuery",
-        params:Vue.querybox
-      });
+      Vue.AxiosPost("getFieldTable",{'bizviewId':Vue.querybox.id},
+      function(response){         
+        Vue.$router.push({
+          path:routerpath,
+          name:"createQuery",
+          params:{querybox:Vue.querybox,fieldTableData:response.data.content}
+        });
+      }); 
+
     },
-    refreshQueryData(param){
+/*    refreshQueryData(param){
       let Vue = this;
       Vue.paramSelected = $.extend(Vue.paramSelected,param);
       let paramLength = Object.keys(Vue.paramSelected).length;
@@ -86,7 +91,7 @@ export default {
         });         
       }
      
-    }
+    }*/
    }
 }
 </script>
