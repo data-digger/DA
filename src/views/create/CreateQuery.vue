@@ -135,17 +135,20 @@ export default {
       if(Vue.value <3){
         Vue.$refs.slide.arrowEvent(1);
         if(Vue.value == 1){
-          //如果用户已经预览了表格
-          if(Vue.currentTableData != null){
-            return;
-          }else{//如果用户没有预览表格
-            Vue.getpreviewData();      
-          } 
+          if(Vue.isCreate == true){
+            //如果用户已经预览了表格
+            if(Vue.currentTableData != null){
+              return;
+            }else{//如果用户没有预览表格
+              Vue.getpreviewData();      
+            }             
+          }else{
+            Vue.currentTableData = Vue.edit_currentTableData;
+          }   
           //将字段编辑表数据存储到store
           Vue.$store.commit("save_query_fieldEdit_table",Vue.currentTableData);         
         }
         if(Vue.value == 2){
-          console.log(Vue.query_fieldEdit_table);
           Vue.finished = true;
         }
       }
@@ -170,12 +173,12 @@ export default {
       let bizViewColum = [];
       for(var c in Vue.query_fieldEdit_table){
         let field_obj = {};
-        field_obj.columnName = Vue.query_fieldEdit_table[c].columnNames;
-        field_obj.columnAlias = Vue.query_fieldEdit_table[c].columnsAlias;
-        field_obj.columnType = Vue.query_fieldEdit_table[c].Type;
-        field_obj.groupby = Vue.query_fieldEdit_table[c].GroupBy;
-        field_obj.filterable = Vue.query_fieldEdit_table[c].Filterable;
-        field_obj.countDistinct = Vue.query_fieldEdit_table[c].CountDistinct;
+        field_obj.columnName = Vue.query_fieldEdit_table[c].columnName;
+        field_obj.columnAlias = Vue.query_fieldEdit_table[c].columnAlias;
+        field_obj.columnType = Vue.query_fieldEdit_table[c].columnType;
+        field_obj.groupby = Vue.query_fieldEdit_table[c].groupby;
+        field_obj.filterable = Vue.query_fieldEdit_table[c].filterable;
+        field_obj.countDistinct = Vue.query_fieldEdit_table[c].countDistinct;
         field_obj.sum = Vue.query_fieldEdit_table[c].sum;
         field_obj.min = Vue.query_fieldEdit_table[c].min;
         field_obj.max = Vue.query_fieldEdit_table[c].max;
@@ -287,7 +290,7 @@ export default {
     getpreviewData(){
       let Vue = this;
       Vue.pageSize = 3;
-      if(Vue.isCreate == true){
+      /*if(Vue.isCreate == true){*/
         let params = {
           'dateSourceId':Vue.bizView.dataSourceId,
           'sqlStament':Vue.sqlEditor.doc.getValue(),
@@ -300,9 +303,9 @@ export default {
           function(){
             Vue.$Message.error('请输入正确sql!')
         });        
-      }else{
+  /*    }else{
         Vue.currentTableData = Vue.edit_currentTableData;
-      }
+      }*/
     }
       
   },
@@ -336,5 +339,10 @@ export default {
   }
   .ivu-carousel{
     height: 550px;
+    -webkit-user-select: text; 
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
   }
+
 </style>
