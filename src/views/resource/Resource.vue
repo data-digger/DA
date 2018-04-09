@@ -1,5 +1,5 @@
 <template>
-  <div id='resource'>
+  <div id='resource' @mouseenter = 'enter()'>
     <Row id='scroll-datasource' class="datasource">
       <Col>
         <div class="note note-datasource">
@@ -8,7 +8,7 @@
       </Col>
       <Row class='cardBox'>
         <DatasourceBox v-for="ds in datasourceList" :key='ds.id' :datasource = 'ds'></DatasourceBox>
-        <Creator :routerpath="createDatasource"></Creator>     
+        <Creator :routerpath="createDatasource" :id='creator_datasource_id'></Creator>     
       </Row>
     </Row>
 
@@ -20,7 +20,7 @@
       </Col>
       <Row class='cardBox'>
         <ParamBox v-for="pr in paramList" :key='pr.id' :parambox = 'pr'></ParamBox>
-        <Creator :routerpath='createParam'></Creator>
+        <Creator :routerpath='createParam' :id='creator_param_id'></Creator>
       </Row>       
     </Row> 
 
@@ -33,7 +33,7 @@
       </Col>
       <Row class='cardBox'>
         <QueryBox  v-for="(q,index) in queryList" :key='q.id':querybox='q' :index='index'></QueryBox>
-        <Creator :routerpath='createQuery'></Creator>
+        <Creator :routerpath='createQuery' :id='creator_query_id'></Creator>
       </Row>
     </Row> 
 
@@ -46,7 +46,7 @@
       </Col>
       <Row class='cardBox'>
         <ChartBox v-for="(chart,index) in chartList" :key='chart.id' :chartbox='chart' :index='index'></ChartBox>
-        <Creator :routerpath='creatEchart'></Creator>
+        <Creator :routerpath='creatEchart' :id='creator_chart_id'></Creator>
       </Row>
     </Row>
 
@@ -59,7 +59,7 @@
       </Col>
       <Row class='cardBox'>
         <TableBox v-for="(tb,index) in tableList" :key='tb.id' :tablebox='tb' :index='index'></TableBox>
-        <Creator :routerpath='createTable' ></Creator>
+        <Creator :routerpath='createTable' :id='creator_table_id'></Creator>
       </Row>
     </Row>  
 
@@ -71,10 +71,10 @@
         </Col>
         <Row class='cardBox'>
           <ReportBox v-for="(rp,index) in reportList" :key='rp.id' :reportbox='rp' :index='index'></ReportBox>
-          <Creator :routerpath='createReport'></Creator>
+          <Creator :routerpath='createReport' :id='creator_report_id'></Creator>
         </Row>
     </Row>
-    <ButtonGroup vertical class="demo-affix" style='right:18px;position:fixed;top:35%;'>
+    <ButtonGroup vertical class="demo-affix" style='right:18px;position:fixed;top:50%;'>
           <Tooltip class='monitor' :content="m.title" placement="left-end" v-for='(m,index) in monitor' :key='index'>
              <div :id='m.id' @click='scroll(m.id)'><Icon :type="m.icon"></Icon></div>
           </Tooltip>
@@ -106,7 +106,13 @@ export default {
       {title:'查询器', icon:'search',id:'scroll-query'},
       {title:'图表' ,icon:'connection-bars',id:'scroll-chart'},
       {title:'表格' ,icon:'ios-grid-view',id:'scroll-table'},
-      {title:'报表', icon:'ios-paper-outline',id:'scroll-report'}]
+      {title:'报表', icon:'ios-paper-outline',id:'scroll-report'}],
+      creator_datasource_id:'creator_datasource',
+      creator_query_id:'creator_query',
+      creator_param_id:'creator_param',
+      creator_chart_id:'creator_chart',
+      creator_table_id:'creator_table',
+      creator_report_id:'creator_report',
     }
   },
   components:{
@@ -129,6 +135,11 @@ export default {
     })
   },
   methods:{
+    enter(){
+      let Vue = this;
+      $(".card-shade").css("display",'none');
+      $('.box-card').css('-webkit-transform','scale(1)');        
+    },
     getDatasourceBox(){
       let Vue = this;
       Vue.AxiosPost("getDatasourceList",'',
@@ -207,11 +218,11 @@ export default {
 .note.note-table,
 .note.note-param{
   width: 100%;
-  color: #3c763d, 80%;
+  color: gray;
   margin-bottom: 0px;
   text-align: left;
 }
-.note.note-datasource{
+/*.note.note-datasource{
   background-color: #eef7ea;
   border-color: #bbdba1;
 }
@@ -234,11 +245,10 @@ export default {
 .note.note-table{
   background-color: #bbd5ef;
   border-color: #569de7;
-}
+}*/
 .note {
   margin: 0 0 20px 0;
   padding: 15px 30px 15px 15px;
-  border-left: 5px solid #eee;
   -webkit-border-radius: 0 4px 4px 0;
   -moz-border-radius: 0 4px 4px 0;
   -ms-border-radius: 0 4px 4px 0;
@@ -246,17 +256,19 @@ export default {
   border-radius: 0 4px 4px 0;
 }
 .monitor{
-  width: 60px;
-  height: 60px;
-  background: rgba(163,166,167,.63);
+  width: 45px;
+  height: 45px;
+  /*background: rgba(163,166,167,.63);*/
+  background-color: #ffffff;
+  opacity: 0.3;
   text-align: center;
   cursor: pointer;
-  line-height:60px;
+  line-height:45px;
   margin-bottom:2px;
   font-size: 30px;
   display: block;
 }
 .monitor:hover{
-  background-color:#2d8cf0;
+  opacity: 0.5;
 }
 </style>

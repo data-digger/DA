@@ -19,7 +19,7 @@
         <div ref="scrollBody" class="tags-inner-scroll-body" :style="{left: tagBodyLeft + 'px'}">
             <transition-group name="taglist-moving-animation">
                 <Tag 
-                    type="dot"
+                    closable
                     v-for="(item, index) in pageTagsList" 
                     ref="tagsPageOpened"
                     :key="item.name" 
@@ -27,7 +27,7 @@
                     @on-close="closePage"
                     @click.native="linkTo(item)"
                     :closable="(item.name==='home_index'|| item.name==='resource_index')?false:true"
-                    :color="item.children?(item.children[0].name===currentPageName?'blue':'default'):(item.name===currentPageName?'blue':'default')"
+                    :color="item.children?(item.children[0].name===currentPageName?'blue':'#28313d'):(item.name===currentPageName?'blue':'#28313d')"
                 >{{ itemTitle(item) }}</Tag>
             </transition-group>
         </div>

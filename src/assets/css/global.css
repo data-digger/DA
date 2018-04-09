@@ -1,6 +1,36 @@
+.ivu-card-body {
+  padding: 0px;
+}
 .box-card{
-  margin-bottom:10px;
+  margin-bottom: 10px;
+  width: 170px;
   height: 150px;
+  transform:scale(1);
+  -webkit-transform:scale(1);
+  border-radius: 7px;
+  border:0;
+}
+.card-shade{
+  height: 150px;
+  opacity: 0.9;
+  display: none;
+  line-height: 150px;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  text-align: center;
+  border-radius: 7px;
+}
+.card-shade img{
+  margin-right: 10px;
+  cursor: pointer;
+}
+.card-content{
+  text-align:center;
+  height: 150px;
+  line-height: 150px;
+  border-radius: 7px;
+  color:white;
 }
 .box-desc{
   overflow:hidden;

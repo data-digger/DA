@@ -6,6 +6,7 @@ import Vue from 'vue';
 import iView from 'iview';
 import {router} from './router/index';
 import {appRouter} from './router/router';
+import 'vue2-animate/dist/vue2-animate.min.css';
 import store from './store';
 import App from './app.vue';
 import API from '@/libs/API.js';

@@ -1,10 +1,24 @@
 <template>
-  <Col :xs="8" :sm="8" :md="8" :lg="6">
+<!--   <Col :xs="8" :sm="8" :md="8" :lg="6">
     <Card class='box-card' @click='link(subpath)'>
         <p slot="title">{{chartbox.alias}} ({{chartbox.type}})</p>
         <p class="box-desc" :title='chartbox.desc'> {{chartbox.desc}}</p>
         <p><button @click='edit()'>编辑</button>
         <button @click='preview()'>预览</button> </p>        
+    </Card> -->
+  <Col :xs="4" :sm="4" :md="4" :lg="4">
+    <Card class='box-card' :id="'card'+chartbox.name">
+      <div class='card-content'  @mouseenter="enter()">
+        <div style='height:30px'><img src="./../../assets/img/chart.png"></div>
+        <div style='height:30px'>{{chartbox.alias}}</div>   
+      </div>
+      <div :id='chartbox.name' class='card-shade' @mouseleave="leave()">
+       <!--  <div><Icon class='icon' type="edit" @click='edit()'></Icon></div>
+        <div><Icon class='icon' type="search"></Icon></div> -->
+        <img src="./../../assets/img/edit.png" @click='edit()'>
+        <img src="./../../assets/img/preview.png" @click='preview()'>
+        <img src="./../../assets/img/info.png">
+      </div>
     </Card>
     <Modal
       v-model="modalpreview"
@@ -61,6 +75,16 @@ export default {
     },
   },
   methods:{
+    enter(){
+      let Vue = this;
+      $('#'+Vue.chartbox.name).css("display",'block');
+      $('#card'+Vue.chartbox.name).css('-webkit-transform','scale(1.1)');
+    },
+    leave(){
+      let Vue = this;
+      $(".card-shade").css("display",'none');
+      $('#card'+Vue.chartbox.name).css('-webkit-transform','scale(1)');  
+    },
     preview (){ 
       let Vue = this;
       Vue.paramComponent = [];
@@ -134,8 +158,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .paramcomponent{
-   display: inline-block;
-   margin: 0px 3px;
-  }
+.paramcomponent{
+ display: inline-block;
+ margin: 0px 3px;
+}
+.icon{
+  font-size:30px;
+  cursor: pointer;
+}
+.card-shade{
+  background-color: #1c5557;
+}
+.box-card{
+  background-color: #19969a;
+}
   </style>

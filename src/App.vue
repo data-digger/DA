@@ -51,7 +51,10 @@ html,body{
 .ivu-collapse-content{
     overflow: visible !important; 
 }
- .CodeMirror{
-    height: 395px !important;
-  }
+.CodeMirror{
+  height: 395px !important;
+}
+.ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
+    border-right:0;
+}
 </style>

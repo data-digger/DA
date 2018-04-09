@@ -1,10 +1,24 @@
 <template>
-  <Col :xs="8" :sm="8" :md="8" :lg="6">
+<!--   <Col :xs="8" :sm="8" :md="8" :lg="6">
     <Card class='box-card'>
         <p slot="title">{{tablebox.name}}</p>
         <p class="box-desc" :title='tablebox.desc'>{{tablebox.desc}}</p>
         <button @click='preview()'>预览</button></p> 
-    </Card> 
+    </Card>  -->
+  <Col :xs="4" :sm="4" :md="4" :lg="4">
+    <Card class='box-card' :id="'card'+tablebox.name">
+      <div class='card-content'  @mouseenter="enter()">    
+        <div style='height:30px'><img src="./../../assets/img/table.png"></div>
+        <div style='height:30px'>{{tablebox.alias}}</div> 
+      </div>
+      <div :id='tablebox.name' class='card-shade' @mouseleave="leave()">
+      <!--   <Icon style='font-size:40px' type="edit" @click='edit()'></Icon>
+        <Icon style='font-size:40px' type="search"></Icon> -->
+        <img src="./../../assets/img/edit.png" @click='edit()'>
+        <img src="./../../assets/img/preview.png" @click='preview()'>
+        <img src="./../../assets/img/info.png">
+      </div>
+    </Card>
     <Modal
       v-model="modalpreview"
       width ="1200px"
@@ -38,6 +52,16 @@ export default {
     }
   }, 
   methods:{
+    enter(){
+      let Vue = this;
+      $('#'+Vue.tablebox.name).css("display",'block');
+      $('#card'+Vue.tablebox.name).css('-webkit-transform','scale(1.1)');
+    },
+    leave(){
+      let Vue = this;
+      $(".card-shade").css("display",'none');
+      $('#card'+Vue.tablebox.name).css('-webkit-transform','scale(1)');  
+    },
     preview(){
       let Vue = this;
       Vue.modalpreview = true;
@@ -90,8 +114,14 @@ export default {
 
 
 <style scoped>
-  .paramcomponent{
-   display: inline-block;
-   margin: 0px 3px;
-  }
+.paramcomponent{
+  display: inline-block;
+  margin: 0px 3px;
+}
+.card-shade{
+  background-color: #2b4270;
+}
+.box-card{
+  background-color: #3d6bc8;
+}
 </style>

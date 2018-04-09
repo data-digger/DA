@@ -2,15 +2,15 @@
   <div>
     <Carousel  v-model="value" :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
         <CarouselItem>
-            <div class="demo-carousel"><BaseInfo ref='initBaseInfo'></BaseInfo>
-            </div>
-        </CarouselItem>
-        <CarouselItem>
             <div class="demo-carousel"><SelectLayout></SelectLayout>
             </div>
         </CarouselItem>
         <CarouselItem>
             <div class="demo-carousel"><component :is="layouts"></component></div>
+        </CarouselItem>
+        <CarouselItem>
+            <div class="demo-carousel"><BaseInfo ref='initBaseInfo'></BaseInfo>
+            </div>
         </CarouselItem>
     </Carousel>
      <Row  class='button'>

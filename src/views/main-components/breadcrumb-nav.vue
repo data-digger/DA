@@ -26,3 +26,11 @@ export default {
 };
 </script>
 
+<style scoped>
+.ivu-breadcrumb a{
+  color: #fff !important;
+}
+/*.ivu-breadcrumb>span:last-child{
+  color: #fff !important;
+}*/
+</style>
