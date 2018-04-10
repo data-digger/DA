@@ -77,6 +77,8 @@ export default {
   methods:{
     enter(){
       let Vue = this;
+      $(".card-shade").css("display",'none');
+      $(".box-card").css('-webkit-transform','scale(1)');
       $('#'+Vue.chartbox.name).css("display",'block');
       $('#card'+Vue.chartbox.name).css('-webkit-transform','scale(1.1)');
     },

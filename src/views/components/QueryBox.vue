@@ -54,6 +54,8 @@ export default {
   methods:{
     enter(){
       let Vue = this;
+      $(".card-shade").css("display",'none');
+      $(".box-card").css('-webkit-transform','scale(1)');
       $('#'+Vue.querybox.name).css("display",'block');
       $('#card'+Vue.querybox.name).css('-webkit-transform','scale(1.1)');
     },

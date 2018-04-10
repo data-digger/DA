@@ -27,6 +27,8 @@ export default {
   methods:{
     enter(){
       let Vue = this;
+      $(".card-shade").css("display",'none');
+      $(".box-card").css('-webkit-transform','scale(1)');
       $('#'+Vue.reportbox.name).css("display",'block');
       $('#card'+Vue.reportbox.name).css('-webkit-transform','scale(1.1)');
     },
