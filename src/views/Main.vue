@@ -20,7 +20,7 @@
             <div class="main-header">
                 <div class="navicon-con">
                     <Button :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)'}" type="text" @click="toggleClick">
-                        <Icon type="navicon" size="32"></Icon>
+                        <Icon type="navicon" size="17" style='color:#b2b4c2'></Icon>
                     </Button>
                 </div>
                 <div class="header-middle-con">

@@ -1,10 +1,9 @@
 <template>
-    <Form id="createDatasource" ref="datasource" :model="datasource" :rules="ruleValidate" :label-width="120">
+  <Row class='createDatasource'>
+    <Form id="createDatasource" ref="datasource" :model="datasource" :rules="ruleValidate" :label-width="130">
+      <Col span='12'>
         <FormItem label="名称" prop="name">
-            <Input v-model="datasource.name" :disabled ='nameEdit' placeholder="输入名称"></Input>
-        </FormItem>
-        <FormItem label="别名" prop="alias">
-            <Input v-model="datasource.alias" placeholder="输入别名"></Input>
+            <Input class='cd_input' v-model="datasource.name" :disabled ='nameEdit' placeholder="输入名称"></Input>
         </FormItem>
         <FormItem label="驱动程序类型" prop="driverType">
             <Select v-model="datasource.driverType" placeholder="Select ...">
@@ -12,44 +11,52 @@
                <Option value="DB2">DB2</Option>
             </Select>
         </FormItem>
-        <FormItem label="驱动程序类" prop="driver">
-            <Input v-model="datasource.driver" placeholder="输入驱动程序类"></Input>
-        </FormItem>
-        <FormItem label="连接字符串" prop="url">
-            <Input v-model="datasource.url" placeholder="输入连接字符串"></Input>
-        </FormItem>
         <FormItem label="数据库字符集" prop="dbCharset">
             <Select v-model="datasource.dbCharset" placeholder="Select ...">
                <Option value="UTF-8">UTF-8</Option>
                <Option value="GBK">GBK</Option>
             </Select>
         </FormItem>
-        <FormItem label="最大连接数" prop="maxConnection">
-            <Input v-model="datasource.maxConnection" placeholder="输入最大连接数"></Input>
-        </FormItem>
          <FormItem label="校验语句" prop="validationQuery">
             <Input v-model="datasource.validationQuery" placeholder="输入校验语句"></Input>
         </FormItem>
          <FormItem label="用户名" prop="user">
             <Input v-model="datasource.user" placeholder="输入用户名"></Input>
-        </FormItem>
-         <FormItem label="密码" prop="password">
-            <Input v-model="datasource.password" placeholder="输入密码"></Input>
+        </FormItem>        
+      </Col>
+
+      <Col span='12'>
+        <FormItem label="别名" prop="alias">
+            <Input v-model="datasource.alias" placeholder="输入别名"></Input>
+        </FormItem>  
+        <FormItem label="驱动程序类" prop="driver">
+            <Input v-model="datasource.driver" placeholder="输入驱动程序类"></Input>
+        </FormItem>    
+        <FormItem label="最大连接数" prop="maxConnection">
+            <Input v-model="datasource.maxConnection" placeholder="输入最大连接数"></Input>
         </FormItem>
         <FormItem label="事物隔离级别" prop="transactionIsolation">
-    <!--         <Select v-model="datasource.transactionIsolation" placeholder="Select ...">
-               <Option value="-1">-1</Option>
-            </Select> -->
             <Input v-model="datasource.transactionIsolation" placeholder="输入事物隔离级别"></Input>
         </FormItem>  
+         <FormItem label="密码" prop="password">
+            <Input v-model="datasource.password" placeholder="输入密码"></Input>
+        </FormItem>                          
+      </Col>
+
+      <Col span='24'>
+        <FormItem label="连接字符串" prop="url">
+            <Input v-model="datasource.url" placeholder="输入连接字符串"></Input>
+        </FormItem>
         <FormItem label="描述" prop="desc">
-            <Input v-model="datasource.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
-        </FormItem>
-        <FormItem>
-            <Button type="primary" @click="createDatasource('datasource')">提交</Button>
-            <Button type="ghost" @click="handleReset('datasource')" style="margin-left: 8px">重置</Button>
-        </FormItem>
+            <Input v-model="datasource.desc" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="Enter something..."></Input>
+        </FormItem>   
+        <FormItem class='cd_button_box'>
+            <Button type="primary" class='cd_button_submit' @click="createDatasource('datasource')">提交</Button>
+            <Button type="primary" class='cd_button_reset' @click="handleReset('datasource')">重置</Button>
+        </FormItem>     
+      </Col>
     </Form>
+  </Row>
 </template>
 <script>
   export default {
@@ -177,7 +184,33 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-
+<style>
+.createDatasource{
+  padding: 40px 77px 0px 14px;
+}
+.ivu-input{
+  background-color: #404c60 !important;
+  color: #ffffff !important;
+  border:0;
+}
+.ivu-input:focus{
+  box-shadow: 0 0 0 1px #738096;
+}
+.cd_button_box{
+  text-align: center;
+}
+.cd_button_box button{
+  width: 150px;
+}
+.cd_button_box button:hover{
+  border:0;
+}
+.cd_button_submit{
+  background-color: #008aff;
+  margin-right: 15px;
+}
+.cd_button_reset{
+  background-color: #7e8da6;
+  color: #2f3949;
+}
 </style>

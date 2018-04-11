@@ -1,22 +1,19 @@
 <template >
-<!--   <Col :xs="8" :sm="8" :md="8" :lg="6">
-    <Card class='box-card'>
-        <p slot="title">{{parambox.alias}}</p>
-        <p class="box-desc">{{parambox.desc}}</p>
-        <p><button @click='edit("/createParam")'>编辑</button></p> 
-    </Card>
-  </Col> -->
-  <Col :xs="4" :sm="4" :md="4" :lg="4">
+  <Col :xs="12" :sm="8" :md="8" :lg="4">
     <Card class='box-card' :id="'card'+parambox.name">
       <div class='card-content'  @mouseenter="enter()"> 
         <div style='height:30px'><img src="./../../assets/img/parameter.png"></div>
-        <div style='height:30px'>{{parambox.alias}}</div>          
+        <div style='height:30px; text-overflow:ellipsis'>{{parambox.alias}}</div>          
       </div>
       <div :id='parambox.name' class='card-shade' @mouseleave="leave()">
-<!--         <div style='display:inline-block' @click='edit()'><Icon  class='icon' type="edit" ></Icon></div>
-        <div style='display:inline-block' ><Icon class='icon'  type="search"></Icon></div> -->
         <img src="./../../assets/img/edit.png" @click='edit()'>
-        <img src="./../../assets/img/info.png">
+        <Tooltip placement="right" transfer>
+          <img src="./../../assets/img/info.png">
+          <div slot="content">
+              <p>{{parambox.alias}}</p>
+              <p style='white-space: normal;'>{{parambox.desc}}</p>
+          </div>          
+        </Tooltip>
       </div>
     </Card>
   </Col>
@@ -65,6 +62,10 @@ export default {
 }
 .card-shade{
   background-color: #294c41;
+  padding:60px 40px;
+}
+.card-shade>img:nth-child(1){
+  margin-right:24px;
 }
 .box-card{
   background-color: #25aa80;

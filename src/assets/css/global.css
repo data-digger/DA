@@ -14,7 +14,6 @@
   height: 150px;
   opacity: 0.9;
   display: none;
-  line-height: 150px;
   position: absolute;
   width: 100%;
   top: 0;
@@ -22,7 +21,6 @@
   border-radius: 7px;
 }
 .card-shade img{
-  margin-right: 10px;
   cursor: pointer;
 }
 .card-content{

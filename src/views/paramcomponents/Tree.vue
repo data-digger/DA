@@ -1,17 +1,17 @@
 <template>
     <div>
-<!--         <div class='treeTitle'>{{treeName}}表字段</div>
-        <Tree :data="data" show-checkbox  @on-check-change='getCheckedNodes' ref='jj'></Tree> -->
-        <Card  style='margin: 10px;height:220px'>
-            <p slot="title">{{treeName}}表字段</p>
-            <Tree class='tree' :data="data" show-checkbox  @on-check-change='getCheckedNodes' ref='jj'></Tree>
-        </Card>
-        <Card  style='margin: 10px;height:230px'>
-            <p slot="title">参考sql</p><!-- <button @click="copyHtml()">copy</button> -->
-            <!-- <p v-html="sql" class='sqlBox' style='overflow-y: auto;height:170px'></p> -->
-            <p v-html="sql" class='sqlBox' id="text"></p>
-            <!-- <textarea id="input"></textarea> -->
-        </Card>
+      <Card class='card_field_tree'>
+        <div>
+          <p class='field_tree_title'>{{treeName}}表字段</p>
+          <Tree class='tree' :data="data" show-checkbox  @on-check-change='getCheckedNodes' ref='jj'></Tree>
+        </div>
+      </Card>
+      <Card  class='card_field_tree'>
+        <div>
+          <p class='field_tree_title'>参考sql</p>
+          <p v-html="sql" class='sqlBox' id="text"></p>
+        </div>
+      </Card>
     </div>
 </template>
 <script>
@@ -71,26 +71,23 @@
               Vue.sql =null;
             }
             
-          },
-          copyHtml(){
-            var html = $("#text").html();
-            var input = document.getElementById("input");
-            input.value = html; // 修改文本框的内容
-            input.select(); // 选中文本
-            document.execCommand("copy"); // 执行浏览器复制命令
-            alert("复制成功");            
           }
         },
     }
 </script>
 <style scoped>
   .tree{
-    height: 120px;
+    height: 180px;
     overflow-y: auto;
+    color: #ffffff;
+    padding: 0 0 10px 10px;
+    font-size: 12px;
   }
   .sqlBox{
-    height: 120px;
+    height: 180px;
     overflow-y: auto;
+    color:#ffffff;
+    padding: 10px;
   }
   #input {
     position: absolute;
@@ -98,5 +95,22 @@
     left: 0;
     opacity: 0;
     z-index: -10;
+  }
+  .card_field_tree{
+    margin: 10px;
+    height:220px;
+    background-color: #404c60;
+    border:0 !important;
+  }
+  .field_tree_title{
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    height:35px;
+    line-height: 35px;
+    color:#a0acbf;
+    padding-left: 5px;
+    font-size: 12px;
+    background-color: #57647a;
+    border-bottom: 1px solid #28313d;
   }
 </style>

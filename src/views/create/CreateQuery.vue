@@ -1,42 +1,37 @@
 <template>
-  <div>
+  <div id="createQuery">
     <Carousel v-model="value" :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
       <CarouselItem>
         <div class="demo-carousel">
-          <Row style="padding:15px 0px 0px 20px">
-            <Col span='11'>
-              <Form :label-width="60" style='margin:5px 5px 0px 0px;'>
+          <Row style="padding:0px 0px 0px 25px;">
+            <Col span='10'>
+              <Form style='margin:5px 10px 0px 10px;'>
                 <FormItem label="数据源" prop="dataSourceId">
-                    <Select class="form-control" v-model='bizView.dataSourceId' @on-change='selectTableFields'>         
-                        <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
-                    </Select>
+                  <Select class="form-control" v-model='bizView.dataSourceId' @on-change='selectTableFields' placeholder='选择数据源'>        
+                      <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
+                  </Select>
                 </FormItem>
               </Form>
               <treebox :datasourceId ='bizView.dataSourceId' :treeName='datasourceName'></treebox>             
             </Col>
-            <Col span='12'>
-              <Card  style='margin:10px'>
-                <p slot="title">sql定义</p><!-- <button @click="copyHtml()">copy</button> -->
-                <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
-                <p style='padding-left: 95%;'>
-                  <Tooltip content="预览表数据" placement="top-end" always>
-                    <Button type="ghost" shape="circle" icon="ios-search" @click='previewTable()'></Button>
-                  </Tooltip>
-                </p>
-              </Card>
+            <Col span='12' style='margin-top:40px;margin-left:10px'>
+              <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
+              <div class='preview_img' @click='previewTable()'><img src="./../../assets/img/page_preview.png"></div>
               <Modal
               v-model="modalPreview"
               width ="1200px"
               title="数据预览">
-                 <iviewtable :chartCmpContent='currentTableData' :pageSize='pageSize'></iviewtable>        
+                <iviewtable :chartCmpContent='currentTableData' :pageSize='pageSize'></iviewtable>        
               </Modal>
             </Col>
           </Row>
         </div>
       </CarouselItem>
+
+
       <CarouselItem>
         <div class="demo-carousel">
-           <Row>
+           <Row style='margin:10px;'>
             <Col span="24">
             <editquerytable :tableData ='currentTableData'></editquerytable>
             </Col>
@@ -64,10 +59,10 @@
         </div>
       </CarouselItem>
     </Carousel>
-    <Row  class='button'>
-      <Button type="primary" @click='pre()'>上一步</Button>
-      <Button v-if="!finished" type="primary" @click='next()'>下一步</Button>
-      <Button v-if="finished" type="primary" @click='save("bizView")'>保存</Button>
+    <Row  class='cd_button_box'>
+      <Button type="primary"  class='cd_button_pre' @click='pre()'>上一步</Button>
+      <Button v-if="!finished" type="primary" class='cd_button_next' @click='next()'>下一步</Button>
+      <Button v-if="finished" type="primary" class='cd_button_save' @click='save("bizView")'>保存</Button>
     </Row> 
   </div>
 </template>
@@ -235,6 +230,7 @@ export default {
         extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
         mode: {name: "text/x-mysql"},  
         dragDrop: true,
+        theme: "blackboard" 
       });
     },
     /*drag(ev){
@@ -321,28 +317,46 @@ export default {
 </script>
 
 <style scoped>
-  .param-span{
-    border: 1px solid #2d8cf0;
-    font-size: 13px;
-    color: #2d8cf0;
-    padding: 4px;
-    border-radius: 4px;
-    background-color: #ffffff;
-    margin-right:3px
-  }
-  .tableBox{
-    margin: -17px 20px;
-  }
-  .button {
-    text-align: center;
-    margin-top: 0;
-  }
-  .ivu-carousel{
-    height: 550px;
-    -webkit-user-select: text; 
-    -moz-user-select: text;
-    -ms-user-select: text;
-    user-select: text;
-  }
-
+.param-span{
+  border: 1px solid #2d8cf0;
+  font-size: 13px;
+  color: #2d8cf0;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  margin-right:3px
+}
+.tableBox{
+  margin: -17px 20px;
+}
+.cd_button_box{
+  text-align: center;
+  margin-top: 25px;
+}
+.cd_button_box button{
+  background-color: #008aff;
+  width: 150px;
+}
+.cd_button_box button:hover{
+  border:0;
+}
+.cd_button_pre{
+  margin-right: 15px;
+}
+.ivu-carousel{
+  height: 550px;
+  -webkit-user-select: text; 
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+.preview_img{
+  position: absolute;
+  z-index: 100;
+  bottom: 5px;
+  right: 20px;
+}
+.preview_img>img{
+  cursor: pointer;
+}
 </style>

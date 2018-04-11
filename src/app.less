@@ -1,0 +1,102 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    background: #f0f0f0;
+    overflow: hidden;
+}
+
+/* sql编辑器 */
+.CodeMirror{
+  height: 502px !important;
+  border-radius:4px;
+}
+.CodeMirror-hscrollbar{
+  overflow-x:auto;
+}
+/* sql编辑器blackbord主题背景色 */
+.cm-s-blackboard.CodeMirror{
+  background: #404c60;
+}
+.cm-s-blackboard .CodeMirror-gutters{
+  background: #57647a;
+}
+
+
+
+.app-main{
+    width: 100%;
+    height: 100%;
+}
+
+/* ivue notice提示 */
+.ivu-notice {
+    width: 366px;
+    top: 132px !important;
+    margin-right: 65px;
+    position: fixed;
+    z-index: 1010;
+}
+
+.ivu-checkbox-indeterminate .ivu-checkbox-inner {
+   background-color: #fff;
+   border-color:1px solid #dddee1;
+}
+.ivu-collapse-content-box{
+    overflow: visible;
+}
+.ivu-collapse-content{
+    overflow: visible !important; 
+}
+
+/* ivue菜单栏相关复写样式 */
+.ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu), .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):hover, .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu), .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title-active:not(.ivu-menu-submenu):hover {
+  border-right:0;
+  background-color: #2f3949;
+  color:#ffffff;
+  font-size: 12px;
+}
+.ivu-menu-dark.ivu-menu-vertical .ivu-menu-item, .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title {
+   
+    background-color: #2f3949;
+    color:#ffffff;
+    font-size: 12px;
+}
+.ivu-breadcrumb a,.ivu-breadcrumb>span:last-child,.ivu-breadcrumb-item-separator,.ivu-icon-arrow-down-b{
+  color:#b2b4c2;
+  font-size: 12px;
+}
+
+/* type为primary的按钮样式复写 */
+.ivu-btn-primary {
+  color: #fff;
+  background-color: #28313d;
+  border-color: #28313d;
+}
+
+.main-user-name{
+   color:#b2b4c2;
+}
+
+/* ivue表单label复写样式 */
+.ivu-form .ivu-form-item-label{
+  color:#a0acbf;
+}
+.ivu-form-item-required .ivu-form-item-label:before{
+  color:#ff5644;
+}
+
+/* ivue select复写样式 */
+.ivu-select-single .ivu-select-selection{
+  color:#ffffff;
+  background-color:#404c60;
+  border:0;
+}
+.ivu-select-visible .ivu-select-selection{
+  border:0;
+  box-shadow: 0 0 0 1px #738096;
+}
+
+/* ivue tree复写样式 */
+.ivu-tree-title{
+  color: #ffffff;
+}

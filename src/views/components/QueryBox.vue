@@ -1,22 +1,20 @@
-	<template >
-<!--   <Col :xs="8" :sm="8" :md="8" :lg="6">
-    <Card class='box-card'>
-        <p slot="title">{{querybox.alias}}</p>
-        <p class="box-desc" :title='querybox.desc'> {{querybox.desc}}</p>
-        <p><button @click='edit("/createQuery")'>编辑</button>
-        <button @click='preview()'>预览</button> </p>     
-    </Card> -->
-  <Col :xs="4" :sm="4" :md="4" :lg="4">
+<template >
+  <Col :xs="12" :sm="8" :md="8" :lg="4">
     <Card class='box-card' :id="'card'+querybox.name">
       <div class='card-content'  @mouseenter="enter()"> 
         <div style='height:30px'><img src="./../../assets/img/search.png"></div>
-        <div style='height:30px'>{{querybox.alias}}</div> 
+        <div style='height:30px;'>{{querybox.alias}}</div> 
       </div>
       <div :id='querybox.name' class='card-shade' @mouseleave="leave()">
-<!--         <Icon style='font-size:40px' type="edit" @click='edit()'></Icon>
-        <Icon style='font-size:40px' type="search"></Icon> -->
         <img src="./../../assets/img/edit.png" @click='edit()'>
-        <img src="./../../assets/img/info.png" @click='preview()'>
+        <img src="./../../assets/img/preview.png" @click='preview()'>
+        <Tooltip placement="right" transfer>
+          <img src="./../../assets/img/info.png">
+          <div slot="content">
+              <p>{{querybox.alias}}</p>
+              <p style='white-space: normal;'>{{querybox.desc}}</p>
+          </div>          
+        </Tooltip>
       </div>
     </Card>
     <Modal
@@ -127,6 +125,10 @@ export default {
 }
 .card-shade{
   background-color: #5b4227;
+  padding:60px 20px;
+}
+.card-shade>img:nth-child(2){
+  margin:0 15.5px;
 }
 .box-card{
   background-color: #ca8c4a;

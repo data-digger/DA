@@ -6,17 +6,18 @@ import Vue from 'vue';
 import iView from 'iview';
 import {router} from './router/index';
 import {appRouter} from './router/router';
-import 'vue2-animate/dist/vue2-animate.min.css';
 import store from './store';
 import App from './app.vue';
 import API from '@/libs/API.js';
 import util from './libs/util';
 import 'iview/dist/styles/iview.css';
 import "codemirror/lib/codemirror.css";
+import 'codemirror/theme/blackboard.css';
 import "@/assets/css/gridlayout.css";
 import "@/assets/css/global.css";
 
 Vue.use(iView);
+
 
 new Vue({
     el: '#app',

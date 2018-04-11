@@ -3,7 +3,7 @@
     <Row id='scroll-datasource' class="datasource">
       <Col>
         <div class="note note-datasource">
-          <h4 id='scroll-datasource' class="block " >数据源</h4> 
+          <h3 id='scroll-datasource' class="block " >数据源</h3> 
         </div>
       </Col>
       <Row class='cardBox'>
@@ -15,7 +15,7 @@
     <Row id='scroll-param'  class=" param">
       <Col>
         <div class="note note-param">
-          <h4 id='scroll-param' class="block ">参数管理</h4> 
+          <h3 id='scroll-param' class="block ">参数管理</h3> 
         </div>
       </Col>
       <Row class='cardBox'>
@@ -28,7 +28,7 @@
     <Row id='scroll-query'  class=" query">
       <Col>
         <div class="note note-query">
-          <h4 id='scroll-query' class="block ">查询器</h4>
+          <h3 id='scroll-query' class="block ">查询器</h3>
         </div>      
       </Col>
       <Row class='cardBox'>
@@ -41,7 +41,7 @@
     <Row id='scroll-chart'  class=" chart">
       <Col>
         <div class="note note-chart">
-          <h4 id='scroll-chart' class="block ">图表</h4>
+          <h3 id='scroll-chart' class="block ">图表</h3>
         </div>        
       </Col>
       <Row class='cardBox'>
@@ -54,7 +54,7 @@
     <Row id='scroll-table'  class=" table">
       <Col>
         <div class="note note-table">
-          <h4 id='scroll-table' class="block ">表格</h4>
+          <h3 id='scroll-table' class="block ">表格</h3>
         </div>
       </Col>
       <Row class='cardBox'>
@@ -66,7 +66,7 @@
     <Row  id='scroll-report' class=" report">
       <Col>
         <div class="note note-report">
-          <h4 id='scroll-report' class="block ">报表</h4>
+          <h3 id='scroll-report' class="block ">报表</h3>
         </div>
         </Col>
         <Row class='cardBox'>
@@ -76,7 +76,7 @@
     </Row>
     <ButtonGroup vertical class="demo-affix" style='right:18px;position:fixed;top:50%;'>
           <Tooltip class='monitor' :content="m.title" placement="left-end" v-for='(m,index) in monitor' :key='index'>
-             <div :id='m.id' @click='scroll(m.id)'><Icon :type="m.icon"></Icon></div>
+             <div :id='m.id' @click='scroll(m.id)'><img v-bind:src="m.src" style='width:50%;height:50%'></div>
           </Tooltip>
     </ButtonGroup>     
 </div>
@@ -101,12 +101,12 @@ export default {
       createReport:'/createReport',
       createTable:'/createTable',
       createParam:'/createParam',
-      monitor:[{title:'数据源' ,icon:'social-dropbox-outline',id:'scroll-datasource'},
-      {title:'参数' ,icon:'wrench',id:'scroll-param'},
-      {title:'查询器', icon:'search',id:'scroll-query'},
-      {title:'图表' ,icon:'connection-bars',id:'scroll-chart'},
-      {title:'表格' ,icon:'ios-grid-view',id:'scroll-table'},
-      {title:'报表', icon:'ios-paper-outline',id:'scroll-report'}],
+      monitor:[{title:'数据源' ,src:require('./../../assets/img/datasource_small.png'),id:'scroll-datasource'},
+      {title:'参数' ,src:require('./../../assets/img/parameter_small.png'),id:'scroll-param'},
+      {title:'查询器', src:require('./../../assets/img/search_small.png'),id:'scroll-query'},
+      {title:'图表' ,src:require('./../../assets/img/chart_small.png'),id:'scroll-chart'},
+      {title:'表格' ,src:require('./../../assets/img/table_small.png'),id:'scroll-table'},
+      {title:'报表', src:require('./../../assets/img/report_small.png'),id:'scroll-report'}],
       creator_datasource_id:'creator_datasource',
       creator_query_id:'creator_query',
       creator_param_id:'creator_param',
@@ -208,8 +208,7 @@ export default {
   margin:10px 20px;
 }
 .datasource,.report,.chart,.query,.table,.param{
-   margin:15px;
-   padding-top:10px;
+   margin:11px;
 }
 .note.note-datasource,
 .note.note-report,
@@ -218,34 +217,10 @@ export default {
 .note.note-table,
 .note.note-param{
   width: 100%;
-  color: gray;
+  color: #a0acbf;;
   margin-bottom: 0px;
   text-align: left;
 }
-/*.note.note-datasource{
-  background-color: #eef7ea;
-  border-color: #bbdba1;
-}
-.note.note-param{
-  background-color: #f1bec1;
-  border-color: #dca7b0;
-}
-.note.note-report{
-  background-color: #eef7fb;
-  border-color: #91d9e8;
-}
-.note.note-chart{
-  background-color: #f9f0f0;
-  border-color: #dca7b0;
-}
-.note.note-query{
-  background-color: #c5e3e1;
-  border-color: #45b6af;
-}
-.note.note-table{
-  background-color: #bbd5ef;
-  border-color: #569de7;
-}*/
 .note {
   margin: 0 0 20px 0;
   padding: 15px 30px 15px 15px;
@@ -256,11 +231,9 @@ export default {
   border-radius: 0 4px 4px 0;
 }
 .monitor{
-  width: 45px;
-  height: 45px;
-  /*background: rgba(163,166,167,.63);*/
-  background-color: #ffffff;
-  opacity: 0.3;
+  width: 40px;
+  height: 40px;
+  background: rgba(163,166,167,.63);
   text-align: center;
   cursor: pointer;
   line-height:45px;

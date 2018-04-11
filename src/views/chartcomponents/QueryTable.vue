@@ -1,16 +1,11 @@
 <template>
-  <div>
-    <Table 
-      :loading="loading" 
-      height='500' 
-      style='margin:20px 10px'
-      border 
-      :columns="columns" 
-      :data="currentTableData" 
-      ref='table'
-      :row-class-name="rowClassName" >   
-    </Table>
-  </div>
+  <Table 
+    :loading="loading" 
+    :columns="columns" 
+    :data="currentTableData" 
+    ref='table'
+    :row-class-name="rowClassName" >   
+  </Table>
 </template>
 <script>
 
@@ -199,9 +194,7 @@ export default {
       Vue.drawTable();
     },
     rowClassName (row, index){
-      if(index == 0){
-        return 'headRow';
-      }
+      return 'headRow';
     }
   },
 /*  beforeMount(){
@@ -211,8 +204,14 @@ export default {
 </script>
 
 
-<style scoped>
-/*.ivu-table .headRow td{
-  background-color: black !important;
-}*/
+<style>
+#createQuery .ivu-input{
+  border:1px solid #75839c;
+}
+.ivu-table .headRow td{
+  background-color: #404c60 !important;
+  color:#ffffff;
+  border-right: 1px solid #404c60;
+  border-bottom:1px solid #28313d;
+}
 </style>
