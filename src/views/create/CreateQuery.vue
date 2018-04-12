@@ -14,7 +14,8 @@
               </Form>
               <treebox :datasourceId ='bizView.dataSourceId' :treeName='datasourceName'></treebox>             
             </Col>
-            <Col span='12' style='margin-top:40px;margin-left:10px'>
+            <Col span='12' style='margin-top:12px;margin-left:10px'>
+              <p style='color:#a0acbf;height: 20px; margin-bottom: 5px;'>sql定义</p>
               <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
               <div class='preview_img' @click='previewTable()'><img src="./../../assets/img/page_preview.png"></div>
               <Modal
@@ -31,7 +32,7 @@
 
       <CarouselItem>
         <div class="demo-carousel">
-           <Row style='margin:10px;'>
+           <Row style="padding: 20px 40px 40px 20px;">
             <Col span="24">
             <editquerytable :tableData ='currentTableData'></editquerytable>
             </Col>
@@ -244,7 +245,7 @@ export default {
         let bizViewInfo = to.params.querybox;
         Vue.edit_currentTableData = to.params.fieldTableData;
         if(bizViewInfo != null){
-          Vue.bizView = bizViewInfo;   
+          Vue.bizView = bizViewInfo;
         }
       }
       if(Vue.isCreate == true){
@@ -330,8 +331,9 @@ export default {
   margin: -17px 20px;
 }
 .cd_button_box{
-  text-align: center;
-  margin-top: 25px;
+  position: fixed;
+  left: 45%;
+  bottom: 3%;
 }
 .cd_button_box button{
   background-color: #008aff;

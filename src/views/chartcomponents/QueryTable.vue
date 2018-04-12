@@ -1,16 +1,21 @@
 <template>
-  <Table 
-    :loading="loading" 
-    :columns="columns" 
-    :data="currentTableData" 
-    ref='table'
-    :row-class-name="rowClassName" >   
-  </Table>
+  <vbar wrapper="wrapper">
+    <Table 
+      :loading="loading" 
+      :columns="columns" 
+      :data="currentTableData" 
+      ref='table'
+      :row-class-name="rowClassName" >   
+    </Table>
+  </vbar>
 </template>
 <script>
-
+import vbar from 'v-bar'
 export default {
   props:['tableData'],
+  components:{
+    vbar
+  },
   watch:{
     'tableData':'refreshTableData'
   },
@@ -194,7 +199,12 @@ export default {
       Vue.drawTable();
     },
     rowClassName (row, index){
-      return 'headRow';
+      if(index ==0){
+        return 'tbody_first';
+      }
+      if(index % 2 == 1){
+        return 'headRow_even'
+      }
     }
   },
 /*  beforeMount(){
@@ -207,11 +217,48 @@ export default {
 <style>
 #createQuery .ivu-input{
   border:1px solid #75839c;
+  background-color:#404c60;
+  color:#ffffff;
 }
-.ivu-table .headRow td{
+#createQuery .ivu-table{
+  border-radius: 4px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.2);
+}
+#createQuery .ivu-table-wrapper{
+  border:0;
+}
+#createQuery .ivu-table,
+#createQuery .ivu-table:after,
+#createQuery .ivu-table:before{
+  background-color: #2f3949;
+}
+#createQuery .ivu-table th{
+  height: 35px;
+  background-color: #57647a !important;
+  color:#a0acbf;
+  border-bottom: 1px solid #6a788f;
+}
+#createQuery .ivu-table  td{
   background-color: #404c60 !important;
   color:#ffffff;
+  height: 70px;
   border-right: 1px solid #404c60;
   border-bottom:1px solid #28313d;
+}
+#createQuery .ivu-table .headRow_even td:nth-child(1){
+  border-left: 3px solid #e0604b;
+}
+#createQuery .ivu-table .tbody_first td{
+  border-top:1px solid #28313d;
+}
+#createQuery .ivu-table .ivu-checkbox-inner{
+  background-color: #404c60;
+  border-color: #ffffff;
+}
+#createQuery .ivu-table .ivu-table-body{
+  overflow: hidden;
+}
+.wrapper {
+  height: 520px;
 }
 </style>
