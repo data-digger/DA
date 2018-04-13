@@ -1,11 +1,11 @@
 <template>
   <Col :xs="12" :sm="8" :md="8" :lg="4">
-    <Card class='box-card' :id="'card'+reportbox.name">
+    <Card class='box-card' :id="'report'+reportbox.name">
       <div class='card-content'  @mouseenter="enter()">
         <div style='height:30px'><img src="./../../assets/img/report.png"></div>
         <div style='height:30px; text-overflow:ellipsis'>{{reportbox.alias}}</div>   
       </div>
-      <div :id='reportbox.name' class='card-shade' @mouseleave="leave()">
+      <div :id='"report_shade"+reportbox.name' class='card-shade' @mouseleave="leave()">
         <img src="./../../assets/img/edit.png">
         <img src="./../../assets/img/preview.png" @click='viewReport("/viewReport")'>
         <Tooltip placement="right" transfer>
@@ -27,13 +27,13 @@ export default {
       let Vue = this;
       $(".card-shade").css("display",'none');
       $(".box-card").css('-webkit-transform','scale(1)');
-      $('#'+Vue.reportbox.name).css("display",'block');
-      $('#card'+Vue.reportbox.name).css('-webkit-transform','scale(1.1)');
+      $('#report_shade'+Vue.reportbox.name).css("display",'block');
+      $('#report'+Vue.reportbox.name).css('-webkit-transform','scale(1.1)');
     },
     leave(){
       let Vue = this;
       $(".card-shade").css("display",'none');
-      $('#card'+Vue.reportbox.name).css('-webkit-transform','scale(1)');  
+      $('#report'+Vue.reportbox.name).css('-webkit-transform','scale(1)');  
     },
     viewReport(routerpath){
       this.$router.push({

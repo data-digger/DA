@@ -1,11 +1,11 @@
 <template >
   <Col :xs="12" :sm="8" :md="8" :lg="4">
-    <Card class='box-card' :id="'card'+parambox.name">
+    <Card class='box-card' :id="'param'+parambox.name">
       <div class='card-content'  @mouseenter="enter()"> 
         <div style='height:30px'><img src="./../../assets/img/parameter.png"></div>
         <div style='height:30px; text-overflow:ellipsis'>{{parambox.alias}}</div>          
       </div>
-      <div :id='parambox.name' class='card-shade' @mouseleave="leave()">
+      <div :id='"param_shade"+parambox.name' class='card-shade' @mouseleave="leave()">
         <img src="./../../assets/img/edit.png" @click='edit()'>
         <Tooltip placement="right" transfer>
           <img src="./../../assets/img/info.png">
@@ -36,13 +36,13 @@ export default {
       let Vue = this;
       $(".card-shade").css("display",'none');
       $(".box-card").css('-webkit-transform','scale(1)');
-      $('#'+Vue.parambox.name).css("display",'block');
-      $('#card'+Vue.parambox.name).css('-webkit-transform','scale(1.1)');
+      $('#param_shade'+Vue.parambox.name).css("display",'block');
+      $('#param'+Vue.parambox.name).css('-webkit-transform','scale(1.1)');
     },
     leave(){
       let Vue = this;
       $(".card-shade").css("display",'none');
-      $('#card'+Vue.parambox.name).css('-webkit-transform','scale(1)');  
+      $('#param'+Vue.parambox.name).css('-webkit-transform','scale(1)');  
     },
     edit(routerpath ){
       let Vue = this; 

@@ -1,11 +1,11 @@
 <template >
   <Col :xs="12" :sm="8" :md="8" :lg="4">
-    <Card class='box-card' :id="'card'+querybox.name">
+    <Card class='box-card' :id="'query'+querybox.name">
       <div class='card-content'  @mouseenter="enter()"> 
         <div style='height:30px'><img src="./../../assets/img/search.png"></div>
         <div style='height:30px;'>{{querybox.alias}}</div> 
       </div>
-      <div :id='querybox.name' class='card-shade' @mouseleave="leave()">
+      <div :id='"query_shade"+querybox.name' class='card-shade' @mouseleave="leave()">
         <img src="./../../assets/img/edit.png" @click='edit()'>
         <img src="./../../assets/img/preview.png" @click='preview()'>
         <Tooltip placement="right" transfer>
@@ -54,13 +54,13 @@ export default {
       let Vue = this;
       $(".card-shade").css("display",'none');
       $(".box-card").css('-webkit-transform','scale(1)');
-      $('#'+Vue.querybox.name).css("display",'block');
-      $('#card'+Vue.querybox.name).css('-webkit-transform','scale(1.1)');
+      $('#query_shade'+Vue.querybox.name).css("display",'block');
+      $('#query'+Vue.querybox.name).css('-webkit-transform','scale(1.1)');
     },
     leave(){
       let Vue = this;
       $(".card-shade").css("display",'none');
-      $('#card'+Vue.querybox.name).css('-webkit-transform','scale(1)');  
+      $('#query'+Vue.querybox.name).css('-webkit-transform','scale(1)');  
     },
     preview (){ 
       let Vue = this;

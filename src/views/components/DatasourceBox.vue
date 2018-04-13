@@ -1,11 +1,11 @@
 <template>
   <Col :xs="12" :sm="8" :md="8" :lg="4">
-    <Card class='box-card' :id="'card'+datasource.name">
+    <Card class='box-card' :id="'datasource'+datasource.name">
       <div class='card-content'  @mouseenter="enter()">
         <div style='height:30px'><img src="./../../assets/img/datasource.png"></div>
         <div style='height:30px;text-overflow:ellipsis;'>{{datasource.alias}}</div>  
       </div>
-      <div :id='datasource.name' class='card-shade' @mouseleave="leave()">
+      <div :id='"datasource_shade"+datasource.name' class='card-shade' @mouseleave="leave()">
         <img src="./../../assets/img/edit.png" @click='edit()'>
         <Tooltip placement="right" transfer>
           <img src="./../../assets/img/info.png">
@@ -35,13 +35,13 @@ export default {
       let Vue = this;
       $(".card-shade").css("display",'none');
       $(".box-card").css('-webkit-transform','scale(1)');
-      $('#'+Vue.datasource.name).css("display",'block');
-      $('#card'+Vue.datasource.name).css('-webkit-transform','scale(1.1)');
+      $('#datasource_shade'+Vue.datasource.name).css("display",'block');
+      $('#datasource'+Vue.datasource.name).css('-webkit-transform','scale(1.1)');
     },
     leave(event){
       let Vue = this;
       $(".card-shade").css("display",'none');
-      $('#card'+Vue.datasource.name).css('-webkit-transform','scale(1)');  
+      $('#datasource'+Vue.datasource.name).css('-webkit-transform','scale(1)');  
     },
     edit(routerpath ){
       let Vue = this; 

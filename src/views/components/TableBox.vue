@@ -1,11 +1,11 @@
 <template>
   <Col :xs="12" :sm="8" :md="8" :lg="4">
-    <Card class='box-card' :id="'card'+tablebox.name">
+    <Card class='box-card' :id="'table'+tablebox.name">
       <div class='card-content'  @mouseenter="enter()">    
         <div style='height:30px'><img src="./../../assets/img/table.png"></div>
         <div style='height:30px; text-overflow:ellipsis'>{{tablebox.alias}}</div> 
       </div>
-      <div :id='tablebox.name' class='card-shade' @mouseleave="leave()">
+      <div :id='"table_shade"+tablebox.name' class='card-shade' @mouseleave="leave()">
         <img src="./../../assets/img/edit.png" @click='edit()'>
         <img src="./../../assets/img/preview.png" @click='preview()'>
         <Tooltip placement="right" transfer>
@@ -54,13 +54,13 @@ export default {
       let Vue = this;
       $(".card-shade").css("display",'none');
       $(".box-card").css('-webkit-transform','scale(1)');
-      $('#'+Vue.tablebox.name).css("display",'block');
-      $('#card'+Vue.tablebox.name).css('-webkit-transform','scale(1.1)');
+      $('#table_shade'+Vue.tablebox.name).css("display",'block');
+      $('#table'+Vue.tablebox.name).css('-webkit-transform','scale(1.1)');
     },
     leave(){
       let Vue = this;
       $(".card-shade").css("display",'none');
-      $('#card'+Vue.tablebox.name).css('-webkit-transform','scale(1)');  
+      $('#table'+Vue.tablebox.name).css('-webkit-transform','scale(1)');  
     },
     preview(){
       let Vue = this;

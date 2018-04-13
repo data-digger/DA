@@ -1,11 +1,11 @@
 <template>
   <Col :xs="12" :sm="8" :md="8" :lg="4">
-    <Card class='box-card' :id="'card'+chartbox.name">
+    <Card class='box-card' :id="'chart'+chartbox.name">
       <div class='card-content'  @mouseenter="enter()">
         <div style='height:30px'><img src="./../../assets/img/chart.png"></div>
         <div style='height:30px ; text-overflow:ellipsis'>{{chartbox.alias}}</div>   
       </div>
-      <div :id='chartbox.name' class='card-shade' @mouseleave="leave()">
+      <div :id='"chart_shade"+chartbox.name' class='card-shade' @mouseleave="leave()">
         <img src="./../../assets/img/edit.png" @click='edit()'>
         <img src="./../../assets/img/preview.png" @click='preview()'>
         <Tooltip placement="right" transfer>
@@ -76,13 +76,13 @@ export default {
       let Vue = this;
       $(".card-shade").css("display",'none');
       $(".box-card").css('-webkit-transform','scale(1)');
-      $('#'+Vue.chartbox.name).css("display",'block');
-      $('#card'+Vue.chartbox.name).css('-webkit-transform','scale(1.1)');
+      $('#chart_shade'+Vue.chartbox.name).css("display",'block');
+      $('#chart'+Vue.chartbox.name).css('-webkit-transform','scale(1.1)');
     },
     leave(){
       let Vue = this;
       $(".card-shade").css("display",'none');
-      $('#card'+Vue.chartbox.name).css('-webkit-transform','scale(1)');  
+      $('#chart'+Vue.chartbox.name).css('-webkit-transform','scale(1)');  
     },
     preview (){ 
       let Vue = this;
