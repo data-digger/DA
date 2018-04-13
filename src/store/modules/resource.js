@@ -24,7 +24,9 @@ const state = {
   },
   layoutSelected:"布局1",
   //查询器字段编辑表
-  query_fieldEdit_table:[]
+  query_fieldEdit_table:[],
+  dimensions:[],
+  metrics:[],
 }
 
 // getters
@@ -37,7 +39,9 @@ const getters = {
   tableList: state => state.tableList,
   layoutSelected: state => state.layoutSelected,
   report: state => state.report,
-  query_fieldEdit_table: state => state.query_fieldEdit_table
+  query_fieldEdit_table: state => state.query_fieldEdit_table,
+  dimensions: state => state.dimensions,
+  metrics: state => state.metrics,
 }
 
 // actions
@@ -126,6 +130,12 @@ const mutations = {
   },
   save_query_fieldEdit_table(state,param){
     state.query_fieldEdit_table = param;
+  },
+  setdimensions(state,param){
+    state.dimensions = param;
+  },
+  setmetrics(state,param){
+    state.metrics = param;
   }
 }
 

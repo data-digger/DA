@@ -7,7 +7,7 @@
             <FormItem prop="xAxis">
                 XAxis
                 <Select class="form-control" v-model='selectdOption.xAxis.data'>               
-                    <Option v-for='item in data' :key='item' :value="item" >{{item}}</Option>
+                    <Option v-for='item in dimensions' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
                 </Select>
             </FormItem>
         </Col>
@@ -15,7 +15,7 @@
             <FormItem prop="yAxis">
                 YAxis
                 <Select v-model="selectedY" multiple>
-                    <Option v-for='item in data' :key='item' :value="item">{{item}}</Option>
+                    <Option v-for='item in metrics' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
                 </Select>
             </FormItem>
         </Col> 
@@ -54,9 +54,14 @@
 </template>
 <script>
 import ChartTemplate from './../../libs/ChartTemplate.js'
+import {mapGetters} from 'vuex'
 export default {
     props:['data'],
     computed: {
+      ...mapGetters({
+        dimensions:'dimensions',
+        metrics:'metrics',
+      }),
       COLORS : function(){
           return ChartTemplate.COLORS;
       }

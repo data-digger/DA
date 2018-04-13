@@ -1,48 +1,62 @@
 <template>
     <Row style="padding:20px">
-      <Col span="4">
-          <FieldList :colNames="colNames"></FieldList>
-        </Col>
-        <Col span="7">
-            <Form id="createChart" ref="myChart" :model="myChart" :rules="ruleValidate" :label-width="80">
-              <FormItem label="名称" prop="name">
-                  <Input v-model="myChart.name" placeholder="输入名称" :disabled="!isNew"></Input>
-              </FormItem>
-              <FormItem label="别名" prop="alias">
-                  <Input v-model="myChart.alias" placeholder="输入别名"></Input>
-              </FormItem>
-              <FormItem label="描述" prop="desc">
-                  <Input v-model="myChart.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter chart descript..."></Input>
-              </FormItem>
-              <FormItem label="查询器" prop="bizViewId">
-                  <Select class="form-control" v-model='myChart.bizViewId'>               
-                      <Option v-for = 'q in queryList' :key='q.id' :name='q.name' :value="q.id" >{{q.name}}</option>
-                  </Select>
-              </FormItem>
-               <FormItem label="类型" prop="type">
-                <RadioGroup v-model="myChart.type" type="button">
-                  <Tooltip v-for="T in chartType" :content="T.desc" :key="T.type" placement="top">
-                      <Radio :label="T.type">
-                          <img v-bind:src="T.src">
-                      </Radio>
-                  </Tooltip> 
-                </RadioGroup>
-              </FormItem>
-              <FormItem label="图表选项" prop="defineJSON">
-                  <component ref='optionSelected' :is="chartComponent" :data="colNames" @getSelectedOption = 'setOption'></component>
-              </FormItem>
-              <FormItem>
-                  <Button type="ghost" shape="circle" icon="ios-search"  @click="previewChart"></Button>
-                  <Button type="primary" @click="saveChart">保存</Button>
-                  <Button type="ghost" style="margin-left: 8px" @click="handleReset">重置</Button>
-              </FormItem> 
-          </Form>
-        </Col>
-        <Col span="12" offset="1">
-          <Row>筛选器<FilterOption :filters="filters"></FilterOption></Row>
-          <Row><component v-show='paramShow'  class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component></Row>   
-          <Row><component v-show='chartPreview' ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption' :styles='styles'></component></Row>  
-        </Col>
+      <Carousel v-model="value" :dots="carouselSetting.dots" :arrow="carouselSetting.arrow" ref='slide'>
+      <CarouselItem>
+        <Col span="4">
+             <FieldList :columns="columns"></FieldList> 
+          </Col>
+          <Col span="7">
+              <Form id="chartOption" ref="chartOption" :model="myChart" :rules="ruleValidate" :label-width="80">
+                <FormItem label="查询器" prop="bizViewId">
+                    <Select class="form-control" v-model='myChart.bizViewId'>               
+                        <Option v-for = 'q in queryList' :key='q.id' :name='q.name' :value="q.id" >{{q.name}}</option>
+                    </Select>
+                </FormItem>
+                <FormItem label="类型" prop="type">
+                  <RadioGroup v-model="myChart.type" type="button">
+                    <Tooltip v-for="T in chartType" :content="T.desc" :key="T.type" placement="top">
+                        <Radio :label="T.type">
+                            <img v-bind:src="T.src">
+                        </Radio>
+                    </Tooltip> 
+                  </RadioGroup>
+                </FormItem>
+                <FormItem label="图表选项" prop="defineJSON">
+                    <component ref='optionSelected' :is="chartComponent" @getSelectedOption = 'setOption'></component>
+                </FormItem>
+                <FormItem>
+                    <Button type="ghost" shape="circle" icon="ios-search"  @click="previewChart"></Button>
+                    <Button type="ghost" style="margin-left: 8px" @click="handleReset">重置</Button>
+                </FormItem> 
+            </Form>
+          </Col>
+          <Col span="12" offset="1">  
+            <Row><component v-show='chartPreview' ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption' :styles='styles'></component></Row>  
+          </Col>
+        </CarouselItem>
+        <CarouselItem>
+          <Row  style="padding:20px 20px">
+              <Col span="24">
+                <Form id="chartInfo" ref="chartInfo" :model="myChart" :rules="ruleValidate" :label-width="80">
+                     <FormItem label="名称" prop="name">
+                        <Input v-model="myChart.name" placeholder="输入名称" :disabled="!isNew"></Input>
+                    </FormItem>
+                    <FormItem label="别名" prop="alias">
+                      <Input v-model="myChart.alias" placeholder="输入别名"></Input>
+                    </FormItem>
+                    <FormItem label="描述" prop="desc">
+                      <Input v-model="myChart.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter chart descript..."></Input>
+                    </FormItem>
+                </Form>
+              </Col>
+            </Row>
+      </CarouselItem>
+      </Carousel>
+      <Row  class='cd_button_box'>
+        <Button type="primary"  class='cd_button_pre' @click='pre()'>上一步</Button>
+        <Button v-if="!finished" type="primary" class='cd_button_next' @click='next()'>下一步</Button>
+        <Button v-if="finished" type="primary" class='cd_button_save' @click="saveChart">保存</Button>
+      </Row> 
     </Row>
 </template>
 
@@ -89,12 +103,19 @@ export default {
     return {
       isNew:true,
       isInit:true,
-      paramComponent:[],
-      paramSelected:null,
-      paramShow:false,
+      //paramComponent:[],
+      //paramSelected:null,
+      //paramShow:false,
       chartPreview:false,
-      colNames:[],
-      filters:[{name:'',defineJSON:''}],
+      columns:[],
+      value:0,
+      carouselSetting:{
+        height:"200",
+        dots:"none",
+        arrow:"never",
+      },
+      finished:false,
+      //filters:[{name:'',defineJSON:''}],
       queryData:null,
       eoption:null,
       chartType:ChartTemplate.TYPE,
@@ -162,9 +183,26 @@ export default {
     }
   },
   　watch:{
-　　　'myChart.bizViewId': 'getQueryData',
+　　　//'myChart.bizViewId': 'getQueryData',
+     'myChart.bizViewId': 'getFieldList',
 　},
   methods:{
+     pre:function(){
+        let Vue = this;
+        if(Vue.value !=0){
+          Vue.$refs.slide.arrowEvent(-1);
+          Vue.finished = false;
+        }
+     },
+     next() {
+      let Vue = this;
+      if(Vue.value <2){
+        Vue.$refs.slide.arrowEvent(1);
+        if(Vue.value == 1){
+          Vue.finished = true;
+        }
+      }
+    },
      initChartData:function(to,from){
       let Vue = this;
       Vue.isInit = true;
@@ -179,7 +217,7 @@ export default {
         Vue.myChart = to.params;
         Vue.$nextTick(function(){
         Vue.$refs['optionSelected'].setData(to.params.defineJSON)
-        Vue.getQueryData();
+        //Vue.getQueryData();
        }) 
       }
       
@@ -198,7 +236,7 @@ export default {
             Vue.AxiosPost("previewBizView",{'bizViewId':Vue.myChart.bizViewId},
               function(response){
                 Vue.queryData = response.data.gridData;
-                Vue.colNames = Vue.queryData.stringHeaders;
+                //Vue.colNames = Vue.queryData.stringHeaders;
                 Vue.initParameters(response);
                  if(!Vue.isNew && Vue.isInit){ //编辑状态并且初始化状态需要在获取数据后初始化图表
                   Vue.previewChart();
@@ -209,6 +247,18 @@ export default {
         }
         
       },
+    getFieldList:function(){
+      let Vue = this;
+      if (Vue.myChart.bizViewId != ''){
+            Vue.AxiosPost("getFieldTable",{'bizviewId':Vue.myChart.bizViewId},
+              function(response){
+                if(response.data.success){
+                  Vue.columns = response.data.content;
+                }
+                
+            })
+        }
+    },
     initParameters(response){
       let Vue = this;
       Vue.paramComponent = [];
@@ -344,4 +394,19 @@ export default {
    display: inline-block;
    margin: 0px 3px;
   }
+.cd_button_box{
+  position: fixed;
+  left: 45%;
+  bottom: 3%;
+}
+.cd_button_box button{
+  background-color: #008aff;
+  width: 150px;
+}
+.cd_button_box button:hover{
+  border:0;
+}
+.cd_button_pre{
+  margin-right: 15px;
+}
 </style>
