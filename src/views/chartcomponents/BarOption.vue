@@ -7,7 +7,7 @@
             <FormItem prop="xAxis">
                 XAxis
                 <Select class="form-control" v-model='selectdOption.xAxis.data'>               
-                    <Option v-for='item in dimensions' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
+                    <Option v-for='item in groupbyList' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
                 </Select>
             </FormItem>
         </Col>
@@ -61,6 +61,7 @@ export default {
       ...mapGetters({
         dimensions:'dimensions',
         metrics:'metrics',
+        groupbyList:'groupbyList'
       }),
       COLORS : function(){
           return ChartTemplate.COLORS;

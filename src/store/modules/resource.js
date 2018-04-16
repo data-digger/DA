@@ -25,8 +25,10 @@ const state = {
   layoutSelected:"布局1",
   //查询器字段编辑表
   query_fieldEdit_table:[],
-  dimensions:[],
-  metrics:[],
+  dimensions:[], //维度字段集合
+  metrics:[], //度量字段集合
+  filterableList:[],  //可过滤字段集合
+  groupbyList:[], //可排序字段集合
 }
 
 // getters
@@ -42,6 +44,8 @@ const getters = {
   query_fieldEdit_table: state => state.query_fieldEdit_table,
   dimensions: state => state.dimensions,
   metrics: state => state.metrics,
+  filterableList: state => state.filterableList,
+  groupbyList: state => state.groupbyList
 }
 
 // actions
@@ -136,6 +140,12 @@ const mutations = {
   },
   setmetrics(state,param){
     state.metrics = param;
+  },
+  setfilterableList(state,param){
+    state.filterableList = param;
+  },
+  setgroupbyList(state,param){
+    state.groupbyList = param;
   }
 }
 

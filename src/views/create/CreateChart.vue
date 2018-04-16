@@ -2,10 +2,10 @@
     <Row style="padding:20px">
       <Carousel v-model="value" :dots="carouselSetting.dots" :arrow="carouselSetting.arrow" ref='slide'>
       <CarouselItem>
-        <Col span="4">
-             <FieldList :columns="columns"></FieldList> 
+        <Col span="6">
+             <FieldList :columns="columns"></FieldList>
           </Col>
-          <Col span="7">
+          <Col span="6">
               <Form id="chartOption" ref="chartOption" :model="myChart" :rules="ruleValidate" :label-width="80">
                 <FormItem label="查询器" prop="bizViewId">
                     <Select class="form-control" v-model='myChart.bizViewId'>               
@@ -30,7 +30,7 @@
                 </FormItem> 
             </Form>
           </Col>
-          <Col span="12" offset="1">  
+          <Col span="11" offset="1">  
             <Row><component v-show='chartPreview' ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption' :styles='styles'></component></Row>  
           </Col>
         </CarouselItem>
@@ -79,7 +79,6 @@ import RingOption from './../chartcomponents/RingOption'
 import StackOption from './../chartcomponents/StackOption'
 import ChinaMapOption from './../chartcomponents/ChinaOption'
 import FieldList from './../chartcomponents/FieldList'
-import FilterOption from './../chartcomponents/Filter'
 
 export default {
   name: 'createChart',
@@ -97,7 +96,6 @@ export default {
     StackOption,
     ChinaMapOption,
     FieldList,
-    FilterOption
   },
   data () {
     return {
