@@ -186,6 +186,7 @@ export default {
     /*添加计算字段*/
     add_calculatedfield(){
       let Vue = this;
+      Vue.cancel_addCalculatedfield();
       Vue.addcalculatedField_show = true;
       Vue.create_button = true;
       Vue.column_disabled = false;
