@@ -7,7 +7,7 @@
           <Form ref='calculatedfield' :rules="ruleValidate">
             <Col span='22'>
               <FormItem label="columnName" :label-width="100" prop="columnName">
-                <Input v-model='modal_addField_obj.columnName' placeholder="Enter something..."></Input>
+                <Input v-model='modal_addField_obj.columnName' :disabled='column_disabled' placeholder="Enter something..."></Input>
               </FormItem> 
               <FormItem label="alias" :label-width="80" prop="alias">
                 <Input v-model='modal_addField_obj.columnAlias' placeholder="Enter something..."></Input>
@@ -43,19 +43,19 @@
                 <Checkbox v-model='modal_addField_obj.max' :true-value ='1' :false-value ='0'></Checkbox>
               </FormItem>
             </Col>          
-            <Col span='20'>
+            <Col span='20' v-show='modal_addField_obj.category == 1 ? true:false'>
               <FormItem label="Expression" :label-width="80">
                 <Input type='textarea' @on-focus='Spin_type_f' placeholder="a valid SQL expression as support by the underlying backend.Example:substr(name,1,1)" v-model='modal_addField_obj.expression'></Input>
               </FormItem>
             </Col>
             <!-- <Col span='2' style='padding:10px 10px'><Button @click='intoType()' type="primary">生成type</Button></Col> -->
-            <Col span='12'>
+            <Col span='12'  v-show='modal_addField_obj.category == 1 ? true:false'>
               <FormItem label="type" :label-width="80">
                 <Input v-model='modal_addField_obj.columnType' @on-focus='intoType'  placeholder="Enter something..."></Input>
               </FormItem> 
             </Col>
-            <Col span='1' style='margin-top:8px'>
-              <Spin  v-if='Spin_type' >
+            <Col span='1' style='margin-top:8px' v-show='modal_addField_obj.category == 1 ? true:false'>
+              <Spin  v-if='Spin_type'>
                 <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
               </Spin>
               <Spin  v-if='Spin_type_s' >
@@ -135,6 +135,7 @@ export default {
       create_button:true,
       addcalculatedField_show:false,
       calculatedFieldPreview:false,
+      column_disabled:false,
       calculatedfieldData:null,
       modal_addField_obj:{},
       columns:[],
@@ -154,6 +155,7 @@ export default {
       Vue.Spin_type = true;
       Vue.Spin_type_s = false;
     },
+
     /*根据所填写的expression判断类型*/
     intoType(){
       let Vue = this;
@@ -174,16 +176,19 @@ export default {
         }
       )        
     },
+
     /*预览计算字段表数据*/
     preview_calculatedfield(){
       let Vue = this;
       Vue.calculatedFieldPreview = true;
     },
+
     /*添加计算字段*/
     add_calculatedfield(){
       let Vue = this;
       Vue.addcalculatedField_show = true;
       Vue.create_button = true;
+      Vue.column_disabled = false;
       Vue.modal_addField_obj = {
         'columnName':null,
         'columnType':null,
@@ -198,6 +203,7 @@ export default {
         'expression':null
       }
     },
+
     /*保存计算字段并插入到字段表中*/
     save_calculatedfield(calculatedfield){
       let Vue = this;
@@ -210,6 +216,7 @@ export default {
         }
       })  
     },
+
     /*更新计算字段*/
     update_calculatedfield(){
       let Vue = this;
@@ -222,11 +229,13 @@ export default {
         Vue.refreshTableData();
       })
     },
+
     /*取消添加字段操作*/
     cancel_addCalculatedfield(){
       let Vue = this;
       Vue.addcalculatedField_show = false;
     },
+
     /*画表*/
     drawTable (){
       let Vue = this;
@@ -243,8 +252,10 @@ export default {
             },
             nativeOn:{
               'click':(event)=>{
+                Vue.cancel_addCalculatedfield();
                 Vue.addcalculatedField_show = true;
                 Vue.create_button = false;
+                Vue.column_disabled = true;
                 Vue.modal_addField_obj.columnName = params.row.columnName;
                 Vue.modal_addField_obj.columnType = params.row.columnType;
                 Vue.modal_addField_obj.columnAlias = params.row.columnAlias;
@@ -421,16 +432,21 @@ export default {
       Vue.columns = cols; 
     }       
     },
-    //保存表编辑
+
+    /*保存表编辑*/
     saveEdit(){
       let Vue = this;
       //将字段编辑表数据存储到store
       Vue.$store.commit("save_query_fieldEdit_table",Vue.currentTableData);        
     },
+
+    /*刷新表数据*/
     refreshTableData(){
       let Vue = this;
       Vue.drawTable();
     },
+    
+    /*表格行样式*/
     rowClassName (row, index){
       if(index ==0){
         return 'tbody_first';
