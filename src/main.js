@@ -12,7 +12,6 @@ import API from '@/libs/API.js';
 import util from './libs/util';
 import 'iview/dist/styles/iview.css';
 import "codemirror/lib/codemirror.css";
-import 'codemirror/theme/blackboard.css';
 import "@/assets/css/gridlayout.css";
 import "@/assets/css/global.css";
 
@@ -65,7 +64,7 @@ Vue.prototype.AxiosPost = function (fun, data, success,failed) {
     .catch(function (error) {
         console.log(error);
         if(failed){
-            failed(error);
+            failed();
         }else{
             V.$Message.error(error.response.data.content);
         }

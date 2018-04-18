@@ -11,7 +11,7 @@
         <Tooltip placement="right" transfer>
           <img src="./../../assets/img/info.png">
           <div slot="content">
-              <p>{{tablebox.alias}}</p>
+              <p style='font-size:14px'>{{tablebox.alias}}</p>
               <p style='white-space: normal;'>{{tablebox.desc}}</p>
           </div>          
         </Tooltip>
@@ -119,13 +119,14 @@ export default {
   margin: 0px 3px;
 }
 .card-shade{
-  background-color: #2b4270;
+  background-color: #4871da;
+  opacity: 0.9;
   padding:60px 20px;
 }
 .card-shade>img:nth-child(2){
   margin:0 15.5px;
 }
 .box-card{
-  background-color: #3d6bc8;
+  background-color: #5b82e5;
 }
 </style>

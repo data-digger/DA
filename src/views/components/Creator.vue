@@ -2,7 +2,7 @@
   <Col :xs="4" :sm="4" :md="4" :lg="4">
     <Card class='box-card' :id='id' >
       <div class='card-content' @mouseenter="enter()" @mouseleave="leave()">
-        <p @click="create(routerpath)" style='text-align:center'><Icon style='color:#a6b4cb' class='newbuild'type="plus"></Icon></p> 
+        <p @click="create(routerpath)" style='text-align:center'><Icon style='color: #adb4c2;' class='newbuild'type="plus"></Icon></p> 
       </div>
     </Card>
   </Col>
@@ -43,6 +43,6 @@ export default {
   cursor: pointer;
 }
 .box-card{
-  background-color: #354052;
+  background-color: #ffffff;
 }
 </style>

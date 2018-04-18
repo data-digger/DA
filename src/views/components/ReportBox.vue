@@ -11,7 +11,7 @@
         <Tooltip placement="right" transfer>
           <img src="./../../assets/img/info.png">
           <div slot="content">
-              <p>{{reportbox.alias}}</p>
+              <p style='font-size:14px'>{{reportbox.alias}}</p>
               <p style='white-space: normal;'>{{reportbox.desc}}</p>
           </div>          
         </Tooltip>
@@ -49,10 +49,11 @@ export default {
 
 <style scoped>
 .box-card{
-  background-color: #e26f4c;
+  background-color: #e87653;
 }
 .card-shade{
-  background-color: #683c2f;
+  background-color: #e0592f;
+  opacity: 0.9;
   padding:60px 20px;
 }
 .card-shade>img:nth-child(2){

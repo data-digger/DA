@@ -11,7 +11,7 @@
         <Tooltip placement="right" transfer>
           <img src="./../../assets/img/info.png">
           <div slot="content">
-              <p>{{chartbox.alias}}</p>
+              <p style='font-size:14px'>{{chartbox.alias}}</p>
               <p style='white-space: normal;'>{{chartbox.desc}}</p>
           </div>          
         </Tooltip>
@@ -166,13 +166,14 @@ export default {
   cursor: pointer;
 }
 .card-shade{
-  background-color: #1c5557;
+  background-color: #0aabb1;
+  opacity: 0.9;
   padding: 60px 20px;
 }
 .card-shade>img:nth-child(2){
   margin:0 15.5px;
 }
 .box-card{
-  background-color: #19969a;
+  background-color: #1ebbc1;
 }
   </style>

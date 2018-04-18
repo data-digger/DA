@@ -1,16 +1,16 @@
 <template>
     <div>
       <Card class='card_field_tree'>
+        <p  slot="title" >{{treeName}}表字段</p>
         <div>
-          <p class='field_tree_title'>{{treeName}}表字段</p>
           <vbar wrapper="wrapper">
             <Tree class='tree' :data="data" show-checkbox  @on-check-change='getCheckedNodes' ref='jj'></Tree>
           </vbar>
         </div>
       </Card>
       <Card  class='card_field_tree'>
+        <p slot="title"  >参考sql</p>
         <div>
-          <p class='field_tree_title'>参考sql</p>
           <vbar wrapper="wrapper">
             <p v-html="sql" class='sqlBox' id="text"></p>
           </vbar>
@@ -92,16 +92,14 @@ import vbar from 'v-bar'
 </script>
 <style scoped>
   #createQuery .ivu-tree.tree{
-    color: #ffffff;
     padding: 0 0 10px 10px;
     font-size: 12px;
   }
   .sqlBox{
-    color:#ffffff;
-    padding: 10px;
+    padding: 0 0 10px 10px;
   }
   .wrapper {
-    height: 180px;
+    height: 140px;
   }
   #input {
     position: absolute;
@@ -113,18 +111,12 @@ import vbar from 'v-bar'
   .card_field_tree{
     margin: 10px;
     height:220px;
-    background-color: #404c60;
     border:0 !important;
   }
   .field_tree_title{
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
     height:35px;
-    line-height: 35px;
-    color:#a0acbf;
     padding-left: 5px;
     font-size: 12px;
-    background-color: #57647a;
     border-bottom: 1px solid #28313d;
   }
 </style>

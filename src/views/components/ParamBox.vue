@@ -10,7 +10,7 @@
         <Tooltip placement="right" transfer>
           <img src="./../../assets/img/info.png">
           <div slot="content">
-              <p>{{parambox.alias}}</p>
+              <p style='font-size:14px'>{{parambox.alias}}</p>
               <p style='white-space: normal;'>{{parambox.desc}}</p>
           </div>          
         </Tooltip>
@@ -61,13 +61,14 @@ export default {
   cursor: pointer;
 }
 .card-shade{
-  background-color: #294c41;
+  background-color: #0f9171;
+  opacity: 0.9;
   padding:60px 40px;
 }
 .card-shade>img:nth-child(1){
   margin-right:24px;
 }
 .box-card{
-  background-color: #25aa80;
+  background-color: #22b687;
 }
 </style>

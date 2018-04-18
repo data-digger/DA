@@ -1,5 +1,5 @@
 <template>
-  <Col :xs="12" :sm="8" :md="8" :lg="4">
+  <Col :xs="12" :sm="8" :md="8" :lg="4" id='datasourceBox'>
     <Card class='box-card' :id="'datasource'+datasource.name">
       <div class='card-content'  @mouseenter="enter()">
         <div style='height:30px'><img src="./../../assets/img/datasource.png"></div>
@@ -10,7 +10,7 @@
         <Tooltip placement="right" transfer>
           <img src="./../../assets/img/info.png">
           <div slot="content">
-              <p>{{datasource.alias}}</p>
+              <p style='font-size:14px'>{{datasource.alias}}</p>
               <p style='white-space: normal;'>{{datasource.desc}}</p>
           </div>          
         </Tooltip>
@@ -62,10 +62,11 @@ export default {
   display: inline-block;
 }
 .card-shade{
-  background-color: #0e548e;
+  background-color: #008cdd;
+  opacity: 0.9;
   padding: 60px 40px;
 }
 .box-card{
-  background-color: #0096ff;
+  background-color: #00a2ff;
 }
 </style>

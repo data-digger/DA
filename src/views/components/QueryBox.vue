@@ -11,7 +11,7 @@
         <Tooltip placement="right" transfer>
           <img src="./../../assets/img/info.png">
           <div slot="content">
-              <p>{{querybox.alias}}</p>
+              <p style='font-size:14px'>{{querybox.alias}}</p>
               <p style='white-space: normal;'>{{querybox.desc}}</p>
           </div>          
         </Tooltip>
@@ -124,13 +124,14 @@ export default {
  margin: 0px 3px;
 }
 .card-shade{
-  background-color: #5b4227;
+  background-color: #d0912e;
+  opacity: 0.9;
   padding:60px 20px;
 }
 .card-shade>img:nth-child(2){
   margin:0 15.5px;
 }
 .box-card{
-  background-color: #ca8c4a;
+  background-color: #e2ab4c;
 }
 </style>

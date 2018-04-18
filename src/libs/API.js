@@ -8,7 +8,6 @@ window.urlConf = {
     save: `${window.uri}/datasource/save`,
     gettables: `${window.uri}/datasource/gettables`,
   },
-  
   bizview: {
     list:`${window.uri}/bizview/list`,
     save: `${window.uri}/bizview/save`,
@@ -16,6 +15,8 @@ window.urlConf = {
     preview:`${window.uri}/bizview/preview/id`,
     update: `${window.uri}/bizview/update`,
     columnList:`${window.uri}/bizview/column/list`,
+    calculatedfield:`${window.uri}/bizview/column/calculatedfield/preview`,
+    update_calculatedfield:`${window.uri}/bizview/column/save`,
   },
   chart: {
     list:`${window.uri}/chart/list`,
@@ -67,7 +68,7 @@ export default {
     getDatasourceList(params){
    	 return axios.post(urlConf.datasource.list, params); 
    },
-   /*获取数据表和字段*/
+   /*获取数据表和字段树*/
     getTablesTree(params){
      return axios.post(urlConf.datasource.gettables, params); 
    },
@@ -78,6 +79,14 @@ export default {
    /*获取查询器列表*/
     getQueryList(params){
    	 return axios.post(urlConf.bizview.list, params); 
+    },
+    /*新建计算字段后返回计算字段数据类型和数据*/
+    calculatedfield(params){
+      return axios.post(urlConf.bizview.calculatedfield, params); 
+    },
+    /*更新计算字段*/
+    update_calculatedfield(params){
+      return axios.post(urlConf.bizview.update_calculatedfield, params);
     },
     /*预览查询器中包含字段表的数据*/
     previewBizView_extra(params){

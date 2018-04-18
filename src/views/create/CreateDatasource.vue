@@ -51,8 +51,8 @@
             <Input v-model="datasource.desc" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="Enter something..."></Input>
         </FormItem>   
         <FormItem class='cd_button_box'>
-            <Button type="primary" class='cd_button_submit' @click="createDatasource('datasource')">提交</Button>
-            <Button type="primary" class='cd_button_reset' @click="handleReset('datasource')">重置</Button>
+            <Button type="primary" @click="createDatasource('datasource')">提交</Button>
+            <Button type="primary" @click="handleReset('datasource')">重置</Button>
         </FormItem>     
       </Col>
     </Form>
@@ -184,14 +184,9 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
 .createDatasource{
   padding: 40px 77px 0px 14px;
-}
-.ivu-input{
-  background-color: #404c60 !important;
-  color: #ffffff !important;
-  border:0;
 }
 .ivu-input:focus{
   box-shadow: 0 0 0 1px #738096;
@@ -201,16 +196,7 @@
 }
 .cd_button_box button{
   width: 150px;
-}
-.cd_button_box button:hover{
-  border:0;
-}
-.cd_button_submit{
   background-color: #008aff;
   margin-right: 15px;
-}
-.cd_button_reset{
-  background-color: #7e8da6;
-  color: #2f3949;
 }
 </style>

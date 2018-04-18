@@ -1,65 +1,66 @@
 <template>
   <div id="createQuery">
-    <Carousel v-model="value" :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
-      <CarouselItem>
-        <div class="demo-carousel">
-          <Row style="padding:0px 0px 0px 25px;">
-            <Col span='10'>
-              <Form style='margin:5px 10px 0px 10px;'>
-                <FormItem label="数据源" prop="dataSourceId">
-                  <Select class="form-control" v-model='bizView.dataSourceId' @on-change='selectTableFields' placeholder='选择数据源'>        
-                      <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
-                  </Select>
-                </FormItem>
-              </Form>
-              <treebox :datasourceId ='bizView.dataSourceId' :treeName='datasourceName'></treebox>             
-            </Col>
-            <Col span='12' style='margin-top:12px;margin-left:10px'>
-              <p style='color:#a0acbf;height: 20px; margin-bottom: 5px;'>sql定义</p>
-              <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
-              <div class='preview_img' @click='previewTable()'><img src="./../../assets/img/page_preview.png"></div>
-              <Modal
-              v-model="modalPreview"
-              width ="1200px"
-              title="数据预览">
-                <iviewtable :chartCmpContent='currentTableData' :pageSize='pageSize'></iviewtable>        
-              </Modal>
-            </Col>
-          </Row>
-        </div>
-      </CarouselItem>
-
-
-      <CarouselItem>
-        <div class="demo-carousel">
-           <Row style="padding: 20px 40px 40px 20px;">
-            <Col span="24">
-            <editquerytable :tableData ='currentTableData'></editquerytable>
-            </Col>
-           </Row>
-          
-        </div>
-      </CarouselItem>
-      <CarouselItem>
-        <div class="demo-carousel">
-          <Row  style="padding:20px 20px">
-              <Col span="24">
-                <Form id="createQuery" ref="bizView" :model="bizView" :rules="ruleValidate" :label-width="80">
-                    <FormItem label="名称" prop="name">
-                        <Input v-model="bizView.name" placeholder="输入名称" :disabled ='nameEdit'></Input>
-                    </FormItem>
-                    <FormItem label="别名" prop="alias">
-                        <Input v-model="bizView.alias" placeholder="输入别名"></Input>
-                    </FormItem>
-                    <FormItem label="描述" prop="desc">
-                        <Input v-model="bizView.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
-                    </FormItem>
+      <Carousel v-model="value" :dots="setting.dots" :arrow="setting.arrow" ref='slide'>
+        <CarouselItem>
+          <div class="demo-carousel">
+            <Row style="padding:0px 0px 0px 25px;">
+              <Col span='10'>
+                <Form style='margin:5px 10px 0px 10px;'>
+                  <FormItem label="数据源" prop="dataSourceId">
+                    <Select class="form-control" v-model='bizView.dataSourceId' @on-change='selectTableFields' placeholder='选择数据源'>        
+                        <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
+                    </Select>
+                  </FormItem>
                 </Form>
+                <treebox :datasourceId ='bizView.dataSourceId' :treeName='datasourceName'></treebox>             
+              </Col>
+              <Col span='12' style='margin-top:12px;margin-left:10px'>
+                <p style='color:#a0acbf;height: 20px; margin-bottom: 5px;'>sql定义</p>
+                <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
+                <div class='preview_img' @click='previewTable()'><img src="./../../assets/img/page_preview.png"></div>
+                <Modal
+                v-model="modalPreview"
+                width ="1200px"
+                title="数据预览">
+                  <iviewtable :chartCmpContent='currentTableData' :pageSize='pageSize'></iviewtable>        
+                </Modal>
               </Col>
             </Row>
-        </div>
-      </CarouselItem>
-    </Carousel>
+          </div>
+        </CarouselItem>
+
+
+        <CarouselItem>
+          <div class="demo-carousel">
+             <Row style="padding: 20px 40px 40px 20px;">
+              <Col span="24">
+                <editquerytable :tableData ='currentTableData' :bizView='bizView' ref='saveEdit'></editquerytable>
+              </Col>
+             </Row>
+          </div>
+        </CarouselItem>
+
+        
+        <CarouselItem>
+          <div class="demo-carousel">
+            <Row  style="padding:20px 20px">
+                <Col span="22">
+                  <Form id="createQuery" ref="bizView" :model="bizView" :rules="ruleValidate" :label-width="80">
+                      <FormItem label="名称" prop="name">
+                          <Input v-model="bizView.name" placeholder="输入名称" :disabled ='nameEdit'></Input>
+                      </FormItem>
+                      <FormItem label="别名" prop="alias">
+                          <Input v-model="bizView.alias" placeholder="输入别名"></Input>
+                      </FormItem>
+                      <FormItem label="描述" prop="desc">
+                          <Input v-model="bizView.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
+                      </FormItem>
+                  </Form>
+                </Col>
+              </Row>
+          </div>
+        </CarouselItem>
+      </Carousel>
     <Row  class='cd_button_box'>
       <Button type="primary"  class='cd_button_pre' @click='pre()'>上一步</Button>
       <Button v-if="!finished" type="primary" class='cd_button_next' @click='next()'>下一步</Button>
@@ -85,7 +86,6 @@ export default {
   computed:{
   ...mapGetters({
     datasourceList:'datasourceList',
-    paramList:'paramList',
     query_fieldEdit_table:'query_fieldEdit_table'
    }),
   nameEdit(){
@@ -140,12 +140,11 @@ export default {
             }             
           }else{
             Vue.currentTableData = Vue.edit_currentTableData;
-          }   
-          //将字段编辑表数据存储到store
-          Vue.$store.commit("save_query_fieldEdit_table",Vue.currentTableData);         
+          }       
         }
         if(Vue.value == 2){
           Vue.finished = true;
+          Vue.$refs.saveEdit.saveEdit();
         }
       }
     },
@@ -178,6 +177,8 @@ export default {
         field_obj.sum = Vue.query_fieldEdit_table[c].sum;
         field_obj.min = Vue.query_fieldEdit_table[c].min;
         field_obj.max = Vue.query_fieldEdit_table[c].max;
+        field_obj.category = Vue.query_fieldEdit_table[c].category;
+        field_obj.expression = Vue.query_fieldEdit_table[c].expression;
         bizViewColum.push(field_obj);        
       }
       let columsJSON = JSON.stringify(bizViewColum);
@@ -230,13 +231,11 @@ export default {
         lineNumbers: true,  
         extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
         mode: {name: "text/x-mysql"},  
-        dragDrop: true,
-        theme: "blackboard" 
+        dragDrop: true
       });
     },
-    /*drag(ev){
-      ev.dataTransfer.setData("Text",`^${ev.target.id}^`);
-    },*/
+
+
     //初始化编辑查询器数据
     initEditBizViewData(to,from){
       let Vue = this;
@@ -287,22 +286,19 @@ export default {
     getpreviewData(){
       let Vue = this;
       Vue.pageSize = 3;
-      /*if(Vue.isCreate == true){*/
-        let params = {
-          'dateSourceId':Vue.bizView.dataSourceId,
-          'sqlStament':Vue.sqlEditor.doc.getValue(),
-          'pageSize':Vue.pageSize
-        };
-        Vue.AxiosPost("previewBizView_extra",params,
-          function(response){         
-            Vue.currentTableData = response.data.content;
-          },
-          function(){
-            Vue.$Message.error('请输入正确sql!')
-        });        
-  /*    }else{
-        Vue.currentTableData = Vue.edit_currentTableData;
-      }*/
+      Vue.bizView.defineJSON = Vue.sqlEditor.doc.getValue();
+      let params = {
+        'dateSourceId':Vue.bizView.dataSourceId,
+        'sqlStament':Vue.bizView.defineJSON,
+        'pageSize':Vue.pageSize
+      };
+      Vue.AxiosPost("previewBizView_extra",params,
+        function(response){         
+          Vue.currentTableData = response.data.content;
+        },
+        function(){
+          Vue.$Message.error('请输入正确sql!')
+      });        
     }
       
   },
@@ -331,9 +327,7 @@ export default {
   margin: -17px 20px;
 }
 .cd_button_box{
-  position: fixed;
-  left: 45%;
-  bottom: 3%;
+  margin-left: 38%;
 }
 .cd_button_box button{
   background-color: #008aff;
@@ -345,8 +339,9 @@ export default {
 .cd_button_pre{
   margin-right: 15px;
 }
-.ivu-carousel{
+#createQuery .ivu-carousel{
   height: 550px;
+  overflow-y:auto; 
   -webkit-user-select: text; 
   -moz-user-select: text;
   -ms-user-select: text;

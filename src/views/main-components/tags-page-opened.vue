@@ -6,7 +6,7 @@
     <div ref="scrollCon" @DOMMouseScroll="handlescroll" @mousewheel="handlescroll" class="tags-outer-scroll-con">
         <div class="close-all-tag-con">
             <Dropdown transfer @on-click="handleTagsOption">
-                <a size="small" type="primary" style='color:white'>
+                <a size="small" type="primary" style='color:#333333'>
                     标签选项
                     <Icon type="arrow-down-b"></Icon>
                 </a>
@@ -27,7 +27,7 @@
                     @on-close="closePage"
                     @click.native="linkTo(item)"
                     :closable="(item.name==='home_index'|| item.name==='resource_index')?false:true"
-                    :color="item.children?(item.children[0].name===currentPageName?'#28313d':'#28313d'):(item.name===currentPageName?'#28313d':'#28313d')"
+                    :color="item.children?(item.children[0].name===currentPageName?'blue':'#333333'):(item.name===currentPageName?'blue':'#333333')"
                 >{{ itemTitle(item) }}</Tag>
             </transition-group>
         </div>
