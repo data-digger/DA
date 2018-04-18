@@ -7,7 +7,7 @@
             <FormItem prop="xAxis">
                 NameSeries
                 <Select class="form-control" v-model='selectdOption.series[0].data.name'>               
-                    <Option v-for='item in data' :key='item' :value="item" >{{item}}</Option>
+                    <Option v-for='item in groupbyList' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
                 </Select>
             </FormItem>
         </Col>
@@ -15,7 +15,7 @@
             <FormItem prop="yAxis">
                 ValueSeries
                 <Select class="form-control" v-model="selectdOption.series[0].data.value">
-                    <Option v-for='item in data' :key='item' :value="item">{{item}}</Option>
+                    <Option v-for='item in metrics' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
                 </Select>
             </FormItem>
         </Col>
@@ -50,9 +50,15 @@
 </template>
 <script>
 import ChartTemplate from './../../libs/ChartTemplate.js'
+import {mapGetters} from 'vuex'
 export default {
     props:['data'],
     computed: {
+    ...mapGetters({
+        dimensions:'dimensions',
+        metrics:'metrics',
+        groupbyList:'groupbyList'
+      }),
       COLORS : function(){
           return ChartTemplate.COLORS;
       }

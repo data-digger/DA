@@ -18,6 +18,7 @@
 </template>
 <script>
 import infoCard from './../home/components/inforCard'
+import {mapGetters} from 'vuex'
 export default {
     props:["chartId",'option'],
     components:{
@@ -33,6 +34,9 @@ export default {
             let Vue = this;
             Vue.cardShow = true;
         },
+        reset(){
+            
+        }
     },
 }
 </script>

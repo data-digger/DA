@@ -18,7 +18,7 @@
                 <Col span='13'>
                     Data
                     <Select class="form-control" v-model='selectdOption.data'>               
-                        <Option v-for='item in data' :key='item' :value="item" >{{item}}</Option>
+                        <Option v-for='item in metrics' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
                     </Select>
                 </Col>
                  <Col span='2' offset='1'>
@@ -53,9 +53,15 @@
 </template>
 <script>
 import ChartTemplate from './../../libs/ChartTemplate.js'
+import {mapGetters} from 'vuex'
 export default {
     props:['data'],
     computed: {
+    ...mapGetters({
+        dimensions:'dimensions',
+        metrics:'metrics',
+        groupbyList:'groupbyList'
+      }),
       COLORS : function(){
           return Object.keys(ChartTemplate.COLORS)
       }

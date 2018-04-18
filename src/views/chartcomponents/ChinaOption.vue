@@ -6,27 +6,27 @@
        <FormItem prop="provinceSeries">
             ProvinceSeries
             <Select class="form-control" v-model='selectdOption.series[0].data.name'>               
-                <Option v-for='item in data' :key='item' :value="item" >{{item}}</Option>
+                <Option v-for='item in groupbyList' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
             </Select>
         </FormItem>
         <FormItem prop="valueSeries">
             ValueSeries
             <Select class="form-control" v-model="selectdOption.series[0].data.value">
-                <Option v-for='item in data' :key='item' :value="item">{{item}}</Option>
+                <Option v-for='item in metrics' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
             </Select>
         </FormItem>
         <FormItem prop="color">
                 <Col span='7'>
                     HighValueColor
-                    <ColorPicker v-model="selectdOption.visualMap.inRange.color[1]" />
+                    <ColorPicker v-model="selectdOption.visualMap.inRange.color[1]"/>
                 </Col>
                  <Col span='7' offset='2'>
                     LowValueColor
-                    <ColorPicker v-model="selectdOption.visualMap.inRange.color[0]" />
+                    <ColorPicker v-model="selectdOption.visualMap.inRange.color[0]"/>
                 </Col>
                 <Col span='6' offset='2'>
                     SymbolColor
-                    <ColorPicker v-model="selectdOption.series[0].itemStyle.normal.color" />                   
+                    <ColorPicker v-model="selectdOption.series[0].itemStyle.normal.color"/>                   
                 </Col>
             </FormItem>
         <Col span='6'>
@@ -43,9 +43,15 @@
 </template>
 <script>
 import ChartTemplate from './../../libs/ChartTemplate.js'
+import {mapGetters} from 'vuex'
 export default {
     props:['data'],
     computed: {
+    ...mapGetters({
+        dimensions:'dimensions',
+        metrics:'metrics',
+        groupbyList:'groupbyList'
+      }),
       COLORS : function(){
           return ChartTemplate.COLORS;
       }

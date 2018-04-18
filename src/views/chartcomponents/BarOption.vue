@@ -3,22 +3,18 @@
 </style>
 <template>
    <Row>
-       <Col span='10'>
-            <FormItem prop="xAxis">
-                XAxis
-                <Select class="form-control" v-model='selectdOption.xAxis.data'>               
-                    <Option v-for='item in groupbyList' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
-                </Select>
-            </FormItem>
-        </Col>
-        <Col span='13' offset='1'>
-            <FormItem prop="yAxis">
-                YAxis
-                <Select v-model="selectedY" multiple>
-                    <Option v-for='item in metrics' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
-                </Select>
-            </FormItem>
-        </Col> 
+        <FormItem prop="xAxis">
+            XAxis
+            <Select class="form-control" v-model='selectdOption.xAxis.data'>               
+                <Option v-for='item in groupbyList' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
+            </Select>
+        </FormItem>
+        <FormItem prop="yAxis">
+            YAxis
+            <Select v-model="selectedY" multiple>
+                <Option v-for='item in metrics' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
+            </Select>
+        </FormItem>
         <FormItem prop="Position">
             <Col span='5'>
                 Left
