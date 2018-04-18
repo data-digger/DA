@@ -331,7 +331,7 @@ export default {
       Vue.myChart.alias = '';
       Vue.myChart.bizViewId = '';
       Vue.myChart.desc =  '';
-      Vue.myChart.type = 'Bar',
+      //Vue.myChart.type = 'Bar',
       Vue.myChart.defineJSON = '';
       Vue.chartPreview = false;
       Vue.eoption = null;
@@ -407,5 +407,8 @@ export default {
 }
 .cd_button_pre{
   margin-right: 15px;
+}
+.ivu-carousel-item{
+  min-height: 550px
 }
 </style>

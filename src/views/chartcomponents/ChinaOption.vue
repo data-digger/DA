@@ -18,15 +18,15 @@
         <FormItem prop="color">
                 <Col span='7'>
                     HighValueColor
-                    <ColorPicker v-model="selectdOption.visualMap.inRange.color[1]" recommend/>
+                    <ColorPicker v-model="selectdOption.visualMap.inRange.color[1]"/>
                 </Col>
                  <Col span='7' offset='2'>
                     LowValueColor
-                    <ColorPicker v-model="selectdOption.visualMap.inRange.color[0]" recommend/>
+                    <ColorPicker v-model="selectdOption.visualMap.inRange.color[0]"/>
                 </Col>
                 <Col span='6' offset='2'>
                     SymbolColor
-                    <ColorPicker v-model="selectdOption.series[0].itemStyle.normal.color" recommend/>                   
+                    <ColorPicker v-model="selectdOption.series[0].itemStyle.normal.color"/>                   
                 </Col>
             </FormItem>
         <Col span='6'>
