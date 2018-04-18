@@ -5,7 +5,7 @@
         <Col span="6">
              <FieldList :columns="columns"></FieldList>
           </Col>
-          <Col span="6">
+          <Col span="7">
               <Form id="chartOption" ref="chartOption" :model="myChart" :rules="ruleValidate" :label-width="80">
                 <FormItem label="查询器" prop="bizViewId">
                     <Select class="form-control" v-model='myChart.bizViewId'>               
@@ -30,7 +30,7 @@
                 </FormItem> 
             </Form>
           </Col>
-          <Col span="11" offset="1">  
+          <Col span="11">  
             <Row><component v-show='chartPreview' ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption' :styles='styles'></component></Row>  
           </Col>
         </CarouselItem>
@@ -393,9 +393,10 @@ export default {
    margin: 0px 3px;
   }
 .cd_button_box{
-  position: fixed;
-  left: 45%;
-  bottom: 3%;
+  position: fixed; 
+  left: 38%;
+  bottom: 3%
+
 }
 .cd_button_box button{
   background-color: #008aff;

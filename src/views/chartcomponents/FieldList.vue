@@ -9,7 +9,7 @@
                 </Tooltip>               
                 <div slot="content">
                     <ul>
-                        <li v-for="(item,index) in dimensions" :key="item.columnName">
+                        <li v-for="(item,index) in dimensions" :key="item.columnName" :class="{'computed-field':isComputed(item.category)}"> 
                             <span>
                                 <Icon type="ios-pricetags-outline" size='15'></Icon>
                                 {{ item.columnAlias}}
@@ -25,7 +25,7 @@
                     </Tooltip>
                     <div slot="content">
                         <ul>
-                           <li v-for="(item,index) in metrics" :key="item.columnName">
+                           <li v-for="(item,index) in metrics" :key="item.columnName" :class="{'computed-field':isComputed(item.category)}">
                                 <span>
                                     <Icon type="ios-calculator-outline" size='15'></Icon>
                                     {{item.columnAlias}}
@@ -76,13 +76,13 @@
                                                         <Option v-for="item in filterableList" :key="item.columnName" :value="item.columnName">{{item.columnAlias}}</Option>
                                                     </Select>
                                                 </Col>
-                                                <Col span="7" offset="1">
+                                                <Col span="8" offset="1">
                                                     <Select class="form-control" v-model='filter.where[index].mark'>                   
                                                         <Option v-for="item in CONTENTFILTERMARK" :key="item" :value="item">{{item}}</Option>
                                                     </Select>
                                                 </Col>
-                                                <Col span="6" offset="1">
-                                                    <Input v-model="filter.where[index].value" placeholder="请输入值"></Input>
+                                                <Col span="5" offset="1">
+                                                    <Input v-model="filter.where[index].value" placeholder="过滤值"></Input>
                                                 </Col>
                                                 
                                                 <Col span="1" offset="1">
@@ -108,6 +108,7 @@
 </template>
 <script>
 import bus from './../../libs/bus.js'
+import { parse } from 'babylon';
 export default {
     props:['columns'],
     computed: {
@@ -135,10 +136,15 @@ export default {
     methods: {
         classify(){
             let Vue = this;
+            Vue.metrics = [];
+            Vue.dimensions = [];
+            Vue.filterableList = [];
+            Vue.groupbyList = [];
             for(var i in Vue.columns){
                 let type = Vue.columns[i].columnType;
                 let filterable = Vue.columns[i].filterable;
                 let groupby = Vue.columns[i].groupby;
+                let category = Vue.columns[i].category;
                 switch(type)
                     {
                         case "BIT":
@@ -162,7 +168,11 @@ export default {
                             Vue.dimensions.push(Vue.columns[i]);
                         break;
                         default:
-                            Vue.dimensions.push(Vue.columns[i]);
+                            if(category == 2){
+                                Vue.metrics.push(Vue.columns[i])
+                            } else {
+                                Vue.dimensions.push(Vue.columns[i]);
+                            }       
                     }
 
                 if(filterable == 1){
@@ -187,6 +197,13 @@ export default {
         removeContentFilter(index){
             let Vue = this;
             Vue.filter.where.splice(index,1);
+        },
+        isComputed(category){
+            if(category == 0){
+                return false
+            } else {
+                return true
+            }
         },
         ok(){
             let Vue = this;
@@ -232,8 +249,13 @@ export default {
 #fieldList .ivu-collapse-header{
     padding-left:19px
 }
-.ivu-icon{
+#fieldList .ivu-collapse{
+    max-height: 580px;
+    overflow-y: auto;
+}
+.computed-field{
     cursor: pointer;
+    color:#008aff;
 }
 
 </style>
