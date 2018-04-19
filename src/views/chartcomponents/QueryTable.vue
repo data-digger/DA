@@ -34,24 +34,23 @@
               </FormItem>
             </Col>
             <Col span=3>
-              <FormItem label="Min" :label-width="80">
-                <Checkbox v-model='modal_addField_obj.min' :true-value ='1' :false-value ='0'></Checkbox>
-              </FormItem>
-            </Col>
-            <Col span=3>
               <FormItem label="Max" :label-width="80">
                 <Checkbox v-model='modal_addField_obj.max' :true-value ='1' :false-value ='0'></Checkbox>
               </FormItem>
-            </Col>          
+            </Col> 
+            <Col span=3>
+              <FormItem label="Min" :label-width="80">
+                <Checkbox v-model='modal_addField_obj.min' :true-value ='1' :false-value ='0'></Checkbox>
+              </FormItem>
+            </Col>         
             <Col span='20' v-show='modal_addField_obj.category == 1 ? true:false'>
               <FormItem label="Expression" :label-width="80">
-                <Input type='textarea' @on-focus='Spin_type_f' placeholder="a valid SQL expression as support by the underlying backend.Example:substr(name,1,1)" v-model='modal_addField_obj.expression'></Input>
+                <Input type='textarea' @on-focus='Spin_type_f'  @on-blur='intoType'placeholder="a valid SQL expression as support by the underlying backend.Example:substr(name,1,1)" v-model='modal_addField_obj.expression'></Input>
               </FormItem>
             </Col>
-            <!-- <Col span='2' style='padding:10px 10px'><Button @click='intoType()' type="primary">生成type</Button></Col> -->
             <Col span='12'  v-show='modal_addField_obj.category == 1 ? true:false'>
               <FormItem label="type" :label-width="80">
-                <Input v-model='modal_addField_obj.columnType' @on-focus='intoType'  placeholder="Enter something..."></Input>
+                <Input v-model='modal_addField_obj.columnType'placeholder="Enter something..."></Input>
               </FormItem> 
             </Col>
             <Col span='1' style='margin-top:8px' v-show='modal_addField_obj.category == 1 ? true:false'>
@@ -218,17 +217,53 @@ export default {
       })  
     },
 
+    /*编辑表字段*/
+    EditField(params){
+      let Vue =this;
+      Vue.cancel_addCalculatedfield();
+      Vue.addcalculatedField_show = true;
+      Vue.create_button = false;
+      Vue.column_disabled = true;
+      Vue.modal_addField_obj.columnName = params.row.columnName;
+      Vue.modal_addField_obj.columnType = params.row.columnType;
+      Vue.modal_addField_obj.columnAlias = params.row.columnAlias;
+      Vue.modal_addField_obj.groupby = params.row.groupby;
+      Vue.modal_addField_obj.filterable = params.row.filterable;
+      Vue.modal_addField_obj.countDistinct = params.row.countDistinct;
+      Vue.modal_addField_obj.sum = params.row.sum;
+      Vue.modal_addField_obj.max = params.row.max;
+      Vue.modal_addField_obj.min = params.row.min;
+      Vue.modal_addField_obj.category = params.row.category;
+      Vue.modal_addField_obj.expression = params.row.expression;
+    },
+    
+    /*保存表编辑*/
+    saveEdit(){
+      let Vue = this;
+      //将字段编辑表数据存储到store
+      Vue.$store.commit("save_query_fieldEdit_table",Vue.currentTableData);        
+    },
+
     /*更新计算字段*/
     update_calculatedfield(){
       let Vue = this;
       let param = {
         bizViewId:Vue.bizView.id,
-        columsJSON:JSON.stringify(Vue.modal_addField_obj)
+        columsJSON:JSON.stringify([Vue.modal_addField_obj])
       }
       Vue.AxiosPost("update_calculatedfield",param,function(){
-        alert("success!");
-        Vue.refreshTableData();
+        Vue.getFieldTable();
+        Vue.cancel_addCalculatedfield();
       })
+    },
+
+    /*获取字段表*/
+    getFieldTable(){
+      let Vue = this; 
+      Vue.AxiosPost("getFieldTable",{'bizviewId':Vue.bizView.id},
+      function(response){ 
+        Vue.currentTableData  = response.data.content;
+      });      
     },
 
     /*取消添加字段操作*/
@@ -246,6 +281,29 @@ export default {
         render: (h, params) => {
           return h('Icon',{
             props: {
+              type: "trash-a"
+            },
+            style:{
+              cursor:'pointer'
+            },
+            nativeOn:{
+              'click':(event)=>{
+                Vue.AxiosPost("delete_field",params.row,
+                  function(response){
+                    for(let i in Vue.currentTableData){
+                      if(Vue.currentTableData[i].id == params.row.id){
+                        Vue.currentTableData.splice(i,1);
+                      }
+                    }
+                  });                
+              }
+            }
+          })
+        }
+      },{
+        render: (h, params) => {
+          return h('Icon',{
+            props: {
               type: "edit"
             },
             style:{
@@ -253,20 +311,7 @@ export default {
             },
             nativeOn:{
               'click':(event)=>{
-                Vue.cancel_addCalculatedfield();
-                Vue.addcalculatedField_show = true;
-                Vue.create_button = false;
-                Vue.column_disabled = true;
-                Vue.modal_addField_obj.columnName = params.row.columnName;
-                Vue.modal_addField_obj.columnType = params.row.columnType;
-                Vue.modal_addField_obj.columnAlias = params.row.columnAlias;
-                Vue.modal_addField_obj.groupby = params.row.groupby;
-                Vue.modal_addField_obj.filterable = params.row.filterable;
-                Vue.modal_addField_obj.countDistinct = params.row.countDistinct;
-                Vue.modal_addField_obj.sum = params.row.sum;
-                Vue.modal_addField_obj.min = params.row.min;
-                Vue.modal_addField_obj.category = params.row.category;
-                Vue.modal_addField_obj.expression = params.row.expression;
+                Vue.EditField(params);
               }
             }
           })
@@ -295,6 +340,7 @@ export default {
             on:{
               'on-blur':(event) => {
                 Vue.currentTableData[params.index].columnAlias = event.target.value;
+                Vue.EditField({row:Vue.currentTableData[params.index]});   
               }
             }
           })
@@ -312,7 +358,8 @@ export default {
               }else{
                 value = 0;
               }
-              Vue.currentTableData[params.index].groupby = value;           
+              Vue.currentTableData[params.index].groupby = value;
+              Vue.EditField({row:Vue.currentTableData[params.index]});   
              }
             }}
            )
@@ -331,6 +378,7 @@ export default {
                 value = 0;
               }
               Vue.currentTableData[params.index].filterable = value; 
+              Vue.EditField({row:Vue.currentTableData[params.index]});   
              }
             }})
         }                  
@@ -348,6 +396,7 @@ export default {
                 value = 0;
               }
               Vue.currentTableData[params.index].countDistinct = value;
+              Vue.EditField({row:Vue.currentTableData[params.index]});   
              }
             }})
         }       
@@ -365,6 +414,7 @@ export default {
                 value = 0;
               }
               Vue.currentTableData[params.index].sum = value;
+              Vue.EditField({row:Vue.currentTableData[params.index]});   
              }
             }})
         }        
@@ -382,6 +432,7 @@ export default {
                 value = 0;
               }
               Vue.currentTableData[params.index].max = value;
+              Vue.EditField({row:Vue.currentTableData[params.index]});   
              }
             }})
         }         
@@ -399,6 +450,7 @@ export default {
                 value = 0;
               }
               Vue.currentTableData[params.index].min = value;
+              Vue.EditField({row:Vue.currentTableData[params.index]});   
              }
             }})
         }         
@@ -434,13 +486,6 @@ export default {
     }       
     },
 
-    /*保存表编辑*/
-    saveEdit(){
-      let Vue = this;
-      //将字段编辑表数据存储到store
-      Vue.$store.commit("save_query_fieldEdit_table",Vue.currentTableData);        
-    },
-
     /*刷新表数据*/
     refreshTableData(){
       let Vue = this;
@@ -465,9 +510,6 @@ export default {
 #createQuery .ivu-table th{
   height: 40px;
   border-bottom:1px solid #28313d;
-}
-#createQuery .ivu-table .headRow_even td:nth-child(1){
-  border-left: 3px solid #e0604b;
 }
 .tabs_style > .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab{
     border-radius: 0;
@@ -516,7 +558,7 @@ export default {
   height: 520px;
 }
 .demo-spin-icon-load{
-    animation: ani-demo-spin 1s linear infinite;
+  animation: ani-demo-spin 1s linear infinite;
 }
 @keyframes ani-demo-spin {
     from { transform: rotate(0deg);}

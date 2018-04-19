@@ -24,7 +24,10 @@
       <Row>
         <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'currentTableData'></component>
       </Row>
-      <iviewtable :chartCmpContent='currentTableData' :ifPage='true'></iviewtable>       
+      <Tabs type="card" :animated="false" >
+        <TabPane label="计算字段"><iviewtable :chartCmpContent='currentTableData' :ifPage='true'></iviewtable></TabPane>
+        <TabPane label="聚合"><iviewtable></iviewtable></TabPane>
+      </Tabs>  
     </Modal>
   </Col>
 </template>

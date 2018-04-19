@@ -17,6 +17,7 @@ window.urlConf = {
     columnList:`${window.uri}/bizview/column/list`,
     calculatedfield:`${window.uri}/bizview/column/calculatedfield/preview`,
     update_calculatedfield:`${window.uri}/bizview/column/save`,
+    delete_field:`${window.uri}/bizview/column/delete`,
   },
   chart: {
     list:`${window.uri}/chart/list`,
@@ -88,6 +89,10 @@ export default {
     update_calculatedfield(params){
       return axios.post(urlConf.bizview.update_calculatedfield, params);
     },
+    /*删除计算字段*/
+    delete_field(params){
+      return axios.post(urlConf.bizview.delete_field, params);
+    },    
     /*预览查询器中包含字段表的数据*/
     previewBizView_extra(params){
      return axios.post(urlConf.bizview.preview_extra, params); 
