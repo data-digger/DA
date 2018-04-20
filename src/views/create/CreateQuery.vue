@@ -196,6 +196,7 @@ export default {
           Vue.$Message.error('失败!');
         }
       })
+      
     }, 
 
     /*关闭当前页面*/

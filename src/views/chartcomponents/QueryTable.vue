@@ -141,6 +141,8 @@ export default {
       calculatedFieldPreview:false,
       column_disabled:false,
       calculatedfieldData:null,
+      edit_index:null,
+      delete_item:[],
       modal_addField_obj:{},
       columns:[],
       currentTableData:[],
@@ -268,15 +270,30 @@ export default {
       Vue.modal_addField_obj.category = params.row.category;
       Vue.modal_addField_obj.expression = params.row.expression;
       Vue.$nextTick(function(){//准备好数据后，加载sql编辑器
-        if(Vue.sqlEditor2 == null){
+        if(Vue.modal_addField_obj.category == 1 && Vue.sqlEditor2 == null){
           Vue.initCalculatedfield();      
         }
       }) 
+      Vue.edit_index = params.index;
     },
 
     /*点击更新计算字段*/
     update_calculatedfield(){
       let Vue = this;
+      if(Vue.edit_index){
+        Vue.currentTableData[Vue.edit_index].columnName = Vue.modal_addField_obj.columnName;
+        Vue.currentTableData[Vue.edit_index].columnType = Vue.modal_addField_obj.columnType;
+        Vue.currentTableData[Vue.edit_index].columnAlias = Vue.modal_addField_obj.columnAlias;
+        Vue.currentTableData[Vue.edit_index].groupby = Vue.modal_addField_obj.groupby;
+        Vue.currentTableData[Vue.edit_index].filterable = Vue.modal_addField_obj.filterable;
+        Vue.currentTableData[Vue.edit_index].countDistinct = Vue.modal_addField_obj.countDistinct;
+        Vue.currentTableData[Vue.edit_index].sum = Vue.modal_addField_obj.sum;
+        Vue.currentTableData[Vue.edit_index].max = Vue.modal_addField_obj.max;
+        Vue.currentTableData[Vue.edit_index].min = Vue.modal_addField_obj.min;
+        Vue.currentTableData[Vue.edit_index].category = Vue.modal_addField_obj.category;
+        Vue.currentTableData[Vue.edit_index].expression = Vue.modal_addField_obj.expression;        
+      }
+
       Vue.cancel_addCalculatedfield();
     },
 
@@ -289,16 +306,14 @@ export default {
     /*保存表编辑*/
     saveEdit(){
       let Vue = this;
-      let param = {
-        bizViewId:Vue.bizView.id,
-        columsJSON:JSON.stringify([Vue.modal_addField_obj])
-      }
-      Vue.AxiosPost("update_calculatedfield",param,function(){
-        Vue.getFieldTable();
-        Vue.cancel_addCalculatedfield();
-      })
       //将字段编辑表数据存储到store
       Vue.$store.commit("save_query_fieldEdit_table",Vue.currentTableData);        
+    },
+
+    /*删除表字段*/
+    delete_field(){
+      let Vue = this;
+      Vue.AxiosPost("delete_field",delete_item,function(response){});  
     },
 
     /*画表*/
@@ -317,14 +332,12 @@ export default {
             },
             nativeOn:{
               'click':(event)=>{
-                Vue.AxiosPost("delete_field",params.row,
-                  function(response){
-                    for(let i in Vue.currentTableData){
-                      if(Vue.currentTableData[i].id == params.row.id){
-                        Vue.currentTableData.splice(i,1);
-                      }
+                  for(let i in Vue.currentTableData){
+                    if(Vue.currentTableData[i].id == params.row.id){
+                      Vue.delete_item.push(Vue.currentTableData[i]);
+                      Vue.currentTableData.splice(i,1);
                     }
-                  });                
+                  }               
               }
             }
           })
@@ -359,57 +372,21 @@ export default {
       },{
         "title":'alias',
         "key":'columnAlias',
-        "align":"center",
-        'render':(h,params)=>{
-          return h('Input',{
-            props:{
-              type:'text',
-              value:params.row.columnAlias
-            },
-            on:{
-              'on-blur':(event) => {
-                Vue.currentTableData[params.index].columnAlias = event.target.value;
-                Vue.EditField({row:Vue.currentTableData[params.index]});   
-              }
-            }
-          })
-        }      
+        "align":"center",     
       },{
         "title":'groupby',
         "key":'groupby',
         "align":"center",
         'render':(h,params)=>{
-          return h('Checkbox',
-            {props:{'value':params.row.groupby == 1?true:false},
-             on:{'on-change':(value)=>{
-              if(value == true){
-                value = 1;
-              }else{
-                value = 0;
-              }
-              Vue.currentTableData[params.index].groupby = value;
-              Vue.EditField({row:Vue.currentTableData[params.index]});   
-             }
-            }}
-           )
-          }       
+          return h('Checkbox',{props:{'value':params.row.groupby == 1?true:false,'disabled':true}})
+        }       
       },{
         "title":'filterable',
         "key":'filterable',
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'value':params.row.filterable == 1?true:false},
-             on:{'on-change':(value)=>{
-              if(value == true){
-                value = 1;
-              }else{
-                value = 0;
-              }
-              Vue.currentTableData[params.index].filterable = value; 
-              Vue.EditField({row:Vue.currentTableData[params.index]});   
-             }
-            }})
+            {props:{'value':params.row.filterable == 1?true:false,'disabled':true}})
         }                  
       },{
         "title":'countDistinct',
@@ -417,17 +394,7 @@ export default {
         "align":"center", 
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'value':params.row.countDistinct == 1?true:false},
-             on:{'on-change':(value)=>{
-              if(value == true){
-                value = 1;
-              }else{
-                value = 0;
-              }
-              Vue.currentTableData[params.index].countDistinct = value;
-              Vue.EditField({row:Vue.currentTableData[params.index]});   
-             }
-            }})
+            {props:{'value':params.row.countDistinct == 1?true:false,'disabled':true}})
         }       
       },{
         "title":'sum',
@@ -435,17 +402,7 @@ export default {
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'value':params.row.sum == 1?true:false},
-             on:{'on-change':(value)=>{
-              if(value == true){
-                value = 1;
-              }else{
-                value = 0;
-              }
-              Vue.currentTableData[params.index].sum = value;
-              Vue.EditField({row:Vue.currentTableData[params.index]});   
-             }
-            }})
+            {props:{'value':params.row.sum == 1?true:false,'disabled':true}})
         }        
       },{
         "title":'max',
@@ -453,17 +410,7 @@ export default {
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'value':params.row.max == 1?true:false},
-             on:{'on-change':(value)=>{
-              if(value == true){
-                value = 1;
-              }else{
-                value = 0;
-              }
-              Vue.currentTableData[params.index].max = value;
-              Vue.EditField({row:Vue.currentTableData[params.index]});   
-             }
-            }})
+            {props:{'value':params.row.max == 1?true:false,'disabled':true}})
         }         
       },{
         "title":'min',
@@ -471,17 +418,7 @@ export default {
         "align":"center",
         'render':(h,params)=>{
           return h('Checkbox',
-            {props:{'value':params.row.min == 1?true:false},
-             on:{'on-change':(value)=>{
-              if(value == true){
-                value = 1;
-              }else{
-                value = 0;
-              }
-              Vue.currentTableData[params.index].min = value;
-              Vue.EditField({row:Vue.currentTableData[params.index]});   
-             }
-            }})
+            {props:{'value':params.row.min == 1?true:false,'disabled':true}})
         }         
       })
       
