@@ -160,22 +160,20 @@ export default {
     /*初始化计算字段expression编辑器*/
     initCalculatedfield(){
       let Vue = this;
-      if(Vue.sqlEditor == null){
-        var myTextarea = $("#c_expression")[0];
-        Vue.sqlEditor2 = CodeMirror.fromTextArea(myTextarea,{
-          lineNumbers: true,  
-          extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
-          mode: {name: "text/x-mysql"},  
-          dragDrop: true
-        });  
-        Vue.sqlEditor2.on('focus',function(){
-          Vue.Spin_type_f();       
-        });
-        Vue.sqlEditor2.on('blur',function(){
-          Vue.modal_addField_obj.expression = Vue.sqlEditor2.doc.getValue();
-          Vue.intoType();
-        });
-      }
+      var myTextarea = $("#c_expression")[0];
+      Vue.sqlEditor2 = CodeMirror.fromTextArea(myTextarea,{
+        lineNumbers: true,  
+        extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
+        mode: {name: "text/x-mysql"},  
+        dragDrop: true
+      });  
+      Vue.sqlEditor2.on('focus',function(){
+        Vue.Spin_type_f();       
+      });
+      Vue.sqlEditor2.on('blur',function(){
+        Vue.modal_addField_obj.expression = Vue.sqlEditor2.doc.getValue();
+        Vue.intoType();
+      });
     },
 
     /*进度条控制*/
@@ -226,9 +224,10 @@ export default {
       };
       Vue.addcalculatedField_show = true;
       Vue.$nextTick(function(){//准备好数据后，加载sql编辑器
-        if(Vue.sqlEditor2 == null){
+        if(Vue.modal_addField_obj.category == 1 && Vue.sqlEditor2 == null){
           Vue.initCalculatedfield();      
         }
+        Vue.sqlEditor2.setValue(Vue.modal_addField_obj.expression);
       })            
     },
 
@@ -273,6 +272,7 @@ export default {
         if(Vue.modal_addField_obj.category == 1 && Vue.sqlEditor2 == null){
           Vue.initCalculatedfield();      
         }
+        Vue.sqlEditor2.setValue(Vue.modal_addField_obj.expression);
       }) 
       Vue.edit_index = params.index;
     },

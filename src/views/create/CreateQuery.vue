@@ -239,6 +239,9 @@ export default {
         mode: {name: "text/x-mysql"},  
         dragDrop: true
       });
+/*      Vue.sqlEditor.on('change', function() {  
+        Vue.sqlEditor.showHint();  //满足自动触发自动联想功能  
+      }); */
     },
 
 
