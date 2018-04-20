@@ -72,6 +72,8 @@
 <script>
 import CodeMirror from "codemirror/lib/codemirror.js"
 import "codemirror/mode/sql/sql.js"
+import "codemirror/addon/hint/show-hint.js"
+import "codemirror/addon/hint/sql-hint.js"
 import {mapGetters} from 'vuex'
 import treebox from './../paramcomponents/Tree'
 import editquerytable from './../chartcomponents/QueryTable'
@@ -104,6 +106,7 @@ export default {
       pageSize:null,
       modalPreview:false,
       datasourceName:null,
+      sqlEditor:null,
       setting: {
         height:"200",
         dots:"none",
@@ -125,7 +128,7 @@ export default {
     }
   },
   methods:{
-    //后一步操作
+    /*后一步操作*/
     next() {
       let Vue = this;
       if(Vue.value <3){
@@ -144,12 +147,11 @@ export default {
         }
         if(Vue.value == 2){
           Vue.finished = true;
-          Vue.$refs.saveEdit.saveEdit();
         }
       }
     },
 
-    //前一步操作
+    /*前一步操作*/
     pre() {
       let Vue = this;
       if(Vue.value !=0){
@@ -159,9 +161,10 @@ export default {
       }
     },
 
-    //创建查询器
+    /*创建查询器*/
     save(bizView){
       let Vue = this;
+      Vue.$refs.saveEdit.saveEdit();//在填写完查询器信息的时候，保存之前字段表操作
       //保存查询器表。包含查询器名称，别名,描述，数据源id,sql;
       //保存字段编辑表。包含查询器id，字段名称，别名，类型...
       Vue.bizView.defineJSON = Vue.sqlEditor.doc.getValue();
@@ -195,7 +198,7 @@ export default {
       })
     }, 
 
-    //关闭当前页面
+    /*关闭当前页面*/
     closePage(event, name){
       this.$Notice.destroy(); //关闭当前查询器页面前，销毁字段树提示卡
       let pageOpenedList = this.$store.state.app.pageOpenedList;
@@ -208,7 +211,7 @@ export default {
     },
 
 
-    //关闭当前页面后，链接到资源页面
+    /*关闭当前页面后，链接到资源页面*/
     linkTo (item) {
       let routerObj = {};
       routerObj.name = item.name;
@@ -222,12 +225,11 @@ export default {
     },
 
 
-    //初始化sql编辑器       
+    /* 初始化sql编辑器 */      
     initSqlEdit(){
       let Vue = this;
-      var Market = {};
       var myTextarea = $("#defineJSON")[0];
-      this.sqlEditor = CodeMirror.fromTextArea(myTextarea,{
+      Vue.sqlEditor = CodeMirror.fromTextArea(myTextarea,{
         lineNumbers: true,  
         extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
         mode: {name: "text/x-mysql"},  
@@ -236,18 +238,18 @@ export default {
     },
 
 
-    //初始化编辑查询器数据
+    /*初始化编辑查询器数据，判断是新建操作还是编辑操作*/
     initEditBizViewData(to,from){
       let Vue = this;
       Vue.isCreate =  $.isEmptyObject(to.params);
-      if(Vue.isCreate == false){     
+      if(Vue.isCreate == false){ //编辑
         let bizViewInfo = to.params.querybox;
         Vue.edit_currentTableData = to.params.fieldTableData;
         if(bizViewInfo != null){
           Vue.bizView = bizViewInfo;
         }
       }
-      if(Vue.isCreate == true){
+      if(Vue.isCreate == true){//新建
         Vue.bizView = {
           name:'',
           alias:'',
@@ -255,16 +257,13 @@ export default {
           dataSourceId:'',
           defineJSON:'select * from ...'
         }
-      } 
-      if(Vue.sqlEditor){
-        Vue.sqlEditor.setValue(Vue.bizView.defineJSON);
       }     
     },
 
-    //选择数据库表字段
+    /*选择数据库表字段*/
     selectTableFields(dataSourceId){
       let Vue = this;
-      if(Vue.bizView.dataSourceId != ""){
+      if(Vue.bizView.dataSourceId != ""){//根据所选的数据源，找到相应数据源名称，显示在数据树卡片
         for(var i in Vue.datasourceList){
           if(Vue.datasourceList[i].id == Vue.bizView.dataSourceId){
             Vue.datasourceName = Vue.datasourceList[i].name;
@@ -275,14 +274,14 @@ export default {
       }
     },
 
-    //预览表
+    /*根据sqlstatement预览表数据操作*/
     previewTable(){
       let Vue = this;
       Vue.modalPreview = true;
       Vue.getpreviewData();
     },
 
-    //获取预览表的数据，包括字段编辑表数据
+    /*获取预览表的数据，包括字段编辑表数据*/
     getpreviewData(){
       let Vue = this;
       Vue.pageSize = 3;
@@ -340,12 +339,30 @@ export default {
   margin-right: 15px;
 }
 #createQuery .ivu-carousel{
-  height: 550px;
-  overflow-y:auto; 
+  height: 560px;
+  overflow-y: auto;
   -webkit-user-select: text; 
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
+}  
+@media only screen and (min-width: 1440px) and (max-width: 1600px){
+  #createQuery .ivu-carousel{
+    height: 700px;
+    -webkit-user-select: text; 
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }  
+}
+@media only screen and (min-width: 1681px) and (max-width: 1920px){
+  #createQuery .ivu-carousel{
+    height: 750px;
+    -webkit-user-select: text; 
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }  
 }
 .preview_img{
   position: absolute;

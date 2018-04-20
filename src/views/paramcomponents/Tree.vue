@@ -112,6 +112,20 @@ import vbar from 'v-bar'
     margin: 10px;
     height:220px;
     border:0 !important;
+  }   
+  @media only screen and (min-width: 1681px) and (max-width: 1920px){
+    .card_field_tree{
+      margin: 10px;
+      height:290px;
+      border:0 !important;
+    } 
+  }
+  @media only screen and (min-width: 1440px) and (max-width: 1600px){
+    .card_field_tree{
+      margin: 10px;
+      height:280px;
+      border:0 !important;
+    } 
   }
   .field_tree_title{
     height:35px;
@@ -119,4 +133,5 @@ import vbar from 'v-bar'
     font-size: 12px;
     border-bottom: 1px solid #28313d;
   }
+
 </style>
