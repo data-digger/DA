@@ -313,7 +313,7 @@ export default {
     /*删除表字段*/
     delete_field(){
       let Vue = this;
-      Vue.AxiosPost("delete_field",delete_item,function(response){});  
+      Vue.AxiosPost("delete_field",{columnsJSON:JSON.stringify(Vue.delete_item)},function(response){});  
     },
 
     /*画表*/

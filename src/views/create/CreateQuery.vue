@@ -34,7 +34,7 @@
           <div class="demo-carousel">
              <Row style="padding: 20px 40px 40px 20px;">
               <Col span="24">
-                <editquerytable :tableData ='currentTableData' :bizView='bizView' ref='saveEdit'></editquerytable>
+                <editquerytable :tableData ='currentTableData' :bizView='bizView' ref='Edit'></editquerytable>
               </Col>
              </Row>
           </div>
@@ -164,7 +164,7 @@ export default {
     /*创建查询器*/
     save(bizView){
       let Vue = this;
-      Vue.$refs.saveEdit.saveEdit();//在填写完查询器信息的时候，保存之前字段表操作
+      Vue.$refs.Edit.saveEdit();//在填写完查询器信息的时候，保存之前字段表操作
       //保存查询器表。包含查询器名称，别名,描述，数据源id,sql;
       //保存字段编辑表。包含查询器id，字段名称，别名，类型...
       Vue.bizView.defineJSON = Vue.sqlEditor.doc.getValue();
@@ -191,12 +191,15 @@ export default {
           Vue.AxiosPost("createQuery",{'bizViewJSON':bizViewJSON,'columsJSON':columsJSON},
             function(){
               Vue.$Message.success('成功!');
-              Vue.closePage(event,'createQuery')});             
+              Vue.closePage(event,'createQuery')
+            }
+          ); 
+          Vue.$refs.Edit.delete_field();//在填写完查询器信息的时候，保存之前字段表操作                
         }else{
           Vue.$Message.error('失败!');
         }
       })
-      
+
     }, 
 
     /*关闭当前页面*/
