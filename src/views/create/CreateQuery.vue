@@ -107,7 +107,6 @@ export default {
       modalPreview:false,
       datasourceName:null,
       sqlEditor:null,
-      /*old_sqlStatement:null,*/
       setting: {
         height:"200",
         dots:"none",
@@ -158,7 +157,6 @@ export default {
       if(Vue.value !=0){
         Vue.$refs.slide.arrowEvent(-1);
         Vue.finished = false;
-        Vue.currentTableData = null;
       }
     },
 
@@ -243,9 +241,6 @@ export default {
       if(Vue.isCreate == false){
         Vue.sqlEditor.setOption("readOnly", true); 
       }
-/*      Vue.sqlEditor.on('change', function() {  
-        Vue.sqlEditor.showHint();  //满足自动触发自动联想功能  
-      }); */
     },
 
 
@@ -258,7 +253,6 @@ export default {
         Vue.edit_currentTableData = to.params.fieldTableData;
         if(bizViewInfo != null){
           Vue.bizView = bizViewInfo;
-          Vue.old_sqlStatement = bizViewInfo.defineJSON;
         }
       }
       if(Vue.isCreate == true){//新建
@@ -298,13 +292,6 @@ export default {
       let Vue = this;
       Vue.pageSize = 3;
       Vue.bizView.defineJSON = Vue.sqlEditor.doc.getValue();
-      
-/*      if(Vue.isCreate == false){
-        if(Vue.bizView.defineJSON != Vue.old_sqlStatement){
-          Vue.isCreate = true
-        }
-      }*/
-
       let params = {
         'dateSourceId':Vue.bizView.dataSourceId,
         'sqlStament':Vue.bizView.defineJSON,
