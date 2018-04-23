@@ -292,7 +292,7 @@ export default {
     /*点击更新计算字段*/
     update_calculatedfield(){
       let Vue = this;
-      if(Vue.edit_index){
+      if(Vue.edit_index !=null){
         Vue.currentTableData[Vue.edit_index].columnName = Vue.modal_addCaculatedField_form.columnName;
         Vue.currentTableData[Vue.edit_index].columnType = Vue.modal_addCaculatedField_form.columnType;
         Vue.currentTableData[Vue.edit_index].columnAlias = Vue.modal_addCaculatedField_form.columnAlias;
@@ -344,12 +344,8 @@ export default {
             },
             nativeOn:{
               'click':(event)=>{
-                  for(let i in Vue.currentTableData){
-                    if(Vue.currentTableData[i].id == params.row.id){
-                      Vue.delete_item.push(Vue.currentTableData[i]);
-                      Vue.currentTableData.splice(i,1);
-                    }
-                  }               
+                Vue.delete_item.push(params.row);
+                Vue.currentTableData.splice(params.index,1);               
               }
             }
           })
