@@ -7,7 +7,7 @@
               <Col span='10'>
                 <Form style='margin:5px 10px 0px 10px;'>
                   <FormItem label="数据源" prop="dataSourceId">
-                    <Select class="form-control" v-model='bizView.dataSourceId' @on-change='selectTableFields' placeholder='选择数据源'>        
+                    <Select class="form-control" v-model='bizView.dataSourceId' @on-change='selectTableFields' placeholder='选择数据源' :disabled='bizViewInfo_Edit'>        
                         <Option v-for = 'datasource in datasourceList' :key='datasource.id' :value="datasource.id" >{{datasource.name}}</Option>
                     </Select>
                   </FormItem>
@@ -47,7 +47,7 @@
                 <Col span="22">
                   <Form id="createQuery" ref="bizView" :model="bizView" :rules="ruleValidate" :label-width="80">
                       <FormItem label="名称" prop="name">
-                          <Input v-model="bizView.name" placeholder="输入名称" :disabled ='nameEdit'></Input>
+                          <Input v-model="bizView.name" placeholder="输入名称" :disabled ='bizViewInfo_Edit'></Input>
                       </FormItem>
                       <FormItem label="别名" prop="alias">
                           <Input v-model="bizView.alias" placeholder="输入别名"></Input>
@@ -90,9 +90,9 @@ export default {
     datasourceList:'datasourceList',
     query_fieldEdit_table:'query_fieldEdit_table'
    }),
-  nameEdit(){
+  bizViewInfo_Edit(){
     let Vue = this;  
-    if(Vue.isCreate){
+    if(Vue.isCreate){ 
       return false;
     }else{
       return true;
@@ -107,6 +107,7 @@ export default {
       modalPreview:false,
       datasourceName:null,
       sqlEditor:null,
+      /*old_sqlStatement:null,*/
       setting: {
         height:"200",
         dots:"none",
@@ -239,6 +240,9 @@ export default {
         mode: {name: "text/x-mysql"},  
         dragDrop: true
       });
+      if(Vue.isCreate == false){
+        Vue.sqlEditor.setOption("readOnly", true); 
+      }
 /*      Vue.sqlEditor.on('change', function() {  
         Vue.sqlEditor.showHint();  //满足自动触发自动联想功能  
       }); */
@@ -254,6 +258,7 @@ export default {
         Vue.edit_currentTableData = to.params.fieldTableData;
         if(bizViewInfo != null){
           Vue.bizView = bizViewInfo;
+          Vue.old_sqlStatement = bizViewInfo.defineJSON;
         }
       }
       if(Vue.isCreate == true){//新建
@@ -293,6 +298,13 @@ export default {
       let Vue = this;
       Vue.pageSize = 3;
       Vue.bizView.defineJSON = Vue.sqlEditor.doc.getValue();
+      
+/*      if(Vue.isCreate == false){
+        if(Vue.bizView.defineJSON != Vue.old_sqlStatement){
+          Vue.isCreate = true
+        }
+      }*/
+
       let params = {
         'dateSourceId':Vue.bizView.dataSourceId,
         'sqlStament':Vue.bizView.defineJSON,
@@ -304,7 +316,8 @@ export default {
         },
         function(){
           Vue.$Message.error('请输入正确sql!')
-      });        
+      });          
+      
     }
       
   },

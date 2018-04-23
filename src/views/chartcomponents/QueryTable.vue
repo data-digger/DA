@@ -2,87 +2,86 @@
   <div class="tabs_style">
     <Tabs type="card" :animated="false" >
       <TabPane id='calculatedfield' label="计算字段">
-        <Row class='addcalculatedField' v-show='addcalculatedField_show'>
+        <Row class='addcalculatedField' v-show='addcalculatedField_form'>
           <div class='addcalculatedField_title'>Add Column</div>
           <Form ref='calculatedfield' :rules="ruleValidate">
             <Col span='22'>
               <FormItem label="columnName" :label-width="100" prop="columnName">
-                <Input v-model='modal_addField_obj.columnName' :disabled='column_disabled' placeholder="Enter something..."></Input>
+                <Input v-model='modal_addCaculatedField_form.columnName' :disabled='edit_disabled' placeholder="Enter something..."></Input>
               </FormItem> 
               <FormItem label="alias" :label-width="80" prop="alias">
-                <Input v-model='modal_addField_obj.columnAlias' placeholder="Enter something..."></Input>
+                <Input v-model='modal_addCaculatedField_form.columnAlias' placeholder="Enter something..."></Input>
               </FormItem>  
             </Col>
             <Col span=3>
               <FormItem label="Groupable" :label-width="80" prop="Groupable">
-                <Checkbox v-model='modal_addField_obj.groupby' :true-value ='1' :false-value ='0'></Checkbox>
+                <Checkbox v-model='modal_addCaculatedField_form.groupby' :true-value ='1' :false-value ='0'></Checkbox>
               </FormItem>
             </Col>
             <Col span=3>
               <FormItem label="Filterable" :label-width="80">
-                <Checkbox v-model='modal_addField_obj.filterable' :true-value ='1' :false-value ='0' ></Checkbox>
+                <Checkbox v-model='modal_addCaculatedField_form.filterable' :true-value ='1' :false-value ='0' ></Checkbox>
               </FormItem>
             </Col>
             <Col span=3>
               <FormItem label="Count" :label-width="80">
-                <Checkbox v-model='modal_addField_obj.countDistinct' :true-value ='1' :false-value ='0'></Checkbox>
+                <Checkbox v-model='modal_addCaculatedField_form.countDistinct' :true-value ='1' :false-value ='0'></Checkbox>
               </FormItem>
             </Col>
             <Col span=3>
               <FormItem label="Sum" :label-width="80">
-                <Checkbox v-model='modal_addField_obj.sum' :true-value ='1' :false-value ='0'></Checkbox>
+                <Checkbox v-model='modal_addCaculatedField_form.sum' :true-value ='1' :false-value ='0'></Checkbox>
               </FormItem>
             </Col>
             <Col span=3>
               <FormItem label="Max" :label-width="80">
-                <Checkbox v-model='modal_addField_obj.max' :true-value ='1' :false-value ='0'></Checkbox>
+                <Checkbox v-model='modal_addCaculatedField_form.max' :true-value ='1' :false-value ='0'></Checkbox>
               </FormItem>
             </Col> 
             <Col span=3>
               <FormItem label="Min" :label-width="80">
-                <Checkbox v-model='modal_addField_obj.min' :true-value ='1' :false-value ='0'></Checkbox>
+                <Checkbox v-model='modal_addCaculatedField_form.min' :true-value ='1' :false-value ='0'></Checkbox>
               </FormItem>
             </Col>         
-            <Col span='20' v-show='modal_addField_obj.category == 1 ? true:false'>
+            <Col span='20' v-show='modal_addCaculatedField_form.category == 1 ? true:false'>
               <FormItem label="Expression" :label-width="80">
-            <!--     <Input type='textarea' @on-focus='Spin_type_f'  @on-blur='intoType'placeholder="a valid SQL expression as support by the underlying backend.Example:substr(name,1,1)" v-model='modal_addField_obj.expression'></Input> -->
-                <textarea id='c_expression' v-model='modal_addField_obj.expression'></textarea>
+                <textarea id='c_expression' v-model='modal_addCaculatedField_form.expression'></textarea>
               </FormItem>
             </Col>
-            <Col span='12'  v-show='modal_addField_obj.category == 1 ? true:false'>
+            <Col span='12'  v-show='modal_addCaculatedField_form.category == 1 ? true:false'>
               <FormItem label="type" :label-width="80">
-                <Input v-model='modal_addField_obj.columnType'placeholder="Enter something..."></Input>
+                <Input v-model='modal_addCaculatedField_form.columnType'placeholder="Enter something..."></Input>
               </FormItem> 
             </Col>
-            <Col span='1' style='margin-top:8px' v-show='modal_addField_obj.category == 1 ? true:false'>
-              <Spin  v-if='Spin_type'>
+            <Col span='1' style='margin-top:8px' v-show='modal_addCaculatedField_form.category == 1 ? true:false'>
+              <Spin  v-if='Spin_loading'>
                 <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
               </Spin>
-              <Spin  v-if='Spin_type_s' >
+              <Spin  v-if='Spin_loading_success' >
                 <Icon type="checkmark"></Icon>
               </Spin>
             </Col>
           </Form>
           <Col span='24' class='save_addcalculatedField_buttonBox'>
-            <div v-if='create_button' style='display:inline-block'>
+            <div v-if='add_button' style='display:inline-block'>
               <Button class='addcalculatedField_button' type="success" size="small" @click="save_calculatedfield('calculatedfield')">添加</Button> 
             </div>
-            <div v-else='create_button' style='display:inline-block'>
+            <div v-else='add_button' style='display:inline-block'>
               <Button class='addcalculatedField_button'  type="success" size="small" @click="update_calculatedfield('calculatedfield')">更新</Button>
             </div>
             <Button class='addcalculatedField_button' type="error" size="small" @click='cancel_addCalculatedfield()'>取消</Button>  
             <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='preview_calculatedfield()'>
             <Modal
-            v-model="calculatedFieldPreview"
+            v-model="calculatedField_preview"
             width ="1200px"
             title="数据预览">
-              <iviewtable :chartCmpContent ='calculatedfieldData'></iviewtable>        
+              <iviewtable :chartCmpContent ='calculatedfield_queryData'></iviewtable>        
             </Modal>            
           </Col>
         </Row>
         <Icon type="ios-plus" @click.native='add_calculatedfield()' class='add_listColumn_Icon'></Icon>
         <Table 
-          :columns="columns" 
+          :columns="caculated_columns" 
           :data="currentTableData" 
           ref='table'
           :row-class-name="rowClassName" >   
@@ -92,7 +91,7 @@
 
 
       <TabPane label="度量">
-        <Row>
+<!--         <Row>
           <div class='addcalculatedField_title'>Add Metric</div>
           <Form>
             <Col span='22'>
@@ -104,7 +103,14 @@
               </FormItem>  
             </Col>
           </Form>
-        </Row>
+        </Row> -->
+        <Icon type="ios-plus" @click.native='add_metric()' class='add_listColumn_Icon'></Icon>
+        <Table 
+          :columns="metric_columns" 
+        
+          ref='table'
+          :row-class-name="rowClassName">   
+        </Table> 
       </TabPane>
 
 
@@ -134,22 +140,23 @@ export default {
   },
   data(){
     return {
-      Spin_type:false, 
-      Spin_type_s:false,
-      create_button:true,
-      addcalculatedField_show:false,
-      calculatedFieldPreview:false,
-      column_disabled:false,
-      calculatedfieldData:null,
-      edit_index:null,
-      delete_item:[],
-      modal_addField_obj:{},
-      columns:[],
+      Spin_loading:false, //加载中精度条
+      Spin_loading_success:false,//成功进度条
+      add_button:true,//添加按钮
+      addcalculatedField_form:false,//添加计算字段表单
+      calculatedField_preview:false,//计算字段预览
+      edit_disabled:false,//不可编辑的选项
+      calculatedfield_queryData:null,//计算字段查询数据
+      edit_index:null,//被编辑选项的序号
+      delete_item:[],//被删除的选项
+      modal_addCaculatedField_form:{},//添加计算字段的弹框
+      caculated_columns:[],//计算字段列
+      metric_columns:[],//度量列
       currentTableData:[],
-      total:null,
-      pageSize:4,
-      historyData:null,
-      sqlEditor2:null,
+      total:null,//总记录
+      pageSize:4,//分页
+      historyData:null,//历史数据，用于分页
+      caculated_sqlEditor:null,//计算字段sql编辑器
       ruleValidate:{
        /* columnName: [{ required: true, message: '字段名不能为空',trigger: 'blur'}]*/
       }
@@ -161,26 +168,26 @@ export default {
     initCalculatedfield(){
       let Vue = this;
       var myTextarea = $("#c_expression")[0];
-      Vue.sqlEditor2 = CodeMirror.fromTextArea(myTextarea,{
+      Vue.caculated_sqlEditor = CodeMirror.fromTextArea(myTextarea,{
         lineNumbers: true,  
         extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
         mode: {name: "text/x-mysql"},  
         dragDrop: true
       });  
-      Vue.sqlEditor2.on('focus',function(){
-        Vue.Spin_type_f();       
+      Vue.caculated_sqlEditor.on('focus',function(){
+        Vue.Spin_type_control();       
       });
-      Vue.sqlEditor2.on('blur',function(){
-        Vue.modal_addField_obj.expression = Vue.sqlEditor2.doc.getValue();
+      Vue.caculated_sqlEditor.on('blur',function(){
+        Vue.modal_addCaculatedField_form.expression = Vue.caculated_sqlEditor.doc.getValue();
         Vue.intoType();
       });
     },
 
     /*进度条控制*/
-    Spin_type_f(){
+    Spin_type_control(){
       let Vue = this;
-      Vue.Spin_type = true;
-      Vue.Spin_type_s = false;
+      Vue.Spin_loading = true;
+      Vue.Spin_loading_success = false;
     },
 
     /*根据所填写的expression判断类型*/
@@ -189,14 +196,14 @@ export default {
       let param = {
         dataSourceId:Vue.bizView.dataSourceId,
         bizViewSql : Vue.bizView.defineJSON,
-        expression:Vue.modal_addField_obj.expression
+        expression:Vue.modal_addCaculatedField_form.expression
       };
       Vue.AxiosPost("calculatedfield",param,
         function(response){
-          Vue.modal_addField_obj.columnType = response.data.content.columsType[0];
-          Vue.calculatedfieldData = response.data.content;
-          Vue.Spin_type = false;
-          Vue.Spin_type_s = true;
+          Vue.modal_addCaculatedField_form.columnType = response.data.content.columsType[0];
+          Vue.calculatedfield_queryData = response.data.content;
+          Vue.Spin_loading = false;
+          Vue.Spin_loading_success = true;
         },
         function(){
           Vue.$Message.error('请输入正确的expression!');
@@ -207,9 +214,9 @@ export default {
     /*添加计算字段*/
     add_calculatedfield(){
       let Vue = this;      
-      Vue.create_button = true;//按钮更换为添加
-      Vue.column_disabled = false;//columnName 可编辑
-      Vue.modal_addField_obj = {
+      Vue.add_button = true;//按钮更换为添加
+      Vue.edit_disabled = false;//columnName 可编辑
+      Vue.modal_addCaculatedField_form = {
         'columnName':null,
         'columnType':null,
         'columnAlias':null,
@@ -222,12 +229,14 @@ export default {
         'category':1,
         'expression':''
       };
-      Vue.addcalculatedField_show = true;
+      Vue.addcalculatedField_form = true;
       Vue.$nextTick(function(){//准备好数据后，加载sql编辑器
-        if(Vue.modal_addField_obj.category == 1 && Vue.sqlEditor2 == null){
+        if(Vue.modal_addCaculatedField_form.category == 1 && Vue.caculated_sqlEditor == null){
           Vue.initCalculatedfield();      
         }
-        Vue.sqlEditor2.setValue(Vue.modal_addField_obj.expression);
+        if(Vue.modal_addCaculatedField_form.category == 1){
+          Vue.caculated_sqlEditor.setValue(Vue.modal_addCaculatedField_form.expression);
+        }
       })            
     },
 
@@ -236,7 +245,7 @@ export default {
       let Vue = this;
       Vue.$refs[calculatedfield].validate((valid) => {
         if(valid){
-          Vue.currentTableData.push(Vue.modal_addField_obj);
+          Vue.currentTableData.push(Vue.modal_addCaculatedField_form);
           Vue.cancel_addCalculatedfield();
         }else{
           Vue.$Message.error('请输入正确的信息!');
@@ -247,32 +256,35 @@ export default {
     /*预览计算字段表数据*/
     preview_calculatedfield(){
       let Vue = this;
-      Vue.calculatedFieldPreview = true;
+      Vue.calculatedField_preview = true;
     },
 
     /*编辑表字段*/
     EditField(params){
       let Vue =this;
       Vue.cancel_addCalculatedfield();
-      Vue.addcalculatedField_show = true;//展开编辑页面
-      Vue.create_button = false;//新建按钮改为更新按钮
-      Vue.column_disabled = true;//columnName 不可编辑
-      Vue.modal_addField_obj.columnName = params.row.columnName;
-      Vue.modal_addField_obj.columnType = params.row.columnType;
-      Vue.modal_addField_obj.columnAlias = params.row.columnAlias;
-      Vue.modal_addField_obj.groupby = params.row.groupby;
-      Vue.modal_addField_obj.filterable = params.row.filterable;
-      Vue.modal_addField_obj.countDistinct = params.row.countDistinct;
-      Vue.modal_addField_obj.sum = params.row.sum;
-      Vue.modal_addField_obj.max = params.row.max;
-      Vue.modal_addField_obj.min = params.row.min;
-      Vue.modal_addField_obj.category = params.row.category;
-      Vue.modal_addField_obj.expression = params.row.expression;
+      Vue.addcalculatedField_form = true;//展开编辑页面
+      Vue.add_button = false;//新建按钮改为更新按钮
+      Vue.edit_disabled = true;//columnName 不可编辑
+      Vue.modal_addCaculatedField_form.columnName = params.row.columnName;
+      Vue.modal_addCaculatedField_form.columnType = params.row.columnType;
+      Vue.modal_addCaculatedField_form.columnAlias = params.row.columnAlias;
+      Vue.modal_addCaculatedField_form.groupby = params.row.groupby;
+      Vue.modal_addCaculatedField_form.filterable = params.row.filterable;
+      Vue.modal_addCaculatedField_form.countDistinct = params.row.countDistinct;
+      Vue.modal_addCaculatedField_form.sum = params.row.sum;
+      Vue.modal_addCaculatedField_form.max = params.row.max;
+      Vue.modal_addCaculatedField_form.min = params.row.min;
+      Vue.modal_addCaculatedField_form.category = params.row.category;
+      Vue.modal_addCaculatedField_form.expression = params.row.expression;
       Vue.$nextTick(function(){//准备好数据后，加载sql编辑器
-        if(Vue.modal_addField_obj.category == 1 && Vue.sqlEditor2 == null){
+        if(Vue.modal_addCaculatedField_form.category == 1 && Vue.caculated_sqlEditor == null){
           Vue.initCalculatedfield();      
         }
-        Vue.sqlEditor2.setValue(Vue.modal_addField_obj.expression);
+        if(Vue.modal_addCaculatedField_form.category == 1){
+          Vue.caculated_sqlEditor.setValue(Vue.modal_addCaculatedField_form.expression);
+        }
+        
       }) 
       Vue.edit_index = params.index;
     },
@@ -281,17 +293,17 @@ export default {
     update_calculatedfield(){
       let Vue = this;
       if(Vue.edit_index){
-        Vue.currentTableData[Vue.edit_index].columnName = Vue.modal_addField_obj.columnName;
-        Vue.currentTableData[Vue.edit_index].columnType = Vue.modal_addField_obj.columnType;
-        Vue.currentTableData[Vue.edit_index].columnAlias = Vue.modal_addField_obj.columnAlias;
-        Vue.currentTableData[Vue.edit_index].groupby = Vue.modal_addField_obj.groupby;
-        Vue.currentTableData[Vue.edit_index].filterable = Vue.modal_addField_obj.filterable;
-        Vue.currentTableData[Vue.edit_index].countDistinct = Vue.modal_addField_obj.countDistinct;
-        Vue.currentTableData[Vue.edit_index].sum = Vue.modal_addField_obj.sum;
-        Vue.currentTableData[Vue.edit_index].max = Vue.modal_addField_obj.max;
-        Vue.currentTableData[Vue.edit_index].min = Vue.modal_addField_obj.min;
-        Vue.currentTableData[Vue.edit_index].category = Vue.modal_addField_obj.category;
-        Vue.currentTableData[Vue.edit_index].expression = Vue.modal_addField_obj.expression;        
+        Vue.currentTableData[Vue.edit_index].columnName = Vue.modal_addCaculatedField_form.columnName;
+        Vue.currentTableData[Vue.edit_index].columnType = Vue.modal_addCaculatedField_form.columnType;
+        Vue.currentTableData[Vue.edit_index].columnAlias = Vue.modal_addCaculatedField_form.columnAlias;
+        Vue.currentTableData[Vue.edit_index].groupby = Vue.modal_addCaculatedField_form.groupby;
+        Vue.currentTableData[Vue.edit_index].filterable = Vue.modal_addCaculatedField_form.filterable;
+        Vue.currentTableData[Vue.edit_index].countDistinct = Vue.modal_addCaculatedField_form.countDistinct;
+        Vue.currentTableData[Vue.edit_index].sum = Vue.modal_addCaculatedField_form.sum;
+        Vue.currentTableData[Vue.edit_index].max = Vue.modal_addCaculatedField_form.max;
+        Vue.currentTableData[Vue.edit_index].min = Vue.modal_addCaculatedField_form.min;
+        Vue.currentTableData[Vue.edit_index].category = Vue.modal_addCaculatedField_form.category;
+        Vue.currentTableData[Vue.edit_index].expression = Vue.modal_addCaculatedField_form.expression;        
       }
 
       Vue.cancel_addCalculatedfield();
@@ -300,7 +312,7 @@ export default {
     /*取消添加计算字段操作*/
     cancel_addCalculatedfield(){
       let Vue = this;
-      Vue.addcalculatedField_show = false;
+      Vue.addcalculatedField_form = false;
     },
     
     /*保存表编辑*/
@@ -316,8 +328,8 @@ export default {
       Vue.AxiosPost("delete_field",{columnsJSON:JSON.stringify(Vue.delete_item)},function(response){});  
     },
 
-    /*画表*/
-    drawTable (){
+    /*画计算字段表*/
+    drawCaculatedTable (){
       let Vue = this;
       if(Vue.tableData != null){
       var cols = [];
@@ -448,14 +460,33 @@ export default {
         Vue.historyData = rows;
         Vue.currentTableData = Vue.historyData;                 
       }
-      Vue.columns = cols; 
+      Vue.caculated_columns = cols; 
     }       
+    },
+
+    /*画度量表*/
+    drawMetricTable(){
+      let Vue = this;
+      let col = [];
+      col.push({
+        "title":'Metric',
+        "key":'Metric',
+        "align":"center"       
+      },{
+        "title":'alias',
+        "key":'alias',
+        "align":"center"       
+      },{
+        "title":'type',
+        "key":'type',
+        "align":"center"       
+      });
     },
 
     /*刷新表数据*/
     refreshTableData(){
       let Vue = this;
-      Vue.drawTable();
+      Vue.drawCaculatedTable();
     },
     
     /*表格行样式*/
