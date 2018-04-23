@@ -5,14 +5,15 @@
    <Row>
         <FormItem prop="xAxis">
             XAxis
-            <Select class="form-control" v-model='selectdOption.xAxis.data'>               
-                <Option v-for='item in groupbyList' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
+            <Select class="form-control" v-model='selectedX'>               
+                <Option v-for='(item,index) in groupbyList' :key="item.columnName" :value="index" >{{item.columnAlias}}</Option>
             </Select>
+            <Checkbox v-model="params.isgroupby">以该字段分组</Checkbox>
         </FormItem>
         <FormItem prop="yAxis">
             YAxis
             <Select v-model="selectedY" multiple>
-                <Option v-for='item in metrics' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
+                <Option v-for='(item,index) in (params.isgroupby==true?aggregationFun:metrics)' :key="item.columnName" :value="index" >{{item.columnAlias}}</Option>
             </Select>
         </FormItem>
         <FormItem prop="Position">
@@ -55,9 +56,10 @@ export default {
     props:['data'],
     computed: {
       ...mapGetters({
-        dimensions:'dimensions',
+        //dimensions:'dimensions',
         metrics:'metrics',
-        groupbyList:'groupbyList'
+        groupbyList:'groupbyList',
+        aggregationFun:'aggregationFun'
       }),
       COLORS : function(){
           return ChartTemplate.COLORS;
@@ -93,18 +95,21 @@ export default {
                                 interval:0,  
                                 rotate:40  
                             },
+                            name:'',
                             data : '',
                         },
                     yAxis : [
                         {
-                            type : 'value'
+                            type : 'value',
                         }
                     ],                    
                     series : [
                     ]
                 },
+                selectedX:'',
                 selectedY:[],                
                 colorSelected:0,
+                params:{value:[],groupby:null,isgroupby:true}
             }
     },
     methods: {
@@ -112,6 +117,7 @@ export default {
             let Vue = this;
                 Vue.selectdOption = JSON.parse(JSONOption);
                 Vue.selectedY = [];
+                Vue.selectedX = Vue.selectdOption.xAxis.data;
                 let colorFirst = Vue.selectdOption.color[0];
                 for(let i in Vue.selectdOption.series){
                     Vue.selectedY.push(Vue.selectdOption.series[i].data);
@@ -126,21 +132,40 @@ export default {
         },
        sentOption:function(){
            let Vue = this;
+           Vue.params.value = [];
+           Vue.params.groupby = null;
+           let xName = Vue.groupbyList[Vue.selectedX].columnName;
+           let xAlias = Vue.groupbyList[Vue.selectedX].columnAlias;
+           Vue.selectdOption.xAxis.name = xAlias;
+           Vue.selectdOption.xAxis.data = xName;
+           Vue.params.groupby = Vue.groupbyList[Vue.selectedX];
            Vue.selectdOption.color = ChartTemplate.COLORS[Vue.colorSelected].color;
-           Vue.selectdOption.legend.data = Vue.selectedY;
-           Vue.selectdOption.series = [];
+           //Vue.selectdOption.legend.data = [];
+           Vue.selectdOption.series = [];           
            for (let i in Vue.selectedY){
-
-               Vue.selectdOption.series.push({name:Vue.selectedY[i],data:Vue.selectedY[i],type: 'bar'})
+               if(Vue.params.isgroupby == true){
+                   let yName = Vue.aggregationFun[Vue.selectedY[i]].columnName;
+                   let yAlias = Vue.aggregationFun[Vue.selectedY[i]].columnAlias;
+                   Vue.selectdOption.series.push({name:yAlias,data:yName,type: 'bar'});
+                   Vue.params.value.push(Vue.aggregationFun[Vue.selectedY[i]]);
+               } else {
+                   var yName = Vue.metrics[Vue.selectedY[i]].columnName;
+                   var yAlias = Vue.metrics[Vue.selectedY[i]].columnAlias;
+                   Vue.selectdOption.series.push({name:yAlias,data:yName,type: 'bar'});
+                   Vue.params.value.push(Vue.metrics[Vue.selectedY[i]]);
+               }  
+               
            }
-           Vue.$emit('getSelectedOption',Vue.selectdOption);
+           Vue.$emit('getSelectedOption',{option:Vue.selectdOption,filter:Vue.params});
        },
        reset:function(){
            let Vue = this;
            Vue.selectdOption.color = ChartTemplate.COLORS[0].color;
+           Vue.selectedX = '';
            Vue.selectedY = [];
            Vue.selectdOption.xAxis.data= '',
-           Vue.selectdOption.legend.data = Vue.selectedY;
+           Vue.selectdOption.legend.show = true;
+           //Vue.selectdOption.legend.data = Vue.selectedY;
            Vue.selectdOption.series = [];
            Vue.selectdOption.grid.left='3%',
            Vue.selectdOption.grid.right = '4%',

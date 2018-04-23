@@ -27,6 +27,7 @@ const state = {
   query_fieldEdit_table:[],
   dimensions:[], //维度字段集合
   metrics:[], //度量字段集合
+  aggregationFun:[],//聚合函数集合
   filterableList:[],  //可过滤字段集合
   groupbyList:[], //可排序字段集合
 }
@@ -45,7 +46,8 @@ const getters = {
   dimensions: state => state.dimensions,
   metrics: state => state.metrics,
   filterableList: state => state.filterableList,
-  groupbyList: state => state.groupbyList
+  groupbyList: state => state.groupbyList,
+  aggregationFun: state => state.aggregationFun
 }
 
 // actions
@@ -146,6 +148,9 @@ const mutations = {
   },
   setgroupbyList(state,param){
     state.groupbyList = param;
+  },
+  setaggregationFun(state,param){
+    state.aggregationFun = param;
   }
 }
 
