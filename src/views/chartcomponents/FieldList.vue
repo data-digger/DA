@@ -37,7 +37,7 @@
             <Panel name="3">
                     过滤
                     <div slot="content">
-                        <Collapse>
+                        <Collapse v-model="activedFilterPanel">
                             <Panel name="3-1">
                                 排序
                                 <Row slot="content">
@@ -72,7 +72,7 @@
                                                 :prop="'items.' + index + '.value'">
                                             <Row>
                                                     <Col span="22">
-                                                        <Select class="form-control" v-model='filter.where[index].field'>               
+                                                        <Select class="form-control" v-model='whereIndex[index]'>               
                                                             <Option v-for="(item,i) in filterableList" :key="item.columnName" :value="i">{{item.columnAlias}}</Option>
                                                         </Select>
                                                     </Col>
@@ -120,14 +120,16 @@ export default {
         return {
             FUNCTION:['AND','OR','NOT','DISTINCT','SUM','COUNT','AVG'],
             ORDERTYPE:['ASC','DESC'],
-            CONTENTFILTERMARK:['IN','NOT IN','=','>','<','>=','<=','!=','=='],
+            CONTENTFILTERMARK:['IN','NOT IN','=','>','<','>=','<=','!=','==','LIKE'],
             activedPanel:[],
+            activedFilterPanel:[],
             dimensions:[],
             metrics:[],
             aggregationFun:[],
             filterableList:[],
             groupbyList:[],
-            placeholder:'1',           
+            placeholder:'1',  
+            whereIndex:[],         
             filter:{
                 orderby:{field:'',type:'ASC'},
                 limit:0,
@@ -195,6 +197,29 @@ export default {
 
             Vue.activedPanel = ["1","2"];
         },
+        setData(filters){
+            let Vue = this;
+            Vue.filter.where = filters.where;
+            Vue.filter.orderby = filters.orderby;
+            Vue.filter.limit = filters.limit;
+            Vue.whereIndex = [];
+            for(var i in Vue.filter.where){
+                Vue.whereIndex.push(Vue.findWhereIndex(Vue.filter.where[i].field))
+            }
+            Vue.activedPanel = ["1","2","3"];  
+            Vue.activedFilterPanel = ["3-1","3-2","3-3"]
+        },
+        findWhereIndex(whereObject){
+            let Vue = this;
+            var index='';
+            for(var i=0; i<Vue.filterableList.length; i++){
+                if(whereObject.columnName == Vue.filterableList[i].columnName){
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        },
         addContentFilter(){
             let Vue = this;
             Vue.filter.where.push({field:'',mark:'',value:''})
@@ -219,12 +244,12 @@ export default {
         },
         sentFilter:function(){
             let Vue = this;
-            for(let i in Vue.filter.where){
-                let content = Vue.filter.where[i];
-                if(content.field){
-                    content.field = Vue.filterableList[content.field];
+            for(let i in Vue.whereIndex){
+                let fieldIndex = Vue.whereIndex[i];
+                if(fieldIndex){
+                    Vue.filter.where[i].field = Vue.filterableList[fieldIndex];
                 }else{
-                    content.field = null;
+                    Vue.filter.where[i].field = null;
                 }
             }
             Vue.$emit('getFilter',Vue.filter);
@@ -235,8 +260,29 @@ export default {
         },
         cancel(){
 
+        },
+        reset(){
+            this.activedPanel=[];
+            this.activedFilterPanel=[]
+            this.dimensions=[];
+            this.metrics=[];
+            this.aggregationFun=[];
+            this.filterableList = [];
+            this.groupbyList = [];
+            this.whereIndex = [];         
+            this.filter={
+                    orderby:{field:'',type:'ASC'},
+                    limit:0,
+                    where:[]
+                };
+
+            this.$store.commit('setdimensions', this.dimensions);
+            this.$store.commit('setmetrics',this.metrics);
+            this.$store.commit('setfilterableList',this.filterableList);
+            this.$store.commit('setgroupbyList',this.groupbyList);
+            this.$store.commit('setaggregationFun',this.aggregationFun);
+            }
         }
-    }
 
 }
 </script>

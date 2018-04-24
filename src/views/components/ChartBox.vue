@@ -87,35 +87,20 @@ export default {
     preview (){ 
       let Vue = this;
       Vue.paramComponent = [];
-       Vue.AxiosPost("previewBizView",{'bizViewId':Vue.chartbox.bizViewId},
+       Vue.AxiosPost("getChartData",{'chartId':Vue.chartbox.id},
         function(response){
-            for(var i in response.data.defaultParameters){
-              if(response.data.defaultParameters[i].paramType == 'list'){
-                var cmpObj = {};
-                cmpObj.component = list;
-                cmpObj.content = response.data.defaultParameters[i];
-                Vue.paramComponent.push(cmpObj);
-              };
-              if(response.data.defaultParameters[i].paramType == 'date'){
-                var cmpObj = {};
-                cmpObj.component = datepicker;
-                cmpObj.content = response.data.defaultParameters[i];
-                Vue.paramComponent.push(cmpObj);
-              }
-            }
-            Vue.refreshChartData(response); 
+           Vue.queryData = response.data.content.data;
+           let define = JSON.parse(response.data.content.defineJSON);
+           Vue.eoption = define.option;
+           Vue.drawChart();
+
       });
-    },
-    refreshChartData(response){
-      let Vue = this;
-      Vue.queryData = response.data.gridData;   
-      Vue.drawChart();     
     },
     edit (){
       let Vue = this; 
       this.$router.push({
         name:"createChart",
-        params:Vue.chartbox
+        params:{chartbox:Vue.chartbox}
       });
     },
     editOk(){
@@ -130,27 +115,12 @@ export default {
     drawChart(){
       let Vue = this;
       Vue.chartShow = true;
-      Vue.eoption = eval("(" + Vue.chartbox.defineJSON + ")");
       chartUtil.analysis(Vue.eoption,Vue.chartbox.type,Vue.queryData);
       Vue.modalpreview = true;
-      //Vue.$refs['chart'+Vue.chartbox.id].show();
       Vue.$nextTick(function(){
          Vue.$refs['chart'+Vue.chartbox.id].show(Vue.eoption);
        })
     },
-    refreshQueryData(param){
-      let Vue = this;
-      Vue.paramSelected = $.extend(Vue.paramSelected,param);
-      let paramLength = Object.keys(Vue.paramSelected).length;
-      console.log(Vue.param);
-      let JSONParam = JSON.stringify(Vue.paramSelected);
-      if(paramLength == Vue.paramComponent.length){
-        Vue.AxiosPost("updateBizView",{"bizViewId":Vue.chartbox.bizViewId,"JSONParam":JSONParam},
-          function(response){
-           Vue.refreshChartData(response);
-        });         
-      }     
-    }, 
   },
 }
 </script>

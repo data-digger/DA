@@ -83,7 +83,7 @@ export default {
                     },
                     grid: {
                         left: '3%',
-                        right: '4%',
+                        right: '10%',
                         bottom: '3%',
                         top:'10%',
                         containLabel: true
@@ -113,22 +113,44 @@ export default {
             }
     },
     methods: {
-         setData:function(JSONOption){
+         setData:function(eoption,filters){
             let Vue = this;
-                Vue.selectdOption = JSON.parse(JSONOption);
+                Vue.selectdOption = eoption;
+                Vue.params.value = filters.value;
+                Vue.params.groupby = filters.groupby;
+                Vue.params.isgroupby = filters.isgroupby;
                 Vue.selectedY = [];
-                Vue.selectedX = Vue.selectdOption.xAxis.data;
+                Vue.selectedX = Vue.findIndex(Vue.groupbyList,Vue.selectdOption.xAxis.data);
                 let colorFirst = Vue.selectdOption.color[0];
-                for(let i in Vue.selectdOption.series){
-                    Vue.selectedY.push(Vue.selectdOption.series[i].data);
+                if(Vue.params.isgroupby){
+                     for(let i in Vue.selectdOption.series){
+                            let yIndex = Vue.findIndex(Vue.groupbyList,Vue.selectdOption.series[i].data);
+                            Vue.selectedY.push(yIndex);
+                        } 
+                } else {
+                    for(let i in Vue.selectdOption.series){
+                            let yIndex = Vue.findIndex(Vue.metrics,Vue.selectdOption.series[i].data);
+                            Vue.selectedY.push(yIndex);
+                        } 
                 }
                 for (let j in ChartTemplate.COLORS){
                     if(ChartTemplate.COLORS[j].color[0] == colorFirst){
-                        Vue.colorSelected = j;
+                        Vue.colorSelected = parseInt(j);
                         break;
                     }
                 }
+               
            // Vue.$store.commit('getInitOption',Vue.selectdOption);
+        },
+        findIndex:function(list,name){
+            var re = '';
+            for(let i=0; i<list.length; i++){
+                if(list[i].columnName == name){
+                    re = i;
+                    break;
+                }
+            }
+            return re;
         },
        sentOption:function(){
            let Vue = this;
@@ -168,7 +190,7 @@ export default {
            //Vue.selectdOption.legend.data = Vue.selectedY;
            Vue.selectdOption.series = [];
            Vue.selectdOption.grid.left='3%',
-           Vue.selectdOption.grid.right = '4%',
+           Vue.selectdOption.grid.right = '10%',
            Vue.selectdOption.grid.top = '10%',
            Vue.selectdOption.grid.bottom = '3%',
            Vue.colorSelected = 0

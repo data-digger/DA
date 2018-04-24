@@ -104,7 +104,7 @@ export default {
       //paramComponent:[],
       //paramSelected:null,
       //paramShow:false,
-      chartPreview:true,
+      chartPreview:false,
       columns:[],
       value:0,
       carouselSetting:{
@@ -181,7 +181,6 @@ export default {
     }
   },
   　watch:{
-　　　//'myChart.bizViewId': 'getQueryData',
      'myChart.bizViewId': 'getFieldList',
 　},
   methods:{
@@ -206,17 +205,14 @@ export default {
       Vue.isInit = true;
       Vue.isNew =  $.isEmptyObject(to.params);
       if(Vue.isNew){  //新建图表
-        Vue.paramShow = false;
         Vue.chartPreview = false;
         Vue.handleReset();
       } else {  //编辑图表图表
-        Vue.paramShow = true;
-        Vue.chartPreview = true;
-        Vue.myChart = to.params;
-        Vue.$nextTick(function(){
-        Vue.$refs['optionSelected'].setData(to.params.defineJSON)
-        //Vue.getQueryData();
-       }) 
+        Vue.chartPreview = false;
+        Vue.myChart = to.params.chartbox;
+        let define = JSON.parse(Vue.myChart.defineJSON);
+        Vue.eoption = define.option;
+        Vue.filters = define.filters;
       }
       
     },
@@ -228,71 +224,28 @@ export default {
           }
         ); 
       },
-    getQueryData:function(){
-        let Vue = this;
-        if (Vue.myChart.bizViewId != ''){
-            Vue.AxiosPost("previewBizView",{'bizViewId':Vue.myChart.bizViewId},
-              function(response){
-                Vue.queryData = response.data.gridData;
-                //Vue.colNames = Vue.queryData.stringHeaders;
-                Vue.initParameters(response);
-                 if(!Vue.isNew && Vue.isInit){ //编辑状态并且初始化状态需要在获取数据后初始化图表
-                  Vue.previewChart();
-                  Vue.isInit = false;
-                }
-              }
-          ); 
-        }
-        
-      },
     getFieldList:function(){
       let Vue = this;
+      Vue.chartPreview = false;
       if (Vue.myChart.bizViewId != ''){
             Vue.AxiosPost("getFieldTable",{'bizviewId':Vue.myChart.bizViewId},
               function(response){
                 if(response.data.success){
                   Vue.columns = response.data.content;
-                }
-                
+                  if(Vue.isInit && !Vue.isNew){
+                    Vue.$nextTick(function(){
+                        Vue.$refs['optionSelected'].setData(Vue.eoption,Vue.filters);
+                        Vue.$refs['fieldList'].setData(Vue.filters);
+                        Vue.initChart();
+                        Vue.isInit = false;
+                    }) 
+                  }
+                }  
             })
         }
     },
-    initParameters(response){
-      let Vue = this;
-      Vue.paramComponent = [];
-       for(var i in response.data.defaultParameters){
-              if(response.data.defaultParameters[i].paramType == 'list'){
-                var cmpObj = {};
-                cmpObj.component = list;
-                cmpObj.content = response.data.defaultParameters[i];
-                Vue.paramComponent.push(cmpObj);
-              };
-              if(response.data.defaultParameters[i].paramType == 'date'){
-                var cmpObj = {};
-                cmpObj.component = datepicker;
-                cmpObj.content = response.data.defaultParameters[i];
-                Vue.paramComponent.push(cmpObj);
-              }
-            }
-    },
-    refreshQueryData(param){
-      let Vue = this;
-      Vue.paramSelected = $.extend(Vue.paramSelected,param);
-      let paramLength = Object.keys(Vue.paramSelected).length;
-      let JSONParam = JSON.stringify(Vue.paramSelected);
-      if(paramLength == Vue.paramComponent.length){
-        Vue.AxiosPost("updateBizView",{"bizViewId":Vue.myChart.bizViewId,"JSONParam":JSONParam},
-          function(response){
-           Vue.queryData = response.data.gridData;
-           if(Vue.chartPreview){
-             Vue.previewChart();
-           }   
-        });         
-      }     
-    }, 
     setOption(selectdOption){
       let Vue = this;
-      //Vue.myChart.defineJSON = JSON.stringify(selectdOption);
       Vue.eoption = $.extend(true, {}, selectdOption.option);
       Vue.filters.value = selectdOption.filter.value;
       Vue.filters.groupby = selectdOption.filter.groupby;
@@ -309,27 +262,38 @@ export default {
     previewChart:function(){
         let Vue = this;
         Vue.chartPreview = true;
-        Vue.paramShow = true;
         Vue.$refs['fieldList'].sentFilter();
         Vue.$refs['optionSelected'].sentOption();
         Vue.AxiosPost("chartPreview",{bizViewId:Vue.myChart.bizViewId,filterJSON:JSON.stringify(Vue.filters)},
                            function(response){
                               Vue.queryData = response.data.content;
-                              Vue.analyzeOption();
-                              Vue.$refs['chartContainer'].show(Vue.eoption);
-                              // Vue.$nextTick(function(){
-                              //    Vue.$refs['chartContainer'].show(Vue.eoption);
-                              //  })
+                              Vue.drawChart();
                            });
-      //   Vue.analyzeOption();
-      //   Vue.$nextTick(function(){
-      //    Vue.$refs['chartContainer'].show(Vue.eoption);
-      //  })
+    },
+    initChart(){ 
+      let Vue = this;
+      Vue.chartPreview = true;
+       Vue.AxiosPost("getChartData",{'chartId':Vue.myChart.id},
+        function(response){
+           Vue.queryData = response.data.content.data;
+           Vue.drawChart();
+
+      });
+    },
+    drawChart(){
+      let Vue = this;
+      chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
+      Vue.$nextTick(function(){
+         Vue.$refs['chartContainer'].show(Vue.eoption);
+       })
     },
     saveChart:function(){
       let Vue = this;
+      Vue.$refs['fieldList'].sentFilter();
       Vue.$refs['optionSelected'].sentOption();
-      Vue.$refs["myChart"].validate((valid) => {
+      let chartOption = {filters:Vue.filters,option:Vue.eoption};
+      Vue.myChart.defineJSON = JSON.stringify(chartOption);
+      Vue.$refs["chartInfo"].validate((valid) => {
                     if (valid) {
                          Vue.AxiosPost("createChart",
                           Vue.myChart,
@@ -348,12 +312,12 @@ export default {
       Vue.myChart.alias = '';
       Vue.myChart.bizViewId = '';
       Vue.myChart.desc =  '';
-      //Vue.myChart.type = 'Bar',
       Vue.myChart.defineJSON = '';
       Vue.chartPreview = false;
       Vue.eoption = null;
       Vue.$refs['optionSelected'].reset();
       Vue.$refs['chartContainer'].reset();
+      Vue.$refs['fieldList'].reset();
     },
     closePage(name){
       let pageOpenedList = this.$store.state.app.pageOpenedList;
