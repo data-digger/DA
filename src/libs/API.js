@@ -11,8 +11,8 @@ window.urlConf = {
   bizview: {
     list:`${window.uri}/bizview/list`,
     save: `${window.uri}/bizview/save`,
-    preview_extra:`${window.uri}/bizview/preview`,
-    preview:`${window.uri}/bizview/preview/id`,
+    preview:`${window.uri}/bizview/preview`,
+    previewById:`${window.uri}/bizview/preview/id`,
     update: `${window.uri}/bizview/update`,
     columnList:`${window.uri}/bizview/column/list`,
     calculatedfield:`${window.uri}/bizview/column/calculatedfield/preview`,
@@ -96,11 +96,11 @@ export default {
     },    
     /*预览查询器中包含字段表的数据*/
     previewBizView_extra(params){
-     return axios.post(urlConf.bizview.preview_extra, params); 
+     return axios.post(urlConf.bizview.preview, params); 
     },
     /*预览查询器*/
     previewBizView(params){
-     return axios.post(urlConf.bizview.preview, params); 
+     return axios.post(urlConf.bizview.previewById, params); 
     },
     /*根据参数值更新查询器数据*/
     updateBizView(params){
