@@ -24,6 +24,7 @@ window.urlConf = {
     save: `${window.uri}/chart/save`,
     getone:`${window.uri}/chart/getone`,
     getdata:`${window.uri}/chart/getdata`,
+    preview:`${window.uri}/chart/preview`
   },
   table: {
     list: `${window.uri}/table/list`,
@@ -168,5 +169,9 @@ export default {
     /*获取参数候选值*/
     getStandByValue(params){
       return axios.post(urlConf.param.getstandbyvalue, params); 
+    },
+    /*获取图表SQL*/
+    chartPreview(params){
+      return axios.post(urlConf.chart.preview, params); 
     }
 };

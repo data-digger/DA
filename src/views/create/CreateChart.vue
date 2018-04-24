@@ -3,7 +3,7 @@
       <Carousel v-model="value" :dots="carouselSetting.dots" :arrow="carouselSetting.arrow" ref='slide'>
       <CarouselItem>
         <Col span="6">
-             <FieldList :columns="columns"></FieldList>
+             <FieldList ref='fieldList' :columns="columns" @getFilter = 'setFilter'></FieldList>
           </Col>
           <Col span="7">
               <Form id="chartOption" ref="chartOption" :model="myChart" :rules="ruleValidate" :label-width="80">
@@ -104,7 +104,7 @@ export default {
       //paramComponent:[],
       //paramSelected:null,
       //paramShow:false,
-      chartPreview:false,
+      chartPreview:true,
       columns:[],
       value:0,
       carouselSetting:{
@@ -113,7 +113,7 @@ export default {
         arrow:"never",
       },
       finished:false,
-      //filters:[{name:'',defineJSON:''}],
+      filters:{},
       queryData:null,
       eoption:null,
       chartType:ChartTemplate.TYPE,
@@ -292,8 +292,15 @@ export default {
     }, 
     setOption(selectdOption){
       let Vue = this;
-      Vue.myChart.defineJSON = JSON.stringify(selectdOption);
-      Vue.eoption = $.extend(true, {}, selectdOption);
+      //Vue.myChart.defineJSON = JSON.stringify(selectdOption);
+      Vue.eoption = $.extend(true, {}, selectdOption.option);
+      Vue.filters.value = selectdOption.filter.value;
+      Vue.filters.groupby = selectdOption.filter.groupby;
+      Vue.filters.isgroupby = selectdOption.filter.isgroupby;
+    },
+    setFilter(filter){
+      let Vue = this;
+      Vue.filters = filter;
     },
     analyzeOption:function(){  
       let Vue = this;
@@ -303,11 +310,21 @@ export default {
         let Vue = this;
         Vue.chartPreview = true;
         Vue.paramShow = true;
+        Vue.$refs['fieldList'].sentFilter();
         Vue.$refs['optionSelected'].sentOption();
-        Vue.analyzeOption();
-        Vue.$nextTick(function(){
-         Vue.$refs['chartContainer'].show(Vue.eoption);
-       })
+        Vue.AxiosPost("chartPreview",{bizViewId:Vue.myChart.bizViewId,filterJSON:JSON.stringify(Vue.filters)},
+                           function(response){
+                              Vue.queryData = response.data.content;
+                              Vue.analyzeOption();
+                              Vue.$refs['chartContainer'].show(Vue.eoption);
+                              // Vue.$nextTick(function(){
+                              //    Vue.$refs['chartContainer'].show(Vue.eoption);
+                              //  })
+                           });
+      //   Vue.analyzeOption();
+      //   Vue.$nextTick(function(){
+      //    Vue.$refs['chartContainer'].show(Vue.eoption);
+      //  })
     },
     saveChart:function(){
       let Vue = this;
