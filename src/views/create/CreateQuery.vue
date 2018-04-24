@@ -128,20 +128,19 @@ export default {
     }
   },
   methods:{
-    /*后一步操作*/
+    /*下一步操作*/
     next() {
       let Vue = this;
       if(Vue.value <3){
         Vue.$refs.slide.arrowEvent(1);
         if(Vue.value == 1){
-          if(Vue.isCreate == true){
-            //如果用户已经预览了表格
+          if(Vue.isCreate == true){//如果是新建
             if(Vue.currentTableData != null){
               return;
-            }else{//如果用户没有预览表格
+            }else{
               Vue.getpreviewData();      
             }             
-          }else{
+          }else{//如果编辑
             Vue.currentTableData = Vue.edit_currentTableData;
           }       
         }
@@ -151,7 +150,7 @@ export default {
       }
     },
 
-    /*前一步操作*/
+    /*上一步操作*/
     pre() {
       let Vue = this;
       if(Vue.value !=0){
@@ -248,14 +247,14 @@ export default {
     initEditBizViewData(to,from){
       let Vue = this;
       Vue.isCreate =  $.isEmptyObject(to.params);
-      if(Vue.isCreate == false){ //编辑
+      if(Vue.isCreate == false){ //如果是编辑，通过路由接收到查询器信息以及字段数据
         let bizViewInfo = to.params.querybox;
         Vue.edit_currentTableData = to.params.fieldTableData;
         if(bizViewInfo != null){
           Vue.bizView = bizViewInfo;
         }
       }
-      if(Vue.isCreate == true){//新建
+      if(Vue.isCreate == true){//如果是新建，信息初始化
         Vue.bizView = {
           name:'',
           alias:'',

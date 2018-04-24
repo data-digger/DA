@@ -43,17 +43,17 @@
                 <Checkbox v-model='addCaculatedObj.min' :true-value ='1' :false-value ='0'></Checkbox>
               </FormItem>
             </Col>         
-            <Col span='20' v-show='addCaculatedObj.category == 0 ? false:true'>
+            <Col span='20' v-show='addCaculatedObj.category != 0 ? true:false'>
               <FormItem label="Expression" :label-width="80">
                 <textarea id='c_expression' v-model='addCaculatedObj.expression'></textarea>
               </FormItem>
             </Col>
-            <Col span='12'  v-show='addCaculatedObj.category == 0 ? false:true'>
+            <Col span='12' v-show='addCaculatedObj.category != 0 ? true:false'>
               <FormItem label="type" :label-width="80">
                 <Input v-model='addCaculatedObj.columnType'placeholder="Enter something..."></Input>
               </FormItem> 
             </Col>
-            <Col span='1' style='margin-top:8px' v-show='addCaculatedObj.category == 0 ? false:true'>
+            <Col span='1' style='margin-top:8px' v-show='addCaculatedObj.category != 0 ? true:false'>
               <Spin  v-if='loadSpin'>
                 <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
               </Spin>
@@ -72,7 +72,7 @@
             <Button class='addcalculatedField_button' type="error" size="small" @click='cancel_addCaculatedfield()'>取消</Button>  
             <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='preview_calculatedfield()'>
             <Modal
-            v-model="showPreviewCaculatedield"
+            v-model="showPreviewCaculatedField"
             width ="1200px"
             title="数据预览">
               <iviewtable :chartCmpContent ='calculatedfield_queryData'></iviewtable>        
@@ -102,17 +102,17 @@
                 <Input  v-model='addMetricObj.columnAlias' placeholder="Enter something..."></Input>
               </FormItem>  
             </Col>
-            <Col span='20'  v-show='addMetricObj.category == 0 ? false:true'>
+            <Col span='20' v-show='addMetricObj.category != 0 ? true:false'>
               <FormItem label="Expression" :label-width="80">
                 <textarea id='m_expression' v-model='addMetricObj.expression'></textarea>
               </FormItem>
             </Col>
-            <Col span='12'  v-show='addMetricObj.category == 0 ? false:true'>
+            <Col span='12' v-show='addMetricObj.category != 0 ? true:false'>
               <FormItem label="type" :label-width="80">
                 <Input v-model='addMetricObj.columnType'placeholder="Enter something..."></Input>
               </FormItem> 
             </Col>
-            <Col span='1' style='margin-top:8px' v-show='addMetricObj.category == 0 ? false:true'>
+            <Col span='1' style='margin-top:8px' v-show='addMetricObj.category != 0 ? true:false'>
               <Spin  v-if='loadSpin'>
                 <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
               </Spin>
@@ -128,6 +128,13 @@
                 <Button class='addcalculatedField_button'  type="success" size="small" @click="update_metric('calculatedfield')">更新</Button>
               </div>
               <Button class='addcalculatedField_button' type="error" size="small" @click='cancel_addMetric()'>取消</Button>
+              <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='preview_metric()'>
+              <Modal
+              v-model="showPreviewMetric"
+              width ="1200px"
+              title="数据预览">
+                <iviewtable :chartCmpContent ='metric_queryData'></iviewtable>        
+              </Modal> 
             </Col>
           </Form>
         </Row>
@@ -166,14 +173,17 @@ export default {
   },
   data(){
     return {
+      isCreate:false,
       loadSpin:false, //加载进度条
       loadSpin_success:false,//成功加载进度条
       btn_add:true,//添加按钮
       showAddCaculatedField:false,//显示添加字段框
       showAddMetric:false,//显示添加度量框
-      showPreviewCaculatedield:false,//显示计算字段预览框
+      showPreviewCaculatedField:false,//显示计算字段预览框
+      showPreviewMetric:false,//显示度量预览框
       edit_disabled:false,//不可编辑的选项
       calculatedfield_queryData:null,//计算字段查询数据
+      metric_queryData:null,//度量查询数据
       edit_caculated_index:null,//被编辑计算字段选项的序号
       edit_metric_index:null,//被编辑度量选项的序号
       deleteItem:[],//被删除的选项
@@ -207,7 +217,7 @@ export default {
       });
       Vue.caculated_sqlEditor.on('blur',function(){
         Vue.addCaculatedObj.expression = Vue.caculated_sqlEditor.doc.getValue();
-        Vue.intoType(1);
+        Vue.getExpressionData(1);
       });
     },
 
@@ -226,7 +236,7 @@ export default {
       });
       Vue.metric_sqlEditor.on('blur',function(){
         Vue.addMetricObj.expression = Vue.metric_sqlEditor.doc.getValue();
-        Vue.intoType(2);
+        Vue.getExpressionData(2);
       });
     },
 
@@ -238,7 +248,7 @@ export default {
     },
 
     /*根据所填写的expression判断类型*/
-    intoType(category){
+    getExpressionData(category){
       let Vue = this;
       let param;
       if(category == 1){
@@ -263,7 +273,7 @@ export default {
           }
           if(category == 2){
             Vue.addMetricObj.columnType = response.data.content.columsType[0];
-            /*Vue.calculatedfield_queryData = response.data.content;  */          
+            Vue.metric_queryData = response.data.content;         
           }
           Vue.loadSpin = false;
           Vue.loadSpin_success = true;
@@ -349,15 +359,17 @@ export default {
     /*预览计算字段表数据*/
     preview_calculatedfield(){
       let Vue = this;
-      Vue.showPreviewCaculatedield = true;
+      Vue.showPreviewCaculatedField = true;
+      Vue.getExpressionData(1);
     },
 
     
     /*预览度量表数据*/
-/*    preview_metric(){
+    preview_metric(){
       let Vue = this;
-      Vue.metric_preview = true;
-    },*/
+      Vue.showPreviewMetric = true;
+      Vue.getExpressionData(2);
+    },
 
     /*编辑计算字段表字段*/
     editCaculatedField(params){
@@ -401,6 +413,7 @@ export default {
       Vue.addMetricObj.columnName = params.row.columnName;
       Vue.addMetricObj.columnType = params.row.columnType;
       Vue.addMetricObj.columnAlias = params.row.columnAlias;
+      Vue.addMetricObj.category = params.row.category;
       Vue.addMetricObj.expression = params.row.expression;
       Vue.$nextTick(function(){
         if(Vue.addMetricObj.category == 2 && Vue.metric_sqlEditor == null){
@@ -472,8 +485,8 @@ export default {
       Vue.AxiosPost("delete_field",{columnsJSON:JSON.stringify(Vue.deleteItem)},function(response){});  
     },
 
-    /*计算字段表*/
-    drawCaculatedTable (caculated_tableData){
+    /*画字段表，包含原始字段和计算字段*/
+    drawFieldTable (caculated_tableData){
       let Vue = this;
       if(Vue.tableData != null){
       var cols = [];
@@ -488,7 +501,14 @@ export default {
             },
             nativeOn:{
               'click':(event)=>{
-                Vue.deleteItem.push(params.row);
+                if(Vue.isCreate == false){
+                  for(let i in Vue.tableData){
+                    if(Vue.tableData[i].id == Vue.bizView.id+"_"+params.row.columnName){
+                      Vue.deleteItem.push(Vue.tableData[i]);
+                    }
+                  }                  
+                }
+
                 Vue.caculated_TableData.splice(params.index,1);  
                 Vue.cancel_addCaculatedfield();            
               }
@@ -577,17 +597,17 @@ export default {
       var rows = [];
       for(let r in caculated_tableData){
         rows.push({
-          'columnName':caculated_tableData[r].stringHeader,
+          'columnName':caculated_tableData[r].columnName,
           'columnType':caculated_tableData[r].columnType,
-          'columnAlias':caculated_tableData[r].stringHeader,            
-          'groupby':0,
-          'filterable':0,
-          'countDistinct':0,
-          'sum':0,
-          'max':0,
-          'min':0,
-          'category':0,
-          'expression':null
+          'columnAlias':caculated_tableData[r].columnAlias,            
+          'groupby':caculated_tableData[r].groupby,
+          'filterable':caculated_tableData[r].filterable,
+          'countDistinct':caculated_tableData[r].countDistinct,
+          'sum':caculated_tableData[r].sum,
+          'max':caculated_tableData[r].max,
+          'min':caculated_tableData[r].min,
+          'category':caculated_tableData[r].category,
+          'expression':caculated_tableData[r].expression
         });
       }
       Vue.caculated_TableData = rows;                 
@@ -611,7 +631,13 @@ export default {
             },
             nativeOn:{
               'click':(event)=>{
-                Vue.deleteItem.push(params.row);
+                if(Vue.isCreate == false){
+                  for(let i in Vue.tableData){
+                    if(Vue.tableData[i].id == Vue.bizView.id+"_"+params.row.columnName){
+                      Vue.deleteItem.push(Vue.tableData[i]);
+                    }
+                  }                  
+                }
                 Vue.metric_TableData.splice(params.index,1);    
                 Vue.cancel_addMetric();             
               }
@@ -650,24 +676,38 @@ export default {
       var rows = [];
       for(let r in metric_TableData){
         rows.push({
-          'columnName':metric_TableData[r].stringHeader,
+          'columnName':metric_TableData[r].columnName,
           'columnType':metric_TableData[r].columnType,
-          'columnAlias':metric_TableData[r].stringHeader,            
+          'columnAlias':metric_TableData[r].columnAlias, 
+          'category':metric_TableData[r].category,  
+          'expression':metric_TableData[r].expression         
         });
       }
       Vue.metric_TableData = rows;                 
       Vue.metric_columns = cols;
     },
 
-    /*根据columnType判断tab类型*/
+    /*数据过滤*/
     dataFilter(){
+      let Vue = this;
+      if(Array.isArray(Vue.tableData)){
+        Vue.isCreate = false;//初始化数据为编辑
+        Vue.editQueryDataFilter();
+      }else{
+        Vue.isCreate = true;//初始化数据为新建
+        Vue.createQueryDataFilter();
+      }
+    },
+
+    /*新建查询器的字段表判断*/
+    createQueryDataFilter(){
       let Vue = this;
       if(!Vue.tableData.stringHeaders){
         Vue.caculated_TableData = Vue.tableData; 
         return;
       };
-      var caculated_tableData = [];
-      var metric_TableData = [];
+      let field_TableData = [];
+      let metric_TableData = [];
       for(let i in Vue.tableData.columsType){
         var columnType = Vue.tableData.columsType[i];
         var stringHeader = Vue.tableData.stringHeaders[i];
@@ -682,16 +722,49 @@ export default {
           case "REAL":
           case "DECIMAL":
           case "NUMERIC":
-            metric_TableData.push({'columnType':columnType,'stringHeader':stringHeader});
+            metric_TableData.push({
+              'columnType':columnType,
+              'columnName':stringHeader,
+              'columnAlias':stringHeader,
+              'category':2,
+              'expression':''});
           break;
-          default:caculated_tableData.push({'columnType':columnType,'stringHeader':stringHeader});
+          default:field_TableData.push({
+            'columnType':columnType,
+            'columnName':stringHeader,
+            'columnAlias':stringHeader,
+            'groupby':0,
+            'filterable':0,
+            'countDistinct':0,
+            'sum':0,
+            'max':0,
+            'min':0,
+            'category':0,
+            'expression':''});
         }
         
       };
-      
       Vue.drawMetricTable(metric_TableData);
-      Vue.drawCaculatedTable(caculated_tableData);
+      Vue.drawFieldTable(field_TableData);//包含计算字段和原始字段
     },
+
+    /*编辑查询器的字段类型判断*/
+    editQueryDataFilter(){
+      let Vue = this;
+      let field_TableData = [];
+      let metric_TableData = [];
+      for(let i in Vue.tableData){
+        if(Vue.tableData[i].category == 2){//度量
+          metric_TableData.push(Vue.tableData[i]);
+        }
+        if(Vue.tableData[i].category == 0 || Vue.tableData[i].category == 1){
+          field_TableData.push(Vue.tableData[i]);
+        }        
+      }
+      Vue.drawMetricTable(metric_TableData);
+      Vue.drawFieldTable(field_TableData);//计算字段和原始字段
+    },
+
 
     /*刷新表数据*/
     refreshTableData(){
