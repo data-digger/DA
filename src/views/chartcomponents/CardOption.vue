@@ -17,8 +17,8 @@
             <FormItem prop="data">
                 <Col span='13'>
                     Data
-                    <Select class="form-control" v-model='selectdOption.data'>               
-                        <Option v-for='item in metrics' :key="item.columnName" :value="item.columnName" >{{item.columnAlias}}</Option>
+                    <Select class="form-control" v-model='selectdData'>               
+                        <Option v-for='(item,index) in metrics' :key="item.columnName" :value="index" >{{item.columnAlias}}</Option>
                     </Select>
                 </Col>
                  <Col span='2' offset='1'>
@@ -58,9 +58,10 @@ export default {
     props:['data'],
     computed: {
     ...mapGetters({
-        dimensions:'dimensions',
+        //dimensions:'dimensions',
         metrics:'metrics',
-        groupbyList:'groupbyList'
+        //groupbyList:'groupbyList',
+        //aggregationFun:'aggregationFun'
       }),
       COLORS : function(){
           return Object.keys(ChartTemplate.COLORS)
@@ -70,30 +71,56 @@ export default {
         return {
                 selectdOption:{
                     introText:"",
-                    data:"",
-                    iconType:"android-person-add",
+                    data:0,
+                    iconType:"person-add",
                     color:"#2d8cf0",
                     countSize: '30px',
                     countWeight: 700,
                     iconSize: 40,
                     introColor: '#C8C8C8',
-                    introSize: '12px',
-                    introWeight: 500
+                    introSize: '15px',
+                    introWeight: 500,
+                    dataName:'',
                 },
                 ICONS : ChartTemplate.ICONS,
                 iconSearch:false,
+                selectdData:-1,
+                params:{value:[],groupby:null,isgroupby:false}
             }
     },
     methods:{
-        setData:function(JSONOption){
+        setData:function(eoption,filters){
             let Vue = this;
-            Vue.selectdOption = JSON.parse(JSONOption);
+            Vue.selectdOption = eoption;
+            Vue.selectdData = Vue.findIndex(Vue.metrics,Vue.selectdOption.dataName);
+            Vue.params.value = filters.value;
+            Vue.params.groupby = filters.groupby;
+            Vue.params.isgroupby = filters.isgroupby;
             Vue.iconSearch = false
            // Vue.$store.commit('getInitOption',Vue.selectdOption);
         },
+        findIndex:function(list,name){
+            var re = -1;
+            for(let i=0; i<list.length; i++){
+                if(list[i].columnName == name){
+                    re = i;
+                    break;
+                }
+            }
+            return re;
+        },
        sentOption:function(){
            let Vue = this;
-           Vue.$emit('getSelectedOption',Vue.selectdOption);
+            if (Vue.selectdData != -1) {
+                    Vue.params.value = [];
+                    let dataName = Vue.metrics[Vue.selectdData].columnName;
+                    Vue.selectdOption.dataName = dataName;
+                    Vue.params.value.push(Vue.metrics[Vue.selectdData]);
+                    Vue.$emit('getSelectedOption',{option:Vue.selectdOption,filter:Vue.params,isvalid:true});
+            } else {
+                Vue.$emit('getSelectedOption',{isvalid:false});
+                Vue.$Message.error('data is neccessary');
+            }
        },
        showIconSearch:function(){
            let Vue = this;
@@ -104,14 +131,17 @@ export default {
        },
        cancel:function(){},
        reset:function(){
-           let Vue = this;
-           Vue.selectdOption.introText = '';
-           Vue.selectdOption.introColor = '#C8C8C8',
-           Vue.selectdOption.introSize= '12px',
-           Vue.selectdOption.data = '',
-           Vue.selectdOption.color = "#2d8cf0"
-           Vue.selectdOption.countSize='30px',
-           Vue.selectdOption.iconType="android-person-add"
+            let Vue = this;
+            Vue.selectdOption.introText = '';
+            Vue.selectdOption.introColor = '#C8C8C8';
+            Vue.selectdOption.introSize= '15px';
+            Vue.selectdOption.data = 0;
+            Vue.selectdOption.color = "#2d8cf0";
+            Vue.selectdOption.countSize='30px';
+            Vue.selectdOption.iconType="person-add";
+            Vue.selectdOption.dataName = '';
+            Vue.selectdData = -1;
+            Vue.params = {value:[],groupby:null,isgroupby:false}
        }
     },
 }

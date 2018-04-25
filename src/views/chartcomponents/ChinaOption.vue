@@ -1,5 +1,5 @@
 <style lang="less">
-    @import "./chart.less";
+     @import "./styles/chart.less";
 </style>
 <template>
    <Row>

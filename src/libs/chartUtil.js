@@ -100,9 +100,10 @@ function analysisCirChart(option,data){
 }
 
 function analysisCardChart(option,data){
-    let cntData = getColData(option.data,data);
+    let cntData = getColData(option.dataName,data);
     if(cntData.length>0){
-        option.data = parseInt(cntData[0]);
+        //option.data = parseInt(cntData[0]);
+        option.data = cntData[0];
     } else {
         option.data = 0;
     }

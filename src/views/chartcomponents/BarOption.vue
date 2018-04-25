@@ -1,8 +1,9 @@
 <style lang="less">
-    @import "./chart.less";
+    @import "./styles/chart.less";
 </style>
 <template>
    <Row>
+       <Form id="barOption" ref="barOption" :label-width="80">
         <FormItem prop="xAxis">
             XAxis
             <Select class="form-control" v-model='selectedX'>               
@@ -46,7 +47,8 @@
         </FormItem> 
         <FormItem prop="legend">
             <span class="legend-area">Legend&nbsp;</span><i-switch v-model="selectdOption.legend.show"></i-switch>            
-        </FormItem>             
+        </FormItem>  
+    </Form>           
     </Row>
 </template>
 <script>
@@ -106,7 +108,7 @@ export default {
                     series : [
                     ]
                 },
-                selectedX:'',
+                selectedX:-1,
                 selectedY:[],                
                 colorSelected:0,
                 params:{value:[],groupby:null,isgroupby:true}
@@ -124,7 +126,7 @@ export default {
                 let colorFirst = Vue.selectdOption.color[0];
                 if(Vue.params.isgroupby){
                      for(let i in Vue.selectdOption.series){
-                            let yIndex = Vue.findIndex(Vue.groupbyList,Vue.selectdOption.series[i].data);
+                            let yIndex = Vue.findIndex(Vue.aggregationFun,Vue.selectdOption.series[i].data);
                             Vue.selectedY.push(yIndex);
                         } 
                 } else {
@@ -139,11 +141,9 @@ export default {
                         break;
                     }
                 }
-               
-           // Vue.$store.commit('getInitOption',Vue.selectdOption);
         },
         findIndex:function(list,name){
-            var re = '';
+            var re = -1;
             for(let i=0; i<list.length; i++){
                 if(list[i].columnName == name){
                     re = i;
@@ -154,46 +154,53 @@ export default {
         },
        sentOption:function(){
            let Vue = this;
-           Vue.params.value = [];
-           Vue.params.groupby = null;
-           let xName = Vue.groupbyList[Vue.selectedX].columnName;
-           let xAlias = Vue.groupbyList[Vue.selectedX].columnAlias;
-           Vue.selectdOption.xAxis.name = xAlias;
-           Vue.selectdOption.xAxis.data = xName;
-           Vue.params.groupby = Vue.groupbyList[Vue.selectedX];
-           Vue.selectdOption.color = ChartTemplate.COLORS[Vue.colorSelected].color;
-           //Vue.selectdOption.legend.data = [];
-           Vue.selectdOption.series = [];           
-           for (let i in Vue.selectedY){
-               if(Vue.params.isgroupby == true){
-                   let yName = Vue.aggregationFun[Vue.selectedY[i]].columnName;
-                   let yAlias = Vue.aggregationFun[Vue.selectedY[i]].columnAlias;
-                   Vue.selectdOption.series.push({name:yAlias,data:yName,type: 'bar'});
-                   Vue.params.value.push(Vue.aggregationFun[Vue.selectedY[i]]);
-               } else {
-                   var yName = Vue.metrics[Vue.selectedY[i]].columnName;
-                   var yAlias = Vue.metrics[Vue.selectedY[i]].columnAlias;
-                   Vue.selectdOption.series.push({name:yAlias,data:yName,type: 'bar'});
-                   Vue.params.value.push(Vue.metrics[Vue.selectedY[i]]);
-               }  
-               
-           }
-           Vue.$emit('getSelectedOption',{option:Vue.selectdOption,filter:Vue.params});
+            if (Vue.selectedX!=-1 && Vue.selectedY.length>0) {
+                    Vue.params.value = [];
+                    Vue.params.groupby = null;
+                    let xName = Vue.groupbyList[Vue.selectedX].columnName;
+                    let xAlias = Vue.groupbyList[Vue.selectedX].columnAlias;
+                    Vue.selectdOption.xAxis.name = xAlias;
+                    Vue.selectdOption.xAxis.data = xName;
+                    Vue.params.groupby = Vue.groupbyList[Vue.selectedX];
+                    Vue.selectdOption.color = ChartTemplate.COLORS[Vue.colorSelected].color;
+                    //Vue.selectdOption.legend.data = [];
+                    Vue.selectdOption.series = [];           
+                    for (let i in Vue.selectedY){
+                        if(Vue.params.isgroupby == true){
+                            let yName = Vue.aggregationFun[Vue.selectedY[i]].columnName;
+                            let yAlias = Vue.aggregationFun[Vue.selectedY[i]].columnAlias;
+                            Vue.selectdOption.series.push({name:yAlias,data:yName,type: 'bar'});
+                            Vue.params.value.push(Vue.aggregationFun[Vue.selectedY[i]]);
+                        } else {
+                            var yName = Vue.metrics[Vue.selectedY[i]].columnName;
+                            var yAlias = Vue.metrics[Vue.selectedY[i]].columnAlias;
+                            Vue.selectdOption.series.push({name:yAlias,data:yName,type: 'bar'});
+                            Vue.params.value.push(Vue.metrics[Vue.selectedY[i]]);
+                        }  
+                        
+                    }
+                    Vue.$emit('getSelectedOption',{option:Vue.selectdOption,filter:Vue.params,isvalid:true});
+            } else {
+                Vue.$emit('getSelectedOption',{isvalid:false});
+                Vue.$Message.error('x and y is neccessary');
+            }
+          
        },
        reset:function(){
            let Vue = this;
            Vue.selectdOption.color = ChartTemplate.COLORS[0].color;
-           Vue.selectedX = '';
+           Vue.selectedX = -1;
            Vue.selectedY = [];
            Vue.selectdOption.xAxis.data= '',
            Vue.selectdOption.legend.show = true;
            //Vue.selectdOption.legend.data = Vue.selectedY;
            Vue.selectdOption.series = [];
-           Vue.selectdOption.grid.left='3%',
-           Vue.selectdOption.grid.right = '10%',
-           Vue.selectdOption.grid.top = '10%',
-           Vue.selectdOption.grid.bottom = '3%',
-           Vue.colorSelected = 0
+           Vue.selectdOption.grid.left='3%';
+           Vue.selectdOption.grid.right = '10%';
+           Vue.selectdOption.grid.top = '10%';
+           Vue.selectdOption.grid.bottom = '3%';
+           Vue.colorSelected = 0;
+           Vue.params = {value:[],groupby:null,isgroupby:true};
        }
     }
 
