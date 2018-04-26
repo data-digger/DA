@@ -7,7 +7,7 @@
                 </Col>
                 <Col span='2' offset='1'>
                     TextColor
-                    <ColorPicker v-model="selectdOption.introColor" />
+                    <ColorPicker v-model="selectdOption.introColor"/>
                 </Col>
                 <Col span='4' offset='4'>
                     TextSize
@@ -23,7 +23,7 @@
                 </Col>
                  <Col span='2' offset='1'>
                     Color
-                    <ColorPicker v-model="selectdOption.color" />
+                    <ColorPicker v-model="selectdOption.color" placement='top'/>
                 </Col>
                 <Col span='4' offset='4'>
                     DataSize

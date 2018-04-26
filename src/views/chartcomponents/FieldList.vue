@@ -41,18 +41,18 @@
                             <Panel name="3-1">
                                 排序
                                 <Row slot="content">
-                                    <Col span='13'>
+                                    <Col span='12'>
                                         <Select class="form-control" v-model='filter.orderby.field'>               
                                             <Option v-for="item in columns" :key="item.columnName" :value="item.columnName">{{item.columnAlias}}</Option>
                                         </Select>
                                     </Col>
-                                    <Col span='7' offset='1'>
+                                    <Col span='9' offset='1'>
                                         <Select class="form-control" v-model='filter.orderby.type'>               
                                             <Option v-for='item in ORDERTYPE' :key='item' :value="item" >{{item}}</Option>
                                         </Select>
                                     </Col>
-                                    <Col span='2' offset='1'>
-                                         <Button type="ghost" icon="ios-close-empty" shape="circle" size='small' @click="emptyOrderBy"></Button>
+                                    <Col span='1' offset='1'>
+                                         <Button id='orderEmpty' type="ghost" icon="ios-close-empty" shape="circle" size='small' @click="emptyOrderBy"></Button>
                                     </Col>
                                 </Row>
                             </Panel>
@@ -79,29 +79,29 @@
                                                 :key="index"
                                                 :prop="'items.' + index + '.value'">
                                             <Row>
-                                                    <Col span="21">
+                                                    <Col span="12">
                                                         <Select class="form-control" v-model='whereIndex[index]'>               
                                                             <Option v-for="(item,i) in filterableList" :key="item.columnName" :value="i">{{item.columnAlias}}</Option>
                                                         </Select>
                                                     </Col>
-                                                    <Col span="8">
+                                                    <Col span="9" offset="1">
                                                         <Select class="form-control" v-model='filter.where[index].mark' @on-change="changePlaceHolder">                   
                                                             <Option v-for="item in CONTENTFILTERMARK" :key="item" :value="item">{{item}}</Option>
                                                         </Select>
                                                     </Col>
-                                                    <Col span="12" offset="1">
+                                                    <Col span="22">
                                                         <Input v-model="filter.where[index].value" :placeholder="placeholder"></Input>
                                                     </Col>
                                                     
-                                                    <Col span="2" offset="1">
-                                                        <Button type="ghost" icon="ios-minus-empty" shape="circle" size='small' @click="removeContentFilter(index)"></Button>
+                                                    <Col span="1" offset="1">
+                                                        <Button id='removeContent' type="ghost" icon="ios-minus-empty" shape="circle" size='small' @click="removeContentFilter(index)"></Button>
                                                     </Col>
                                             </Row>
                                         </FormItem>
                                         <FormItem>
                                             <Row>
                                                 <Col span="12">
-                                                    <Button type="dashed" long @click="addContentFilter" icon="plus-round">添加内容过滤</Button>
+                                                    <Button type="dashed" long @click="addContentFilter" icon="plus-round">添加过滤</Button>
                                                 </Col>
                                             </Row>
                                         </FormItem>
@@ -165,21 +165,28 @@ export default {
 						case "TINYINT":
 						case "SMALLINT":
                         case "INTEGER":
+                        case "INT":
                         case "FLOAT":
 						case "DOUBLE":
                         case "REAL":
                         case "DECIMAL":
 						case "NUMERIC":
                             Vue.metrics.push(Vue.columns[i]);
+                            if(category == 2){
+                                Vue.aggregationFun.push(Vue.columns[i]);
+                            }
                         break;
-                        case "CHAR":
-						case "LONGVARCHAR":
-                        case "VARCHAR":
-                        case "DATE":
-						case "TIME":
-						case "TIMESTAMP":
-                            Vue.dimensions.push(Vue.columns[i]);
-                        break;
+                        // case "CHAR":
+						// case "LONGVARCHAR":
+                        // case "VARCHAR":
+                        // case "DATE":
+						// case "TIME":
+						// case "TIMESTAMP":
+                        //     Vue.dimensions.push(Vue.columns[i]);
+                        //     if(category == 2){
+                        //         Vue.aggregationFun.push(Vue.columns[i]);
+                        //     }
+                        // break;
                         default:
                             if(category == 2){
                                 Vue.metrics.push(Vue.columns[i]);
@@ -340,6 +347,13 @@ export default {
 .notice-span{
     line-height: 2;
     color: #d2d3d3;
+}
+#removeContent.ivu-btn-small, #orderEmpty.ivu-btn-small{
+    width: 17px;
+    height: 17px;
+    padding: 0;
+    font-size: 8px;
+    border-radius: 50%;
 }
 
 </style>

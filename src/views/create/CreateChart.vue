@@ -2,7 +2,7 @@
     <Row style="padding:20px">
       <Carousel v-model="value" :dots="carouselSetting.dots" :arrow="carouselSetting.arrow" ref='slide'>
       <CarouselItem>
-        <Col span="6">
+        <Col span="5">
              <FieldList ref='fieldList' :columns="columns" @getFilter = 'setFilter'></FieldList>
           </Col>
           <Col span="7">
@@ -30,7 +30,7 @@
                 </FormItem> 
             </Form>
           </Col>
-          <Col span="11">  
+          <Col span="12">  
             <Row><component v-show='chartPreview' ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption' :styles='styles'></component></Row>  
           </Col>
         </CarouselItem>
@@ -128,16 +128,16 @@ export default {
       },
       ruleValidate:{
         name: [
-            { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+            { required: true, message: '图表名不能为空', trigger: 'blur' }
         ],
         alias: [
-            { required: true, message: 'alias cannot be empty', trigger: 'blur' }
+            { required: true, message: '别名不能为空', trigger: 'blur' }
         ],
         type: [
-            { required: true, message: 'Please select the type', trigger: 'change' }
+            { required: true, message: '类型不能为空', trigger: 'change' }
         ],
         bizViewId: [
-            { required: true, message: 'Please select the bizView', trigger: 'change' }
+            { required: true, message: '查询器不能为空', trigger: 'change' }
         ],
       },
       
@@ -204,7 +204,7 @@ export default {
             }
           }
       } else {  //当图表选项不完整时禁止翻到下一页
-        Vue.$Message.error('Option is invalid!');
+        Vue.$Message.error('信息不完整!');
       }
       
     },
@@ -253,7 +253,8 @@ export default {
                     }) 
                   }
                 }  
-            })
+            },
+            )
         }
     },
      /*封装图表option*/
@@ -284,10 +285,14 @@ export default {
         Vue.$refs['optionSelected'].sentOption();//调用图表选项组件的传递参数方法
         if(Vue.optionValid){
            Vue.AxiosPost("chartPreview",{bizViewId:Vue.myChart.bizViewId,filterJSON:JSON.stringify(Vue.filters)},
-                           function(response){
-                              Vue.queryData = response.data.content;
-                              Vue.drawChart();
-                           });
+              function(response){
+                  if(response.success){
+                    Vue.queryData = response.data.content;
+                    Vue.drawChart();
+                  } else {
+                    Vue.$Message.error('获取数据错误'+response.data.content);
+                  }
+                });
         }
     },
     /*从编辑进入时的图表初始化*/
@@ -296,9 +301,12 @@ export default {
       Vue.chartPreview = true;
        Vue.AxiosPost("getChartData",{'chartId':Vue.myChart.id},
         function(response){
-           Vue.queryData = response.data.content.data;
-           Vue.drawChart();
-
+          if(response.success){
+            Vue.queryData = response.data.content.data;
+            Vue.drawChart();
+          } else {
+            Vue.$Message.error('获取数据错误'+response.data.content);
+          }    
       });
     },
     /*画图*/
@@ -322,11 +330,11 @@ export default {
                          Vue.AxiosPost("createChart",
                           Vue.myChart,
                            function(){
-                              Vue.$Message.success('Success!');
+                              Vue.$Message.success('保存成功!');
                               Vue.closePage('createChart');  //保存完图表，关闭图表编辑页面
                            });
                     } else {
-                        Vue.$Message.error('Fail!');
+                        Vue.$Message.error('信息不完整,保存失败!');
                     }
                 })
     },
@@ -415,7 +423,10 @@ export default {
 .cd_button_pre{
   margin-right: 15px;
 }
-.ivu-carousel-item{
-  min-height: 550px
+#chartOption .ivu-form-item{
+  margin-bottom: 10px;
 }
+/* .ivu-carousel-item{
+  min-height: 550px
+} */
 </style>
