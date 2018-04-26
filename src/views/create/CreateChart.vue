@@ -286,7 +286,7 @@ export default {
         if(Vue.optionValid){
            Vue.AxiosPost("chartPreview",{bizViewId:Vue.myChart.bizViewId,filterJSON:JSON.stringify(Vue.filters)},
               function(response){
-                  if(response.success){
+                  if(response.data.success){
                     Vue.queryData = response.data.content;
                     Vue.drawChart();
                   } else {
@@ -301,11 +301,11 @@ export default {
       Vue.chartPreview = true;
        Vue.AxiosPost("getChartData",{'chartId':Vue.myChart.id},
         function(response){
-          if(response.success){
+          if(response.data.success){
             Vue.queryData = response.data.content.data;
             Vue.drawChart();
           } else {
-            Vue.$Message.error('获取数据错误'+response.data.content);
+            Vue.$Message.error('获取数据错误'+response.data.content.data);
           }    
       });
     },
