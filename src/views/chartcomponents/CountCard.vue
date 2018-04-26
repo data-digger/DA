@@ -17,7 +17,7 @@
     </div>
 </template>
 <script>
-import infoCard from './../home/components/inforCard'
+import infoCard from './inforCard.vue'
 import {mapGetters} from 'vuex'
 export default {
     props:["chartId",'option'],

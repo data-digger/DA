@@ -37,29 +37,37 @@
             <Panel name="3">
                     过滤
                     <div slot="content">
-                        <Collapse>
+                        <Collapse v-model="activedFilterPanel">
                             <Panel name="3-1">
                                 排序
                                 <Row slot="content">
-                                    <Col span='15'>
+                                    <Col span='13'>
                                         <Select class="form-control" v-model='filter.orderby.field'>               
                                             <Option v-for="item in columns" :key="item.columnName" :value="item.columnName">{{item.columnAlias}}</Option>
                                         </Select>
                                     </Col>
-                                    <Col span='8' offset='1'>
+                                    <Col span='7' offset='1'>
                                         <Select class="form-control" v-model='filter.orderby.type'>               
                                             <Option v-for='item in ORDERTYPE' :key='item' :value="item" >{{item}}</Option>
                                         </Select>
+                                    </Col>
+                                    <Col span='2' offset='1'>
+                                         <Button type="ghost" icon="ios-close-empty" shape="circle" size='small' @click="emptyOrderBy"></Button>
                                     </Col>
                                 </Row>
                             </Panel>
                             <Panel name="3-2">
                                 顶部
                                 <Row slot="content">
-                                    <Col span='3'><label class='filter-label'>top:</label></Col>
-                                    <Col span='20'>
-                                        <Input v-model="filter.limit" placeholder="10"></Input>
-                                    </Col>
+                                    <Row>
+                                        <Col span='3'><label class='filter-label'>top:</label></Col>
+                                        <Col span='20'>
+                                            <Input v-model="filter.limit" placeholder="10"></Input>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col span='21' offset='3'><span class='notice-span'><I>0表示不过滤个数</I></span></Col>
+                                    </Row>
                                 </Row>
                             </Panel>
                             <Panel name="3-3">
@@ -71,8 +79,8 @@
                                                 :key="index"
                                                 :prop="'items.' + index + '.value'">
                                             <Row>
-                                                    <Col span="22">
-                                                        <Select class="form-control" v-model='filter.where[index].field'>               
+                                                    <Col span="21">
+                                                        <Select class="form-control" v-model='whereIndex[index]'>               
                                                             <Option v-for="(item,i) in filterableList" :key="item.columnName" :value="i">{{item.columnAlias}}</Option>
                                                         </Select>
                                                     </Col>
@@ -81,12 +89,12 @@
                                                             <Option v-for="item in CONTENTFILTERMARK" :key="item" :value="item">{{item}}</Option>
                                                         </Select>
                                                     </Col>
-                                                    <Col span="13" offset="1">
+                                                    <Col span="12" offset="1">
                                                         <Input v-model="filter.where[index].value" :placeholder="placeholder"></Input>
                                                     </Col>
                                                     
-                                                    <Col span="1" offset="1">
-                                                        <Icon type="ios-minus-outline" size='18' @click.native="removeContentFilter(index)" ></Icon>
+                                                    <Col span="2" offset="1">
+                                                        <Button type="ghost" icon="ios-minus-empty" shape="circle" size='small' @click="removeContentFilter(index)"></Button>
                                                     </Col>
                                             </Row>
                                         </FormItem>
@@ -120,14 +128,16 @@ export default {
         return {
             FUNCTION:['AND','OR','NOT','DISTINCT','SUM','COUNT','AVG'],
             ORDERTYPE:['ASC','DESC'],
-            CONTENTFILTERMARK:['IN','NOT IN','=','>','<','>=','<=','!=','=='],
+            CONTENTFILTERMARK:['IN','NOT IN','=','>','<','>=','<=','!=','==','LIKE'],
             activedPanel:[],
+            activedFilterPanel:[],
             dimensions:[],
             metrics:[],
             aggregationFun:[],
             filterableList:[],
             groupbyList:[],
-            placeholder:'1',           
+            placeholder:"'1',使用英文半角引号",  
+            whereIndex:[],         
             filter:{
                 orderby:{field:'',type:'ASC'},
                 limit:0,
@@ -195,13 +205,45 @@ export default {
 
             Vue.activedPanel = ["1","2"];
         },
+        setData(filters){
+            let Vue = this;
+            Vue.filter.where = filters.where;
+            Vue.filter.orderby = filters.orderby;
+            Vue.filter.limit = filters.limit;
+            Vue.whereIndex = [];
+            for(var i in Vue.filter.where){
+                Vue.whereIndex.push(Vue.findWhereIndex(Vue.filter.where[i].field))
+            }
+            Vue.activedPanel = ["1","2","3"];  
+            Vue.activedFilterPanel = ["3-1","3-2","3-3"]
+        },
+        findWhereIndex(whereObject){
+            let Vue = this;
+            var index=-1;
+            if(whereObject!=null){
+                for(var i=0; i<Vue.filterableList.length; i++){
+                    if(whereObject.columnName == Vue.filterableList[i].columnName){
+                        index = i;
+                        break;
+                    }
+                }
+            }
+            return index;
+        },
+        emptyOrderBy(){
+            let Vue = this;
+            Vue.filter.orderby.field = '';
+            Vue.filter.orderby.type = 'ASC';
+        },
         addContentFilter(){
             let Vue = this;
-            Vue.filter.where.push({field:'',mark:'',value:''})
+            Vue.filter.where.push({field:'',mark:'',value:''});
+            Vue.whereIndex.push(-1);
         },
         removeContentFilter(index){
             let Vue = this;
             Vue.filter.where.splice(index,1);
+            Vue.whereIndex.splice(index,1);
         },
         isComputed(category){
             if(category == 0){
@@ -214,29 +256,43 @@ export default {
             if(value=='IN' || value=='NOT IN'){
                 this.placeholder =  "('1','2','3'...)";
             } else {
-                this.placeholder = "'1'"
+                this.placeholder = "'1',使用英文半角引号"
             }
         },
         sentFilter:function(){
             let Vue = this;
-            for(let i in Vue.filter.where){
-                let content = Vue.filter.where[i];
-                if(content.field){
-                    content.field = Vue.filterableList[content.field];
+            for(let i in Vue.whereIndex){
+                let fieldIndex = Vue.whereIndex[i];
+                if(fieldIndex != -1){
+                    Vue.filter.where[i].field = Vue.filterableList[fieldIndex];
                 }else{
-                    content.field = null;
+                    Vue.filter.where[i].field = null;
                 }
             }
             Vue.$emit('getFilter',Vue.filter);
         },
-        ok(){
-            let Vue = this;
-            Vue.colNames.push(Vue.field.name);
-        },
-        cancel(){
+        reset(){
+            this.activedPanel=[];
+            this.activedFilterPanel=[]
+            this.dimensions=[];
+            this.metrics=[];
+            this.aggregationFun=[];
+            this.filterableList = [];
+            this.groupbyList = [];
+            this.whereIndex = [];         
+            this.filter={
+                    orderby:{field:'',type:'ASC'},
+                    limit:0,
+                    where:[]
+                };
 
+            this.$store.commit('setdimensions', this.dimensions);
+            this.$store.commit('setmetrics',this.metrics);
+            this.$store.commit('setfilterableList',this.filterableList);
+            this.$store.commit('setgroupbyList',this.groupbyList);
+            this.$store.commit('setaggregationFun',this.aggregationFun);
+            }
         }
-    }
 
 }
 </script>
@@ -280,6 +336,10 @@ export default {
 .computed-field{
     cursor: pointer;
     color:#008aff;
+}
+.notice-span{
+    line-height: 2;
+    color: #d2d3d3;
 }
 
 </style>

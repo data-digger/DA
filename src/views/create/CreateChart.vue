@@ -104,7 +104,8 @@ export default {
       //paramComponent:[],
       //paramSelected:null,
       //paramShow:false,
-      chartPreview:true,
+      chartPreview:false,
+      optionValid:false,
       columns:[],
       value:0,
       carouselSetting:{
@@ -181,10 +182,10 @@ export default {
     }
   },
   　watch:{
-　　　//'myChart.bizViewId': 'getQueryData',
      'myChart.bizViewId': 'getFieldList',
 　},
   methods:{
+    /*走马灯上一页*/
      pre:function(){
         let Vue = this;
         if(Vue.value !=0){
@@ -192,34 +193,39 @@ export default {
           Vue.finished = false;
         }
      },
+     /*走马灯下一页*/
      next() {
       let Vue = this;
-      if(Vue.value <2){
-        Vue.$refs.slide.arrowEvent(1);
-        if(Vue.value == 1){
-          Vue.finished = true;
-        }
+      if(Vue.optionValid){ 
+          if(Vue.value <2){
+          Vue.$refs.slide.arrowEvent(1);
+            if(Vue.value == 1){
+              Vue.finished = true;
+            }
+          }
+      } else {  //当图表选项不完整时禁止翻到下一页
+        Vue.$Message.error('Option is invalid!');
       }
+      
     },
+    /*初始化页面数据*/
      initChartData:function(to,from){
       let Vue = this;
       Vue.isInit = true;
       Vue.isNew =  $.isEmptyObject(to.params);
-      if(Vue.isNew){  //新建图表
-        Vue.paramShow = false;
+      if(Vue.isNew){  //新建图表(图表预览区隐藏，所有选项还原默认值)
         Vue.chartPreview = false;
         Vue.handleReset();
-      } else {  //编辑图表图表
-        Vue.paramShow = true;
-        Vue.chartPreview = true;
-        Vue.myChart = to.params;
-        Vue.$nextTick(function(){
-        Vue.$refs['optionSelected'].setData(to.params.defineJSON)
-        //Vue.getQueryData();
-       }) 
+      } else {  //编辑图表
+        //Vue.chartPreview = false;
+        Vue.myChart = to.params.chartbox;
+        let define = JSON.parse(Vue.myChart.defineJSON);
+        Vue.eoption = define.option;
+        Vue.filters = define.filters;
       }
       
     },
+    /*获取查询器列表*/
     getQueryList:function(){
         let Vue = this;
         Vue.AxiosPost("getQuery",'',
@@ -228,76 +234,40 @@ export default {
           }
         ); 
       },
-    getQueryData:function(){
-        let Vue = this;
-        if (Vue.myChart.bizViewId != ''){
-            Vue.AxiosPost("previewBizView",{'bizViewId':Vue.myChart.bizViewId},
-              function(response){
-                Vue.queryData = response.data.gridData;
-                //Vue.colNames = Vue.queryData.stringHeaders;
-                Vue.initParameters(response);
-                 if(!Vue.isNew && Vue.isInit){ //编辑状态并且初始化状态需要在获取数据后初始化图表
-                  Vue.previewChart();
-                  Vue.isInit = false;
-                }
-              }
-          ); 
-        }
-        
-      },
+
+    /*获取查询器所有列信息*/
     getFieldList:function(){
       let Vue = this;
+      Vue.chartPreview = false;
       if (Vue.myChart.bizViewId != ''){
             Vue.AxiosPost("getFieldTable",{'bizviewId':Vue.myChart.bizViewId},
               function(response){
                 if(response.data.success){
                   Vue.columns = response.data.content;
-                }
-                
+                  if(Vue.isInit && !Vue.isNew){ //在编辑图表的时候，必须等到获取到列信息之后进行图表选项、过滤选项的初始化
+                    Vue.$nextTick(function(){
+                        Vue.$refs['optionSelected'].setData(Vue.eoption,Vue.filters); 
+                        Vue.$refs['fieldList'].setData(Vue.filters);
+                        Vue.initChart();
+                        Vue.isInit = false; //初始化完成，初始化标识置为false
+                    }) 
+                  }
+                }  
             })
         }
     },
-    initParameters(response){
-      let Vue = this;
-      Vue.paramComponent = [];
-       for(var i in response.data.defaultParameters){
-              if(response.data.defaultParameters[i].paramType == 'list'){
-                var cmpObj = {};
-                cmpObj.component = list;
-                cmpObj.content = response.data.defaultParameters[i];
-                Vue.paramComponent.push(cmpObj);
-              };
-              if(response.data.defaultParameters[i].paramType == 'date'){
-                var cmpObj = {};
-                cmpObj.component = datepicker;
-                cmpObj.content = response.data.defaultParameters[i];
-                Vue.paramComponent.push(cmpObj);
-              }
-            }
-    },
-    refreshQueryData(param){
-      let Vue = this;
-      Vue.paramSelected = $.extend(Vue.paramSelected,param);
-      let paramLength = Object.keys(Vue.paramSelected).length;
-      let JSONParam = JSON.stringify(Vue.paramSelected);
-      if(paramLength == Vue.paramComponent.length){
-        Vue.AxiosPost("updateBizView",{"bizViewId":Vue.myChart.bizViewId,"JSONParam":JSONParam},
-          function(response){
-           Vue.queryData = response.data.gridData;
-           if(Vue.chartPreview){
-             Vue.previewChart();
-           }   
-        });         
-      }     
-    }, 
+     /*封装图表option*/
     setOption(selectdOption){
       let Vue = this;
-      //Vue.myChart.defineJSON = JSON.stringify(selectdOption);
-      Vue.eoption = $.extend(true, {}, selectdOption.option);
-      Vue.filters.value = selectdOption.filter.value;
-      Vue.filters.groupby = selectdOption.filter.groupby;
-      Vue.filters.isgroupby = selectdOption.filter.isgroupby;
+      Vue.optionValid = selectdOption.isvalid;
+      if(Vue.optionValid){
+        Vue.eoption = $.extend(true, {}, selectdOption.option);
+        Vue.filters.value = selectdOption.filter.value;
+        Vue.filters.groupby = selectdOption.filter.groupby;
+        Vue.filters.isgroupby = selectdOption.filter.isgroupby;     
+      }
     },
+    /*封装过滤条件*/
     setFilter(filter){
       let Vue = this;
       Vue.filters = filter;
@@ -306,55 +276,75 @@ export default {
       let Vue = this;
       chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
     },
+    /*预览图表*/
     previewChart:function(){
         let Vue = this;
         Vue.chartPreview = true;
-        Vue.paramShow = true;
-        Vue.$refs['fieldList'].sentFilter();
-        Vue.$refs['optionSelected'].sentOption();
-        Vue.AxiosPost("chartPreview",{bizViewId:Vue.myChart.bizViewId,filterJSON:JSON.stringify(Vue.filters)},
+        Vue.$refs['fieldList'].sentFilter(); //调用过滤条件组件的传递参数方法
+        Vue.$refs['optionSelected'].sentOption();//调用图表选项组件的传递参数方法
+        if(Vue.optionValid){
+           Vue.AxiosPost("chartPreview",{bizViewId:Vue.myChart.bizViewId,filterJSON:JSON.stringify(Vue.filters)},
                            function(response){
                               Vue.queryData = response.data.content;
-                              Vue.analyzeOption();
-                              Vue.$refs['chartContainer'].show(Vue.eoption);
-                              // Vue.$nextTick(function(){
-                              //    Vue.$refs['chartContainer'].show(Vue.eoption);
-                              //  })
+                              Vue.drawChart();
                            });
-      //   Vue.analyzeOption();
-      //   Vue.$nextTick(function(){
-      //    Vue.$refs['chartContainer'].show(Vue.eoption);
-      //  })
+        }
     },
+    /*从编辑进入时的图表初始化*/
+    initChart(){ 
+      let Vue = this;
+      Vue.chartPreview = true;
+       Vue.AxiosPost("getChartData",{'chartId':Vue.myChart.id},
+        function(response){
+           Vue.queryData = response.data.content.data;
+           Vue.drawChart();
+
+      });
+    },
+    /*画图*/
+    drawChart(){
+      let Vue = this;
+      chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
+      Vue.$nextTick(function(){
+         Vue.$refs['chartContainer'].show(Vue.eoption);
+       })
+    },
+
+    /*保存图表*/
     saveChart:function(){
       let Vue = this;
+      Vue.$refs['fieldList'].sentFilter();
       Vue.$refs['optionSelected'].sentOption();
-      Vue.$refs["myChart"].validate((valid) => {
-                    if (valid) {
+      let chartOption = {filters:Vue.filters,option:Vue.eoption};
+      Vue.myChart.defineJSON = JSON.stringify(chartOption);
+      Vue.$refs["chartInfo"].validate((valid) => {
+                    if (valid && Vue.optionValid) {
                          Vue.AxiosPost("createChart",
                           Vue.myChart,
                            function(){
                               Vue.$Message.success('Success!');
-                              Vue.closePage('createChart');
+                              Vue.closePage('createChart');  //保存完图表，关闭图表编辑页面
                            });
                     } else {
                         Vue.$Message.error('Fail!');
                     }
                 })
     },
+    /*还原默认设置*/
     handleReset:function(){
       let Vue = this;
       Vue.myChart.name = '';
       Vue.myChart.alias = '';
       Vue.myChart.bizViewId = '';
       Vue.myChart.desc =  '';
-      //Vue.myChart.type = 'Bar',
       Vue.myChart.defineJSON = '';
       Vue.chartPreview = false;
       Vue.eoption = null;
       Vue.$refs['optionSelected'].reset();
       Vue.$refs['chartContainer'].reset();
+      Vue.$refs['fieldList'].reset();
     },
+    /*关闭页面*/
     closePage(name){
       let pageOpenedList = this.$store.state.app.pageOpenedList;
       let lastPageObj = pageOpenedList[1];
@@ -362,7 +352,7 @@ export default {
       this.$store.commit('closePage', name);
       pageOpenedList = this.$store.state.app.pageOpenedList;
       localStorage.pageOpenedList = JSON.stringify(pageOpenedList);    
-      this.linkTo(lastPageObj);          
+      this.linkTo(lastPageObj);  //关闭当前页面并定位到资源页面        
     },
     linkTo (item) {
       let routerObj = {};
