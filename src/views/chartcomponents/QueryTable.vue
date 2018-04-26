@@ -7,7 +7,7 @@
           <Form ref='calculatedfield' :rules="ruleValidate">
             <Col span='22'>
               <FormItem label="columnName" :label-width="100" prop="columnName">
-                <Input v-model='addCaculatedObj.columnName' :disabled='edit_disabled' placeholder="Enter something..."></Input>
+                <Input v-model='addCaculatedObj.columnName' :disabled='canEdit' placeholder="Enter something..."></Input>
               </FormItem> 
               <FormItem label="alias" :label-width="80" prop="alias">
                 <Input v-model='addCaculatedObj.columnAlias' placeholder="Enter something..."></Input>
@@ -63,26 +63,26 @@
             </Col>
           </Form>
           <Col span='24' class='save_addcalculatedField_buttonBox'>
-            <div v-if='btn_add' style='display:inline-block'>
-              <Button class='addcalculatedField_button' type="success" size="small" @click="save_calculatedfield('calculatedfield')">添加</Button> 
+            <div v-if='isAddBtn' style='display:inline-block'>
+              <Button class='addcalculatedField_button' type="success" size="small" @click="saveCalculateField('calculatedfield')">添加</Button> 
             </div>
-            <div v-else='btn_add' style='display:inline-block'>
-              <Button class='addcalculatedField_button'  type="success" size="small" @click="update_calculatedfield('calculatedfield')">更新</Button>
+            <div v-else='isAddBtn' style='display:inline-block'>
+              <Button class='addcalculatedField_button'  type="success" size="small" @click="updateCalculateField('calculatedfield')">更新</Button>
             </div>
-            <Button class='addcalculatedField_button' type="error" size="small" @click='cancel_addCaculatedfield()'>取消</Button>  
-            <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='preview_calculatedfield()'>
+            <Button class='addcalculatedField_button' type="error" size="small" @click='hideCaculatePanel()'>取消</Button>  
+            <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='previewCalculateField()'>
             <Modal
             v-model="showPreviewCaculatedField"
             width ="1200px"
             title="数据预览">
-              <iviewtable :chartCmpContent ='calculatedfield_queryData'></iviewtable>        
+              <iviewtable :chartCmpContent ='calculateFieldSampleData'></iviewtable>        
             </Modal>            
           </Col>
         </Row>
-        <Icon type="ios-plus" @click.native='add_caculated_field()' class='add_listColumn_Icon'></Icon>
+        <Icon type="ios-plus" @click.native='addCaculateField()' class='add_listColumn_Icon'></Icon>
         <Table 
-          :columns="caculated_columns" 
-          :data="caculated_TableData" 
+          :columns="caculateColumns" 
+          :data="caculateTableData" 
           ref='table'
           :row-class-name="rowClassName" >   
         </Table>      
@@ -96,7 +96,7 @@
           <Form  ref='metric' >
             <Col span='22'>
               <FormItem label="metricName" :label-width="100" prop="metricName">
-                <Input  v-model='addMetricObj.columnName' placeholder="Enter something..."></Input>
+                <Input  v-model='addMetricObj.columnName':disabled='canEdit' placeholder="Enter something..."></Input>
               </FormItem> 
               <FormItem label="alias" :label-width="80" prop="alias">
                 <Input  v-model='addMetricObj.columnAlias' placeholder="Enter something..."></Input>
@@ -121,27 +121,27 @@
               </Spin>
             </Col>
             <Col span='24' class='save_addcalculatedField_buttonBox'>
-              <div v-if='btn_add' style='display:inline-block'>
-                <Button class='addcalculatedField_button' type="success" size="small" @click="save_metric('metric')">添加</Button> 
+              <div v-if='isAddBtn' style='display:inline-block'>
+                <Button class='addcalculatedField_button' type="success" size="small" @click="saveMetric('metric')">添加</Button> 
               </div>
-              <div v-else='btn_add' style='display:inline-block'>
-                <Button class='addcalculatedField_button'  type="success" size="small" @click="update_metric('calculatedfield')">更新</Button>
+              <div v-else='isAddBtn' style='display:inline-block'>
+                <Button class='addcalculatedField_button'  type="success" size="small" @click="updateMetric('metric')">更新</Button>
               </div>
-              <Button class='addcalculatedField_button' type="error" size="small" @click='cancel_addMetric()'>取消</Button>
-              <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='preview_metric()'>
+              <Button class='addcalculatedField_button' type="error" size="small" @click='hideMetricPanel()'>取消</Button>
+              <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='previewMetric()'>
               <Modal
               v-model="showPreviewMetric"
               width ="1200px"
               title="数据预览">
-                <iviewtable :chartCmpContent ='metric_queryData'></iviewtable>        
+                <iviewtable :chartCmpContent ='metricSampleData'></iviewtable>        
               </Modal> 
             </Col>
           </Form>
         </Row>
-        <Icon type="ios-plus" @click.native='add_metric(2)' class='add_listColumn_Icon'></Icon>
+        <Icon type="ios-plus" @click.native='addMetric()' class='add_listColumn_Icon'></Icon>
         <Table 
-          :columns="metric_columns" 
-          :data='metric_TableData'
+          :columns="metricColumns" 
+          :data='metricTableData'
           :row-class-name="rowClassName">   
         </Table> 
       </TabPane>
@@ -152,15 +152,20 @@
   </div>
 </template>
 <script>
-import CodeMirror from "codemirror/lib/codemirror.js"
-import "codemirror/mode/sql/sql.js"
-import "codemirror/addon/hint/show-hint.js"
-import "codemirror/addon/hint/sql-hint.js"
-import vbar from 'v-bar'
-import expandRow from './EditField.vue'
-import iviewtable from './Table.vue'
+import CodeMirror from "codemirror/lib/codemirror.js";
+import "codemirror/mode/sql/sql.js";
+import "codemirror/addon/hint/show-hint.js";
+import "codemirror/addon/hint/sql-hint.js";
+import vbar from 'v-bar';
+import expandRow from './EditField.vue';
+import iviewtable from './Table.vue';
+const CATEGORY = {
+  'RAW': 0,
+  'CACULATE': 1,
+  'METRIC': 2
+};
 export default {
-  props:['tableData','bizView'],
+  props:['queryMetaData','bizView','isCreate'],
   components:{
     vbar,
     expandRow,
@@ -169,32 +174,31 @@ export default {
   computed:{
   },
   watch:{
-    'tableData':'refreshTableData'
+    'queryMetaData':'refreshCaculateAndMetric'
   },
   data(){
     return {
-      isCreate:false,
       loadSpin:false, //加载进度条
       loadSpin_success:false,//成功加载进度条
-      btn_add:true,//添加按钮
+      isAddBtn:true,//添加按钮
       showAddCaculatedField:false,//显示添加字段框
       showAddMetric:false,//显示添加度量框
       showPreviewCaculatedField:false,//显示计算字段预览框
       showPreviewMetric:false,//显示度量预览框
-      edit_disabled:false,//不可编辑的选项
-      calculatedfield_queryData:null,//计算字段查询数据
-      metric_queryData:null,//度量查询数据
-      edit_caculated_index:null,//被编辑计算字段选项的序号
-      edit_metric_index:null,//被编辑度量选项的序号
+      canEdit:false,//不可编辑的选项
+      calculateFieldSampleData:null,//计算字段查询数据
+      metricSampleData:null,//度量查询数据
+      selectedCaculatedIndex:null,//被编辑计算字段选项的序号
+      selectedMetricIndex:null,//被编辑度量选项的序号
       deleteItem:[],//被删除的选项
       addCaculatedObj:{},//计算字段对象
       addMetricObj:{},//度量对象
-      caculated_columns:[],//计算字段列
-      metric_columns:[],//度量列
-      caculated_TableData:[],
-      metric_TableData:[],
-      caculated_sqlEditor:null,//计算字段sql编辑器
-      metric_sqlEditor:null,//度量sql编辑器
+      caculateColumns:[],//计算字段列
+      metricColumns:[],//度量列
+      caculateTableData:[],
+      metricTableData:[],
+      caculatedSQLEditor:null,//计算字段sql编辑器
+      metricSQLEditor:null,//度量sql编辑器
       ruleValidate:{
        /* columnName: [{ required: true, message: '字段名不能为空',trigger: 'blur'}]*/
       }
@@ -206,18 +210,18 @@ export default {
     initCalculatedfieldSql(){
       let Vue = this;
       var myTextarea = $("#c_expression")[0];
-      Vue.caculated_sqlEditor = CodeMirror.fromTextArea(myTextarea,{
+      Vue.caculatedSQLEditor = CodeMirror.fromTextArea(myTextarea,{
         lineNumbers: true,  
         extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
         mode: {name: "text/x-mysql"},  
         dragDrop: true
       });  
-      Vue.caculated_sqlEditor.on('focus',function(){
+      Vue.caculatedSQLEditor.on('focus',function(){
         Vue.Spin_type_control();       
       });
-      Vue.caculated_sqlEditor.on('blur',function(){
-        Vue.addCaculatedObj.expression = Vue.caculated_sqlEditor.doc.getValue();
-        Vue.getExpressionData(1);
+      Vue.caculatedSQLEditor.on('blur',function(){
+        Vue.addCaculatedObj.expression = Vue.caculatedSQLEditor.doc.getValue();
+        Vue.getExpressionData(CATEGORY.CACULATE);
       });
     },
 
@@ -225,18 +229,18 @@ export default {
     initMetricSql(){
       let Vue = this;
       var myTextarea = $("#m_expression")[0];
-      Vue.metric_sqlEditor = CodeMirror.fromTextArea(myTextarea,{
+      Vue.metricSQLEditor = CodeMirror.fromTextArea(myTextarea,{
         lineNumbers: true,  
         extraKeys: {"Ctrl": "autocomplete"},//输入s然后ctrl就可以弹出选择项  
         mode: {name: "text/x-mysql"},  
         dragDrop: true
       });  
-      Vue.metric_sqlEditor.on('focus',function(){
+      Vue.metricSQLEditor.on('focus',function(){
         Vue.Spin_type_control();       
       });
-      Vue.metric_sqlEditor.on('blur',function(){
-        Vue.addMetricObj.expression = Vue.metric_sqlEditor.doc.getValue();
-        Vue.getExpressionData(2);
+      Vue.metricSQLEditor.on('blur',function(){
+        Vue.addMetricObj.expression = Vue.metricSQLEditor.doc.getValue();
+        Vue.getExpressionData(CATEGORY.METRIC);
       });
     },
 
@@ -251,14 +255,14 @@ export default {
     getExpressionData(category){
       let Vue = this;
       let param;
-      if(category == 1){
+      if(category == CATEGORY.CACULATE){
         param = {
           dataSourceId:Vue.bizView.dataSourceId,
           bizViewSql : Vue.bizView.defineJSON,
           expression:Vue.addCaculatedObj.expression
         };
       }
-      if(category == 2){
+      if(category == CATEGORY.METRIC){
         param = {
             dataSourceId:Vue.bizView.dataSourceId,
             bizViewSql : Vue.bizView.defineJSON,
@@ -267,13 +271,13 @@ export default {
       }
       Vue.AxiosPost("calculatedfield",param,
         function(response){
-          if(category == 1){
+          if(category == CATEGORY.CACULATE){
             Vue.addCaculatedObj.columnType = response.data.content.columsType[0];
-            Vue.calculatedfield_queryData = response.data.content;
+            Vue.calculateFieldSampleData = response.data.content;
           }
-          if(category == 2){
+          if(category == CATEGORY.METRIC){
             Vue.addMetricObj.columnType = response.data.content.columsType[0];
-            Vue.metric_queryData = response.data.content;         
+            Vue.metricSampleData = response.data.content;         
           }
           Vue.loadSpin = false;
           Vue.loadSpin_success = true;
@@ -287,8 +291,8 @@ export default {
     /*初始化列*/
     initColumnModel(category){
       let Vue = this;      
-      Vue.btn_add = true;//按钮更换为添加
-      Vue.edit_disabled = false;//columnName 可编辑      
+      Vue.isAddBtn = true;//按钮更换为添加
+      Vue.canEdit = false;//columnName 可编辑      
       return {
         'columnName':null,
         'columnType':null,
@@ -305,38 +309,38 @@ export default {
     },
 
     /*添加计算字段*/
-    add_caculated_field(){
+    addCaculateField(){
       let Vue = this;      
-      Vue.addCaculatedObj = Vue.initColumnModel(1);
+      Vue.addCaculatedObj = Vue.initColumnModel(CATEGORY.CACULATE);
       Vue.showAddCaculatedField = true;
       Vue.$nextTick(function(){
-        if(Vue.caculated_sqlEditor == null){
+        if(Vue.caculatedSQLEditor == null){
           Vue.initCalculatedfieldSql();
         }
-        Vue.caculated_sqlEditor.setValue(Vue.addCaculatedObj.expression);
+        Vue.caculatedSQLEditor.setValue(Vue.addCaculatedObj.expression);
       })       
     },
 
     /*添加度量*/
-    add_metric(){
+    addMetric(){
       let Vue = this;      
-      Vue.addMetricObj = Vue.initColumnModel(2);
+      Vue.addMetricObj = Vue.initColumnModel(CATEGORY.METRIC);
       Vue.showAddMetric = true;
       Vue.$nextTick(function(){
-        if(Vue.metric_sqlEditor == null){
+        if(Vue.metricSQLEditor == null){
           Vue.initMetricSql();
         }
-        Vue.metric_sqlEditor.setValue(Vue.addMetricObj.expression);
+        Vue.metricSQLEditor.setValue(Vue.addMetricObj.expression);
       })       
     },
 
     /*插入到计算字段表中*/
-    save_calculatedfield(field){
+    saveCalculateField(field){
       let Vue = this;
       Vue.$refs[field].validate((valid) => {
         if(valid){
-          Vue.caculated_TableData.push(Vue.addCaculatedObj);
-          Vue.cancel_addCaculatedfield();
+          Vue.caculateTableData.push(Vue.addCaculatedObj);
+          Vue.hideCaculatePanel();
         }else{
           Vue.$Message.error('请输入正确的信息!');
         }
@@ -344,12 +348,12 @@ export default {
     },
     
     /*插入度量表中*/
-    save_metric(field){
+    saveMetric(field){
       let Vue = this;
       Vue.$refs[field].validate((valid) => {
         if(valid){
-          Vue.metric_TableData.push(Vue.addMetricObj);
-          Vue.cancel_addMetric();
+          Vue.metricTableData.push(Vue.addMetricObj);
+          Vue.hideMetricPanel();
         }else{
           Vue.$Message.error('请输入正确的信息!');
         }
@@ -357,27 +361,27 @@ export default {
     },
 
     /*预览计算字段表数据*/
-    preview_calculatedfield(){
+    previewCalculateField(){
       let Vue = this;
       Vue.showPreviewCaculatedField = true;
-      Vue.getExpressionData(1);
+      Vue.getExpressionData(CATEGORY.CACULATE);
     },
 
     
     /*预览度量表数据*/
-    preview_metric(){
+    previewMetric(){
       let Vue = this;
       Vue.showPreviewMetric = true;
-      Vue.getExpressionData(2);
+      Vue.getExpressionData(CATEGORY.METRIC);
     },
 
     /*编辑计算字段表字段*/
     editCaculatedField(params){
       let Vue =this;
-      Vue.cancel_addCaculatedfield();
+      Vue.hideCaculatePanel();
       Vue.showAddCaculatedField = true;//展开编辑页面
-      Vue.btn_add = false;//新建按钮改为更新按钮
-      Vue.edit_disabled = true;//columnName 不可编辑
+      Vue.isAddBtn = false;//新建按钮改为更新按钮
+      Vue.canEdit = true;//columnName 不可编辑
       Vue.addCaculatedObj.columnName = params.row.columnName;
       Vue.addCaculatedObj.columnType = params.row.columnType;
       Vue.addCaculatedObj.columnAlias = params.row.columnAlias;
@@ -390,105 +394,100 @@ export default {
       Vue.addCaculatedObj.category = params.row.category;
       Vue.addCaculatedObj.expression = params.row.expression;
       Vue.$nextTick(function(){
-        if(Vue.addCaculatedObj.category == 1 && Vue.caculated_sqlEditor == null){
-          //准备好数据后，如果是计算字段，加载sql编辑器，并且是第一次加载
-          Vue.initCalculatedfieldSql();      
+        if (Vue.addCaculatedObj.category == CATEGORY.CACULATE) {
+          if (Vue.caculatedSQLEditor == null) {//准备好数据后，如果是计算字段，加载sql编辑器，并且是第一次加载
+            Vue.initCalculatedfieldSql();   
+          }   
+          Vue.caculatedSQLEditor.setValue(Vue.addCaculatedObj.expression);
         }
-        if(Vue.addCaculatedObj.category == 1){
-          Vue.caculated_sqlEditor.setValue(Vue.addCaculatedObj.expression);
-        }
-        
       }) 
-      Vue.edit_caculated_index = params.index;
+      Vue.selectedCaculatedIndex = params.index;
     },
 
 
-    /*编辑计算字段表字段*/
+    /*编辑度量表字段*/
     editMetric(params){
       let Vue =this;
-      Vue.cancel_addMetric();
+      Vue.hideMetricPanel();
       Vue.showAddMetric = true;//展开编辑页面
-      Vue.btn_add = false;//新建按钮改为更新按钮
-      Vue.edit_disabled = true;//columnName 不可编辑
+      Vue.isAddBtn = false;//新建按钮改为更新按钮
+      Vue.canEdit = true;//columnName 不可编辑
       Vue.addMetricObj.columnName = params.row.columnName;
       Vue.addMetricObj.columnType = params.row.columnType;
       Vue.addMetricObj.columnAlias = params.row.columnAlias;
       Vue.addMetricObj.category = params.row.category;
       Vue.addMetricObj.expression = params.row.expression;
       Vue.$nextTick(function(){
-        if(Vue.addMetricObj.category == 2 && Vue.metric_sqlEditor == null){
-          Vue.initMetricSql();      
+        if (Vue.addMetricObj.category == CATEGORY.METRIC ){
+          if (Vue.metricSQLEditor == null){
+             Vue.initMetricSql();
+          }
+          Vue.metricSQLEditor.setValue(Vue.addMetricObj.expression);      
         }
-        if(Vue.addMetricObj.category == 2){
-          Vue.metric_sqlEditor.setValue(Vue.addMetricObj.expression);
-        }
-        
       }) 
-      Vue.edit_metric_index = params.index;
+      Vue.selectedMetricIndex = params.index;
     },
 
     /*点击更新计算字段*/
-    update_calculatedfield(){
+    updateCalculateField(){
       let Vue = this;
-      if(Vue.edit_caculated_index !=null){
-        Vue.caculated_TableData[Vue.edit_caculated_index].columnName = Vue.addCaculatedObj.columnName;
-        Vue.caculated_TableData[Vue.edit_caculated_index].columnType = Vue.addCaculatedObj.columnType;
-        Vue.caculated_TableData[Vue.edit_caculated_index].columnAlias = Vue.addCaculatedObj.columnAlias;
-        Vue.caculated_TableData[Vue.edit_caculated_index].groupby = Vue.addCaculatedObj.groupby;
-        Vue.caculated_TableData[Vue.edit_caculated_index].filterable = Vue.addCaculatedObj.filterable;
-        Vue.caculated_TableData[Vue.edit_caculated_index].countDistinct = Vue.addCaculatedObj.countDistinct;
-        Vue.caculated_TableData[Vue.edit_caculated_index].sum = Vue.addCaculatedObj.sum;
-        Vue.caculated_TableData[Vue.edit_caculated_index].max = Vue.addCaculatedObj.max;
-        Vue.caculated_TableData[Vue.edit_caculated_index].min = Vue.addCaculatedObj.min;
-        Vue.caculated_TableData[Vue.edit_caculated_index].category = Vue.addCaculatedObj.category;
-        Vue.caculated_TableData[Vue.edit_caculated_index].expression = Vue.addCaculatedObj.expression;        
+      if(Vue.selectedCaculatedIndex !=null){
+        Vue.caculateTableData[Vue.selectedCaculatedIndex].columnName = Vue.addCaculatedObj.columnName;
+        Vue.caculateTableData[Vue.selectedCaculatedIndex].columnType = Vue.addCaculatedObj.columnType;
+        Vue.caculateTableData[Vue.selectedCaculatedIndex].columnAlias = Vue.addCaculatedObj.columnAlias;
+        Vue.caculateTableData[Vue.selectedCaculatedIndex].groupby = Vue.addCaculatedObj.groupby;
+        Vue.caculateTableData[Vue.selectedCaculatedIndex].filterable = Vue.addCaculatedObj.filterable;
+        Vue.caculateTableData[Vue.selectedCaculatedIndex].countDistinct = Vue.addCaculatedObj.countDistinct;
+        Vue.caculateTableData[Vue.selectedCaculatedIndex].sum = Vue.addCaculatedObj.sum;
+        Vue.caculateTableData[Vue.selectedCaculatedIndex].max = Vue.addCaculatedObj.max;
+        Vue.caculateTableData[Vue.selectedCaculatedIndex].min = Vue.addCaculatedObj.min;
+        Vue.caculateTableData[Vue.selectedCaculatedIndex].category = Vue.addCaculatedObj.category;
+        Vue.caculateTableData[Vue.selectedCaculatedIndex].expression = Vue.addCaculatedObj.expression;        
       }
 
-      Vue.cancel_addCaculatedfield();
+      Vue.hideCaculatePanel();
     },
     
-    /*点击度量*/
-    update_metric(){
+    /*点击更新度量*/
+    updateMetric(){
       let Vue = this;
-      if(Vue.edit_metric_index !=null){
-        Vue.metric_TableData[Vue.edit_metric_index].columnName = Vue.addMetricObj.columnName;
-        Vue.metric_TableData[Vue.edit_metric_index].columnType = Vue.addMetricObj.columnType;
-        Vue.metric_TableData[Vue.edit_metric_index].columnAlias = Vue.addMetricObj.columnAlias;
-        Vue.metric_TableData[Vue.edit_metric_index].expression = Vue.addMetricObj.expression;        
+      if(Vue.selectedMetricIndex !=null){
+        Vue.metricTableData[Vue.selectedMetricIndex].columnName = Vue.addMetricObj.columnName;
+        Vue.metricTableData[Vue.selectedMetricIndex].columnType = Vue.addMetricObj.columnType;
+        Vue.metricTableData[Vue.selectedMetricIndex].columnAlias = Vue.addMetricObj.columnAlias;
+        Vue.metricTableData[Vue.selectedMetricIndex].expression = Vue.addMetricObj.expression;        
       }
-
-      Vue.cancel_addMetric();
+      Vue.hideMetricPanel();
     },
 
     /*取消添加计算字段操作*/
-    cancel_addCaculatedfield(){
+    hideCaculatePanel(){
       let Vue = this;
       Vue.showAddCaculatedField = false;
     },
     
     /*取消添加度量操作*/
-    cancel_addMetric(){
+    hideMetricPanel(){
       let Vue = this;
       Vue.showAddMetric = false;
     },
 
     /*保存表编辑*/
-    saveEdit(){
+    saveQueryFields(){
       let Vue = this;
       //将字段编辑表数据存储到store
-      Vue.$store.commit("save_query_fieldEdit_table",Vue.caculated_TableData.concat(Vue.metric_TableData));        
+      Vue.$store.commit("saveQueryFields",Vue.caculateTableData.concat(Vue.metricTableData));        
     },
 
     /*删除表字段*/
-    delete_field(){
+    deleteField(){
       let Vue = this;
-      Vue.AxiosPost("delete_field",{columnsJSON:JSON.stringify(Vue.deleteItem)},function(response){});  
+      Vue.AxiosPost("deleteField",{columnsJSON:JSON.stringify(Vue.deleteItem)},function(response){});  
     },
 
-    /*画字段表，包含原始字段和计算字段*/
-    drawFieldTable (caculated_tableData){
-      let Vue = this;
-      if(Vue.tableData != null){
+    /*画字段表，数据包含原始字段和计算字段*/
+    drawFieldTable (caculatetableData){
+    let Vue = this;
       var cols = [];
       cols.push({
         render: (h, params) => {
@@ -501,16 +500,16 @@ export default {
             },
             nativeOn:{
               'click':(event)=>{
-                if(Vue.isCreate == false){
-                  for(let i in Vue.tableData){
-                    if(Vue.tableData[i].id == Vue.bizView.id+"_"+params.row.columnName){
-                      Vue.deleteItem.push(Vue.tableData[i]);
+                if(!Vue.isCreate){
+                  for(let i in Vue.queryMetaData){
+                    if(Vue.queryMetaData[i].id == Vue.bizView.id+"_"+params.row.columnName){
+                      Vue.deleteItem.push(Vue.queryMetaData[i]);
                     }
                   }                  
                 }
 
-                Vue.caculated_TableData.splice(params.index,1);  
-                Vue.cancel_addCaculatedfield();            
+                Vue.caculateTableData.splice(params.index,1);  
+                Vue.hideCaculatePanel();            
               }
             }
           })
@@ -593,36 +592,19 @@ export default {
           return h('Checkbox',
             {props:{'value':params.row.min == 1?true:false,'disabled':true}})
         }         
-      })
-      var rows = [];
-      for(let r in caculated_tableData){
-        rows.push({
-          'columnName':caculated_tableData[r].columnName,
-          'columnType':caculated_tableData[r].columnType,
-          'columnAlias':caculated_tableData[r].columnAlias,            
-          'groupby':caculated_tableData[r].groupby,
-          'filterable':caculated_tableData[r].filterable,
-          'countDistinct':caculated_tableData[r].countDistinct,
-          'sum':caculated_tableData[r].sum,
-          'max':caculated_tableData[r].max,
-          'min':caculated_tableData[r].min,
-          'category':caculated_tableData[r].category,
-          'expression':caculated_tableData[r].expression
-        });
-      }
-      Vue.caculated_TableData = rows;                 
-    }
-    Vue.caculated_columns = cols;
+      });
+      Vue.caculateTableData = caculatetableData;                 
+      Vue.caculateColumns = cols;
      
     },
 
     /*度量表*/
-    drawMetricTable(metric_TableData){
+    drawMetricTable(metricTableData){
       let Vue = this;
       var cols = [];
       cols.push({
         render: (h, params) => {
-          return h('Icon',{
+          return h('Icon',{//删除度量
             props: {
               type: "trash-a"
             },
@@ -631,15 +613,15 @@ export default {
             },
             nativeOn:{
               'click':(event)=>{
-                if(Vue.isCreate == false){
-                  for(let i in Vue.tableData){
-                    if(Vue.tableData[i].id == Vue.bizView.id+"_"+params.row.columnName){
-                      Vue.deleteItem.push(Vue.tableData[i]);
+                if(!Vue.isCreate){
+                  for(let i in Vue.queryMetaData){
+                    if(Vue.queryMetaData[i].id == Vue.bizView.id+"_"+params.row.columnName){
+                      Vue.deleteItem.push(Vue.queryMetaData[i]);
                     }
                   }                  
                 }
-                Vue.metric_TableData.splice(params.index,1);    
-                Vue.cancel_addMetric();             
+                Vue.metricTableData.splice(params.index,1);    
+                Vue.hideMetricPanel();             
               }
             }
           })
@@ -673,44 +655,22 @@ export default {
         "key":'columnType',
         "align":"center"       
       });
-      var rows = [];
-      for(let r in metric_TableData){
-        rows.push({
-          'columnName':metric_TableData[r].columnName,
-          'columnType':metric_TableData[r].columnType,
-          'columnAlias':metric_TableData[r].columnAlias, 
-          'category':metric_TableData[r].category,  
-          'expression':metric_TableData[r].expression         
-        });
-      }
-      Vue.metric_TableData = rows;                 
-      Vue.metric_columns = cols;
+      Vue.metricTableData = metricTableData;                 
+      Vue.metricColumns = cols;
     },
 
-    /*数据过滤*/
-    dataFilter(){
+    /*新建查询器的字段表判断，metric->category:2,original->category:0
+      将数据按照度量，字段进行分割
+      度量数据存放在metricTableData中
+      计算字段和原始字段放在field_TableData中
+    */
+    renderQueryMetaDataForCreate(){
       let Vue = this;
-      if(Array.isArray(Vue.tableData)){
-        Vue.isCreate = false;//初始化数据为编辑
-        Vue.editQueryDataFilter();
-      }else{
-        Vue.isCreate = true;//初始化数据为新建
-        Vue.createQueryDataFilter();
-      }
-    },
-
-    /*新建查询器的字段表判断*/
-    createQueryDataFilter(){
-      let Vue = this;
-      if(!Vue.tableData.stringHeaders){
-        Vue.caculated_TableData = Vue.tableData; 
-        return;
-      };
       let field_TableData = [];
-      let metric_TableData = [];
-      for(let i in Vue.tableData.columsType){
-        var columnType = Vue.tableData.columsType[i];
-        var stringHeader = Vue.tableData.stringHeaders[i];
+      let metricTableData = [];
+      for(let i in Vue.queryMetaData.columsType){
+        let columnType = Vue.queryMetaData.columsType[i];
+        let stringHeader = Vue.queryMetaData.stringHeaders[i];
         switch(columnType){
           case "BIT":
           case "BIGINT":
@@ -722,11 +682,11 @@ export default {
           case "REAL":
           case "DECIMAL":
           case "NUMERIC":
-            metric_TableData.push({
+            metricTableData.push({
               'columnType':columnType,
               'columnName':stringHeader,
               'columnAlias':stringHeader,
-              'category':2,
+              'category':CATEGORY.METRIC,
               'expression':''});
           break;
           default:field_TableData.push({
@@ -739,40 +699,48 @@ export default {
             'sum':0,
             'max':0,
             'min':0,
-            'category':0,
+            'category':CATEGORY.RAW,
             'expression':''});
         }
         
       };
-      Vue.drawMetricTable(metric_TableData);
+      Vue.drawMetricTable(metricTableData);
       Vue.drawFieldTable(field_TableData);//包含计算字段和原始字段
     },
 
-    /*编辑查询器的字段类型判断*/
-    editQueryDataFilter(){
+    /*编辑查询器的字段类型判断 metric->category:2, original->category:0, caculatedField->category:1
+      将数据按照度量，字段进行分割
+      度量数据存放在metricTableData中
+      计算字段和原始字段放在field_TableData中
+    */
+    renderQueryMetaDataForEdit(){
       let Vue = this;
       let field_TableData = [];
-      let metric_TableData = [];
-      for(let i in Vue.tableData){
-        if(Vue.tableData[i].category == 2){//度量
-          metric_TableData.push(Vue.tableData[i]);
+      let metricTableData = [];
+      for(let i in Vue.queryMetaData){
+        if(Vue.queryMetaData[i].category == CATEGORY.METRIC){//度量
+          metricTableData.push(Vue.queryMetaData[i]);
         }
-        if(Vue.tableData[i].category == 0 || Vue.tableData[i].category == 1){
-          field_TableData.push(Vue.tableData[i]);
+        if(Vue.queryMetaData[i].category == CATEGORY.RAW || Vue.queryMetaData[i].category == CATEGORY.CACULATE){
+          field_TableData.push(Vue.queryMetaData[i]);
         }        
       }
-      Vue.drawMetricTable(metric_TableData);
+      Vue.drawMetricTable(metricTableData);
       Vue.drawFieldTable(field_TableData);//计算字段和原始字段
     },
 
 
-    /*刷新表数据*/
-    refreshTableData(){
+    /*刷新计算字段、度量表格数据*/
+    refreshCaculateAndMetric(){
       let Vue = this;
-      Vue.dataFilter();
+      if (Vue.isCreate) {
+        Vue.renderQueryMetaDataForCreate();
+      }else{
+        Vue.renderQueryMetaDataForEdit();
+      }
     },
     
-    /*表格行样式*/
+    /*表格行样式,暂不启用*/
     rowClassName (row, index){
       if(index ==0){
         return 'tbody_first';

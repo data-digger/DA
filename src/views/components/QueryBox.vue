@@ -20,7 +20,7 @@
     <Modal
       v-model="modalpreview"
       width ="1200px"
-      title="Common Modal dialog box title">
+      :title="'预览'+querybox.name+'查询器数据'">
       <Row>
         <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'currentTableData'></component>
       </Row>
