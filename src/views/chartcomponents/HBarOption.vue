@@ -155,21 +155,23 @@ export default {
                 let yAlias = Vue.groupbyList[Vue.selectedY].columnAlias;
                 Vue.selectdOption.yAxis.name = yAlias;
                 Vue.selectdOption.yAxis.data = yName;
-                Vue.params.groupby = Vue.groupbyList[Vue.selectedY];
+                //Vue.params.groupby = Vue.groupbyList[Vue.selectedY];
+                Vue.params.groupby = yName;
                 Vue.selectdOption.color = ChartTemplate.COLORS[Vue.colorSelected].color;
-                //Vue.selectdOption.legend.data = [];
                 Vue.selectdOption.series = [];           
                 for (let i in Vue.selectedX){
                     if(Vue.params.isgroupby == true){
                         let xName = Vue.aggregationFun[Vue.selectedX[i]].columnName;
                         let xAlias = Vue.aggregationFun[Vue.selectedX[i]].columnAlias;
                         Vue.selectdOption.series.push({name:xAlias,data:xName,type: 'bar'});
-                        Vue.params.value.push(Vue.aggregationFun[Vue.selectedX[i]]);
+                        //Vue.params.value.push(Vue.aggregationFun[Vue.selectedX[i]]);
+                        Vue.params.value.push(xName);
                     } else {
                         var xName = Vue.metrics[Vue.selectedX[i]].columnName;
                         var xAlias = Vue.metrics[Vue.selectedX[i]].columnAlias;
                         Vue.selectdOption.series.push({name:xAlias,data:xName,type: 'bar'});
-                        Vue.params.value.push(Vue.metrics[Vue.selectedX[i]]);
+                        //Vue.params.value.push(Vue.metrics[Vue.selectedX[i]]);
+                        Vue.params.value.push(xName);
                     }  
                     
                 }

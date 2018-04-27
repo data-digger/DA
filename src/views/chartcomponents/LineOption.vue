@@ -167,7 +167,8 @@ export default {
                     let xAlias = Vue.groupbyList[Vue.selectedX].columnAlias;
                     Vue.selectdOption.xAxis.name = xAlias;
                     Vue.selectdOption.xAxis.data = xName;
-                    Vue.params.groupby = Vue.groupbyList[Vue.selectedX];
+                    //Vue.params.groupby = Vue.groupbyList[Vue.selectedX];
+                    Vue.params.groupby = xName;
                     Vue.selectdOption.color = ChartTemplate.COLORS[Vue.colorSelected].color;
                     Vue.selectdOption.series = [];           
                     for (let i in Vue.selectedY){
@@ -179,7 +180,8 @@ export default {
                                 } else {
                                     Vue.selectdOption.series.push({name:yAlias,data:yName,type: 'line'})
                                 }
-                            Vue.params.value.push(Vue.aggregationFun[Vue.selectedY[i]]);
+                            //Vue.params.value.push(Vue.aggregationFun[Vue.selectedY[i]]);
+                            Vue.params.value.push(yName);
                         } else {
                             var yName = Vue.metrics[Vue.selectedY[i]].columnName;
                             var yAlias = Vue.metrics[Vue.selectedY[i]].columnAlias;
@@ -188,7 +190,8 @@ export default {
                             } else {
                                 Vue.selectdOption.series.push({name:yAlias,data:yName,type: 'line'})
                             }
-                            Vue.params.value.push(Vue.metrics[Vue.selectedY[i]]);
+                            //Vue.params.value.push(Vue.metrics[Vue.selectedY[i]]);
+                            Vue.params.value.push(yName);
                         }  
                         
                     }

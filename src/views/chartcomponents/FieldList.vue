@@ -80,8 +80,8 @@
                                                 :prop="'items.' + index + '.value'">
                                             <Row>
                                                     <Col span="12">
-                                                        <Select class="form-control" v-model='whereIndex[index]'>               
-                                                            <Option v-for="(item,i) in filterableList" :key="item.columnName" :value="i">{{item.columnAlias}}</Option>
+                                                        <Select class="form-control" v-model='filter.where[index].field'>               
+                                                            <Option v-for="(item,i) in filterableList" :key="item.columnName" :value="item.columnName">{{item.columnAlias}}</Option>
                                                         </Select>
                                                     </Col>
                                                     <Col span="9" offset="1">
@@ -217,17 +217,17 @@ export default {
             Vue.filter.where = filters.where;
             Vue.filter.orderby = filters.orderby;
             Vue.filter.limit = filters.limit;
-            Vue.whereIndex = [];
-            for(var i in Vue.filter.where){
-                Vue.whereIndex.push(Vue.findWhereIndex(Vue.filter.where[i].field))
-            }
+            // Vue.whereIndex = [];
+            // for(var i in Vue.filter.where){
+            //     Vue.whereIndex.push(Vue.findWhereIndex(Vue.filter.where[i].field))
+            // }
             Vue.activedPanel = ["1","2","3"];  
             Vue.activedFilterPanel = ["3-1","3-2","3-3"]
         },
-        findWhereIndex(whereObject){
+        findWhereIndex(filed){
             let Vue = this;
             var index=-1;
-            if(whereObject!=null){
+            if(filed!=null ){
                 for(var i=0; i<Vue.filterableList.length; i++){
                     if(whereObject.columnName == Vue.filterableList[i].columnName){
                         index = i;
@@ -268,14 +268,14 @@ export default {
         },
         sentFilter:function(){
             let Vue = this;
-            for(let i in Vue.whereIndex){
-                let fieldIndex = Vue.whereIndex[i];
-                if(fieldIndex != -1){
-                    Vue.filter.where[i].field = Vue.filterableList[fieldIndex];
-                }else{
-                    Vue.filter.where[i].field = null;
-                }
-            }
+            // for(let i in Vue.whereIndex){
+            //     let fieldIndex = Vue.whereIndex[i];
+            //     if(fieldIndex != -1){
+            //         Vue.filter.where[i].field = Vue.filterableList[fieldIndex].columnName;
+            //     }else{
+            //         Vue.filter.where[i].field = null;
+            //     }
+            // }
             Vue.$emit('getFilter',Vue.filter);
         },
         reset(){

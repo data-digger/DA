@@ -143,16 +143,19 @@ export default {
                     Vue.params.groupby = null;
                     let xName = Vue.groupbyList[Vue.selectedX].columnName;
                     Vue.selectdOption.series[0].data.name = xName;
-                    Vue.params.groupby = Vue.groupbyList[Vue.selectedX];
+                    //Vue.params.groupby = Vue.groupbyList[Vue.selectedX];
+                    Vue.params.groupby = xName;
                     Vue.selectdOption.color = ChartTemplate.COLORS[Vue.colorSelected].color;      
                     if(Vue.params.isgroupby == true){
                         let yName = Vue.aggregationFun[Vue.selectedY].columnName;
                         Vue.selectdOption.series[0].data.value = yName;
-                        Vue.params.value.push(Vue.aggregationFun[Vue.selectedY]);
+                        //Vue.params.value.push(Vue.aggregationFun[Vue.selectedY]);
+                        Vue.params.value.push(yName);
                     } else {
                         var yName = Vue.metrics[Vue.selectedY].columnName;
                         Vue.selectdOption.series[0].data.value = yName;
-                        Vue.params.value.push(Vue.metrics[Vue.selectedY]);
+                        //Vue.params.value.push(Vue.metrics[Vue.selectedY]);
+                        Vue.params.value.push(yName);
                     }  
                     Vue.$emit('getSelectedOption',{option:Vue.selectdOption,filter:Vue.params,isvalid:true});
             } else {

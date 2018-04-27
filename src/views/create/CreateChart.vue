@@ -222,6 +222,7 @@ export default {
         let define = JSON.parse(Vue.myChart.defineJSON);
         Vue.eoption = define.option;
         Vue.filters = define.filters;
+        Vue.optionValid = true;
       }
       
     },

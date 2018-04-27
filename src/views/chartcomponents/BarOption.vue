@@ -161,7 +161,8 @@ export default {
                     let xAlias = Vue.groupbyList[Vue.selectedX].columnAlias;
                     Vue.selectdOption.xAxis.name = xAlias;
                     Vue.selectdOption.xAxis.data = xName;
-                    Vue.params.groupby = Vue.groupbyList[Vue.selectedX];
+                    //Vue.params.groupby = Vue.groupbyList[Vue.selectedX];
+                    Vue.params.groupby = xName;
                     Vue.selectdOption.color = ChartTemplate.COLORS[Vue.colorSelected].color;
                     //Vue.selectdOption.legend.data = [];
                     Vue.selectdOption.series = [];           
@@ -170,19 +171,21 @@ export default {
                             let yName = Vue.aggregationFun[Vue.selectedY[i]].columnName;
                             let yAlias = Vue.aggregationFun[Vue.selectedY[i]].columnAlias;
                             Vue.selectdOption.series.push({name:yAlias,data:yName,type: 'bar'});
-                            Vue.params.value.push(Vue.aggregationFun[Vue.selectedY[i]]);
+                            //Vue.params.value.push(Vue.aggregationFun[Vue.selectedY[i]]);
+                            Vue.params.value.push(yName);
                         } else {
                             var yName = Vue.metrics[Vue.selectedY[i]].columnName;
                             var yAlias = Vue.metrics[Vue.selectedY[i]].columnAlias;
                             Vue.selectdOption.series.push({name:yAlias,data:yName,type: 'bar'});
-                            Vue.params.value.push(Vue.metrics[Vue.selectedY[i]]);
+                            //Vue.params.value.push(Vue.metrics[Vue.selectedY[i]]);
+                            Vue.params.value.push(yName);
                         }  
                         
                     }
                     Vue.$emit('getSelectedOption',{option:Vue.selectdOption,filter:Vue.params,isvalid:true});
             } else {
                 Vue.$emit('getSelectedOption',{isvalid:false});
-                Vue.$Message.error('x and y is neccessary');
+                Vue.$Message.error('X轴与Y轴不可为空');
             }
           
        },

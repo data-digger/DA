@@ -115,11 +115,12 @@ export default {
                     Vue.params.value = [];
                     let dataName = Vue.metrics[Vue.selectdData].columnName;
                     Vue.selectdOption.dataName = dataName;
-                    Vue.params.value.push(Vue.metrics[Vue.selectdData]);
+                    //Vue.params.value.push(Vue.metrics[Vue.selectdData]);
+                    Vue.params.value.push(dataName);
                     Vue.$emit('getSelectedOption',{option:Vue.selectdOption,filter:Vue.params,isvalid:true});
             } else {
                 Vue.$emit('getSelectedOption',{isvalid:false});
-                Vue.$Message.error('data is neccessary');
+                Vue.$Message.error('数据字段');
             }
        },
        showIconSearch:function(){
