@@ -91,7 +91,7 @@ export default {
     methods:{
         setData:function(eoption,filters){
             let Vue = this;
-            Vue.selectdOption = eoption;
+            Vue.selectdOption = $.extend(true, {}, eoption);
             Vue.selectdData = Vue.findIndex(Vue.metrics,Vue.selectdOption.dataName);
             Vue.params.value = filters.value;
             Vue.params.groupby = filters.groupby;

@@ -130,12 +130,12 @@ export default {
         if(Vue.chartView != null){
           Vue.chartView.dispose();
         }       
-        Vue.AxiosPost("previewBizView",{'bizViewId':chart.bizViewId},
+        Vue.AxiosPost("getChartData",{'chartId':chart.id},
           function(response){
             if(chart.type){
               if(chart.type == 'Card'){
                 Vue.$nextTick(function(){
-                  Vue.drawCard(chart,response);
+                  Vue.drawCard(response.data.content);
                 })
                 Vue.cardShow = true;
                 Vue.EChartShow = false;
@@ -145,7 +145,7 @@ export default {
                 Vue.EChartShow = true;
                 Vue.tableShow = false;
                 Vue.$nextTick(function(){
-                  Vue.drawEChart(chart,response); 
+                  Vue.drawEChart(response.data.content); 
                 })                
               }
             }else{
@@ -162,11 +162,13 @@ export default {
           }
         );
       },
-      drawEChart (chart,chartData) {
+      drawEChart (chartData) {
         let Vue = this;
-        let eoption = eval("(" + chart.defineJSON + ")");
+        let queryData = chartData.data;
+        let defineOption = JSON.parse(chartData.defineJSON);
+        let eoption = defineOption.option;
         //解析option
-        chartUtil.analysis(eoption,chart.type,chartData.data.gridData);
+        chartUtil.analysis(eoption,chartData.type,queryData);
         // 基于准备好的dom，初始化echarts实例
         Vue.chartView = echarts.init(document.getElementById("chart-"+Vue.chartID+Vue.portletID));
         // 绘制图表
@@ -201,10 +203,12 @@ export default {
           Vue.currentTableData = Vue.historyData.slice(0,this.pageSize);
         } 
       },
-      drawCard(chart,cardData){
+      drawCard(cardData){
         let Vue = this;
-        Vue.cardOption = eval("(" + chart.defineJSON + ")");
-        chartUtil.analysis(Vue.cardOption,chart.type,cardData.data.gridData);        
+        let queryData = cardData.data;
+        let defineOption = JSON.parse(cardData.defineJSON);
+        Vue.cardOption = defineOption.option;
+        chartUtil.analysis(Vue.cardOption,cardData.type,queryData);        
       },
       resized(){
         let Vue = this;
@@ -271,3 +275,4 @@ export default {
   margin: 10px;
 }
 </style>
+

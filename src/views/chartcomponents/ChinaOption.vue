@@ -126,7 +126,7 @@ export default {
     methods:{
          setData:function(eoption,filters){
             let Vue = this;
-            Vue.selectdOption = eoption;
+            Vue.selectdOption = $.extend(true, {}, eoption);
             Vue.params.value = filters.value;
             Vue.params.groupby = filters.groupby;
             Vue.params.isgroupby = filters.isgroupby;

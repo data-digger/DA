@@ -34,82 +34,73 @@
                         </ul>
                     </div>
             </Panel>
+
             <Panel name="3">
-                    过滤
-                    <div slot="content">
-                        <Collapse v-model="activedFilterPanel">
-                            <Panel name="3-1">
-                                排序
-                                <Row slot="content">
-                                    <Col span='12'>
-                                        <Select class="form-control" v-model='filter.orderby.field'>               
-                                            <Option v-for="item in columns" :key="item.columnName" :value="item.columnName">{{item.columnAlias}}</Option>
+                排序
+                <Row slot="content">
+                    <Col span='13'>
+                        <Select class="form-control" v-model='filter.orderby.field' clearable>               
+                            <Option v-for="item in columns" :key="item.columnName" :value="item.columnName">{{item.columnAlias}}</Option>
+                        </Select>
+                    </Col>
+                    <Col span='9' offset='1'>
+                        <Select class="form-control" v-model='filter.orderby.type'>               
+                            <Option v-for='item in ORDERTYPE' :key='item' :value="item" >{{item}}</Option>
+                        </Select>
+                    </Col>
+                </Row>
+            </Panel>
+            <Panel name="4">
+                顶部
+                <Row slot="content">
+                    <Row>
+                        <Col span='3'><label class='filter-label'>top:</label></Col>
+                        <Col span='20'>
+                            <Input v-model="filter.limit" placeholder="10"></Input>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span='21' offset='3'><span class='notice-span'><I>最大个数为200</I></span></Col>
+                    </Row>
+                </Row>
+            </Panel>
+            <Panel name="5">
+                过滤
+                <div slot="content">
+                    <Form ref="contentFilter" :label-width="0">
+                        <FormItem
+                                v-for="(item, index) in filter.where"
+                                :key="index"
+                                :prop="'items.' + index + '.value'">
+                            <Row>
+                                    <Col span="12">
+                                        <Select class="form-control" v-model='filter.where[index].field'>               
+                                            <Option v-for="(item,i) in filterableList" :key="item.columnName" :value="item.columnName">{{item.columnAlias}}</Option>
                                         </Select>
                                     </Col>
-                                    <Col span='9' offset='1'>
-                                        <Select class="form-control" v-model='filter.orderby.type'>               
-                                            <Option v-for='item in ORDERTYPE' :key='item' :value="item" >{{item}}</Option>
+                                    <Col span="9" offset="1">
+                                        <Select class="form-control" v-model='filter.where[index].mark' @on-change="changePlaceHolder">                   
+                                            <Option v-for="item in CONTENTFILTERMARK" :key="item" :value="item">{{item}}</Option>
                                         </Select>
                                     </Col>
-                                    <Col span='1' offset='1'>
-                                         <Button id='orderEmpty' type="ghost" icon="ios-close-empty" shape="circle" size='small' @click="emptyOrderBy"></Button>
+                                    <Col span="22">
+                                        <Input v-model="filter.where[index].value" :placeholder="placeholder"></Input>
                                     </Col>
-                                </Row>
-                            </Panel>
-                            <Panel name="3-2">
-                                顶部
-                                <Row slot="content">
-                                    <Row>
-                                        <Col span='3'><label class='filter-label'>top:</label></Col>
-                                        <Col span='20'>
-                                            <Input v-model="filter.limit" placeholder="10"></Input>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col span='21' offset='3'><span class='notice-span'><I>0表示不过滤个数</I></span></Col>
-                                    </Row>
-                                </Row>
-                            </Panel>
-                            <Panel name="3-3">
-                                内容
-                                <div slot="content">
-                                    <Form ref="contentFilter" :label-width="0">
-                                        <FormItem
-                                                v-for="(item, index) in filter.where"
-                                                :key="index"
-                                                :prop="'items.' + index + '.value'">
-                                            <Row>
-                                                    <Col span="12">
-                                                        <Select class="form-control" v-model='filter.where[index].field'>               
-                                                            <Option v-for="(item,i) in filterableList" :key="item.columnName" :value="item.columnName">{{item.columnAlias}}</Option>
-                                                        </Select>
-                                                    </Col>
-                                                    <Col span="9" offset="1">
-                                                        <Select class="form-control" v-model='filter.where[index].mark' @on-change="changePlaceHolder">                   
-                                                            <Option v-for="item in CONTENTFILTERMARK" :key="item" :value="item">{{item}}</Option>
-                                                        </Select>
-                                                    </Col>
-                                                    <Col span="22">
-                                                        <Input v-model="filter.where[index].value" :placeholder="placeholder"></Input>
-                                                    </Col>
-                                                    
-                                                    <Col span="1" offset="1">
-                                                        <Button id='removeContent' type="ghost" icon="ios-minus-empty" shape="circle" size='small' @click="removeContentFilter(index)"></Button>
-                                                    </Col>
-                                            </Row>
-                                        </FormItem>
-                                        <FormItem>
-                                            <Row>
-                                                <Col span="12">
-                                                    <Button type="dashed" long @click="addContentFilter" icon="plus-round">添加过滤</Button>
-                                                </Col>
-                                            </Row>
-                                        </FormItem>
-                                    </Form>
-                                </div>
-                            </Panel>
-                    </Collapse>
-                    </div>
+                                    
+                                    <Col span="1" offset="1">
+                                        <Button id='removeContent' type="ghost" icon="ios-minus-empty" shape="circle" size='small' @click="removeContentFilter(index)"></Button>
+                                    </Col>
+                            </Row>
+                        </FormItem>
+                        <FormItem>
+                            <Row>
+                                <Col span="12">
+                                    <Button type="dashed" long @click="addContentFilter" icon="plus-round">添加过滤</Button>
+                                </Col>
+                            </Row>
+                        </FormItem>
+                    </Form>
+                </div>
             </Panel>
     </Collapse>
 </div>
@@ -140,7 +131,7 @@ export default {
             whereIndex:[],         
             filter:{
                 orderby:{field:'',type:'ASC'},
-                limit:0,
+                limit:200,
                 where:[]
                 }
             }
@@ -221,8 +212,7 @@ export default {
             // for(var i in Vue.filter.where){
             //     Vue.whereIndex.push(Vue.findWhereIndex(Vue.filter.where[i].field))
             // }
-            Vue.activedPanel = ["1","2","3"];  
-            Vue.activedFilterPanel = ["3-1","3-2","3-3"]
+            Vue.activedPanel = ["3","4","5"];  
         },
         findWhereIndex(filed){
             let Vue = this;
@@ -289,7 +279,7 @@ export default {
             this.whereIndex = [];         
             this.filter={
                     orderby:{field:'',type:'ASC'},
-                    limit:0,
+                    limit:200,
                     where:[]
                 };
 
