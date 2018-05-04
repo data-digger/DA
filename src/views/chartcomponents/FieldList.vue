@@ -72,24 +72,28 @@
                                 v-for="(item, index) in filter.where"
                                 :key="index"
                                 :prop="'items.' + index + '.value'">
+                                <!-- <FilterItem v-model="filter.where[index]" :bizViewId="bizViewId" :filterableList="filterableList" :CONTENTFILTERMARK="CONTENTFILTERMARK" :index="index"  @removeItem='removeFilterItem'></FilterItem> -->
                             <Row>
                                     <Col span="12">
-                                        <Select class="form-control" v-model='filter.where[index].field'>               
+                                        <Select class="form-control" v-model='filter.where[index].field' @on-change="getStandByValue(index)">               
                                             <Option v-for="(item,i) in filterableList" :key="item.columnName" :value="item.columnName">{{item.columnAlias}}</Option>
                                         </Select>
                                     </Col>
                                     <Col span="9" offset="1">
-                                        <Select class="form-control" v-model='filter.where[index].mark' @on-change="changePlaceHolder">                   
+                                        <Select class="form-control" v-model='filter.where[index].mark' @on-change="changeFilterType(index)">                   
                                             <Option v-for="item in CONTENTFILTERMARK" :key="item" :value="item">{{item}}</Option>
                                         </Select>
                                     </Col>
                                     <Col span="22">
-                                        <Input v-model="filter.where[index].value" :placeholder="placeholder"></Input>
+                                        <FieldSelect v-if="ftype[index]=='select'" v-model="filter.where[index].value" :bizViewId="bizViewId" :field="filter.where[index].field" :mark="filter.where[index].mark"></FieldSelect>
+                                        <FieldMultiSelect v-if="ftype[index]=='multiple'" v-model="filter.where[index].value" :bizViewId="bizViewId" :field="filter.where[index].field" :mark="filter.where[index].mark"></FieldMultiSelect>
+                                        <Input v-if="ftype[index]=='input'"  v-model="filter.where[index].value" :placeholder="placeholder"></Input>
                                     </Col>
                                     
                                     <Col span="1" offset="1">
                                         <Button id='removeContent' type="ghost" icon="ios-minus-empty" shape="circle" size='small' @click="removeContentFilter(index)"></Button>
                                     </Col>
+                                    <Col span='21' offset='3'><span class='notice-span'><I>最大候选数为200</I></span></Col>
                             </Row>
                         </FormItem>
                         <FormItem>
@@ -108,8 +112,14 @@
 <script>
 import bus from './../../libs/bus.js'
 import { parse } from 'babylon';
+import FieldSelect from './FieldSelect'
+import FieldMultiSelect from './FieldMultiSelect'
 export default {
-    props:['columns'],
+    props:['columns','bizViewId'],
+    components:{
+        FieldSelect,
+        FieldMultiSelect,
+    },
     computed: {
     },
     watch:{
@@ -119,7 +129,7 @@ export default {
         return {
             FUNCTION:['AND','OR','NOT','DISTINCT','SUM','COUNT','AVG'],
             ORDERTYPE:['ASC','DESC'],
-            CONTENTFILTERMARK:['IN','NOT IN','=','>','<','>=','<=','!=','==','LIKE'],
+            CONTENTFILTERMARK:['IN','NOT IN','=','>','<','>=','<=','!=','LIKE'],
             activedPanel:[],
             activedFilterPanel:[],
             dimensions:[],
@@ -127,12 +137,16 @@ export default {
             aggregationFun:[],
             filterableList:[],
             groupbyList:[],
-            placeholder:"'1',使用英文半角引号",  
+            placeholder:"1,不需要引号", 
+            ftype:[], 
+            filterStandBy:[],
+            //filterStandBy:[],
             whereIndex:[],         
             filter:{
                 orderby:{field:'',type:'ASC'},
                 limit:200,
-                where:[]
+                where:[],
+                whereType:[],
                 }
             }
     },
@@ -208,6 +222,7 @@ export default {
             Vue.filter.where = filters.where;
             Vue.filter.orderby = filters.orderby;
             Vue.filter.limit = filters.limit;
+            Vue.ftype = filters.whereType;
             // Vue.whereIndex = [];
             // for(var i in Vue.filter.where){
             //     Vue.whereIndex.push(Vue.findWhereIndex(Vue.filter.where[i].field))
@@ -235,11 +250,13 @@ export default {
         addContentFilter(){
             let Vue = this;
             Vue.filter.where.push({field:'',mark:'',value:''});
+            Vue.ftype.push('input');
             Vue.whereIndex.push(-1);
         },
         removeContentFilter(index){
             let Vue = this;
             Vue.filter.where.splice(index,1);
+            Vue.ftype.splice(index,1);
             Vue.whereIndex.splice(index,1);
         },
         isComputed(category){
@@ -249,23 +266,20 @@ export default {
                 return true
             }
         },
-         changePlaceHolder:function(value){
+         changeFilterType:function(index){
+            let value = this.filter.where[index].mark;
             if(value=='IN' || value=='NOT IN'){
-                this.placeholder =  "('1','2','3'...)";
-            } else {
-                this.placeholder = "'1',使用英文半角引号"
+                this.ftype[index] = 'multiple'
+            } else if(value == '=' || value == '!='){
+                this.ftype[index]  = 'select';
+                this.getStandByValue(index);
+            }else {
+                this.ftype[index]  = 'input'
             }
         },
         sentFilter:function(){
             let Vue = this;
-            // for(let i in Vue.whereIndex){
-            //     let fieldIndex = Vue.whereIndex[i];
-            //     if(fieldIndex != -1){
-            //         Vue.filter.where[i].field = Vue.filterableList[fieldIndex].columnName;
-            //     }else{
-            //         Vue.filter.where[i].field = null;
-            //     }
-            // }
+            Vue.filter.whereType = Vue.ftype;
             Vue.$emit('getFilter',Vue.filter);
         },
         reset(){
@@ -349,3 +363,5 @@ export default {
 </style>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+
+

@@ -24,7 +24,8 @@ window.urlConf = {
     save: `${window.uri}/chart/save`,
     getone:`${window.uri}/chart/getone`,
     getdata:`${window.uri}/chart/getdata`,
-    preview:`${window.uri}/chart/preview`
+    preview:`${window.uri}/chart/preview`,
+    filterStandByValue:`${window.uri}/chart/filter/standby`
   },
   table: {
     list: `${window.uri}/table/list`,
@@ -170,8 +171,12 @@ export default {
     getStandByValue(params){
       return axios.post(urlConf.param.getstandbyvalue, params); 
     },
-    /*获取图表SQL*/
+    /*获取图表数据*/
     chartPreview(params){
       return axios.post(urlConf.chart.preview, params); 
+    },
+    /*获取过滤器列表候选值*/
+    getFilterStandByValue(params){
+      return axios.post(urlConf.chart.filterStandByValue, params); 
     }
 };

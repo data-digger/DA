@@ -3,7 +3,7 @@
       <Carousel v-model="value" :dots="carouselSetting.dots" :arrow="carouselSetting.arrow" ref='slide'>
       <CarouselItem>
         <Col span="5">
-             <FieldList ref='fieldList' :columns="columns" @getFilter = 'setFilter'></FieldList>
+             <FieldList ref='fieldList' :columns="columns" :bizViewId="myChart.bizViewId"   @getFilter = 'setFilter'></FieldList>
           </Col>
           <Col span="7">
               <Form id="chartOption" ref="chartOption" :model="myChart" :rules="ruleValidate" :label-width="80">
