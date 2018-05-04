@@ -92,6 +92,7 @@ export default {
       },
       globalFilterColumns:[
         {
+          width:250,
           title: '全局过滤器名称',
           key: 'filterName'
         },
@@ -100,6 +101,8 @@ export default {
           key: 'filterDESC'
         },
         {
+          width:150,
+          align:'center',
           title:'操作',
           render: (h, params) => {
             return h('Icon',{
@@ -256,6 +259,7 @@ export default {
         }
       }
     },
+    
     //删除全局过滤器列表选项
     deleteGlobalFilter(event, params){
       let Vue = this;

@@ -11,7 +11,7 @@
         <Creator :routerpath="createDatasource" :id='creator_datasource_id'></Creator>     
       </Row>
     </Row>
-
+<!-- 
     <Row id='scroll-param'  class=" param">
       <Col>
         <div class="note note-param">
@@ -22,7 +22,7 @@
         <ParamBox v-for="pr in paramList" :key='pr.id' :parambox = 'pr'></ParamBox>
         <Creator :routerpath='createParam' :id='creator_param_id'></Creator>
       </Row>       
-    </Row> 
+    </Row>  -->
 
 
     <Row id='scroll-query'  class=" query">
@@ -84,7 +84,7 @@
 
 <script>
 import DatasourceBox from './../components/DatasourceBox'
-import ParamBox from './../components/ParamBox'
+/*import ParamBox from './../components/ParamBox'*/
 import Creator from './../components/Creator'
 import ReportBox from './../components/ReportBox'
 import ChartBox from './../components/ChartBox'
@@ -100,16 +100,16 @@ export default {
       createQuery:'/createQuery',
       createReport:'/createReport',
       createTable:'/createTable',
-      createParam:'/createParam',
+      /*createParam:'/createParam',*/
       monitor:[{title:'数据源' ,src:require('./../../assets/img/datasource_small.png'),id:'scroll-datasource'},
-      {title:'参数' ,src:require('./../../assets/img/parameter_small.png'),id:'scroll-param'},
+      /*{title:'参数' ,src:require('./../../assets/img/parameter_small.png'),id:'scroll-param'},*/
       {title:'查询器', src:require('./../../assets/img/search_small.png'),id:'scroll-query'},
       {title:'图表' ,src:require('./../../assets/img/chart_small.png'),id:'scroll-chart'},
       {title:'表格' ,src:require('./../../assets/img/table_small.png'),id:'scroll-table'},
       {title:'报表', src:require('./../../assets/img/report_small.png'),id:'scroll-report'}],
       creator_datasource_id:'creator_datasource',
       creator_query_id:'creator_query',
-      creator_param_id:'creator_param',
+      /*creator_param_id:'creator_param',*/
       creator_chart_id:'creator_chart',
       creator_table_id:'creator_table',
       creator_report_id:'creator_report',
@@ -122,12 +122,12 @@ export default {
     QueryBox,
     ChartBox,
     TableBox,
-    ParamBox
+   /* ParamBox*/
   },
   computed: {
     ...mapGetters({
       datasourceList: 'datasourceList',
-      paramList: 'paramList',
+      /*paramList: 'paramList',*/
       reportList:'reportList',
       chartList:'chartList',
       queryList:'queryList',
@@ -148,14 +148,14 @@ export default {
         }
       );   
     },
-    getParamBox(){
+/*    getParamBox(){
       let Vue = this;
       Vue.AxiosPost("getParamList",'',
         function(response){
           Vue.$store.dispatch('getParamBox',response);
         }
       );   
-    },
+    },*/
     getQueryBox (){
       let Vue = this;
       Vue.AxiosPost("getQueryList",'',
@@ -195,7 +195,7 @@ export default {
   },
   mounted (){
      this.getDatasourceBox();
-     this.getParamBox();
+    /* this.getParamBox();*/
      this.getReportBox();
      this.getQueryBox();
      this.getChartBox();
@@ -206,6 +206,9 @@ export default {
 <style scoped>
 .datasource,.report,.chart,.query,.table,.param{
    margin:11px;
+}
+.cardBox{
+  padding-left: 25px;
 }
 .note.note-datasource,
 .note.note-report,

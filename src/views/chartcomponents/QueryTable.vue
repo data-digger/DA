@@ -490,6 +490,7 @@ export default {
     let Vue = this;
       var cols = [];
       cols.push({
+        title:'删除',
         render: (h, params) => {
           return h('Icon',{
             props: {
@@ -515,6 +516,7 @@ export default {
           })
         }
       },{
+        title:'编辑',
         render: (h, params) => {
           return h('Icon',{
             props: {
@@ -603,6 +605,7 @@ export default {
       let Vue = this;
       var cols = [];
       cols.push({
+        title:'删除',
         render: (h, params) => {
           return h('Icon',{//删除度量
             props: {
@@ -627,6 +630,7 @@ export default {
           })
         }
       },{
+        title:'编辑',
         render: (h, params) => {
           return h('Icon',{
             props: {
