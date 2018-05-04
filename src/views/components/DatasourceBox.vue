@@ -64,7 +64,7 @@ export default {
 .card-shade{
   background-color: #008cdd;
   opacity: 0.9;
-  padding: 60px 40px;
+  padding: 60px 33px;
 }
 .box-card{
   background-color: #00a2ff;

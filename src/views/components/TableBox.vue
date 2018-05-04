@@ -121,7 +121,7 @@ export default {
 .card-shade{
   background-color: #4871da;
   opacity: 0.9;
-  padding:60px 20px;
+  padding:60px 12px;
 }
 .card-shade>img:nth-child(2){
   margin:0 15.5px;

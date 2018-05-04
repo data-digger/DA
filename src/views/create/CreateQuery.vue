@@ -15,7 +15,7 @@
                 <treebox :datasourceId ='bizView.dataSourceId' :treeName='datasourceName'></treebox>             
               </Col>
               <Col span='12' style='margin-top:12px;margin-left:10px'>
-                <p style='color:#a0acbf;height: 20px; margin-bottom: 5px;'>sql定义</p>
+                <p style='color:#a0acbf;height: 20px; margin-bottom: 5px;'>sql定义(按ctrl键可语法提示)</p>
                 <textarea id='defineJSON' v-model ="bizView.defineJSON"></textarea>
                 <div class='preview_img' @click='previewSQLResult()'><img src="./../../assets/img/page_preview.png"></div>
                 <Modal
@@ -346,29 +346,21 @@ export default {
 #createQuery .ivu-carousel{
   height: 560px;
   overflow-y: auto;
-  -webkit-user-select: text; 
+  -webkit-user-select: text;/*解决无法选中的问题*/ 
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
 }  
-@media only screen and (min-width: 1440px) and (max-width: 1600px){
+/*@media only screen and (min-width: 1600px) and (max-width: 1681px){
   #createQuery .ivu-carousel{
     height: 700px;
-    -webkit-user-select: text; 
-    -moz-user-select: text;
-    -ms-user-select: text;
-    user-select: text;
   }  
 }
 @media only screen and (min-width: 1681px) and (max-width: 1920px){
   #createQuery .ivu-carousel{
     height: 750px;
-    -webkit-user-select: text; 
-    -moz-user-select: text;
-    -ms-user-select: text;
-    user-select: text;
   }  
-}
+}*/
 .preview_img{
   position: absolute;
   z-index: 100;
