@@ -63,7 +63,7 @@ export default {
 .card-shade{
   background-color: #0f9171;
   opacity: 0.9;
-  padding:60px 40px;
+  padding:60px 33px;
 }
 .card-shade>img:nth-child(1){
   margin-right:24px;

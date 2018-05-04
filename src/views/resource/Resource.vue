@@ -204,9 +204,6 @@ export default {
 }
 </script>
 <style scoped>
-.cardBox{
-  margin:10px 20px;
-}
 .datasource,.report,.chart,.query,.table,.param{
    margin:11px;
 }

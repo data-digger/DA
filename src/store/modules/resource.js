@@ -9,7 +9,7 @@ const state = {
   chartList:null,
   queryList:null,
   tableList:null,
-  report:{
+  report:{//报表数据结构
     id:'',
     name:'',
     alias:'',
@@ -23,7 +23,7 @@ const state = {
     }
   },
   layoutSelected:"布局1",
-  queryFields:[],
+  queryFields:[],//查询器字段集合
   dimensions:[], //维度字段集合
   metrics:[], //度量字段集合
   aggregationFun:[],//聚合函数集合

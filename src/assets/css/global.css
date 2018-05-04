@@ -1,14 +1,14 @@
 .box-card{
   margin-bottom: 10px;
-  width: 170px;
-  height: 150px;
+  width: 155px;
+  height: 145px;
   transform:scale(1);
   -webkit-transform:scale(1);
   border-radius: 7px;
   border:0;
 }
 .card-shade{
-  height: 150px;
+  height: 145px;
   opacity: 0.9;
   display: none;
   position: absolute;
