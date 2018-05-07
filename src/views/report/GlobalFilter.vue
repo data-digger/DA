@@ -19,20 +19,14 @@
               <Cascader :data="filterTypeSelections" v-model="filterType_bak" trigger="hover" @on-change='selectFilterType'></Cascader>
            </FormItem> 
          </Col>
-          <Col span='8'>
+          <Col span='8' v-if='filterType_bak[1] == "DateByUser"'>
            <!--  <FormItem label="日期" v-if ='filterType_bak[1] == "DateByDay" || filterType_bak[1] == "DateByMonth" || filterType_bak[1] == "DateByUser" ' >
               <DatePicker :dateType = 'filterType_bak[1]' @sendDate='getDefaultDate' ref='DatePicker'></DatePicker> 
             </FormItem> -->
-            <FormItem label="时间" prop="date" v-if ='filterType_bak[1] == "DateByDay" || filterType_bak[1] == "DateByMonth" || filterType_bak[1] == "DateByUser" '>
-              <Select v-model="filter.defaultValue" placeholder="选择日" v-if ='filterType_bak[1] == "DateByDay"'>
-                 <Option value="currentDay">当日</Option>
-                 <Option value="prevDay">前一日</Option>
-              </Select>
-              <Select v-model="filter.defaultValue" placeholder="选择月份" v-if ='filterType_bak[1] == "DateByMonth"'>
-                 <Option value="currentMonth">当月</Option>
-                 <Option value="prevMonth">前一月</Option>
-              </Select>
-              <Input v-model="filter.defaultValue"  v-if ='filterType_bak[1] == "DateByUser"'  placeholder="请输入" ></Input>
+             <FormItem label="时间" prop="date" >
+              <Input v-model="filter.value"  disabled v-if='false'></Input>
+              <Input v-model="filter.value"  disabled v-if='false'>></Input>
+              <Input v-model="filter.value"  placeholder="请输入" v-if='filterType_bak[1] == "DateByUser"'></Input>
             </FormItem>            
          </Col>
          <Col span='15'>
@@ -51,7 +45,7 @@
             :name='el.chartName'
             :key='index'
           >
-            {{el.chartName}}.{{el.filter}}
+            {{el.chartName}}.{{el.field}}({{el.mark}})
           </Tag></Col>
         </Form>
         <Col span='10'>
@@ -147,7 +141,7 @@ export default {
         name:null,
         alias:null,
         type:[],
-        defaultValue:null,
+        value:null,
         related:[]
       }
     }
@@ -166,7 +160,20 @@ export default {
     //选择过滤器类型
     selectFilterType(filterType){
       let Vue = this;
-      Vue.filter.defaultValue = null;       
+      let DATE = new Date();
+      let Y = DATE.getFullYear() + '-';
+      let M = (DATE.getMonth()+1 < 10 ? '0'+(DATE.getMonth()+1) : DATE.getMonth()+1);
+      let D = '-'+DATE.getDate() + ' ';
+      if(filterType[1] == 'DateByDay'){
+        /*Vue.filter.value = Y+M+D; */
+        Vue.filter.value = '2011-05-19';
+      }
+      if(filterType[1] == 'DateByMonth'){
+        Vue.filter.value = Y+M; 
+      }
+      if(filterType[1] == 'DateByUser'){
+        Vue.filter.value = ''; 
+      }
     },
 
     //初始化关联过滤器层连选项
@@ -202,13 +209,13 @@ export default {
         return;
       };
       for(let i in Vue.relatedFilterTagList){
-        if(Vue.relatedFilterTagList[i].chartName == relatedFilter[0].name && Vue.relatedFilterTagList[i].filter == relatedFilter[1].field){
+        if(Vue.relatedFilterTagList[i].chartName == relatedFilter[0].name && Vue.relatedFilterTagList[i].field == relatedFilter[1].field){
           return;
         }
       };
       Vue.relatedFilterTagList.push({
         chartName:relatedFilter[0].name,
-        filter:relatedFilter[1].field,
+        field:relatedFilter[1].field,
         mark:relatedFilter[1].mark,
         chartId:relatedFilter[0].id}
       );
@@ -219,7 +226,7 @@ export default {
       let Vue = this;
       var relatedDESC = '';
       for(let i in Vue.relatedFilterTagList){
-        relatedDESC = relatedDESC+Vue.relatedFilterTagList[i].chartName+"."+Vue.relatedFilterTagList[i].filter + ",";
+        relatedDESC = relatedDESC+Vue.relatedFilterTagList[i].chartName+"."+Vue.relatedFilterTagList[i].field +"("+Vue.relatedFilterTagList[i].mark+")"+ ",";
       }
       Vue.$refs[globalFilter].validate((valid) => {
         if (valid) {
@@ -241,12 +248,13 @@ export default {
       for(let i in Vue.globalFilterList){
         Vue.filter.related = Vue.filter.related.concat(Vue.globalFilterList[i].globalFilterCells);
       }
+      this.$store.commit("saveReportGlobalFilter",Vue.filter);
     },
 
     //获取默认的时间
     getDefaultDate(defaultDate){
       let Vue = this;
-      Vue.filter.defaultValue = defaultDate;
+      Vue.filter.value = defaultDate;
     },
 
     //删除关联过滤器tag

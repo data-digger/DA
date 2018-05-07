@@ -5,10 +5,13 @@
           <div class="demo-carousel"><SelectLayout></SelectLayout></div>
         </CarouselItem>
         <CarouselItem>
-          <div class="demo-carousel"><component :is="layouts"></component></div>
+          <div class="demo-carousel"><component :is="currentLayout"></component></div>
         </CarouselItem>
         <CarouselItem>
-          <div class="demo-carousel"><globalFilter ref='saveGlobalFilterData'></globalFilter></div>
+          <div class="demo-carousel"><globalFilter ref='globalFilter'></globalFilter></div>
+        </CarouselItem>
+        <CarouselItem>
+          <div class="demo-carousel"><reportForm ref='reportForm'></reportForm></div>
         </CarouselItem>
         <CarouselItem>
           <div class="demo-carousel"><BaseInfo ref='initBaseInfo'></BaseInfo></div>
@@ -30,6 +33,7 @@ import Layout2 from "./../report/Layout2"
 import Layout3 from "./../report/Layout3"
 import Layout4 from "./../report/Layout4"
 import globalFilter from "./../report/GlobalFilter"
+import reportForm from "./../components/ReportForm"
 import {mapGetters} from 'vuex'
 export default {
     components:{
@@ -39,7 +43,8 @@ export default {
       Layout2,
       Layout3,
       Layout4,
-      globalFilter
+      globalFilter,
+      reportForm
     },
     computed: {
       ...mapGetters({
@@ -50,13 +55,15 @@ export default {
     data () {
       return {
         finished:false,
+        createReportFromNext:false,
         step: 0,
         carouselSetting: {
             height:"200",
             dots:"none",
             arrow:"never",
         },
-        layouts:Layout1
+        currentLayout:Layout1,
+        currentReport:null
       }
     },
     methods:{
@@ -64,20 +71,22 @@ export default {
       /*下一步操作*/
       next() {
         let Vue = this;
-        if (Vue.step >=3) return ;
-        //Slide向前移一步
-        Vue.$refs.slide.arrowEvent(1);        
+        if (Vue.step >=4) return ;
+        Vue.$refs.slide.arrowEvent(1); //Slide向前移一步       
         if(Vue.step == 1){//根据选择的布局
-          if(Vue.layoutSelected == "布局1"){ Vue.layouts=Layout1};
-          if(Vue.layoutSelected == "布局2"){ Vue.layouts=Layout2};
-          if(Vue.layoutSelected == "布局3"){ Vue.layouts=Layout3};
-          if(Vue.layoutSelected == "自定义"){ Vue.layouts=Layout4};
+          if(Vue.layoutSelected == "布局1"){ Vue.currentLayout = Layout1};
+          if(Vue.layoutSelected == "布局2"){ Vue.currentLayout = Layout2};
+          if(Vue.layoutSelected == "布局3"){ Vue.currentLayout = Layout3};
+          if(Vue.layoutSelected == "自定义"){ Vue.currentLayout = Layout4};
         }
         if(Vue.step == 3){
-          Vue.$refs.saveGlobalFilterData.saveGlobalFilterData();
+          Vue.$refs.globalFilter.saveGlobalFilterData();//向store中存储全局过滤器
+          Vue.createReport();//新建报表
+          Vue.createReportFromNext = true;//下一步新建入口
+          Vue.$refs.reportForm.initReport();
         }
-        if(Vue.step == 4){
-          Vue.$refs.initBaseInfo.initBaseInfo();
+        if(Vue.step == 4){    
+          Vue.createReportFromNext = false;
           Vue.finished = true;
         }         
       },
@@ -94,6 +103,7 @@ export default {
       /*新建报表*/
       createReport(){
        let Vue = this;
+       Vue.$refs.initBaseInfo.initBaseInfo();
        var ClonedReport = JSON.parse(JSON.stringify(Vue.report));
        var defineJSON = JSON.stringify(ClonedReport.defineJSON);
        ClonedReport.defineJSON = defineJSON;
@@ -101,7 +111,9 @@ export default {
          ClonedReport,
          function(){
             Vue.$Message.success('新建成功!');
-            Vue.closePage(event,'createReport');
+            if(!Vue.createReportFromNext){
+              Vue.closePage(event,'createReport');
+            }
          });
       },
 

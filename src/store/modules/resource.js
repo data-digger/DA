@@ -15,7 +15,7 @@ const state = {
     alias:'',
     desc:'',
     defineJSON:{
-      header:{conditons:[{type:"",objid:""}]},
+      header:{globalFilter:[]},
       content:{
         portlets:[]
       },
@@ -96,7 +96,7 @@ const mutations = {
     }
     state.reportList = paramData;
   },
-  initReportBaseInfo(state,param){
+  saveReportBaseInfo(state,param){
      state.report.name = param.name;
      state.report.alias = param.alias;
      state.report.desc = param.desc;
@@ -107,9 +107,13 @@ const mutations = {
   initDefaultdPortlets(state,param){
     state.report.defineJSON.content.portlets=param;
   },
+
+  /*保存报表中portlet Title*/
   addDefinePorlets(state,param){
     state.report.defineJSON = param;
   },
+
+  /*删除portlet操作，更新portlets*/
   deletePortlet(state,param){
      let portlets = state.report.defineJSON.content.portlets
      for(var i in portlets){
@@ -119,6 +123,7 @@ const mutations = {
         }
      }
   },
+
   saveTabs(state,param){
     for( let index in state.report.defineJSON.content.portlets){
       if(state.report.defineJSON.content.portlets[index].portletID == param[0].tabID){
@@ -126,6 +131,7 @@ const mutations = {
       }
     }
   },
+  /*保存报表中portlet Title*/
   savePortletTitle(state,param){
     for( let index in state.report.defineJSON.content.portlets){
       if(state.report.defineJSON.content.portlets[index].portletID == param.portletID){
@@ -133,9 +139,16 @@ const mutations = {
       }
     }    
   },
+  /*保存报表全局过滤器*/
+  saveReportGlobalFilter(state,param){
+    state.report.defineJSON.header.globalFilter = [param];
+  },
+
+  /*保存查询器字段*/
   saveQueryFields(state,param){
     state.queryFields = param;
   },
+
   setdimensions(state,param){
     state.dimensions = param;
   },

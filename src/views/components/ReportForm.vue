@@ -3,55 +3,30 @@
       <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="false":is-resizable="false":vertical-compact="true":use-css-transforms="true">
           <Collapse accordion >
               <Panel name="1" ref='collapse'>
-
                 <Row slot="content">
-                 <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component>
+                 <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'updateReport'></component>
                </Row>
               </Panel>
             </Collapse>        
-
             <div class='header' v-if='false'></div>
+
             <grid-item v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h":i="item.i" :key='item.i'>
               <div class='griditem-title'>{{item.tabs[0].title}}</div>
-
-
-              <!-- EChart容器 -->
-              <div :id="'chart'+report.id+item.i" style='height:90%;' v-show='chartShow && item.tabs[0].objtype != "Table"&& item.tabs[0].objtype != "Card"'></div>  
-
-
-              <component :chartCmpContent='chartCmpContent[item.i]' :is='item.component' :ifPage='true'></component> 
-
-
-
-              <!-- 卡片容器  -->  
-              <div class='infoCard' v-if = "cardShow && item.tabs[0].objtype == 'Card'">
-              <infoCard 
-                  :id-name="'card'+report.id+item.i"
-                  :end-val="cardOption.data"
-                  :iconType="cardOption.iconType"
-                  :icon-size="cardOption.iconSize"
-                  :color="cardOption.color"
-                  :count-size="cardOption.countSize"
-                  :count-weight="cardOption.countWeight"
-                  :intro-text="cardOption.introText"
-                  :intro-color='cardOption.introColor'
-                  :intro-size='cardOption.introSize'
-                  :intro-weight='cardOption.introWeight'                         
-                ></infoCard></div>     
-
-
-
-            </grid-item>
-            <ButtonGroup vertical class="demo-affix" style='right:18px;position:fixed;top:35%;'>
-                <div class='monitor'><Icon type="arrow-expand"></Icon></div>
-                <div class='monitor' @click='selectParam()'><Icon type="funnel"></Icon></div>
-                <Poptip placement="left" trigger='hover'>
-                  <div class='monitor'><Icon type="more"></Icon></div>
-                  <div class="api" slot="content">
-                      {{report.desc}}
-                  </div>                      
-                </Poptip> 
-            </ButtonGroup>          
+              <!-- 表格 -->
+              <component v-if='item.component == "Table"' 
+                         :chartCmpContent='chartCmpContent[item.i]'
+                         :is="item.component">
+              </component>
+              <!-- Chart图 -->
+              <component v-if='item.component != "Table"' 
+                         :ref="'chartContainer'+item.i"
+                         :is="item.component" 
+                         :option="'COption'+item.i"
+                         :chartId='report.id+item.i'
+                         :styles='chartStyles'>
+              </component>
+             <!--  <component :chartCmpContent='chartCmpContent[item.i]' :is='item.component' :ifPage='true'></component>  -->
+            </grid-item>         
          </grid-layout>
     </div>    
 </template>
@@ -59,14 +34,12 @@
 import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
 import echarts from 'echarts'
 import chartUtil from './../../libs/chartUtil.js'
-import infoCard from './../home/components/inforCard'
 import {mapGetters} from 'vuex'
-import iviewtable from './../chartcomponents/Table'
-import datepicker from "./../paramcomponents/DatePicker"
-import list from "./../paramcomponents/List"
-import Chart from "./../chartcomponents/Chart"
-import CountCard from "./../chartcomponents/CountCard"
-
+import Table from './../chartcomponents/Table'//表格
+import datepicker from "./../paramcomponents/DatePicker"//日期
+import list from "./../paramcomponents/List"//列表
+import Chart from "./../chartcomponents/Chart"//echart图形
+import CountCard from "./../chartcomponents/CountCard"//统计卡
 
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
@@ -74,8 +47,7 @@ export default {
   components: {
       "GridLayout": GridLayout,
       "GridItem": GridItem,
-      iviewtable,
-      infoCard,
+      Table,
       datepicker,
       list,
       Chart,
@@ -83,12 +55,17 @@ export default {
   },
   computed:{
     ...mapGetters({
-      paramList:'paramList'
-    }),
+      report:'report'
+    })
   },
   data(){
     return {
-      report:null,
+      COption1:null,
+      COption2:null,
+      COption3:null,
+      COption4:null,
+      isIntoFromResource:false,
+      chartStyles:{height:400+'px'},
       chartShow :true,
       cardShow:false,
       cardOption:[],
@@ -98,63 +75,86 @@ export default {
     }
   }, 
   methods:{
-    //初始化图形组件
+
+    /*初始化报表*/
+    initReport(){
+      let Vue =this;
+      Vue.initChartComponent();//初始化图形控件
+      Vue.initReportData();//初始化报表数据  
+    },
+
+    /*初始化图形组件*/
     initChartComponent(){
       let Vue = this;
       let portlets = Vue.report.defineJSON.content.portlets;
       for(var i in portlets){
         if(portlets[i].tabs[0].objtype == 'Table'){
-          portlets[i].component = 'iviewtable';
+          portlets[i].component = 'Table';
         }else if(portlets[i].tabs[0].objtype == 'Card'){
-          /*portlets[i].component = 'CountCard'*/
+          portlets[i].component = 'CountCard'
         }else{
-          /*portlets[i].component = 'Chart'*/
+          portlets[i].component = 'Chart'
         }
       };
+      console.log(portlets);
     },
 
-    initReport(){
+    /*初始化报表数据*/
+    initReportData(){
       let Vue = this;
-      Vue.paramComponent = [];  
-      //初始化参数控件          
-      Vue.AxiosPost("getReportData",{'reportID':Vue.report.id},
-      function(response){
-        if(response.data.parameterSet.length != 0){//如果有参数控件，初始化参数控件
-          for(var i in response.data.parameterSet){
-            if(response.data.parameterSet[i].paramType == 'list'){
-              var cmpObj = {};
-              cmpObj.component = list;
-              cmpObj.content = response.data.parameterSet[i];
-              Vue.paramComponent.push(cmpObj);
-            };
-            if(response.data.parameterSet[i].paramType == 'date'){
-              var cmpObj = {};
-              cmpObj.component = datepicker;
-              cmpObj.content = response.data.parameterSet[i];
-              Vue.paramComponent.push(cmpObj);
-            }
-          } 
-        }else{//如果没有参数控件，便开始刷新报表
-          Vue.refreshReport(response);
-        }
-      })         
+      Vue.paramComponent = [];       
+      if(Vue.isIntoFromResource){//如果从资源界面进入
+        Vue.AxiosPost("getReportDataById",{'reportID':Vue.report.id},
+        function(response){
+         Vue.initFilter(response.data.content);
+        })          
+      }  
+      if(!Vue.isIntoFromResource){//如果从新建下一步入口进入
+        Vue.AxiosPost("getReportDataByDefine",{'reportDefine':JSON.stringify(Vue.report.defineJSON)},
+        function(response){
+          Vue.initFilter(response.data.content);
+        })        
+      }     
     },
 
-    refreshReport(response){
+    /*初始化过滤器组件*/
+    initFilter(response){
       let Vue = this;
-      var chartDataArray = response.data.chartData;
-      var tableDataArray = response.data.tableData;
-      if(chartDataArray.length != 0){
+/*      if(response.data.parameterSet.length != 0){//如果有参数控件，初始化参数控件
+        for(var i in response.data.parameterSet){
+          if(response.data.parameterSet[i].paramType == 'list'){
+            var cmpObj = {};
+            cmpObj.component = list;
+            cmpObj.content = response.data.parameterSet[i];
+            Vue.paramComponent.push(cmpObj);
+          };
+          if(response.data.parameterSet[i].paramType == 'date'){
+            var cmpObj = {};
+            cmpObj.component = datepicker;
+            cmpObj.content = response.data.parameterSet[i];
+            Vue.paramComponent.push(cmpObj);
+          }
+        } 
+      }else{//如果没有参数控件，开始绘制报表
+        Vue.drawReport(response);
+      }*/
+      Vue.drawReport(response);
+    },
+
+    /*绘制报表*/
+    drawReport(response){
+      let Vue = this;
+      var chartDataArray = response.chartData;
+      var tableDataArray = response.tableData;
+      if(chartDataArray.length != 0){//chart图形
         for (var i in chartDataArray){
           if(chartDataArray[i].type == 'Card'){
-            Vue.drawCard(chartDataArray[i]);
             Vue.cardShow = true;
-          }else{
-            Vue.drawEChart(chartDataArray[i]);
           }
+          Vue.drawChart(chartDataArray[i]);
         }        
       }   
-      if(tableDataArray.length != 0){
+      if(tableDataArray.length != 0){//表格
         for(var j in tableDataArray){
           Vue.chartCmpContent[tableDataArray[j].portletID] = tableDataArray[j].data;
 /*          let portlets = Vue.report.defineJSON.content.portlets;
@@ -168,24 +168,9 @@ export default {
       }
     },
 
-    drawEChart (chartData) {
-      let Vue = this;
-      var gridData = chartData.data.gridData;
-      var chartDefineJSON = chartData.defineJSON;
-      var type = chartData.type;
-      var eoption = eval('(' + chartDefineJSON + ')');
-      chartUtil.analysis(eoption,type,gridData);
-      let chartView = echarts.init(document.getElementById("chart"+Vue.report.id +chartData.portletID));
-      chartView.setOption(eoption);           
-    },
 
-    drawCard(cardData){
-      let Vue = this;
-      Vue.cardOption=eval("(" + cardData.defineJSON + ")");
-      chartUtil.analysis(Vue.cardOption,cardData.type,cardData.data.gridData);
-    },   
-
-    refreshQueryData(param){
+    /*更新报表数据*/
+    updateReport(param){
       let Vue = this;
       Vue.paramSelected = $.extend(Vue.paramSelected,param);
       let paramLength = Object.keys(Vue.paramSelected).length;
@@ -193,22 +178,38 @@ export default {
       if(paramLength == Vue.paramComponent.length){
         Vue.AxiosPost("updateReport",{"reportID":Vue.report.id,"JSONparam":JSONParam},
           function(response){
-            Vue.refreshReport(response);
+            Vue.drawReport(response);
         });        
       }
     },
-
+    
+    /*选择过滤条件*/
     selectParam(){
       let Vue = this;
       Vue.$refs.collapse.toggle();
-    }
-  },
+    },
+      
+    /*绘制Chart图形*/  
+    drawChart (chartData) {
+      let Vue = this;
+      let data = chartData.data;
+      let currentCOption = "COption" + chartData.portletID ;
+      Vue[currentCOption]= JSON.parse(chartData.defineJSON).option;
+      var type = chartData.type;
+      chartUtil.analysis(Vue[currentCOption],type,data);
+      Vue.$nextTick(function(){
+        Vue.$refs['chartContainer'+chartData.portletID][0].show(Vue[currentCOption]);
+      })     
+    },   
 
-  beforeMount(){
-    let Vue =this;
-    Vue.report = Vue.$route.params;
-    Vue.initChartComponent();//初始化图形控件
-    Vue.initReport();//初始化报表  
+  },
+  mounted(){
+    let Vue = this;
+    Vue.isIntoFromResource =  !$.isEmptyObject(Vue.$route.params);//判断是否从资源界面入口进入
+    if(Vue.isIntoFromResource){//如果是从资源界面入口进入，根据报表id，预览报表
+      Vue.report = Vue.$route.params;
+      Vue.initReport();
+    }
   }
 }
 </script>

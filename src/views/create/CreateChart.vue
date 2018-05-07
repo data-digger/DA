@@ -1,5 +1,5 @@
 <template>
-    <Row style="padding:20px">
+    <Row style="padding:20px"> 
       <Carousel v-model="value" :dots="carouselSetting.dots" :arrow="carouselSetting.arrow" ref='slide'>
       <CarouselItem>
         <Col span="5">

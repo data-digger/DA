@@ -38,6 +38,7 @@ window.urlConf = {
     getone: `${window.uri}/report/getone`,
     getdata: `${window.uri}/report/getdata`,
     update: `${window.uri}/report/update`,
+    preview:`${window.uri}/report/preview`,
   },
   param: {
     list:`${window.uri}/parameter/list`,
@@ -152,13 +153,17 @@ export default {
       return axios.post(urlConf.report.getone, params); 
     },
     /*获取单张报表数据*/
-    getReportData(params){
+    getReportDataById(params){
       return axios.post(urlConf.report.getdata, params); 
     },
-     /*根据参数值更新报表数据*/
-     updateReport(params){
+    /*过去报表数据通过defineJSON*/
+    getReportDataByDefine(params){
+      return axios.post(urlConf.report.preview, params); 
+    },
+    /*根据参数值更新报表数据*/
+    updateReport(params){
       return axios.post(urlConf.report.update, params); 
-     },
+    },
     /*新建参数*/
     createParam(params){
       return axios.post(urlConf.param.save, params); 

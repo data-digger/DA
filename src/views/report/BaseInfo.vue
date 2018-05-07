@@ -35,7 +35,7 @@ import {mapGetters} from 'vuex'
     methods:{
        //更新报表中baseInfo
        initBaseInfo(){
-         this.$store.commit("initReportBaseInfo",this.report)
+         this.$store.commit("saveReportBaseInfo",this.report)
        }
     },
     mounted(){
