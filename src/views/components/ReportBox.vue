@@ -36,7 +36,6 @@ export default {
       $('#report'+Vue.reportbox.name).css('-webkit-transform','scale(1)');  
     },
     viewReport(routerpath){
-      
       this.$router.push({
         path:routerpath,
         name:"viewReport",

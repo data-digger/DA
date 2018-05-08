@@ -1,33 +1,26 @@
 <template> 
     <div>
       <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="false":is-resizable="false":vertical-compact="true":use-css-transforms="true">
-          <Collapse accordion >
-              <Panel name="1" ref='collapse'>
-                <Row slot="content">
-                 <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'updateReport'></component>
-               </Row>
-              </Panel>
-            </Collapse>        
-            <div class='header' v-if='false'></div>
-
-            <grid-item v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h":i="item.i" :key='item.i'>
-              <div class='griditem-title'>{{item.tabs[0].title}}</div>
-              <!-- 表格 -->
-              <component v-if='item.component == "Table"' 
-                         :chartCmpContent='chartCmpContent[item.i]'
-                         :is="item.component">
-              </component>
-              <!-- Chart图 -->
-              <component v-if='item.component != "Table"' 
-                         :ref="'chartContainer'+item.i"
-                         :is="item.component" 
-                         :option="'COption'+item.i"
-                         :chartId='report.id+item.i'
-                         :styles='chartStyles'>
-              </component>
-             <!--  <component :chartCmpContent='chartCmpContent[item.i]' :is='item.component' :ifPage='true'></component>  -->
-            </grid-item>         
-         </grid-layout>
+          <!-- 过滤器 -->
+          <component class='globalFilters' v-for='(cmp,index) in globalFilters' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'updateReport'></component>    
+          <grid-item v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h":i="item.i" :key='item.i'>
+            <div class='griditem-title'>{{item.tabs[0].title}}</div>
+            <!-- 表格 -->
+            <component v-if='item.component == "Table"' 
+                       :tableContent='tableContent[item.i]'
+                       :is="item.component"
+                       :ifPage='true'>
+            </component>
+            <!-- Chart图 -->
+            <component v-if='item.component != "Table"' 
+                       :ref="'chartContainer'+item.i"
+                       :is="item.component" 
+                       :option="'COption'+item.i"
+                       :chartId='report.id+item.i'
+                       :styles='chartStyles'>
+            </component>
+          </grid-item>         
+      </grid-layout>
     </div>    
 </template>
 <script>
@@ -59,19 +52,13 @@ export default {
     })
   },
   data(){
-    return {
-      COption1:null,
-      COption2:null,
-      COption3:null,
-      COption4:null,
-      isIntoFromResource:false,
-      chartStyles:{height:400+'px'},
-      chartShow :true,
-      cardShow:false,
-      cardOption:[],
-      paramComponent:[],
-      chartCmpContent:{'0':null,'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null,'9':null},
-      paramSelected:null,
+    return { 
+      isIntoFromResource:false,//是否从资源入口进入
+      chartStyles:{height:400+'px'},//chart图样式
+      cardShow:false,//显示卡片容器
+      globalFilters:[],
+      tableContent:{'0':null,'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null,'9':null},//表格组件的内容
+      paramSelected:null,//选择的参数值
     }
   }, 
   methods:{
@@ -96,23 +83,27 @@ export default {
           portlets[i].component = 'Chart'
         }
       };
-      console.log(portlets);
     },
 
     /*初始化报表数据*/
     initReportData(){
-      let Vue = this;
-      Vue.paramComponent = [];       
+      let Vue = this;     
       if(Vue.isIntoFromResource){//如果从资源界面进入
         Vue.AxiosPost("getReportDataById",{'reportID':Vue.report.id},
         function(response){
          Vue.initFilter(response.data.content);
+         Vue.drawReport(response.data.content);
         })          
       }  
       if(!Vue.isIntoFromResource){//如果从新建下一步入口进入
         Vue.AxiosPost("getReportDataByDefine",{'reportDefine':JSON.stringify(Vue.report.defineJSON)},
         function(response){
+          let reportData = response.data.content;
+          if(reportData.defineJSON){
+            
+          }
           Vue.initFilter(response.data.content);
+          Vue.drawReport(response.data.content);
         })        
       }     
     },
@@ -120,7 +111,7 @@ export default {
     /*初始化过滤器组件*/
     initFilter(response){
       let Vue = this;
-/*      if(response.data.parameterSet.length != 0){//如果有参数控件，初始化参数控件
+/*    if(response.data.parameterSet.length != 0){//如果有参数控件，初始化参数控件
         for(var i in response.data.parameterSet){
           if(response.data.parameterSet[i].paramType == 'list'){
             var cmpObj = {};
@@ -135,10 +126,7 @@ export default {
             Vue.paramComponent.push(cmpObj);
           }
         } 
-      }else{//如果没有参数控件，开始绘制报表
-        Vue.drawReport(response);
       }*/
-      Vue.drawReport(response);
     },
 
     /*绘制报表*/
@@ -156,7 +144,7 @@ export default {
       }   
       if(tableDataArray.length != 0){//表格
         for(var j in tableDataArray){
-          Vue.chartCmpContent[tableDataArray[j].portletID] = tableDataArray[j].data;
+          Vue.tableContent[tableDataArray[j].portletID] = tableDataArray[j].data;
 /*          let portlets = Vue.report.defineJSON.content.portlets;
           for(var k in portlets){
             if(portlets[k].portletID == tableDataArray[j].portletID){
@@ -207,7 +195,11 @@ export default {
     let Vue = this;
     Vue.isIntoFromResource =  !$.isEmptyObject(Vue.$route.params);//判断是否从资源界面入口进入
     if(Vue.isIntoFromResource){//如果是从资源界面入口进入，根据报表id，预览报表
-      Vue.report = Vue.$route.params;
+      Vue.report.name= Vue.$route.params.name;
+      Vue.report.id= Vue.$route.params.id;
+      Vue.report.desc= Vue.$route.params.desc;
+      Vue.report.defineJSON= Vue.$route.params.defineJSON;
+      Vue.report.alias= Vue.$route.params.alias;
       Vue.initReport();
     }
   }
@@ -257,7 +249,7 @@ export default {
 .monitor:hover{
   background-color:#2d8cf0;
 }
-.paramcomponent{
+.globalFilters{
   display: inline-block;
   margin:0 3px;
 }

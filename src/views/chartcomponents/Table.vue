@@ -13,9 +13,9 @@
 <script>
 
 export default {
-  props:['chartCmpContent','ifPage','pageSize'],
+  props:['tableContent','ifPage','pageSize'],
   watch:{
-    'chartCmpContent':'refreshChartContent'
+    'tableContent':'refreshChartContent'
   },
   data(){
     return {
@@ -28,8 +28,8 @@ export default {
   methods:{
     drawTable (){
       let Vue = this;
-      if(Vue.chartCmpContent != null){
-      var header = Vue.chartCmpContent.stringHeaders;
+      if(Vue.tableContent != null){
+      var header = Vue.tableContent.stringHeaders;
       var cols = [];
       for(let c in header){
          cols.push({
@@ -38,7 +38,7 @@ export default {
          })
       };
       var rows = [];
-      var rowData = Vue.chartCmpContent.data;
+      var rowData = Vue.tableContent.data;
        for(let r in rowData){
           let row = {};
           let curRow = rowData[r];

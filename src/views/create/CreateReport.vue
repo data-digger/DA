@@ -55,7 +55,6 @@ export default {
     data () {
       return {
         finished:false,
-        createReportFromNext:false,
         step: 0,
         carouselSetting: {
             height:"200",
@@ -81,12 +80,9 @@ export default {
         }
         if(Vue.step == 3){
           Vue.$refs.globalFilter.saveGlobalFilterData();//向store中存储全局过滤器
-          Vue.createReport();//新建报表
-          Vue.createReportFromNext = true;//下一步新建入口
-          Vue.$refs.reportForm.initReport();
+          Vue.$refs.reportForm.initReport();//初始化预览报表
         }
         if(Vue.step == 4){    
-          Vue.createReportFromNext = false;
           Vue.finished = true;
         }         
       },
@@ -111,9 +107,7 @@ export default {
          ClonedReport,
          function(){
             Vue.$Message.success('新建成功!');
-            if(!Vue.createReportFromNext){
-              Vue.closePage(event,'createReport');
-            }
+            Vue.closePage(event,'createReport');
          });
       },
 

@@ -141,7 +141,7 @@ const mutations = {
   },
   /*保存报表全局过滤器*/
   saveReportGlobalFilter(state,param){
-    state.report.defineJSON.header.globalFilter = [param];
+    state.report.defineJSON.header.globalFilter = param;
   },
 
   /*保存查询器字段*/
