@@ -237,6 +237,7 @@ export default {
     //添加全局过滤器描述表格
     addGlobalFilter(globalFilter){
       let Vue = this;
+      let _filter = [];
       var relatedDESC = '';
       for(let i in Vue.relatedFilterTagList){
         relatedDESC = relatedDESC+Vue.relatedFilterTagList[i].chartName+"."+Vue.relatedFilterTagList[i].field +"("+Vue.relatedFilterTagList[i].mark+")"+ ",";
@@ -251,6 +252,7 @@ export default {
       })
       Vue.filterType();
       Vue.filter.related = Vue.relatedFilterTagList;
+      Vue._filter = $.extend(true,{},Vue.filter);
       Vue.globalFilter.push(Vue._filter);
     },
 

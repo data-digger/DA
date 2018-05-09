@@ -91,17 +91,18 @@ export default {
       if(Vue.isIntoFromResource){//如果从资源界面进入
         Vue.AxiosPost("getReportDataById",{'reportID':Vue.report.id},
         function(response){
-         Vue.initFilter(response.data.content);
-         Vue.drawReport(response.data.content);
+          let reportData = response.data.content;
+          Vue.initFilter(response.data.content);
+          Vue.drawReport(response.data.content);
         })          
       }  
       if(!Vue.isIntoFromResource){//如果从新建下一步入口进入
         Vue.AxiosPost("getReportDataByDefine",{'reportDefine':JSON.stringify(Vue.report.defineJSON)},
         function(response){
           let reportData = response.data.content;
-          if(reportData.defineJSON){
+/*          if(reportData.defineJSON){
             
-          }
+          }*/
           Vue.initFilter(response.data.content);
           Vue.drawReport(response.data.content);
         })        
