@@ -66,8 +66,16 @@ export default {
     /*初始化报表*/
     initReport(){
       let Vue =this;
+      Vue.isIntoFromResource =  !$.isEmptyObject(Vue.$route.params);//判断是否从资源界面入口进入
+      if(Vue.isIntoFromResource){//如果是从资源界面入口进入
+        Vue.report.name= Vue.$route.params.name;
+        Vue.report.id= Vue.$route.params.id;
+        Vue.report.desc= Vue.$route.params.desc;
+        Vue.report.defineJSON= Vue.$route.params.defineJSON;
+        Vue.report.alias= Vue.$route.params.alias;
+        Vue.initReportData();
+      }
       Vue.initChartComponent();//初始化图形控件
-      Vue.initReportData();//初始化报表数据  
     },
 
     /*初始化图形组件*/
@@ -193,15 +201,7 @@ export default {
   },
   mounted(){
     let Vue = this;
-    Vue.isIntoFromResource =  !$.isEmptyObject(Vue.$route.params);//判断是否从资源界面入口进入
-    if(Vue.isIntoFromResource){//如果是从资源界面入口进入，根据报表id，预览报表
-      Vue.report.name= Vue.$route.params.name;
-      Vue.report.id= Vue.$route.params.id;
-      Vue.report.desc= Vue.$route.params.desc;
-      Vue.report.defineJSON= Vue.$route.params.defineJSON;
-      Vue.report.alias= Vue.$route.params.alias;
-      Vue.initReport();
-    }
+    Vue.initReport();
   }
 }
 </script>

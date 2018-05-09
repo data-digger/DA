@@ -80,7 +80,7 @@ export default {
         }
         if(Vue.step == 3){
           Vue.$refs.globalFilter.saveGlobalFilterData();//向store中存储全局过滤器
-          Vue.$refs.reportForm.initReport();//初始化预览报表
+          Vue.$refs.reportForm.initReportData();//初始化预览报表
         }
         if(Vue.step == 4){    
           Vue.finished = true;
