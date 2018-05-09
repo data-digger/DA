@@ -24,8 +24,8 @@
               <DatePicker :dateType = 'filterType_bak[1]' @sendDate='getDefaultDate' ref='DatePicker'></DatePicker> 
             </FormItem> -->
              <FormItem label="时间" prop="date" v-if='filterType_bak[1] == "DateByUser"'>
-              <Input v-model="filter.value"  disabled v-if='false'></Input>
-              <Input v-model="filter.value"  disabled v-if='false'>></Input>
+              <Input v-model="filter.value"  v-if='false'></Input>
+              <Input v-model="filter.value"  v-if='false'>></Input>
               <Input v-model="filter.value"  placeholder="请输入" v-if='filterType_bak[1] == "DateByUser"'></Input>
             </FormItem>           
           </Col>
@@ -177,18 +177,21 @@ export default {
       let Y = DATE.getFullYear() + '-';
       let M = (DATE.getMonth()+1 < 10 ? '0'+(DATE.getMonth()+1) : DATE.getMonth()+1);
       let D = '-'+DATE.getDate() + ' ';
-      if(filterType[1] == 'DateByDay'){
+      if(filterType[0] == 'date' && filterType[1] == 'DateByDay'){
         /*Vue.filter.value = Y+M+D; */
         Vue.filter.value = '2011-05-19';
       }
-      if(filterType[1] == 'DateByMonth'){
+      if(filterType[0] == 'date' && filterType[1] == 'DateByMonth'){
         Vue.filter.value = Y+M; 
       }
-      if(filterType[1] == 'DateByUser'){
+      if(filterType[0] == 'date' && filterType[1] == 'DateByUser'){
+        Vue.filter.value = ''; 
+      }
+      if(filterType[0] == 'singleSelect' || filterType[0] == 'multiSelect' || filterType[0] == 'input'){
         Vue.filter.value = ''; 
       }
     },
-
+    
     //初始化关联过滤器层连选项
     initRelatedFilterSelections(isOpen){
       let Vue = this;
