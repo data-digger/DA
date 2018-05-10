@@ -39,6 +39,7 @@ window.urlConf = {
     getdata: `${window.uri}/report/getdata`,
     update: `${window.uri}/report/update`,
     preview:`${window.uri}/report/preview`,
+    getStandBy:`${window.uri}/report/getStandBy`
   },
   param: {
     list:`${window.uri}/parameter/list`,
@@ -156,9 +157,13 @@ export default {
     getReportDataById(params){
       return axios.post(urlConf.report.getdata, params); 
     },
-    /*过去报表数据通过defineJSON*/
+    /*获取报表数据通过defineJSON*/
     getReportDataByDefine(params){
       return axios.post(urlConf.report.preview, params); 
+    },
+    /*获取关联查询器的候选值*/
+    getReportRelatedStandBy(params){
+      return axios.post(urlConf.report.getStandBy, params); 
     },
     /*根据参数值更新报表数据*/
     updateReport(params){

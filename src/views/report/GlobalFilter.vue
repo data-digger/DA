@@ -21,25 +21,11 @@
           </Col>
           <Col span='24'>
             <FormItem label="关联过滤器">
-         <!--      <Cascader :data='relatedFilterSelections' placeholder="选择添加" trigger="hover" @on-change='selectRelatedFilter' @on-visible-change='initRelatedFilterSelections'></Cascader> -->
               <Select v-model = 'relatedFilterList' multiple>
                   <Option v-for="item in relatedFilterSelections" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>       
             </FormItem>          
           </Col>
-<!--          <Col span='24' style='padding-left:120px;margin-bottom:20px'>
-          <Tag  
-            @on-close="deleteRelatedFilter"
-            v-for='(el,index) in relatedFilterList'
-            checkable
-            closable 
-            type='dot'
-            color="green" 
-            :name='el.chartName'
-            :key='index'
-          >
-            {{el.chartName}}.{{el.field}}({{el.mark}})
-          </Tag></Col> -->
           <Col span='8'>
              <FormItem label="时间默认值" prop="date" v-if='filterType_bak[1] == "DateByUser"'>
               <Input v-model="filter.value"  v-if='false'></Input>
@@ -49,7 +35,7 @@
           </Col>
           <Col span='8'>
             <FormItem label="默认值" v-if='filterType_bak[0] == "singleSelect" || filterType_bak[0] == "multiSelect" || filterType_bak[0] == "input"'>
-               <Select v-model="filter.value" style="width:200px" v-if='filterType_bak[0] == "singleSelect"'>
+               <Select v-model="filter.value" style="width:200px" v-if='filterType_bak[0] == "singleSelect"' @click.native='test()'>
                   <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select> 
               <Input v-model="filter.value"  placeholder="请输入" v-if='filterType_bak[0] == "multiSelect"'></Input>
@@ -153,7 +139,6 @@ export default {
         value:null,
         related:[]
       },
-      globalFilter:[],
       cityList: [  
         {
             value: 'New York',
@@ -163,9 +148,19 @@ export default {
             value: 'London',
             label: 'London'
         }],
+      globalFilter:[]
     }
   },
   methods:{
+    //初始化默认值
+    test(){
+      let Vue = this;
+      /*Vue.filterRelated();*/
+      Vue.AxiosPost("getReportRelatedStandBy",{"relatedJSON":JSON.stringify(Vue.filter.related)},
+        function(response){
+          console.log(response);
+      });  
+     },
 
     //过滤器类型处理
     filterType(){
