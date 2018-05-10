@@ -16,7 +16,12 @@
           </Col> 
           <Col span='15'>
             <FormItem label="全局过滤器类型" prop="filterTypeSelections">
-              <Cascader :data="filterTypeSelections" trigger="hover" @on-change='selectFilterType'></Cascader>
+              <Cascader 
+                :data="filterTypeSelections" 
+                trigger="hover" 
+                @on-change='selectFilterType' 
+                @click.native='initRelatedFilterSelections()'
+                ></Cascader>
            </FormItem> 
           </Col>
           <Col span='24'>
@@ -223,7 +228,6 @@ export default {
       let Vue = this;
       Vue.setFilterTypeValue(filterType);
       Vue.initFilterValue(filterType);
-      Vue.initRelatedFilterSelections();
     },
     
     //初始化关联过滤器层连选项
