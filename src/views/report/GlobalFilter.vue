@@ -22,7 +22,7 @@
           <Col span='24'>
             <FormItem label="关联过滤器" >
               <Select v-model = 'relatedFilterSelectedList' multiple>
-                  <Option v-for="item in relatedFilterSelections" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  <Option v-for="(item,index) in relatedFilterSelections" :value="index" :key="item.value">{{ item.label }}</Option>
               </Select>       
             </FormItem>          
           </Col>
@@ -211,14 +211,18 @@ export default {
       let Vue = this;
       let aRelated = [];
       for(let i in Vue.relatedFilterSelectedList){
+        let valueIndex = Vue.relatedFilterSelectedList[i];
         let _orelated ={};
-        _orelated.chartId = "CR."+Vue.relatedFilterSelectedList[i].split(".")[0];
-        for(let r in Vue.relatedFilterSelections){
-          if(Vue.relatedFilterSelections[r].chartId = _orelated.chartId){
-            _orelated.field = Vue.relatedFilterSelections[r].field;
-            _orelated.mark = Vue.relatedFilterSelections[r].mark;
-          }
-        }
+        _orelated.chartId= Vue.relatedFilterSelections[valueIndex].chartId;
+        _orelated.field = Vue.relatedFilterSelections[valueIndex].field;
+        _orelated.mark = Vue.relatedFilterSelections[valueIndex].mark;
+        // _orelated.chartId = "CR."+Vue.relatedFilterSelectedList[i].split(".")[0];
+        // for(let r in Vue.relatedFilterSelections){
+        //   if(Vue.relatedFilterSelections[r].chartId = _orelated.chartId){
+        //     _orelated.field = Vue.relatedFilterSelections[r].field;
+        //     _orelated.mark = Vue.relatedFilterSelections[r].mark;
+        //   }
+        // }
        aRelated.push(_orelated);
       }
       return aRelated;
@@ -258,7 +262,8 @@ export default {
       var relatedDESC = '';
       //生成表格列
       for(let i in Vue.relatedFilterSelectedList){
-        relatedDESC = relatedDESC+Vue.relatedFilterSelectedList[i]+ ",";
+        let valueIndex = Vue.relatedFilterSelectedList[i];
+        relatedDESC += Vue.relatedFilterSelections[valueIndex].label+", ";
       }
       Vue.$refs[globalFilter].validate((valid) => {
         if (valid) {

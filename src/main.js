@@ -67,8 +67,8 @@ Vue.prototype.AxiosPost = function (fun, data, success,failed) {
         if(failed){
             failed(error);
         }else{
-            V.$Message.error(error.response.data.content);
-            console.log(error.response.data.content);
+            V.$Message.error(error.message);
+            console.log(error);
         }
     });
 }
