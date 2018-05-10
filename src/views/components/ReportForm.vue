@@ -1,8 +1,20 @@
 <template> 
     <div>
       <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="false":is-resizable="false":vertical-compact="true":use-css-transforms="true">
+
+
           <!-- 过滤器 -->
-          <component class='globalFilters' v-for='(cmp,index) in globalFilters' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'updateReport'></component>    
+          <component 
+            class='globalFilters' 
+            v-for='(cmp,index) in globalFilters' 
+            :is="cmp.component" 
+            :key='cmp.defaultValue' 
+            :componentType='cmp.type'
+            :defaultValue='cmp.defaultValue'
+            @sentDate = 'updateReport'
+          ></component>   
+
+
           <grid-item v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h":i="item.i" :key='item.i'>
             <div class='griditem-title'>{{item.tabs[0].title}}</div>
             <!-- 表格 -->
@@ -19,7 +31,10 @@
                        :chartId='report.id+item.i'
                        :styles='chartStyles'>
             </component>
-          </grid-item>         
+          </grid-item>    
+
+
+
       </grid-layout>
     </div>    
 </template>
@@ -95,47 +110,44 @@ export default {
 
     /*初始化报表数据*/
     initReportData(){
-      let Vue = this;     
+      let Vue = this;   
       if(Vue.isIntoFromResource){//如果从资源界面进入
         Vue.AxiosPost("getReportDataById",{'reportID':Vue.report.id},
         function(response){
-          let reportData = response.data.content;
-          Vue.initFilter(response.data.content);
+          Vue.initFilter(response.data.content.defineJSON);
           Vue.drawReport(response.data.content);
         })          
       }  
       if(!Vue.isIntoFromResource){//如果从新建下一步入口进入
         Vue.AxiosPost("getReportDataByDefine",{'reportDefine':JSON.stringify(Vue.report.defineJSON)},
         function(response){
-          let reportData = response.data.content;
-/*          if(reportData.defineJSON){
-            
-          }*/
-          Vue.initFilter(response.data.content);
+          Vue.initFilter(response.data.content.defineJSON);
           Vue.drawReport(response.data.content);
         })        
-      }     
+      } 
     },
 
     /*初始化过滤器组件*/
-    initFilter(response){
+    initFilter(defineJSON){
       let Vue = this;
-/*    if(response.data.parameterSet.length != 0){//如果有参数控件，初始化参数控件
-        for(var i in response.data.parameterSet){
-          if(response.data.parameterSet[i].paramType == 'list'){
-            var cmpObj = {};
-            cmpObj.component = list;
-            cmpObj.content = response.data.parameterSet[i];
-            Vue.paramComponent.push(cmpObj);
-          };
-          if(response.data.parameterSet[i].paramType == 'date'){
-            var cmpObj = {};
-            cmpObj.component = datepicker;
-            cmpObj.content = response.data.parameterSet[i];
-            Vue.paramComponent.push(cmpObj);
-          }
-        } 
-      }*/
+      let reportDefineObject = JSON.parse(defineJSON);
+      let globalFiltersArray = reportDefineObject.header.globalFilter;
+      let aGlobalFilters = [];
+      for(let i in globalFiltersArray){
+        if(globalFiltersArray[i].type == "DateByDay" || globalFiltersArray[i].type == "DateByMonth" || globalFiltersArray[i].type == "DateByUser"){
+          aGlobalFilters.push({component:'datepicker',defaultValue:globalFiltersArray[i].value,type:globalFiltersArray[i].type});
+        }
+        if(globalFiltersArray[i].type == 'singleSelect'){
+          aGlobalFilters.push({component:'input',defaultValue:globalFiltersArray[i].value,type:globalFiltersArray[i].type});
+        }
+        if(globalFiltersArray[i].type == 'multiSelect'){
+          
+        }
+        if(globalFiltersArray[i].type == 'input'){
+          
+        }
+      }
+      Vue.globalFilters = aGlobalFilters;
     },
 
     /*绘制报表*/
@@ -168,7 +180,10 @@ export default {
     /*更新报表数据*/
     updateReport(param){
       let Vue = this;
-      Vue.paramSelected = $.extend(Vue.paramSelected,param);
+      let _reportDefine = Vue.report.defineJSON;
+
+
+/*      Vue.paramSelected = $.extend(Vue.paramSelected,param);
       let paramLength = Object.keys(Vue.paramSelected).length;
       let JSONParam = JSON.stringify(Vue.paramSelected);
       if(paramLength == Vue.paramComponent.length){
@@ -176,14 +191,10 @@ export default {
           function(response){
             Vue.drawReport(response);
         });        
-      }
+      }*/
+
     },
-    
-    /*选择过滤条件*/
-    selectParam(){
-      let Vue = this;
-      Vue.$refs.collapse.toggle();
-    },
+
       
     /*绘制Chart图形*/  
     drawChart (chartData) {
