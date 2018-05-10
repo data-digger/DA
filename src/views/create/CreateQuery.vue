@@ -22,7 +22,7 @@
                 v-model="showSQLResultModal"
                 width ="1200px"
                 title="数据预览">
-                  <iviewtable :chartCmpContent='queryMetaData' :pageSize='pageSize'></iviewtable>        
+                  <iviewtable :tableContent='queryMetaData' :pageSize='pageSize'></iviewtable>        
                 </Modal>
               </Col>
             </Row>
