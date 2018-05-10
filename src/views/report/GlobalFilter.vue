@@ -4,17 +4,17 @@
       <p slot="title">添加全局过滤器</p>
       <Row>
         <Form id="createGlobalFilter" :label-width="120"  :rules="ruleValidate" ref="globalFilter" :model='filter'>
-         <Col span='12'>
+         <Col span='15'>
             <FormItem label="全局过滤器名称" prop="name">
               <Input v-model="filter.name" placeholder="输入名称"></Input>
             </FormItem>
           </Col>
-          <Col span='12'>
+          <Col span='8'>
             <FormItem label="全局过滤器别名" prop="alias">
               <Input v-model="filter.alias" placeholder="输入别名"></Input>
             </FormItem>
           </Col> 
-          <Col span='12'>
+          <Col span='15'>
             <FormItem label="全局过滤器类型" prop="filterTypeSelections">
               <Cascader :data="filterTypeSelections" trigger="hover" @on-change='selectFilterType'></Cascader>
            </FormItem> 
@@ -26,14 +26,7 @@
               </Select>       
             </FormItem>          
           </Col>
-          <Col span='8'>
-             <FormItem label="时间默认值" prop="date" v-if='filter.type == "DateByUser"'>
-              <Input v-model="filter.value"  v-if='false'></Input>
-              <Input v-model="filter.value"  v-if='false'>></Input>
-              <Input v-model="filter.value"  placeholder="请输入" v-if='filter.type == "DateByUser"'></Input>
-            </FormItem>           
-          </Col>
-          <Col span='8'>
+          <Col span='24'>
             <FormItem label="默认值" v-if='filter.type == "singleSelect" || filter.type == "multiSelect" || filter.type == "input"' prop="dafaultValue">
                <Select 
                   :multiple='filter.type == "multiSelect" ? true:false'
@@ -73,6 +66,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      report:'report',
       chartList:'chartList'
     })
   },
@@ -99,8 +93,7 @@ export default {
         { value: 'date',
           label: '时间',
           children: [{value: 'DateByMonth',label: '月'},
-            {value: 'DateByDay',label: '日'},
-            {value: 'DateByUser',label: '自定义'}]
+            {value: 'DateByDay',label: '日'}]
         },
         { value: 'singleSelect',
           label: '单选'
@@ -195,9 +188,6 @@ export default {
       if(filterType[0] == 'date' && filterType[1] == 'DateByMonth'){
         Vue.filter.value = Y+M; 
       }
-      if(filterType[0] == 'date' && filterType[1] == 'DateByUser'){
-        Vue.filter.value = ''; 
-      }
       if(filterType[0] == 'singleSelect' ||filterType[0] == 'input'){
         Vue.filter.value = ''; 
       }
@@ -235,20 +225,26 @@ export default {
     //初始化关联过滤器层连选项
     initRelatedFilterSelections(){
       let Vue = this;
-      var aRelatedFilter = [];
-      for(let i in Vue.chartList){
-        let oChartDefineJSON = JSON.parse(Vue.chartList[i].defineJSON);
-        for(let c in oChartDefineJSON.filters.where){
-          let oRelatedFilter = {};
-          oRelatedFilter.value = Vue.chartList[i].name+"."+oChartDefineJSON.filters.where[c].field+"("+oChartDefineJSON.filters.where[c].mark+")";
-          oRelatedFilter.label = oRelatedFilter.value;
-          oRelatedFilter.field = oChartDefineJSON.filters.where[c].field;
-          oRelatedFilter.mark = oChartDefineJSON.filters.where[c].mark;
-          oRelatedFilter.chartId = Vue.chartList[i].id;
-          aRelatedFilter.push(oRelatedFilter);
-        }    
-      }  
-      Vue.relatedFilterSelections = aRelatedFilter;        
+      let aRelatedFilter = [];
+      let aPortlets = Vue.report.defineJSON.content.portlets;
+      for(let i in aPortlets){
+        for(let c in Vue.chartList){
+          if(aPortlets[i].tabs[0].objid == Vue.chartList[c].id){
+            let oChartDefineJSON = JSON.parse(Vue.chartList[c].defineJSON);
+            for(let r in oChartDefineJSON.filters.where){
+              let oRelatedFilter = {};
+              oRelatedFilter.value = Vue.chartList[c].name+"."+oChartDefineJSON.filters.where[r].field+"("+oChartDefineJSON.filters.where[r].mark+")";
+              oRelatedFilter.label = oRelatedFilter.value;
+              oRelatedFilter.field = oChartDefineJSON.filters.where[r].field;
+              oRelatedFilter.mark = oChartDefineJSON.filters.where[r].mark;
+              oRelatedFilter.chartId = Vue.chartList[c].id;
+              aRelatedFilter.push(oRelatedFilter);              
+            }
+            
+          }
+        }
+      } 
+      Vue.relatedFilterSelections = aRelatedFilter;       
     },
 
     //添加全局过滤器描述表格

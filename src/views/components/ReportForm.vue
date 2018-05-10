@@ -8,11 +8,12 @@
             class='globalFilters' 
             v-for='(cmp,index) in globalFilters' 
             :is="cmp.component" 
-            :key='cmp.defaultValue' 
+            :key='"filter"+index' 
             :componentType='cmp.type'
             :defaultValue='cmp.defaultValue'
             :index='index'
             @sentDate = 'updateReport'
+            :standByValue = "cmp.standByValue"
           ></component>   
 
 
@@ -135,17 +136,37 @@ export default {
       let globalFiltersArray = reportDefineObject.header.globalFilter;
       let aGlobalFilters = [];
       for(let i in globalFiltersArray){
+        //当过滤器为日期
         if(globalFiltersArray[i].type == "DateByDay" || globalFiltersArray[i].type == "DateByMonth" || globalFiltersArray[i].type == "DateByUser"){
-          aGlobalFilters.push({component:'datepicker',defaultValue:globalFiltersArray[i].value,type:globalFiltersArray[i].type});
+          aGlobalFilters.push({
+            component:'datepicker',
+            defaultValue:globalFiltersArray[i].value,
+            type:globalFiltersArray[i].type,
+            standByValue:[]
+          });
         }
-        if(globalFiltersArray[i].type == 'singleSelect'){
-          aGlobalFilters.push({component:'input',defaultValue:globalFiltersArray[i].value,type:globalFiltersArray[i].type});
+        //当过滤器为单选框或者多选框
+        if(globalFiltersArray[i].type == 'singleSelect' || globalFiltersArray[i].type == 'multiSelect'){
+          let aStandByValue = [];
+          Vue.AxiosPost("getReportRelatedStandBy",{"relatedJSON":JSON.stringify(globalFiltersArray[i].related)},
+            function(response){
+              for(let i in response.data.content){
+                let oStandByValue = {};
+                oStandByValue.value = response.data.content[i];
+                oStandByValue.label = response.data.content[i];
+                aStandByValue.push(oStandByValue);      
+              }
+          });            
+          aGlobalFilters.push({
+            component:'list',
+            defaultValue:globalFiltersArray[i].value,
+            type:globalFiltersArray[i].type,
+            standByValue:aStandByValue
+          });
         }
-        if(globalFiltersArray[i].type == 'multiSelect'){
-          
-        }
+        //当过滤器为输入框
         if(globalFiltersArray[i].type == 'input'){
-          
+          /*aGlobalFilters.push({component:'list',defaultValue:globalFiltersArray[i].value,type:globalFiltersArray[i].type});*/
         }
       }
       Vue.globalFilters = aGlobalFilters;

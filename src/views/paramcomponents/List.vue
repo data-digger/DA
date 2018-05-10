@@ -1,50 +1,40 @@
 <template>
     <div>
-        <Select v-model = "defaultDefine" style="width:200px" placeholder="Select ..." class='select'>
-            <Option v-for='(stbValue,index) in getStandByValue' :value='stbValue.value' :key='index'>{{stbValue.value}}</Option>
+        <Select 
+            v-model = "currentSelection" 
+            style="width:200px" 
+            class='select'
+            :multiple='componentType == "multiSelect" ? true:false'
+            @on-change='sentDate'>
+            <Option v-for='(sdbValue,sdbIndex) in standByValue' :value='sdbValue.value' :key='sdbValue.value'>{{sdbValue.value}}</Option>
         </Select>
     </div>
 </template>
 <script>
     export default {
-        props:['cmpContent'],
+        props:["componentType",'defaultValue','index','standByValue'],
         data () {
            return {
-            defaultDefine:'',
-            getStandByValue:''
+            currentSelection:[],
            }
         },
         watch:{
-        　　　'defaultDefine': 'sentListParam',
-        　},
-        methods:{
-            sentListParam(){
-                let Vue = this;
-                let paramSelected = {};
-                if(Vue.cmpContent.content.paramType == 'list'){
-                    for(var i in Vue.getStandByValue){
-                        if(Vue.getStandByValue[i].value == Vue.defaultDefine){
-                            paramSelected[Vue.cmpContent.content.paramId] = Vue.getStandByValue[i].key; 
-                        }
-                    }
-                    
-                }
-                Vue.$emit("sentParam",paramSelected);
-            }
+ 
         },
-        beforeMount(){
+        methods:{
+          //传递所选值到其他组件
+          sentDate(selection){
             let Vue = this;
-            if(Vue.cmpContent){  
-                Vue.AxiosPost("getStandByValue",
-                    {"paramId":Vue.cmpContent.content.paramId},
-                    function(response){
-                       Vue.getStandByValue = response.data.standByList;
-                       Vue.defaultDefine = Vue.cmpContent.content.defaultListValue.value;
-                });                               
-            }
+            Vue.$emit("sentDate",{index:Vue.index,value:selection});
+          },
+        },
+        mounted(){
+            let Vue = this;
+            Vue.currentSelection = Vue.defaultValue
         }
     }
 </script>
+
 <style scoped>
 .ivu-select{
   display: block !important;
