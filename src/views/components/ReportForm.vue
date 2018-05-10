@@ -11,6 +11,7 @@
             :key='cmp.defaultValue' 
             :componentType='cmp.type'
             :defaultValue='cmp.defaultValue'
+            :index='index'
             @sentDate = 'updateReport'
           ></component>   
 
@@ -180,19 +181,11 @@ export default {
     /*更新报表数据*/
     updateReport(param){
       let Vue = this;
-      let _reportDefine = Vue.report.defineJSON;
-
-
-/*      Vue.paramSelected = $.extend(Vue.paramSelected,param);
-      let paramLength = Object.keys(Vue.paramSelected).length;
-      let JSONParam = JSON.stringify(Vue.paramSelected);
-      if(paramLength == Vue.paramComponent.length){
-        Vue.AxiosPost("updateReport",{"reportID":Vue.report.id,"JSONparam":JSONParam},
-          function(response){
-            Vue.drawReport(response);
-        });        
-      }*/
-
+      Vue.report.defineJSON.header.globalFilter[param.index].value = param.value;
+        Vue.AxiosPost("updateReport",{'reportDefine':JSON.stringify(Vue.report.defineJSON)},
+        function(response){
+          Vue.drawReport(response.data.content);
+      })       
     },
 
       

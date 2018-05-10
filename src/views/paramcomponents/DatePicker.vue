@@ -12,7 +12,7 @@
 </template>
 <script>
     export default {
-        props:["componentType",'defaultValue'],
+        props:["componentType",'defaultValue','index'],
         computed:{
           datePickerType(){
             let Vue = this;
@@ -56,7 +56,7 @@
           //传递date到其他组件
           sentDate(currentDate){
             let Vue = this;
-            Vue.$emit("sentDate",currentDate);
+            Vue.$emit("sentDate",{index:Vue.index,value:currentDate});
           },
         },
         beforeMount(){
