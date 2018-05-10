@@ -1,13 +1,11 @@
 <template>
     <Row>
       <DatePicker 
-        v-if='datePickerShow' 
-        :type="datePickerType" 
+        :type="datePickerType"  
         :value='defaultValue' 
         @on-change='sentDate'
         style="width: 200px" 
       ></DatePicker>
-      <Input v-if='defineDatePickerShow' :value='defaultValue'></Input>
     </Row>
 </template>
 <script>
@@ -24,24 +22,6 @@
                 return 'date'          
               }           
             }            
-          },
-          datePickerShow(){
-            let Vue = this;
-            if(Vue.componentType == 'DateByMonth' || Vue.componentType == 'DateByDay'){
-              return true;
-            }
-            if(Vue.componentType == 'DateByUser'){
-              return false;
-            }
-          },
-          defineDatePickerShow(){
-            let Vue = this;
-            if(Vue.componentType == 'DateByMonth' || Vue.componentType == 'DateByDay'){
-              return false;
-            }
-            if(Vue.componentType == 'DateByUser'){
-              return true;
-            }
           }
         },
         watch:{
