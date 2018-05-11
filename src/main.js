@@ -67,7 +67,12 @@ Vue.prototype.AxiosPost = function (fun, data, success,failed) {
         if(failed){
             failed(error);
         }else{
-            V.$Message.error(error.message);
+            Vue.$Message.error({
+                content: error.message,
+                duration: 10,
+                closable: true
+            });
+            //V.$Message.error();
             console.log(error);
         }
     });
