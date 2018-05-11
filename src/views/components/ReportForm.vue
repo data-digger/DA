@@ -92,7 +92,6 @@ export default {
         Vue.report.alias= Vue.$route.params.alias;
         Vue.initReportData();
       }
-      Vue.initChartComponent();//初始化图形控件
     },
 
     /*初始化图形组件*/
