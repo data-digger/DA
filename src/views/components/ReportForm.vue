@@ -48,6 +48,7 @@ import {mapGetters} from 'vuex'
 import Table from './../chartcomponents/Table'//表格
 import datepicker from "./../paramcomponents/DatePicker"//日期
 import list from "./../paramcomponents/List"//列表
+import DefineInput from "./../paramcomponents/Input"//列表
 import Chart from "./../chartcomponents/Chart"//echart图形
 import CountCard from "./../chartcomponents/CountCard"//统计卡
 
@@ -61,6 +62,7 @@ export default {
       datepicker,
       list,
       Chart,
+      DefineInput,
       CountCard     
   },
   computed:{
@@ -165,7 +167,11 @@ export default {
         }
         //当过滤器为输入框
         if(globalFiltersArray[i].type == 'input'){
-          /*aGlobalFilters.push({component:'list',defaultValue:globalFiltersArray[i].value,type:globalFiltersArray[i].type});*/
+          aGlobalFilters.push({
+            component:'DefineInput',
+            defaultValue:globalFiltersArray[i].value,
+            type:globalFiltersArray[i].type
+          });
         }
       }
       Vue.globalFilters = aGlobalFilters;

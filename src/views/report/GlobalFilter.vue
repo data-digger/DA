@@ -33,6 +33,7 @@
           <Col span='24'>
             <FormItem label="默认值" v-if='filter.type == "singleSelect" || filter.type == "multiSelect" || filter.type == "input"' prop="dafaultValue">
                <Select 
+                  ref='multiSelectComp'
                   :multiple='filter.type == "multiSelect" ? true:false'
                   v-model="filter.value" 
                   v-if='filter.type == "singleSelect" || filter.type == "multiSelect"'
