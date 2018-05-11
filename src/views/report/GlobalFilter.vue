@@ -187,8 +187,7 @@ export default {
       let D = '-'+DATE.getDate() + ' ';
      
       if(filterType[0] == 'date' && filterType[1] == 'DateByDay'){
-        /*Vue.filter.value = Y+M+D; */
-        Vue.filter.value = '2011-05-19';
+        Vue.filter.value = Y+M+D; 
       }
       if(filterType[0] == 'date' && filterType[1] == 'DateByMonth'){
         Vue.filter.value = Y+M; 

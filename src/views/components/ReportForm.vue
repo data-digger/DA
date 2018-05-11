@@ -4,17 +4,24 @@
 
 
           <!-- 过滤器 -->
-          <component 
-            class='globalFilters' 
-            v-for='(cmp,index) in globalFilters' 
-            :is="cmp.component" 
-            :key='"filter"+index' 
-            :componentType='cmp.type'
-            :defaultValue='cmp.defaultValue'
-            :index='index'
-            @sentDate = 'updateReport'
-            :standByValue = "cmp.standByValue"
-          ></component>   
+          <Card style='margin:10px' >
+            <p slot="title">过滤条件</p>
+            <Row v-for='(cmp,index) in globalFilters' :key='"filter"+index' >
+              <Col span='2'>{{cmp.alias}}</Col>
+              <Col span='10'>
+                <component 
+                  class='globalFilters'       
+                  :is="cmp.component"        
+                  :componentType='cmp.type'
+                  :defaultValue='cmp.defaultValue'
+                  :index='index'
+                  @sentDate = 'updateReport'
+                  :standByValue = "cmp.standByValue"
+                ></component>                
+              </Col>
+            </Row> 
+          </Card>          
+  
 
 
           <grid-item v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h":i="item.i" :key='item.i'>
@@ -142,6 +149,7 @@ export default {
         if(globalFiltersArray[i].type == "DateByDay" || globalFiltersArray[i].type == "DateByMonth" || globalFiltersArray[i].type == "DateByUser"){
           aGlobalFilters.push({
             component:'datepicker',
+            alias:globalFiltersArray[i].alias,
             defaultValue:globalFiltersArray[i].value,
             type:globalFiltersArray[i].type,
             standByValue:[]
@@ -161,17 +169,21 @@ export default {
           });            
           aGlobalFilters.push({
             component:'list',
+            alias:globalFiltersArray[i].alias,
+            standByValue:aStandByValue,
             defaultValue:globalFiltersArray[i].value,
             type:globalFiltersArray[i].type,
-            standByValue:aStandByValue
+            
           });
         }
         //当过滤器为输入框
         if(globalFiltersArray[i].type == 'input'){
           aGlobalFilters.push({
             component:'DefineInput',
+            alias:globalFiltersArray[i].alias,
             defaultValue:globalFiltersArray[i].value,
-            type:globalFiltersArray[i].type
+            type:globalFiltersArray[i].type,
+            standByValue:[]
           });
         }
       }

@@ -2,7 +2,7 @@
     <Row>
       <DatePicker 
         :type="datePickerType"  
-        :value='defaultValue' 
+        :value='currentDate' 
         @on-change='sentDate'
         style="width: 200px" 
       ></DatePicker>
@@ -29,7 +29,7 @@
         },
         data () {
             return {
-
+              currentDate:null
             }
         },
         methods:{
@@ -39,8 +39,31 @@
             Vue.$emit("sentDate",{index:Vue.index,value:currentDate});
           },
         },
-        beforeMount(){
-           let Vue = this; 
+        mounted(){
+            let Vue = this;
+            Vue.currentDate = Vue.defaultValue
+            console.log('mounted');
         },
+        beforeCreate(){
+          console.log('beforeCreate');
+        },
+        created(){
+          console.log('created');
+        },
+        beforeMount(){
+          console.log('beforeMount');
+        },
+        beforeUpdate(){
+          console.log('beforeUpdate');
+        },
+        updated(){
+          console.log('updated');
+        },
+        beforeDestroy(){
+          console.log('beforeDestroy');
+        },
+        destroyed(){
+          console.log('destroyed');
+        }
     }
 </script>
