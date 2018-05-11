@@ -35,7 +35,8 @@
                <Select 
                   :multiple='filter.type == "multiSelect" ? true:false'
                   v-model="filter.value" 
-                  v-if='filter.type == "singleSelect" || filter.type == "multiSelect"'>
+                  v-if='filter.type == "singleSelect" || filter.type == "multiSelect"'
+                  @click.native='initStandByValue'>
                   <Option v-for="(standByValue,index) in standByValues" 
                     :value="standByValue.value" 
                     :key="index">{{ standByValue.label }}
@@ -197,7 +198,6 @@ export default {
       }
       if(filterType[0] == 'multiSelect' ){
         Vue.filter.value = []; 
-        
       };
       
      
