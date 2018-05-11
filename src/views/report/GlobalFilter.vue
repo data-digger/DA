@@ -20,14 +20,13 @@
                 :data="filterTypeSelections" 
                 trigger="hover" 
                 @on-change='selectFilterType' 
-                @click.native='initRelatedFilterSelections()'
                 ></Cascader>
            </FormItem> 
           </Col>
           <Col span='24'>
             <FormItem label="关联过滤器" >
-              <Select v-model = 'relatedFilterSelectedList' multiple>
-                  <Option v-for="(item,index) in relatedFilterSelections" :value="index" :key="item.value">{{ item.label }}</Option>
+              <Select v-model = 'relatedFilterSelectedList' multiple @click.native='initRelatedFilterSelections()'>
+                  <Option v-for="(item,index) in relatedFilterSelections" :value="index" :key="index">{{ item.label }}</Option>
               </Select>       
             </FormItem>          
           </Col>
@@ -36,9 +35,7 @@
                <Select 
                   :multiple='filter.type == "multiSelect" ? true:false'
                   v-model="filter.value" 
-                  style="width:200px" 
-                  v-if='filter.type == "singleSelect" || filter.type == "multiSelect"'
-                  @click.native='initStandByValue()'>
+                  v-if='filter.type == "singleSelect" || filter.type == "multiSelect"'>
                   <Option v-for="(standByValue,index) in standByValues" 
                     :value="standByValue.value" 
                     :key="index">{{ standByValue.label }}
@@ -186,6 +183,7 @@ export default {
       let Y = DATE.getFullYear() + '-';
       let M = (DATE.getMonth()+1 < 10 ? '0'+(DATE.getMonth()+1) : DATE.getMonth()+1);
       let D = '-'+DATE.getDate() + ' ';
+     
       if(filterType[0] == 'date' && filterType[1] == 'DateByDay'){
         /*Vue.filter.value = Y+M+D; */
         Vue.filter.value = '2011-05-19';
@@ -195,10 +193,14 @@ export default {
       }
       if(filterType[0] == 'singleSelect' ||filterType[0] == 'input'){
         Vue.filter.value = ''; 
+       
       }
       if(filterType[0] == 'multiSelect' ){
         Vue.filter.value = []; 
-      }  
+        
+      };
+      
+     
     },
      
     //过滤器related参数处理
@@ -211,13 +213,6 @@ export default {
         _orelated.chartId= Vue.relatedFilterSelections[valueIndex].chartId;
         _orelated.field = Vue.relatedFilterSelections[valueIndex].field;
         _orelated.mark = Vue.relatedFilterSelections[valueIndex].mark;
-        // _orelated.chartId = "CR."+Vue.relatedFilterSelectedList[i].split(".")[0];
-        // for(let r in Vue.relatedFilterSelections){
-        //   if(Vue.relatedFilterSelections[r].chartId = _orelated.chartId){
-        //     _orelated.field = Vue.relatedFilterSelections[r].field;
-        //     _orelated.mark = Vue.relatedFilterSelections[r].mark;
-        //   }
-        // }
        aRelated.push(_orelated);
       }
       return aRelated;
@@ -228,6 +223,9 @@ export default {
       let Vue = this;
       Vue.setFilterTypeValue(filterType);
       Vue.initFilterValue(filterType);
+      if(Vue.$refs.multiSelectComp){
+        Vue.$refs.multiSelectComp.selectedMultiple = [];
+      }    
     },
     
     //初始化关联过滤器层连选项
