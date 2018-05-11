@@ -12,10 +12,10 @@
 </template>
 <script>
     export default {
-        props:["componentType",'defaultValue','index','standByValue'],
+        props:["componentType",'standByValue','defaultValue','index'],
         data () {
            return {
-            currentSelection:[],
+            currentSelection:this.defaultValue,
            }
         },
         watch:{
@@ -31,7 +31,7 @@
         mounted(){
             let Vue = this;
             Vue.currentSelection = Vue.defaultValue
-        }
+        },
     }
 </script>
 

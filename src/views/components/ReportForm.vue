@@ -133,6 +133,7 @@ export default {
     /*初始化过滤器组件*/
     initFilter(defineJSON){
       let Vue = this;
+      Vue.globalFilters = [];
       let reportDefineObject = JSON.parse(defineJSON);
       let globalFiltersArray = reportDefineObject.header.globalFilter;
       let aGlobalFilters = [];
@@ -207,8 +208,9 @@ export default {
     /*更新报表数据*/
     updateReport(param){
       let Vue = this;
-      Vue.report.defineJSON.header.globalFilter[param.index].value = param.value;
-        Vue.AxiosPost("updateReport",{'reportDefine':JSON.stringify(Vue.report.defineJSON)},
+      let _report = $.extend(true,[],Vue.report);
+      _report.defineJSON.header.globalFilter[param.index].value = param.value;
+        Vue.AxiosPost("updateReport",{'reportDefine':JSON.stringify(_report.defineJSON)},
         function(response){
           Vue.drawReport(response.data.content);
       })       
