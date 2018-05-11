@@ -60,7 +60,7 @@
                         </Col>
                     </Row>
                     <Row>
-                        <Col span='21' offset='3'><span class='notice-span'><I>最大个数为200</I></span></Col>
+                        <Col span='21' offset='3'><I class='notice-span'>最大个数为200</I></Col>
                     </Row>
                 </Row>
             </Panel>
@@ -75,7 +75,7 @@
                                 <!-- <FilterItem v-model="filter.where[index]" :bizViewId="bizViewId" :filterableList="filterableList" :CONTENTFILTERMARK="CONTENTFILTERMARK" :index="index"  @removeItem='removeFilterItem'></FilterItem> -->
                             <Row>
                                     <Col span="12">
-                                        <Select class="form-control" v-model='filter.where[index].field' @on-change="getStandByValue(index)">               
+                                        <Select class="form-control" v-model='filter.where[index].field'>               
                                             <Option v-for="(item,i) in filterableList" :key="item.columnName" :value="item.columnName">{{item.columnAlias}}</Option>
                                         </Select>
                                     </Col>
@@ -93,7 +93,7 @@
                                     <Col span="1" offset="1">
                                         <Button id='removeContent' type="ghost" icon="ios-minus-empty" shape="circle" size='small' @click="removeContentFilter(index)"></Button>
                                     </Col>
-                                    <Col span='21' offset='3'><span class='notice-span'><I>最大候选数为200</I></span></Col>
+                                    <Col span='21'><I class='notice-span'>最大候选数为200</I></Col>
                             </Row>
                         </FormItem>
                         <FormItem>
@@ -272,7 +272,7 @@ export default {
                 this.ftype[index] = 'multiple'
             } else if(value == '=' || value == '!='){
                 this.ftype[index]  = 'select';
-                this.getStandByValue(index);
+                //this.getStandByValue(index);
             }else {
                 this.ftype[index]  = 'input'
             }
@@ -344,6 +344,9 @@ export default {
     max-height: 580px;
     overflow-y: auto;
 }
+#fieldList .ivu-form-item{
+    margin-bottom:2px;
+}
 .computed-field{
     cursor: pointer;
     color:#008aff;
@@ -363,5 +366,6 @@ export default {
 </style>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+
 
 

@@ -101,6 +101,9 @@ export default {
     return {
       isNew:true,
       isInit:true,
+      messageType:'error',
+      messageVisible:false,
+      message:'',
       //paramComponent:[],
       //paramSelected:null,
       //paramShow:false,
@@ -291,7 +294,12 @@ export default {
                     Vue.queryData = response.data.content;
                     Vue.drawChart();
                   } else {
-                    Vue.$Message.error('获取数据错误'+response.data.content);
+                    Vue.$Message.error({
+                      content: '获取数据错误: '+response.data.content,
+                      duration: 20,
+                      closable: true
+                    });
+                    //Vue.$Message.error('获取数据错误: '+response.data.content);
                   }
                 });
         }
@@ -306,7 +314,11 @@ export default {
             Vue.queryData = response.data.content.data;
             Vue.drawChart();
           } else {
-            Vue.$Message.error('获取数据错误'+response.data.content.data);
+            Vue.$Message.error({
+                      content: '获取数据错误: '+response.data.content,
+                      duration: 20,
+                      closable: true
+                    });
           }    
       });
     },
