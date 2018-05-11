@@ -20,14 +20,13 @@
                 :data="filterTypeSelections" 
                 trigger="hover" 
                 @on-change='selectFilterType' 
-                @click.native='initRelatedFilterSelections()'
                 ></Cascader>
            </FormItem> 
           </Col>
           <Col span='24'>
             <FormItem label="关联过滤器" >
-              <Select v-model = 'relatedFilterSelectedList' multiple>
-                  <Option v-for="(item,index) in relatedFilterSelections" :value="index" :key="item.value">{{ item.label }}</Option>
+              <Select v-model = 'relatedFilterSelectedList' multiple @click.native='initRelatedFilterSelections()'>
+                  <Option v-for="(item,index) in relatedFilterSelections" :value="index" :key="index">{{ item.label }}</Option>
               </Select>       
             </FormItem>          
           </Col>
@@ -36,7 +35,6 @@
                <Select 
                   :multiple='filter.type == "multiSelect" ? true:false'
                   v-model="filter.value" 
-                  style="width:200px" 
                   v-if='filter.type == "singleSelect" || filter.type == "multiSelect"'
                   @click.native='initStandByValue()'>
                   <Option v-for="(standByValue,index) in standByValues" 
