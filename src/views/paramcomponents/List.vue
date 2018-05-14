@@ -2,7 +2,7 @@
     <div>
         <Select 
             v-model = "currentSelection" 
-            style="width:600px" 
+            style="width:300px" 
             class='select'
             :multiple='componentType == "multiSelect" ? true:false'
             @on-change='sentDate'>

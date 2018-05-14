@@ -44,26 +44,5 @@
             Vue.currentDate = Vue.defaultValue
             console.log('mounted');
         },
-        beforeCreate(){
-          console.log('beforeCreate');
-        },
-        created(){
-          console.log('created');
-        },
-        beforeMount(){
-          console.log('beforeMount');
-        },
-        beforeUpdate(){
-          console.log('beforeUpdate');
-        },
-        updated(){
-          console.log('updated');
-        },
-        beforeDestroy(){
-          console.log('beforeDestroy');
-        },
-        destroyed(){
-          console.log('destroyed');
-        }
     }
 </script>

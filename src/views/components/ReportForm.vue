@@ -87,7 +87,7 @@ export default {
       globalFilters:[],
       tableContent:{'0':null,'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null,'9':null},//表格组件的内容
       paramSelected:null,//选择的参数值
-      report_bak:null,
+      report_replace:null,//用于更新数据的report替身
     }
   }, 
   methods:{
@@ -127,11 +127,11 @@ export default {
       if(Vue.isIntoFromResource){//如果从资源界面进入
         Vue.AxiosPost("getReportDataById",{'reportID':Vue.report.id},
         function(response){
-          //为了不改变原始report，更新数据用report_bak
-          Vue.report_bak = $.extend(true,{},Vue.report);
+          //为了不改变原始report，更新数据用report_replace
+          Vue.report_replace = $.extend(true,{},Vue.report);
           //修改后台传来的默认值
           let reportDefineObject = JSON.parse(response.data.content.defineJSON);
-          Vue.report_bak.defineJSON.header.globalFilter = reportDefineObject.header.globalFilter;
+          Vue.report_replace.defineJSON.header.globalFilter = reportDefineObject.header.globalFilter;
           //初始化过滤器
           Vue.initFilter(response.data.content.defineJSON);
           //绘制报表
@@ -141,11 +141,11 @@ export default {
       if(!Vue.isIntoFromResource){//如果从新建下一步入口进入
         Vue.AxiosPost("getReportDataByDefine",{'reportDefine':JSON.stringify(Vue.report.defineJSON)},
         function(response){
-          //为了不改变原始report，更新数据用report_bak
-          Vue.report_bak = $.extend(true,{},Vue.report);
+          //为了不改变原始report，更新数据用report_replace
+          Vue.report_replace = $.extend(true,{},Vue.report);
           //修改后台传来的默认值
           let reportDefineObject = JSON.parse(response.data.content.defineJSON);
-          Vue.report_bak.defineJSON.header.globalFilter = reportDefineObject.header.globalFilter;
+          Vue.report_replace.defineJSON.header.globalFilter = reportDefineObject.header.globalFilter;
           //初始化过滤器
           Vue.initFilter(response.data.content.defineJSON);
           //绘制报表
@@ -237,8 +237,8 @@ export default {
     /*更新报表数据*/
     updateReport(param){
       let Vue = this;
-      Vue.report_bak.defineJSON.header.globalFilter[param.index].value = param.value;
-        Vue.AxiosPost("updateReport",{'reportDefine':JSON.stringify(Vue.report_bak.defineJSON)},
+      Vue.report_replace.defineJSON.header.globalFilter[param.index].value = param.value;
+        Vue.AxiosPost("updateReport",{'reportDefine':JSON.stringify(Vue.report_replace.defineJSON)},
         function(response){
           Vue.drawReport(response.data.content);
       })       
