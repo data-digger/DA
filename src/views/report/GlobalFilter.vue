@@ -186,12 +186,12 @@ export default {
       let M = (DATE.getMonth()+1 < 10 ? '0'+(DATE.getMonth()+1) : DATE.getMonth()+1);
       let D = '-'+DATE.getDate() + ' ';
      
-      if(filterType[0] == 'date' && filterType[1] == 'DateByDay'){
-        Vue.filter.value = Y+M+D; 
+      if(filterType[0] == 'date'){
+        Vue.filter.value =null; 
       }
-      if(filterType[0] == 'date' && filterType[1] == 'DateByMonth'){
+/*      if(filterType[0] == 'date' && filterType[1] == 'DateByMonth'){
         Vue.filter.value = Y+M; 
-      }
+      }*/
       if(filterType[0] == 'singleSelect' ||filterType[0] == 'input'){
         Vue.filter.value = ''; 
        
