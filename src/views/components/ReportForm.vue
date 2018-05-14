@@ -18,6 +18,7 @@
                     :index='index'
                     @sentDate = 'updateReport'
                     :standByValue = "cmp.standByValue"
+                    :randomName ="cmp.randomName"
                   ></component>                
                 </Col>
               </Col span='12'> 
@@ -87,7 +88,7 @@ export default {
       globalFilters:[],
       tableContent:{'0':null,'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null,'9':null},//表格组件的内容
       paramSelected:null,//选择的参数值
-      report_replace:null,//用于更新数据的report替身
+      report_replace:null//用于更新数据的report替身
     }
   }, 
   methods:{
@@ -157,10 +158,12 @@ export default {
     /*初始化过滤器组件*/
     initFilter(defineJSON){
       let Vue = this;
+      Vue.test = false;
       Vue.globalFilters = [];
       let reportDefineObject = JSON.parse(defineJSON);
       let globalFiltersArray = reportDefineObject.header.globalFilter;
       let aGlobalFilters = [];
+      let randomName=Math.random();
       for(let i in globalFiltersArray){
         //当过滤器为日期
         if(globalFiltersArray[i].type == "DateByDay" || globalFiltersArray[i].type == "DateByMonth" || globalFiltersArray[i].type == "DateByUser"){
@@ -169,7 +172,8 @@ export default {
             alias:globalFiltersArray[i].alias,
             defaultValue:globalFiltersArray[i].value,
             type:globalFiltersArray[i].type,
-            standByValue:[]
+            standByValue:[],
+            randomName:randomName
           });
         }
         //当过滤器为单选框或者多选框
@@ -190,7 +194,7 @@ export default {
             standByValue:aStandByValue,
             defaultValue:globalFiltersArray[i].value,
             type:globalFiltersArray[i].type,
-            
+            randomName:randomName
           });
         }
         //当过滤器为输入框
@@ -200,10 +204,11 @@ export default {
             alias:globalFiltersArray[i].alias,
             defaultValue:globalFiltersArray[i].value,
             type:globalFiltersArray[i].type,
-            standByValue:[]
+            standByValue:[],
+            randomName:randomName
           });
         }
-      }
+      }   
       Vue.globalFilters = aGlobalFilters;
     },
 

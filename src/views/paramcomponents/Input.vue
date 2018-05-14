@@ -1,7 +1,7 @@
 <template>
     <div>
         <Input 
-          v-model="defaultValue" 
+          v-model="selectedValue" 
           icon="refresh" 
           placeholder="Enter something..." 
           style="width: 200px"
@@ -11,9 +11,16 @@
 </template>
 <script>
     export default {
-        props:["componentType",'defaultValue','index','standByValue'],
+        props:["componentType",'defaultValue','index','standByValue','randomName'],
+        data(){
+          return {
+            selectedValue: this.defaultValue
+          }
+        },
         watch:{
- 
+          randomName (val) {
+             this.selectedValue = this.defaultValue;
+          }
         },
         methods:{
           //传递所选值到其他组件

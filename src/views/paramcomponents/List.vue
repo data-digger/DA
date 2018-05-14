@@ -1,7 +1,7 @@
 <template>
     <div>
         <Select 
-            v-model = "defaultValue" 
+            :value = "selectedValue" 
             style="width:300px" 
             class='select'
             :multiple='componentType == "multiSelect" ? true:false'
@@ -12,12 +12,25 @@
 </template>
 <script>
     export default {
-        props:["componentType",'standByValue','defaultValue','index'],
+        props:["componentType",'standByValue','defaultValue','index','randomName'],
+        data(){
+            return{
+                selectedValue:this.defaultValue
+            }
+        },
+        watch:{
+          randomName (val) {
+             this.selectedValue = this.defaultValue;
+          }
+        },
         methods:{
           //传递所选值到其他组件
           sentDate(selection){
             let Vue = this;
-            Vue.defaultValue = selection;
+            if(selection == ''){
+                this.selectedValue = this.defaultValue;
+                selection = this.defaultValue;
+            }
             Vue.$emit("sentDate",{index:Vue.index,value:selection});
           },
         },
