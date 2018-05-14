@@ -38,12 +38,12 @@
         <!-- EChart图形容器   -->     
         <div :id="'chart-'+chartID+portletID" style='height:85%' v-if = 'EChartShow'></div>
         <!-- 表格容器 -->
-<!--         <Table style='margin:20px 10px' border :columns="columns" :data="currentTableData" v-if = 'tableShow'></Table>
+        <Table style='margin:20px 10px' border :columns="columns" :data="currentTableData" v-if = 'tableShow'></Table>
         <div style="margin: 10px;overflow: hidden" v-if = 'tableShow'>
           <div style="float: right;">
             <Page :total="total" :current="1" :page-size='pageSize' @on-change="changePage"></Page>
           </div>
-        </div>  -->
+        </div>  
         <!-- 卡片容器 -->
         <div class='infoCard'>
         <infoCard 
@@ -60,20 +60,6 @@
             :intro-size='cardOption.introSize'
             :intro-weight='cardOption.introWeight'                         
           ></infoCard></div>     
-            <!-- 表格 -->
-<!--             <component v-if='item.component == "Table"' 
-                       :tableContent='tableContent[item.i]'
-                       :is="item.component"
-                       :ifPage='true'>
-            </component>
- -->            <!-- Chart图 -->
-<!--             <component v-if='item.component != "Table"' 
-                       :ref="'chartContainer'+item.i"
-                       :is="item.component" 
-                       :option="'COption'+item.i"
-                       :chartId='report.id+item.i'
-                       :styles='chartStyles'>
-            </component>  --> 
       </div>
       <div class="vue-draggable-handle" v-if='isShowExtraIcon()'></div> 
     </div>

@@ -2,7 +2,7 @@
     <Row>
       <DatePicker 
         :type="datePickerType"  
-        :value='currentDate' 
+        :value='defaultValue' 
         @on-change='sentDate'
         style="width: 200px" 
       ></DatePicker>
@@ -36,13 +36,9 @@
           //传递date到其他组件
           sentDate(currentDate){
             let Vue = this;
+            Vue.defaultValue = currentDate;
             Vue.$emit("sentDate",{index:Vue.index,value:currentDate});
           },
-        },
-        mounted(){
-            let Vue = this;
-            Vue.currentDate = Vue.defaultValue
-            console.log('mounted');
-        },
+        }
     }
 </script>
