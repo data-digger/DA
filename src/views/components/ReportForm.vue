@@ -6,20 +6,23 @@
           <!-- 过滤器 -->
           <Card style='margin:10px' >
             <p slot="title">过滤条件</p>
-            <Row v-for='(cmp,index) in globalFilters' :key='"filter"+index' >
-              <Col span='2'>{{cmp.alias}}</Col>
-              <Col span='10'>
-                <component 
-                  class='globalFilters'       
-                  :is="cmp.component"        
-                  :componentType='cmp.type'
-                  :defaultValue='cmp.defaultValue'
-                  :index='index'
-                  @sentDate = 'updateReport'
-                  :standByValue = "cmp.standByValue"
-                ></component>                
-              </Col>
-            </Row> 
+            <Row>
+              <Col span='12' v-for='(cmp,index) in globalFilters' :key='"filter"+index' >
+                <Col span='3' style='line-height: 30px'>{{cmp.alias}}</Col>
+                <Col span='10'>
+                  <component 
+                    class='globalFilters'       
+                    :is="cmp.component"        
+                    :componentType='cmp.type'
+                    :defaultValue='cmp.defaultValue'
+                    :index='index'
+                    @sentDate = 'updateReport'
+                    :standByValue = "cmp.standByValue"
+                    :randomName ="cmp.randomName"
+                  ></component>                
+                </Col>
+              </Col span='12'> 
+            </Row>
           </Card>          
   
 
@@ -85,6 +88,7 @@ export default {
       globalFilters:[],
       tableContent:{'0':null,'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null,'9':null},//表格组件的内容
       paramSelected:null,//选择的参数值
+      report_replace:null//用于更新数据的report替身
     }
   }, 
   methods:{
@@ -124,14 +128,28 @@ export default {
       if(Vue.isIntoFromResource){//如果从资源界面进入
         Vue.AxiosPost("getReportDataById",{'reportID':Vue.report.id},
         function(response){
+          //为了不改变原始report，更新数据用report_replace
+          Vue.report_replace = $.extend(true,{},Vue.report);
+          //修改后台传来的默认值
+          let reportDefineObject = JSON.parse(response.data.content.defineJSON);
+          Vue.report_replace.defineJSON.header.globalFilter = reportDefineObject.header.globalFilter;
+          //初始化过滤器
           Vue.initFilter(response.data.content.defineJSON);
+          //绘制报表
           Vue.drawReport(response.data.content);
         })          
       }  
       if(!Vue.isIntoFromResource){//如果从新建下一步入口进入
         Vue.AxiosPost("getReportDataByDefine",{'reportDefine':JSON.stringify(Vue.report.defineJSON)},
         function(response){
+          //为了不改变原始report，更新数据用report_replace
+          Vue.report_replace = $.extend(true,{},Vue.report);
+          //修改后台传来的默认值
+          let reportDefineObject = JSON.parse(response.data.content.defineJSON);
+          Vue.report_replace.defineJSON.header.globalFilter = reportDefineObject.header.globalFilter;
+          //初始化过滤器
           Vue.initFilter(response.data.content.defineJSON);
+          //绘制报表
           Vue.drawReport(response.data.content);
         })        
       } 
@@ -140,10 +158,12 @@ export default {
     /*初始化过滤器组件*/
     initFilter(defineJSON){
       let Vue = this;
+      Vue.test = false;
       Vue.globalFilters = [];
       let reportDefineObject = JSON.parse(defineJSON);
       let globalFiltersArray = reportDefineObject.header.globalFilter;
       let aGlobalFilters = [];
+      let randomName=Math.random();
       for(let i in globalFiltersArray){
         //当过滤器为日期
         if(globalFiltersArray[i].type == "DateByDay" || globalFiltersArray[i].type == "DateByMonth" || globalFiltersArray[i].type == "DateByUser"){
@@ -152,7 +172,8 @@ export default {
             alias:globalFiltersArray[i].alias,
             defaultValue:globalFiltersArray[i].value,
             type:globalFiltersArray[i].type,
-            standByValue:[]
+            standByValue:[],
+            randomName:randomName
           });
         }
         //当过滤器为单选框或者多选框
@@ -166,15 +187,16 @@ export default {
                 oStandByValue.label = response.data.content[i];
                 aStandByValue.push(oStandByValue);      
               }
-          });            
-          aGlobalFilters.push({
-            component:'list',
-            alias:globalFiltersArray[i].alias,
-            standByValue:aStandByValue,
-            defaultValue:globalFiltersArray[i].value,
-            type:globalFiltersArray[i].type,
-            
-          });
+              aGlobalFilters.push({
+                component:'list',
+                alias:globalFiltersArray[i].alias,
+                standByValue:aStandByValue,
+                defaultValue:globalFiltersArray[i].value,
+                type:globalFiltersArray[i].type,
+                randomName:randomName
+              });
+            });            
+          
         }
         //当过滤器为输入框
         if(globalFiltersArray[i].type == 'input'){
@@ -183,10 +205,11 @@ export default {
             alias:globalFiltersArray[i].alias,
             defaultValue:globalFiltersArray[i].value,
             type:globalFiltersArray[i].type,
-            standByValue:[]
+            standByValue:[],
+            randomName:randomName
           });
         }
-      }
+      }   
       Vue.globalFilters = aGlobalFilters;
     },
 
@@ -220,9 +243,8 @@ export default {
     /*更新报表数据*/
     updateReport(param){
       let Vue = this;
-      let _report = $.extend(true,[],Vue.report);
-      _report.defineJSON.header.globalFilter[param.index].value = param.value;
-        Vue.AxiosPost("updateReport",{'reportDefine':JSON.stringify(_report.defineJSON)},
+      Vue.report_replace.defineJSON.header.globalFilter[param.index].value = param.value;
+        Vue.AxiosPost("updateReport",{'reportDefine':JSON.stringify(Vue.report_replace.defineJSON)},
         function(response){
           Vue.drawReport(response.data.content);
       })       

@@ -8,11 +8,10 @@
           <div style='float:right;margin-right:5px;cursor:pointer' @click = "selectReportChart()"><Icon type="plus-round"></Icon></div>
         </div>
         <Modal
-          v-model="modalSelectChart"
+          v-model="showSelectChartModal"
           title="选择图表"
           width ="1200px"
-          @on-ok="drawReport"
-          @on-cancel="cancel">
+          @on-ok="drawReportChart">
             <Tabs type="card" v-model='currentTab'>
                 <TabPane label="选择图形" name='chart'>
                   <RadioGroup v-model="chartSelected" type='button'>
@@ -44,7 +43,7 @@
           <div style="float: right;">
             <Page :total="total" :current="1" :page-size='pageSize' @on-change="changePage"></Page>
           </div>
-        </div> 
+        </div>  
         <!-- 卡片容器 -->
         <div class='infoCard'>
         <infoCard 
@@ -60,7 +59,7 @@
             :intro-color='cardOption.introColor'
             :intro-size='cardOption.introSize'
             :intro-weight='cardOption.introWeight'                         
-          ></infoCard></div>       
+          ></infoCard></div>     
       </div>
       <div class="vue-draggable-handle" v-if='isShowExtraIcon()'></div> 
     </div>
@@ -97,7 +96,7 @@ export default {
         historyData:[],
         currentTableData:[],
         pageSize:4, 
-        modalSelectChart:false,
+        showSelectChartModal:false,
         chartID:null,
         currentTab:"chart",
         chartSelected:0,
@@ -113,13 +112,17 @@ export default {
           return true;
         }
       },
+
+      //选择报表图形
       selectReportChart(){
         let Vue = this;
-        Vue.modalSelectChart = true;
+        Vue.showSelectChartModal = true;
       },
-      drawReport(){
+
+      //绘制报表图形
+      drawReportChart(){
         let Vue = this;
-        let chart;
+        let chart = null;
         if(Vue.currentTab == "chart"){
           chart = Vue.chartList[Vue.chartSelected];
         }
@@ -162,6 +165,8 @@ export default {
           }
         );
       },
+
+      //绘制EChart图形
       drawEChart (chartData) {
         let Vue = this;
         let queryData = chartData.data;
@@ -174,6 +179,8 @@ export default {
         // 绘制图表
         Vue.chartView.setOption(eoption);
       },
+
+      //绘制table
       drawTable(chart,tableData){
         let Vue = this;
         var header = tableData.data.gridData.stringHeaders;
@@ -236,9 +243,6 @@ export default {
         let Vue = this;
         Vue.flag=true;
         Vue.$store.commit("savePortletTitle",{"portletTitle":Vue.portletTitle,"portletID":Vue.portletID}); 
-      },
-      cancel(){
-
       }
     },
     mounted(){

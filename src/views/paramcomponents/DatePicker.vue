@@ -2,7 +2,7 @@
     <Row>
       <DatePicker 
         :type="datePickerType"  
-        :value='currentDate' 
+        :value='selectedValue' 
         @on-change='sentDate'
         style="width: 200px" 
       ></DatePicker>
@@ -10,7 +10,7 @@
 </template>
 <script>
     export default {
-        props:["componentType",'defaultValue','index'],
+        props:["componentType",'defaultValue','index','randomName'],
         computed:{
           datePickerType(){
             let Vue = this;
@@ -25,45 +25,22 @@
           }
         },
         watch:{
-
+          randomName (val) {
+             this.selectedValue = this.defaultValue;
+          }
         },
         data () {
             return {
-              currentDate:null
+              selectedValue:this.defaultValue
             }
         },
         methods:{
           //传递date到其他组件
           sentDate(currentDate){
             let Vue = this;
+            Vue.selectedValue = currentDate;
             Vue.$emit("sentDate",{index:Vue.index,value:currentDate});
           },
         },
-        mounted(){
-            let Vue = this;
-            Vue.currentDate = Vue.defaultValue
-            console.log('mounted');
-        },
-        beforeCreate(){
-          console.log('beforeCreate');
-        },
-        created(){
-          console.log('created');
-        },
-        beforeMount(){
-          console.log('beforeMount');
-        },
-        beforeUpdate(){
-          console.log('beforeUpdate');
-        },
-        updated(){
-          console.log('updated');
-        },
-        beforeDestroy(){
-          console.log('beforeDestroy');
-        },
-        destroyed(){
-          console.log('destroyed');
-        }
     }
 </script>

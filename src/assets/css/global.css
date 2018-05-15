@@ -1,3 +1,7 @@
+.ivu-carousel{
+  height: 450px;
+  overflow-y:auto;
+}
 .box-card{
   margin-bottom: 10px;
   width: 155px;

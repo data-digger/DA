@@ -20,12 +20,7 @@
     <Modal
       v-model="modalpreview"
       width ="1200px"
-      title="Common Modal dialog box title"
-      @on-ok="previewOk"
-      @on-cancel="cancel">
-      <Row>
-        <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp' @sentParam = 'refreshQueryData'></component>
-      </Row>
+      title="Common Modal dialog box title">
       <iviewtable :chartCmpContent='currentTableData' :ifPage='true'></iviewtable> 
     </Modal>  
   </Col>
@@ -45,7 +40,6 @@ export default {
     return {
       modalpreview:false,
       currentTableData:null, 
-      paramComponent:[],
       paramSelected:null
     }
   }, 
@@ -65,7 +59,6 @@ export default {
     preview(){
       let Vue = this;
       Vue.modalpreview = true;
-      Vue.paramComponent = [];
       Vue.AxiosPost("previewBizView",{'bizViewId':Vue.tablebox.bizViewId},
         function(response){
           if(response.data.defaultParameters.length != 0){
@@ -88,12 +81,6 @@ export default {
           }        
         }
       );
-    },
-    cancel(){
-
-    },
-    previewOk(){
-
     },
     refreshQueryData(param){
       let Vue = this;

@@ -1,7 +1,7 @@
 <template>
     <div>
         <Input 
-          v-model="currentInput" 
+          v-model="selectedValue" 
           icon="refresh" 
           placeholder="Enter something..." 
           style="width: 200px"
@@ -11,26 +11,24 @@
 </template>
 <script>
     export default {
-        props:["componentType",'defaultValue','index','standByValue'],
-        data () {
-           return {
-            currentInput:[],
-           }
+        props:["componentType",'defaultValue','index','standByValue','randomName'],
+        data(){
+          return {
+            selectedValue: this.defaultValue
+          }
         },
         watch:{
- 
+          randomName (val) {
+             this.selectedValue = this.defaultValue;
+          }
         },
         methods:{
           //传递所选值到其他组件
           sentDate(){
             let Vue = this;
-            Vue.$emit("sentDate",{index:Vue.index,value:Vue.currentInput});
+            Vue.$emit("sentDate",{index:Vue.index,value:Vue.defaultValue});
           },
         },
-        mounted(){
-            let Vue = this;
-            Vue.currentInput = Vue.defaultValue
-        }
     }
 </script>
 
