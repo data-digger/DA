@@ -128,13 +128,13 @@
                 <Button class='addcalculatedField_button'  type="success" size="small" @click="updateMetric('metric')">更新</Button>
               </div>
               <Button class='addcalculatedField_button' type="error" size="small" @click='hideMetricPanel()'>取消</Button>
-              <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='previewMetric()'>
+<!--               <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='previewMetric()'>
               <Modal
               v-model="showPreviewMetric"
               width ="1200px"
               title="数据预览">
                 <iviewtable :chartCmpContent ='metricSampleData'></iviewtable>        
-              </Modal> 
+              </Modal>  -->
             </Col>
           </Form>
         </Row>
@@ -216,9 +216,6 @@ export default {
         mode: {name: "text/x-mysql"},  
         dragDrop: true
       });  
-      Vue.caculatedSQLEditor.on('focus',function(){
-        Vue.Spin_type_control();       
-      });
       Vue.caculatedSQLEditor.on('blur',function(){
         Vue.addCaculatedObj.expression = Vue.caculatedSQLEditor.doc.getValue();
         Vue.getExpressionData(CATEGORY.CACULATE);
@@ -235,20 +232,10 @@ export default {
         mode: {name: "text/x-mysql"},  
         dragDrop: true
       });  
-      Vue.metricSQLEditor.on('focus',function(){
-        Vue.Spin_type_control();       
-      });
       Vue.metricSQLEditor.on('blur',function(){
         Vue.addMetricObj.expression = Vue.metricSQLEditor.doc.getValue();
         Vue.getExpressionData(CATEGORY.METRIC);
       });
-    },
-
-    /*进度条控制*/
-    Spin_type_control(){
-      let Vue = this;
-      Vue.loadSpin = true;
-      Vue.loadSpin_success = false;
     },
 
     /*根据所填写的expression判断类型*/
@@ -304,7 +291,8 @@ export default {
         'max':0,
         'min':0,
         'category':category,
-        'expression':''
+        'expression':'',
+        'isAdd':true
       };
     },
 
@@ -339,7 +327,8 @@ export default {
       let Vue = this;
       Vue.$refs[field].validate((valid) => {
         if(valid){
-          Vue.caculateTableData.push(Vue.addCaculatedObj);
+          let _addCaculatedObj = $.extend(true,{},Vue.addCaculatedObj);
+          Vue.caculateTableData.push(_addCaculatedObj);
           Vue.hideCaculatePanel();
         }else{
           Vue.$Message.error('请输入正确的信息!');
@@ -352,7 +341,8 @@ export default {
       let Vue = this;
       Vue.$refs[field].validate((valid) => {
         if(valid){
-          Vue.metricTableData.push(Vue.addMetricObj);
+          let _addMetricObj = $.extend(true,{},Vue.addMetricObj);
+          Vue.metricTableData.push(_addMetricObj);
           Vue.hideMetricPanel();
         }else{
           Vue.$Message.error('请输入正确的信息!');
@@ -491,29 +481,35 @@ export default {
       var cols = [];
       cols.push({
         title:'删除',
+        "key":'isAdd',
         render: (h, params) => {
-          return h('Icon',{
-            props: {
-              type: "trash-a"
-            },
-            style:{
-              cursor:'pointer'
-            },
-            nativeOn:{
-              'click':(event)=>{
-                if(!Vue.isCreate){
-                  for(let i in Vue.queryMetaData){
-                    if(Vue.queryMetaData[i].id == Vue.bizView.id+"_"+params.row.columnName){
-                      Vue.deleteItem.push(Vue.queryMetaData[i]);
-                    }
-                  }                  
-                }
+          if(params.row.isAdd){
+            return h('Icon',{
+              props: {
+                type: "trash-a"
+              },
+              style:{
+                cursor:'pointer'
+              },
+              nativeOn:{
+                'click':(event)=>{
+                  if(!Vue.isCreate){
+                    for(let i in Vue.queryMetaData){
+                      if(Vue.queryMetaData[i].id == Vue.bizView.id+"_"+params.row.columnName){
+                        Vue.deleteItem.push(Vue.queryMetaData[i]);
+                      }
+                    }                  
+                  }
 
-                Vue.caculateTableData.splice(params.index,1);  
-                Vue.hideCaculatePanel();            
+                  Vue.caculateTableData.splice(params.index,1);  
+                  Vue.hideCaculatePanel();            
+                }
               }
-            }
-          })
+            }) 
+          }else{
+            return ''
+          }
+
         }
       },{
         title:'编辑',
@@ -606,28 +602,33 @@ export default {
       var cols = [];
       cols.push({
         title:'删除',
+        'key':'isAdd',
         render: (h, params) => {
-          return h('Icon',{//删除度量
-            props: {
-              type: "trash-a"
-            },
-            style:{
-              cursor:'pointer'
-            },
-            nativeOn:{
-              'click':(event)=>{
-                if(!Vue.isCreate){
-                  for(let i in Vue.queryMetaData){
-                    if(Vue.queryMetaData[i].id == Vue.bizView.id+"_"+params.row.columnName){
-                      Vue.deleteItem.push(Vue.queryMetaData[i]);
-                    }
-                  }                  
+          if(params.row.isAdd){
+            return h('Icon',{//删除度量
+              props: {
+                type: "trash-a"
+              },
+              style:{
+                cursor:'pointer'
+              },
+              nativeOn:{
+                'click':(event)=>{
+                  if(!Vue.isCreate){
+                    for(let i in Vue.queryMetaData){
+                      if(Vue.queryMetaData[i].id == Vue.bizView.id+"_"+params.row.columnName){
+                        Vue.deleteItem.push(Vue.queryMetaData[i]);
+                      }
+                    }                  
+                  }
+                  Vue.metricTableData.splice(params.index,1);    
+                  Vue.hideMetricPanel();             
                 }
-                Vue.metricTableData.splice(params.index,1);    
-                Vue.hideMetricPanel();             
               }
-            }
-          })
+            })
+          }else{
+            return ''
+          }
         }
       },{
         title:'编辑',

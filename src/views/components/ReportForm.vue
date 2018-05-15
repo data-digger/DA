@@ -187,15 +187,16 @@ export default {
                 oStandByValue.label = response.data.content[i];
                 aStandByValue.push(oStandByValue);      
               }
-          });            
-          aGlobalFilters.push({
-            component:'list',
-            alias:globalFiltersArray[i].alias,
-            standByValue:aStandByValue,
-            defaultValue:globalFiltersArray[i].value,
-            type:globalFiltersArray[i].type,
-            randomName:randomName
-          });
+              aGlobalFilters.push({
+                component:'list',
+                alias:globalFiltersArray[i].alias,
+                standByValue:aStandByValue,
+                defaultValue:globalFiltersArray[i].value,
+                type:globalFiltersArray[i].type,
+                randomName:randomName
+              });
+            });            
+          
         }
         //当过滤器为输入框
         if(globalFiltersArray[i].type == 'input'){

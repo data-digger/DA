@@ -4,6 +4,7 @@
 }
 
 .vue-grid-layout {
+        overflow-y: auto;
     /*background-color: white;*/
     /*box-shadow: 5px 5px 3px 8px lightgrey;*/
 }
