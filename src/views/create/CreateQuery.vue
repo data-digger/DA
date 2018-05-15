@@ -34,7 +34,7 @@
           <div class="demo-carousel">
              <Row style="padding: 20px 40px 40px 20px;">
               <Col span="24">
-                <editquerytable :queryMetaData ='queryMetaData' :isCreate='isCreate' :bizView='bizView' ref='Edit'></editquerytable>
+                <fieldTable :queryMetaData ='queryMetaData' :isCreate='isCreate' :bizView='bizView' ref='Edit'></fieldTable>
               </Col>
              </Row>
           </div>
@@ -76,13 +76,13 @@ import "codemirror/addon/hint/show-hint.js"
 import "codemirror/addon/hint/sql-hint.js"
 import {mapGetters} from 'vuex'
 import treebox from './../paramcomponents/Tree'
-import editquerytable from './../chartcomponents/QueryTable'
+import fieldTable from './../chartcomponents/FieldTable'
 import iviewtable from './../chartcomponents/Table'
 export default {
   name:"createQuery",
   components:{
     treebox,
-    editquerytable,
+    fieldTable,
     iviewtable
   },
   computed:{

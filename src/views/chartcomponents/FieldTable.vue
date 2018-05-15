@@ -43,23 +43,17 @@
                 <Checkbox v-model='addCaculatedObj.min' :true-value ='1' :false-value ='0'></Checkbox>
               </FormItem>
             </Col>         
-            <Col span='20' v-show='addCaculatedObj.category != 0 ? true:false'>
+            <Col span='20' v-show='addCaculatedObj.expression == null? false:true'>
               <FormItem label="Expression" :label-width="80">
                 <textarea id='c_expression' v-model='addCaculatedObj.expression'></textarea>
               </FormItem>
             </Col>
             <Col span='12' v-show='addCaculatedObj.category != 0 ? true:false'>
               <FormItem label="type" :label-width="80">
-                <Input v-model='addCaculatedObj.columnType'placeholder="Enter something..."></Input>
+                <Input v-model='addCaculatedObj.columnType'placeholder="Enter something..." @click.native='getExpressionData(1)'></Input>
               </FormItem> 
             </Col>
             <Col span='1' style='margin-top:8px' v-show='addCaculatedObj.category != 0 ? true:false'>
-              <Spin  v-if='loadSpin'>
-                <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-              </Spin>
-              <Spin  v-if='loadSpin_success' >
-                <Icon type="checkmark"></Icon>
-              </Spin>
             </Col>
           </Form>
           <Col span='24' class='save_addcalculatedField_buttonBox'>
@@ -70,12 +64,12 @@
               <Button class='addcalculatedField_button'  type="success" size="small" @click="updateCalculateField('calculatedfield')">更新</Button>
             </div>
             <Button class='addcalculatedField_button' type="error" size="small" @click='hideCaculatePanel()'>取消</Button>  
-            <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='previewCalculateField()'>
+            <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='previewCalculateField()' v-show='addCaculatedObj.category != 0 ? true:false'>
             <Modal
             v-model="showPreviewCaculatedField"
             width ="1200px"
             title="数据预览">
-              <iviewtable :chartCmpContent ='calculateFieldSampleData'></iviewtable>        
+              <iviewtable :tableContent ='calculateFieldSampleData'></iviewtable>        
             </Modal>            
           </Col>
         </Row>
@@ -102,23 +96,17 @@
                 <Input  v-model='addMetricObj.columnAlias' placeholder="Enter something..."></Input>
               </FormItem>  
             </Col>
-            <Col span='20' v-show='addMetricObj.category != 0 ? true:false'>
+            <Col span='20' v-show='addMetricObj.expression == null ? false:true'>
               <FormItem label="Expression" :label-width="80">
                 <textarea id='m_expression' v-model='addMetricObj.expression'></textarea>
               </FormItem>
             </Col>
             <Col span='12' v-show='addMetricObj.category != 0 ? true:false'>
               <FormItem label="type" :label-width="80">
-                <Input v-model='addMetricObj.columnType'placeholder="Enter something..."></Input>
+                <Input v-model='addMetricObj.columnType'placeholder="Enter something..." @click.native='getExpressionData(2)'></Input>
               </FormItem> 
             </Col>
             <Col span='1' style='margin-top:8px' v-show='addMetricObj.category != 0 ? true:false'>
-              <Spin  v-if='loadSpin'>
-                <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-              </Spin>
-              <Spin  v-if='loadSpin_success' >
-                <Icon type="checkmark"></Icon>
-              </Spin>
             </Col>
             <Col span='24' class='save_addcalculatedField_buttonBox'>
               <div v-if='isAddBtn' style='display:inline-block'>
@@ -128,13 +116,6 @@
                 <Button class='addcalculatedField_button'  type="success" size="small" @click="updateMetric('metric')">更新</Button>
               </div>
               <Button class='addcalculatedField_button' type="error" size="small" @click='hideMetricPanel()'>取消</Button>
-<!--               <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='previewMetric()'>
-              <Modal
-              v-model="showPreviewMetric"
-              width ="1200px"
-              title="数据预览">
-                <iviewtable :chartCmpContent ='metricSampleData'></iviewtable>        
-              </Modal>  -->
             </Col>
           </Form>
         </Row>
@@ -178,13 +159,10 @@ export default {
   },
   data(){
     return {
-      loadSpin:false, //加载进度条
-      loadSpin_success:false,//成功加载进度条
       isAddBtn:true,//添加按钮
       showAddCaculatedField:false,//显示添加字段框
       showAddMetric:false,//显示添加度量框
       showPreviewCaculatedField:false,//显示计算字段预览框
-      showPreviewMetric:false,//显示度量预览框
       canEdit:false,//不可编辑的选项
       calculateFieldSampleData:null,//计算字段查询数据
       metricSampleData:null,//度量查询数据
@@ -216,10 +194,6 @@ export default {
         mode: {name: "text/x-mysql"},  
         dragDrop: true
       });  
-      Vue.caculatedSQLEditor.on('blur',function(){
-        Vue.addCaculatedObj.expression = Vue.caculatedSQLEditor.doc.getValue();
-        Vue.getExpressionData(CATEGORY.CACULATE);
-      });
     },
 
     /*初始化度量expression编辑器*/
@@ -232,17 +206,14 @@ export default {
         mode: {name: "text/x-mysql"},  
         dragDrop: true
       });  
-      Vue.metricSQLEditor.on('blur',function(){
-        Vue.addMetricObj.expression = Vue.metricSQLEditor.doc.getValue();
-        Vue.getExpressionData(CATEGORY.METRIC);
-      });
     },
-
-    /*根据所填写的expression判断类型*/
+    
+    /*根据所填写的expression判断类型并获取预览数据*/
     getExpressionData(category){
       let Vue = this;
       let param;
       if(category == CATEGORY.CACULATE){
+        Vue.addCaculatedObj.expression = Vue.caculatedSQLEditor.doc.getValue();
         param = {
           dataSourceId:Vue.bizView.dataSourceId,
           bizViewSql : Vue.bizView.defineJSON,
@@ -250,6 +221,7 @@ export default {
         };
       }
       if(category == CATEGORY.METRIC){
+        Vue.addMetricObj.expression = Vue.metricSQLEditor.doc.getValue();
         param = {
             dataSourceId:Vue.bizView.dataSourceId,
             bizViewSql : Vue.bizView.defineJSON,
@@ -266,8 +238,6 @@ export default {
             Vue.addMetricObj.columnType = response.data.content.columsType[0];
             Vue.metricSampleData = response.data.content;         
           }
-          Vue.loadSpin = false;
-          Vue.loadSpin_success = true;
         },
         function(){
           Vue.$Message.error('请输入正确的expression!');
@@ -291,8 +261,7 @@ export default {
         'max':0,
         'min':0,
         'category':category,
-        'expression':'',
-        'isAdd':true
+        'expression':'输入s然后ctrl就可以弹出选择项'
       };
     },
 
@@ -357,13 +326,6 @@ export default {
       Vue.getExpressionData(CATEGORY.CACULATE);
     },
 
-    
-    /*预览度量表数据*/
-    previewMetric(){
-      let Vue = this;
-      Vue.showPreviewMetric = true;
-      Vue.getExpressionData(CATEGORY.METRIC);
-    },
 
     /*编辑计算字段表字段*/
     editCaculatedField(params){
@@ -408,7 +370,8 @@ export default {
       Vue.addMetricObj.category = params.row.category;
       Vue.addMetricObj.expression = params.row.expression;
       Vue.$nextTick(function(){
-        if (Vue.addMetricObj.category == CATEGORY.METRIC ){
+        //表示原始字段中的度量（根据expression是否为空来判断）
+        if (Vue.addMetricObj.category == CATEGORY.METRIC && Vue.addMetricObj.expression != null){
           if (Vue.metricSQLEditor == null){
              Vue.initMetricSql();
           }
@@ -481,9 +444,10 @@ export default {
       var cols = [];
       cols.push({
         title:'删除',
-        "key":'isAdd',
         render: (h, params) => {
-          if(params.row.isAdd){
+          if(params.row.expression == null){
+            return ''
+          }else{
             return h('Icon',{
               props: {
                 type: "trash-a"
@@ -505,11 +469,8 @@ export default {
                   Vue.hideCaculatePanel();            
                 }
               }
-            }) 
-          }else{
-            return ''
+            })             
           }
-
         }
       },{
         title:'编辑',
@@ -602,9 +563,10 @@ export default {
       var cols = [];
       cols.push({
         title:'删除',
-        'key':'isAdd',
         render: (h, params) => {
-          if(params.row.isAdd){
+          if(params.row.expression == null){
+            return ''
+          }else{
             return h('Icon',{//删除度量
               props: {
                 type: "trash-a"
@@ -625,9 +587,7 @@ export default {
                   Vue.hideMetricPanel();             
                 }
               }
-            })
-          }else{
-            return ''
+            })            
           }
         }
       },{
@@ -692,7 +652,7 @@ export default {
               'columnName':stringHeader,
               'columnAlias':stringHeader,
               'category':CATEGORY.METRIC,
-              'expression':''});
+              'expression':null});
           break;
           default:field_TableData.push({
             'columnType':columnType,
@@ -705,7 +665,7 @@ export default {
             'max':0,
             'min':0,
             'category':CATEGORY.RAW,
-            'expression':''});
+            'expression':null});
         }
         
       };
