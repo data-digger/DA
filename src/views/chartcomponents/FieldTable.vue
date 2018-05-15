@@ -43,17 +43,15 @@
                 <Checkbox v-model='addCaculatedObj.min' :true-value ='1' :false-value ='0'></Checkbox>
               </FormItem>
             </Col>         
-            <Col span='20' v-show='addCaculatedObj.expression == null? false:true'>
+            <Col span='20' v-show='addCaculatedObj.category == 0? false:true'>
               <FormItem label="Expression" :label-width="80">
                 <textarea id='c_expression' v-model='addCaculatedObj.expression'></textarea>
               </FormItem>
             </Col>
-            <Col span='12' v-show='addCaculatedObj.category != 0 ? true:false'>
+            <Col span='12' v-show='addCaculatedObj.category == 0 ? false:true'>
               <FormItem label="type" :label-width="80">
                 <Input v-model='addCaculatedObj.columnType'placeholder="Enter something..." @click.native='getExpressionData(1)'></Input>
               </FormItem> 
-            </Col>
-            <Col span='1' style='margin-top:8px' v-show='addCaculatedObj.category != 0 ? true:false'>
             </Col>
           </Form>
           <Col span='24' class='save_addcalculatedField_buttonBox'>
@@ -64,7 +62,7 @@
               <Button class='addcalculatedField_button'  type="success" size="small" @click="updateCalculateField('calculatedfield')">更新</Button>
             </div>
             <Button class='addcalculatedField_button' type="error" size="small" @click='hideCaculatePanel()'>取消</Button>  
-            <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='previewCalculateField()' v-show='addCaculatedObj.category != 0 ? true:false'>
+            <img class='preview_addcalculatedField' src="./../../assets/img/page_preview.png" @click='previewCalculateField()' v-show='addCaculatedObj.category == 0 ? false:true'>
             <Modal
             v-model="showPreviewCaculatedField"
             width ="1200px"
@@ -84,7 +82,7 @@
 
 
 
-      <TabPane  id='metric' label="度量">
+      <TabPane  id='metric' label="聚合">
         <Row  class='addField'  v-show='showAddMetric'>
           <div class='addField_title'>Add Metric</div>
           <Form  ref='metric' >
@@ -96,17 +94,15 @@
                 <Input  v-model='addMetricObj.columnAlias' placeholder="Enter something..."></Input>
               </FormItem>  
             </Col>
-            <Col span='20' v-show='addMetricObj.expression == null ? false:true'>
+            <Col span='20'>
               <FormItem label="Expression" :label-width="80">
                 <textarea id='m_expression' v-model='addMetricObj.expression'></textarea>
               </FormItem>
             </Col>
-            <Col span='12' v-show='addMetricObj.category != 0 ? true:false'>
+            <Col span='12'>
               <FormItem label="type" :label-width="80">
                 <Input v-model='addMetricObj.columnType'placeholder="Enter something..." @click.native='getExpressionData(2)'></Input>
               </FormItem> 
-            </Col>
-            <Col span='1' style='margin-top:8px' v-show='addMetricObj.category != 0 ? true:false'>
             </Col>
             <Col span='24' class='save_addcalculatedField_buttonBox'>
               <div v-if='isAddBtn' style='display:inline-block'>
@@ -445,7 +441,7 @@ export default {
       cols.push({
         title:'删除',
         render: (h, params) => {
-          if(params.row.expression == null){
+          if(params.row.category == 0){
             return ''
           }else{
             return h('Icon',{
@@ -564,32 +560,28 @@ export default {
       cols.push({
         title:'删除',
         render: (h, params) => {
-          if(params.row.expression == null){
-            return ''
-          }else{
-            return h('Icon',{//删除度量
-              props: {
-                type: "trash-a"
-              },
-              style:{
-                cursor:'pointer'
-              },
-              nativeOn:{
-                'click':(event)=>{
-                  if(!Vue.isCreate){
-                    for(let i in Vue.queryMetaData){
-                      if(Vue.queryMetaData[i].id == Vue.bizView.id+"_"+params.row.columnName){
-                        Vue.deleteItem.push(Vue.queryMetaData[i]);
-                      }
-                    }                  
-                  }
-                  Vue.metricTableData.splice(params.index,1);    
-                  Vue.hideMetricPanel();             
+          return h('Icon',{//删除度量
+            props: {
+              type: "trash-a"
+            },
+            style:{
+              cursor:'pointer'
+            },
+            nativeOn:{
+              'click':(event)=>{
+                if(!Vue.isCreate){
+                  for(let i in Vue.queryMetaData){
+                    if(Vue.queryMetaData[i].id == Vue.bizView.id+"_"+params.row.columnName){
+                      Vue.deleteItem.push(Vue.queryMetaData[i]);
+                    }
+                  }                  
                 }
+                Vue.metricTableData.splice(params.index,1);    
+                Vue.hideMetricPanel();             
               }
-            })            
-          }
-        }
+            }
+          }) 
+          }           
       },{
         title:'编辑',
         render: (h, params) => {
@@ -636,25 +628,7 @@ export default {
       for(let i in Vue.queryMetaData.columsType){
         let columnType = Vue.queryMetaData.columsType[i];
         let stringHeader = Vue.queryMetaData.stringHeaders[i];
-        switch(columnType){
-          case "BIT":
-          case "BIGINT":
-          case "TINYINT":
-          case "SMALLINT":
-          case "INTEGER":
-          case "FLOAT":
-          case "DOUBLE":
-          case "REAL":
-          case "DECIMAL":
-          case "NUMERIC":
-            metricTableData.push({
-              'columnType':columnType,
-              'columnName':stringHeader,
-              'columnAlias':stringHeader,
-              'category':CATEGORY.METRIC,
-              'expression':null});
-          break;
-          default:field_TableData.push({
+        field_TableData.push({
             'columnType':columnType,
             'columnName':stringHeader,
             'columnAlias':stringHeader,
@@ -665,9 +639,7 @@ export default {
             'max':0,
             'min':0,
             'category':CATEGORY.RAW,
-            'expression':null});
-        }
-        
+            'expression':null})
       };
       Vue.drawMetricTable(metricTableData);
       Vue.drawFieldTable(field_TableData);//包含计算字段和原始字段
