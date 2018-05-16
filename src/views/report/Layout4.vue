@@ -61,10 +61,6 @@ export default {
 
 <style scoped lang='less'>
 @background-color:#2d8cf0;
-.vue-grid-layout {
-   height: 400px !important;
-   overflow: auto;
-}
 .toolbar{
     padding: 3px;
     margin: 3px;

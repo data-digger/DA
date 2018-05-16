@@ -17,8 +17,8 @@
                   <RadioGroup v-model="chartSelected" type='button'>
                     <Radio v-for='(chart,chartIndex) in chartList' :key='chart.id' :label='chartIndex'>
                       <Card style="width:250px;margin:10px;display:inline-block;" >
-                          <p slot="title">{{chart.name}}</p>
-                          <p>{{chart.desc}}</p>      
+                          <p slot="title" :title="chart.name">{{chart.name}}</p>
+                          <p :title="chart.desc">{{chart.desc}}</p>      
                       </Card> 
                     </Radio>
                   </RadioGroup>
@@ -27,8 +27,8 @@
                   <RadioGroup v-model="tableSelected"type='button'>
                     <Radio v-for='(table,tableIndex) in tableList' :key='table.id' :label='tableIndex'>
                       <Card style="width:250px;margin:10px;display:inline-block;">
-                       <p slot="title">{{table.name}}</p>
-                        <p>{{table.desc}}</p>      
+                        <p slot="title" :title="table.name">{{table.name}}</p>
+                        <p :title="table.desc">{{table.desc}}</p>      
                       </Card>
                     </Radio>
                   </RadioGroup>
@@ -253,10 +253,6 @@ export default {
 </script>
 
 <style scoped lang='less'>
-.vue-grid-layout {
-   height: 400px !important;
-   overflow:auto !important;
-}
 .griditem-title{
   height: 40px;
   line-height: 40px;

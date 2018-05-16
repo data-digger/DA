@@ -2,8 +2,8 @@
   <Col :xs="12" :sm="8" :md="8" :lg="4">
     <Card class='box-card' :id="'report'+reportbox.name">
       <div class='card-content'  @mouseenter="enter()">
-        <div style='height:30px'><img src="./../../assets/img/report.png"></div>
-        <div style='height:30px; text-overflow:ellipsis'>{{reportbox.alias}}</div>   
+        <div><img src="./../../assets/img/report.png"></div>
+        <p>{{reportbox.alias}}</p>   
       </div>
       <div :id='"report_shade"+reportbox.name' class='card-shade' @mouseleave="leave()">
         <img src="./../../assets/img/edit.png">

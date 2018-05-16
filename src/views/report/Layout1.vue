@@ -54,11 +54,6 @@ export default {
 }
 </script>
 <style scoped>
-.vue-grid-layout {
-   height: 480px !important;
-   margin-bottom: 10px;
-   overflow: auto;
-}
 .griditem-title{
  background-color:lightgray;
 }

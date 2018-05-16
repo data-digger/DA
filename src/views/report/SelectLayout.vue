@@ -1,5 +1,5 @@
 <template>
-  <RadioGroup v-model="layoutSelected" :on-change ='layoutselected()'>
+  <RadioGroup id='selectLayout' v-model="layoutSelected" :on-change ='layoutselected()'>
      <Radio label="布局1">
         <Card style="margin-bottom:10px;width:200px;height:200px">
           <img class='layoutImg' src="./../../assets/img/default_layout_1.png">
@@ -40,10 +40,8 @@
 </script>
 
 <style scoped>
-.vue-grid-layout {
-   height: 100px !important;
-   margin-bottom: 10px;
-   overflow: auto;
+#selectLayout{
+  margin:20px;
 }
 .layoutImg{
   width: 100%;

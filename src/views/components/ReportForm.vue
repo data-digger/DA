@@ -1,6 +1,6 @@
 <template> 
     <div>
-      <grid-layout :layout="report.defineJSON.content.portlets":col-num="12":row-height="30":is-draggable="false":is-resizable="false":vertical-compact="true":use-css-transforms="true">
+      <grid-layout :layout="report.defineJSON.content.portlets" :col-num="12" :row-height="30" :is-draggable="false" :is-resizable="false" :vertical-compact="true" :use-css-transforms="true">
 
 
           <!-- 过滤器 -->

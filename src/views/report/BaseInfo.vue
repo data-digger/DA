@@ -44,9 +44,7 @@ import {mapGetters} from 'vuex'
 </script>
 
 <style scoped>
-.vue-grid-layout {
-   height: 200px !important;
-   margin-bottom: 10px;
-   overflow: auto;
+#createReport{
+  margin: 20px 40px auto 10px;
 }
 </style>

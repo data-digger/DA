@@ -3,15 +3,30 @@ html,body{
     height: 100%;
     background: #f0f0f0;
     overflow: hidden;
+} 
+.ivu-card-body p{
+  width:150px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
-
-/* sql编辑器 */
+.box-card .card-content div{
+   height:30px;
+}
+.box-card .card-content p{
+  width:150px;
+  white-space:nowrap; 
+  text-overflow:ellipsis; 
+  -o-text-overflow:ellipsis; 
+  overflow: hidden; 
+}
+/* 响应式*/
     @media (max-width: 1920px){
       .CodeMirror{
         height: 700px !important;
         border-radius:4px;
       }
-      #createQuery .ivu-carousel{
+      .ivu-carousel{
         height: 815px;
         overflow-y: auto;
         -webkit-user-select: text;/*解决无法选中的问题*/ 
@@ -23,14 +38,18 @@ html,body{
         margin: 10px;
         height:315px;
         border:0 !important;
-      }       
+      }  
+      .vue-grid-layout {
+          height: 750px !important;
+          overflow-y: auto;
+      }     
     }
     @media (max-width: 1680px) {
       .CodeMirror{
         height: 700px !important;
         border-radius:4px;
       }
-      #createQuery .ivu-carousel{
+      .ivu-carousel{
         height: 800px;
         overflow-y: auto;
         -webkit-user-select: text;/*解决无法选中的问题*/ 
@@ -43,13 +62,17 @@ html,body{
         height:315px;
         border:0 !important;
       } 
+      .vue-grid-layout {
+          height: 735px !important;
+          overflow-y: auto;
+      }  
     }
     @media (max-width: 1440px) {
       .CodeMirror{
         height: 600px !important;
         border-radius:4px;
       }
-      #createQuery .ivu-carousel{
+      .ivu-carousel{
         height: 650px;
         overflow-y: auto;
         -webkit-user-select: text;/*解决无法选中的问题*/ 
@@ -62,6 +85,10 @@ html,body{
         height:266px;
         border:0 !important;
       } 
+      .vue-grid-layout {
+          height: 585px !important;
+          overflow-y: auto;
+      }
     }
 
     @media (max-width: 1366px) {
@@ -69,7 +96,7 @@ html,body{
         height: 500px !important;
         border-radius:4px;
       }
-      #createQuery .ivu-carousel{
+      .ivu-carousel{
         height: 550px;
         overflow-y: auto;
         -webkit-user-select: text;/*解决无法选中的问题*/ 
@@ -82,13 +109,17 @@ html,body{
         height:216px;
         border:0 !important;
       } 
+      .vue-grid-layout {
+          height: 485px !important;
+          overflow-y: auto;
+      }
     }  
     @media (max-width: 1280px) {
       .CodeMirror{
         height: 650px !important;
         border-radius:4px;
       }
-      #createQuery .ivu-carousel{
+      .ivu-carousel{
         height: 750px;
         overflow-y: auto;
         -webkit-user-select: text;/*解决无法选中的问题*/ 
@@ -101,13 +132,17 @@ html,body{
         height:291px;
         border:0 !important;
       } 
+      .vue-grid-layout {
+          height: 685px !important;
+          overflow-y: auto;
+      }
     } 
     @media (max-width: 1024px) {
       .CodeMirror{
         height: 500px !important;
         border-radius:4px;
       }
-      #createQuery .ivu-carousel{
+      .ivu-carousel{
         height: 550px;
         overflow-y: auto;
         -webkit-user-select: text;/*解决无法选中的问题*/ 
@@ -120,6 +155,10 @@ html,body{
         height:216px;
         border:0 !important;
       } 
+      .vue-grid-layout {
+          height: 585px !important;
+          overflow-y: auto;
+      }
     } 
 
 .CodeMirror-hscrollbar{

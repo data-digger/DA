@@ -2,8 +2,8 @@
   <Col :xs="12" :sm="8" :md="8" :lg="4">
     <Card class='box-card' :id="'param'+parambox.name">
       <div class='card-content'  @mouseenter="enter()"> 
-        <div style='height:30px'><img src="./../../assets/img/parameter.png"></div>
-        <div style='height:30px; text-overflow:ellipsis'>{{parambox.alias}}</div>          
+        <div><img src="./../../assets/img/parameter.png"></div>
+        <div>{{parambox.alias}}</div>          
       </div>
       <div :id='"param_shade"+parambox.name' class='card-shade' @mouseleave="leave()">
         <img src="./../../assets/img/edit.png" @click='edit()'>

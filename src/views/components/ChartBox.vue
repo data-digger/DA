@@ -2,8 +2,8 @@
   <Col :xs="12" :sm="8" :md="8" :lg="4">
     <Card class='box-card' :id="'chart'+chartbox.name">
       <div class='card-content'  @mouseenter="enter()">
-        <div style='height:30px'><img src="./../../assets/img/chart.png"></div>
-        <div style='height:30px ; text-overflow:ellipsis'>{{chartbox.alias}}</div>   
+        <div><img src="./../../assets/img/chart.png"></div>
+        <p>{{chartbox.alias}}</p>   
       </div>
       <div :id='"chart_shade"+chartbox.name' class='card-shade' @mouseleave="leave()">
         <img src="./../../assets/img/edit.png" @click='edit()'>

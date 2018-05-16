@@ -2,8 +2,8 @@
   <Col :xs="12" :sm="8" :md="8" :lg="4" id='datasourceBox'>
     <Card class='box-card' :id="'datasource'+datasource.name">
       <div class='card-content'  @mouseenter="enter()">
-        <div style='height:30px'><img src="./../../assets/img/datasource.png"></div>
-        <div style='height:30px;text-overflow:ellipsis;'>{{datasource.alias}}</div>  
+        <div><img src="./../../assets/img/datasource.png"></div>
+        <div>{{datasource.alias}}</div>  
       </div>
       <div :id='"datasource_shade"+datasource.name' class='card-shade' @mouseleave="leave()">
         <img src="./../../assets/img/edit.png" @click='edit()'>

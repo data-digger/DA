@@ -2,8 +2,8 @@
   <Col :xs="12" :sm="8" :md="8" :lg="4">
     <Card class='box-card' :id="'query'+querybox.name">
       <div class='card-content'  @mouseenter="enter()"> 
-        <div style='height:30px'><img src="./../../assets/img/search.png"></div>
-        <div style='height:30px;'>{{querybox.alias}}</div> 
+        <div><img src="./../../assets/img/search.png"></div>
+        <p>{{querybox.alias}}</p> 
       </div>
       <div :id='"query_shade"+querybox.name' class='card-shade' @mouseleave="leave()">
         <img src="./../../assets/img/edit.png" @click='edit()'>
