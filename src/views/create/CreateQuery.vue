@@ -342,25 +342,7 @@ export default {
 }
 .cd_button_pre{
   margin-right: 15px;
-}
-#createQuery .ivu-carousel{
-  height: 560px;
-  overflow-y: auto;
-  -webkit-user-select: text;/*解决无法选中的问题*/ 
-  -moz-user-select: text;
-  -ms-user-select: text;
-  user-select: text;
 }  
-/*@media only screen and (min-width: 1600px) and (max-width: 1681px){
-  #createQuery .ivu-carousel{
-    height: 700px;
-  }  
-}
-@media only screen and (min-width: 1681px) and (max-width: 1920px){
-  #createQuery .ivu-carousel{
-    height: 750px;
-  }  
-}*/
 .preview_img{
   position: absolute;
   z-index: 100;

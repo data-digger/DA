@@ -107,26 +107,7 @@ import vbar from 'v-bar'
     left: 0;
     opacity: 0;
     z-index: -10;
-  }
-  .card_field_tree{
-    margin: 10px;
-    height:220px;
-    border:0 !important;
-  }   
-/*  @media only screen and (min-width: 1681px) and (max-width: 1920px){
-    .card_field_tree{
-      margin: 10px;
-      height:292.5px;
-      border:0 !important;
-    } 
-  }
-  @media only screen and (min-width: 1600px) and (max-width: 1681px){
-    .card_field_tree{
-      margin: 10px;
-      height:268.5px;
-      border:0 !important;
-    } 
-  }*/
+  }  
   .field_tree_title{
     height:35px;
     padding-left: 5px;

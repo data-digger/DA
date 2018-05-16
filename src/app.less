@@ -6,30 +6,122 @@ html,body{
 }
 
 /* sql编辑器 */
-.CodeMirror{
-  height: 510px !important;
-  border-radius:4px;
-}
-@media only screen and (min-width: 1439px) and (max-width: 1659px){
-  .CodeMirror{
-    height: 650px !important;
-  }
-}
-@media only screen and (min-width: 1659px) and (max-width: 1679px){
-  .CodeMirror{
-    height: 602px !important;
-  }
-}
-@media only screen and (min-width: 1679px) and (max-width: 1919px){
-  .CodeMirror{
-    height: 602px !important;
-  }
-}
-@media only screen and (min-width: 1910px){
-  .CodeMirror{
-    height: 580px !important;
-  }
-}
+    @media (max-width: 1920px){
+      .CodeMirror{
+        height: 700px !important;
+        border-radius:4px;
+      }
+      #createQuery .ivu-carousel{
+        height: 815px;
+        overflow-y: auto;
+        -webkit-user-select: text;/*解决无法选中的问题*/ 
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
+      .card_field_tree{
+        margin: 10px;
+        height:315px;
+        border:0 !important;
+      }       
+    }
+    @media (max-width: 1680px) {
+      .CodeMirror{
+        height: 700px !important;
+        border-radius:4px;
+      }
+      #createQuery .ivu-carousel{
+        height: 800px;
+        overflow-y: auto;
+        -webkit-user-select: text;/*解决无法选中的问题*/ 
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
+      .card_field_tree{
+        margin: 10px;
+        height:315px;
+        border:0 !important;
+      } 
+    }
+    @media (max-width: 1440px) {
+      .CodeMirror{
+        height: 600px !important;
+        border-radius:4px;
+      }
+      #createQuery .ivu-carousel{
+        height: 650px;
+        overflow-y: auto;
+        -webkit-user-select: text;/*解决无法选中的问题*/ 
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
+      .card_field_tree{
+        margin: 10px;
+        height:266px;
+        border:0 !important;
+      } 
+    }
+
+    @media (max-width: 1366px) {
+      .CodeMirror{
+        height: 500px !important;
+        border-radius:4px;
+      }
+      #createQuery .ivu-carousel{
+        height: 550px;
+        overflow-y: auto;
+        -webkit-user-select: text;/*解决无法选中的问题*/ 
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
+      .card_field_tree{
+        margin: 10px;
+        height:216px;
+        border:0 !important;
+      } 
+    }  
+    @media (max-width: 1280px) {
+      .CodeMirror{
+        height: 650px !important;
+        border-radius:4px;
+      }
+      #createQuery .ivu-carousel{
+        height: 750px;
+        overflow-y: auto;
+        -webkit-user-select: text;/*解决无法选中的问题*/ 
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
+      .card_field_tree{
+        margin: 10px;
+        height:291px;
+        border:0 !important;
+      } 
+    } 
+    @media (max-width: 1024px) {
+      .CodeMirror{
+        height: 500px !important;
+        border-radius:4px;
+      }
+      #createQuery .ivu-carousel{
+        height: 550px;
+        overflow-y: auto;
+        -webkit-user-select: text;/*解决无法选中的问题*/ 
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
+      .card_field_tree{
+        margin: 10px;
+        height:216px;
+        border:0 !important;
+      } 
+    } 
+
 .CodeMirror-hscrollbar{
   overflow-x:auto;
 }
@@ -93,10 +185,6 @@ html,body{
    color:#333333;
 }
 
-/* ivue select复写样式 */
-.ivu-select-visible .ivu-select-selection{
-
-}
 
 
 /* 资源页面下共用样式 */

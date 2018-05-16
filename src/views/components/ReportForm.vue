@@ -187,6 +187,9 @@ export default {
                 oStandByValue.label = response.data.content[i];
                 aStandByValue.push(oStandByValue);      
               }
+              if(globalFiltersArray[i].type == 'singleSelect'){
+                globalFiltersArray[i].value = globalFiltersArray[i].value[0];
+              }
               aGlobalFilters.push({
                 component:'list',
                 alias:globalFiltersArray[i].alias,

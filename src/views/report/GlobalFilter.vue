@@ -187,13 +187,11 @@ export default {
       let D = '-'+DATE.getDate() + ' ';
      
       if(filterType[0] == 'date'){
-        Vue.filter.value =null; 
+        Vue.filter.value =[]; 
       }
-/*      if(filterType[0] == 'date' && filterType[1] == 'DateByMonth'){
-        Vue.filter.value = Y+M; 
-      }*/
+
       if(filterType[0] == 'singleSelect' ||filterType[0] == 'input'){
-        Vue.filter.value = ''; 
+        Vue.filter.value = []; 
        
       }
       if(filterType[0] == 'multiSelect' ){
@@ -272,6 +270,10 @@ export default {
         }
       });
      Vue.filter.related = Vue.handleFilterRelated();
+     //当过滤器类型为单选的时候，应后端需要将默认值类型转换成数组形式
+     if(Vue.filter.type == 'singleSelect'){
+       Vue.filter.value = [Vue.filter.value];
+     }
      Vue._filter = $.extend(true,{},Vue.filter);
      Vue.globalFilters.push(Vue._filter);
      /*Vue.handleReset(globalFilter);*/

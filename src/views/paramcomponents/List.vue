@@ -27,9 +27,8 @@
           //传递所选值到其他组件
           sentDate(selection){
             let Vue = this;
-            if(selection == ''){
-                this.selectedValue = this.defaultValue;
-                selection = this.defaultValue;
+            if(Vue.componentType == 'singleSelect'){
+                selection = [selection];
             }
             Vue.$emit("sentDate",{index:Vue.index,value:selection});
           },

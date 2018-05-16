@@ -71,7 +71,7 @@
             </Modal>            
           </Col>
         </Row>
-        <Icon type="ios-plus" @click.native='addCaculateField()' class='add_listColumn_Icon'></Icon>
+        <Icon type="ios-plus" @click.native='initAddCaculateFieldPanel()' class='add_listColumn_Icon'></Icon>
         <Table 
           :columns="caculateColumns" 
           :data="caculateTableData" 
@@ -115,7 +115,7 @@
             </Col>
           </Form>
         </Row>
-        <Icon type="ios-plus" @click.native='addMetric()' class='add_listColumn_Icon'></Icon>
+        <Icon type="ios-plus" @click.native='initAddMetricPanel()' class='add_listColumn_Icon'></Icon>
         <Table 
           :columns="metricColumns" 
           :data='metricTableData'
@@ -181,7 +181,7 @@ export default {
   methods:{
 
     /*初始化计算字段expression编辑器*/
-    initCalculatedfieldSql(){
+    initCalculatedFieldEditor(){
       let Vue = this;
       var myTextarea = $("#c_expression")[0];
       Vue.caculatedSQLEditor = CodeMirror.fromTextArea(myTextarea,{
@@ -193,7 +193,7 @@ export default {
     },
 
     /*初始化度量expression编辑器*/
-    initMetricSql(){
+    initMetricEditor(){
       let Vue = this;
       var myTextarea = $("#m_expression")[0];
       Vue.metricSQLEditor = CodeMirror.fromTextArea(myTextarea,{
@@ -261,27 +261,27 @@ export default {
       };
     },
 
-    /*添加计算字段*/
-    addCaculateField(){
+    /*初始化添加计算字段控制板*/
+    initAddCaculateFieldPanel(){
       let Vue = this;      
       Vue.addCaculatedObj = Vue.initColumnModel(CATEGORY.CACULATE);
       Vue.showAddCaculatedField = true;
       Vue.$nextTick(function(){
         if(Vue.caculatedSQLEditor == null){
-          Vue.initCalculatedfieldSql();
+          Vue.initCalculatedFieldEditor();
         }
         Vue.caculatedSQLEditor.setValue(Vue.addCaculatedObj.expression);
       })       
     },
 
-    /*添加度量*/
-    addMetric(){
+    /*初始化添加度量控制板*/
+    initAddMetricPanel(){
       let Vue = this;      
       Vue.addMetricObj = Vue.initColumnModel(CATEGORY.METRIC);
       Vue.showAddMetric = true;
       Vue.$nextTick(function(){
         if(Vue.metricSQLEditor == null){
-          Vue.initMetricSql();
+          Vue.initMetricEditor();
         }
         Vue.metricSQLEditor.setValue(Vue.addMetricObj.expression);
       })       
@@ -324,7 +324,7 @@ export default {
 
 
     /*编辑计算字段表字段*/
-    editCaculatedField(params){
+    initEditCaculatedFieldPanel(params){
       let Vue =this;
       Vue.hideCaculatePanel();
       Vue.showAddCaculatedField = true;//展开编辑页面
@@ -343,18 +343,19 @@ export default {
       Vue.addCaculatedObj.expression = params.row.expression;
       Vue.$nextTick(function(){
         if (Vue.addCaculatedObj.category == CATEGORY.CACULATE) {
-          if (Vue.caculatedSQLEditor == null) {//准备好数据后，如果是计算字段，加载sql编辑器，并且是第一次加载
-            Vue.initCalculatedfieldSql();   
+          //准备好数据后，如果是第一次打开计算字段的面板，就加载一次编辑计算字段sql编辑器，并设置好初始值
+          if (Vue.caculatedSQLEditor == null) {
+            Vue.initCalculatedFieldEditor();   
           }   
           Vue.caculatedSQLEditor.setValue(Vue.addCaculatedObj.expression);
         }
       }) 
-      Vue.selectedCaculatedIndex = params.index;
+      Vue.selectedCaculatedIndex = params.index;//标识我在计算字段表格中所点击的行号
     },
 
 
     /*编辑度量表字段*/
-    editMetric(params){
+    initEditMetricPanel(params){
       let Vue =this;
       Vue.hideMetricPanel();
       Vue.showAddMetric = true;//展开编辑页面
@@ -366,15 +367,14 @@ export default {
       Vue.addMetricObj.category = params.row.category;
       Vue.addMetricObj.expression = params.row.expression;
       Vue.$nextTick(function(){
-        //表示原始字段中的度量（根据expression是否为空来判断）
         if (Vue.addMetricObj.category == CATEGORY.METRIC && Vue.addMetricObj.expression != null){
-          if (Vue.metricSQLEditor == null){
-             Vue.initMetricSql();
+          if (Vue.metricSQLEditor == null){//准备好数据后，如果是第一次打开度量的面板，就加载一次编写聚合函数sql编辑器，并设置好初始值
+             Vue.initMetricEditor();
           }
           Vue.metricSQLEditor.setValue(Vue.addMetricObj.expression);      
         }
       }) 
-      Vue.selectedMetricIndex = params.index;
+      Vue.selectedMetricIndex = params.index;//标识我在度量表格中所点击的行号
     },
 
     /*点击更新计算字段*/
@@ -480,7 +480,7 @@ export default {
             },
             nativeOn:{
               'click':(event)=>{
-                Vue.editCaculatedField(params);
+                Vue.initEditCaculatedFieldPanel(params);
               }
             }
           })
@@ -594,7 +594,7 @@ export default {
             },
             nativeOn:{
               'click':(event)=>{
-                Vue.editMetric(params);
+                Vue.initEditMetricPanel(params);
               }
             }
           })
@@ -741,21 +741,5 @@ export default {
   width: 25px;
   height: 25px;
   margin-bottom: 2px;
-}
-.wrapper {
-  height: 520px;
-}
-.demo-spin-icon-load{
-  animation: ani-demo-spin 1s linear infinite;
-}
-@keyframes ani-demo-spin {
-    from { transform: rotate(0deg);}
-    50%  { transform: rotate(180deg);}
-    to   { transform: rotate(360deg);}
-}
-.demo-spin-col{
-    height: 100px;
-    position: relative;
-    border: 1px solid #eee;
 }
 </style>
