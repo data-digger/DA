@@ -98,9 +98,6 @@ import vbar from 'v-bar'
   .sqlBox{
     padding: 0 0 10px 10px;
   }
-  .wrapper {
-    height: 140px;
-  }
   #input {
     position: absolute;
     top: 0;
