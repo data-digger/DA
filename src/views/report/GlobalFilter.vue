@@ -38,7 +38,7 @@
                   v-model="filter.value" 
                   v-if='filter.type == "singleSelect" || filter.type == "multiSelect"'
                   @click.native='initStandByValue'>
-                  <Option v-for="(standByValue,index) in standByValues" 
+                  <Option v-for="(standByValue,index) in filter.standByValues" 
                     :value="standByValue.value" 
                     :key="index">{{ standByValue.label }}
                   </Option>
@@ -77,18 +77,14 @@ export default {
   data () {
     return {
       ruleValidate:{
-        name: [
-          { required: true, message: '名称不能为空'}
-        ],
-        alias: [
-          { required: true, message: '别名不能为空'}
-        ]
+
       },
       filter:{//过滤器结构
         name:null,
         alias:null,
         type:null,
         value:[],
+        standByValues:[],
         related:[]
       },
       test:[],
@@ -142,7 +138,6 @@ export default {
             })
           }
       }],
-      standByValues: [], 
     }
   },
   methods:{
@@ -160,7 +155,7 @@ export default {
             oStandByValue.label = response.data.content[i];
             aStandByValue.push(oStandByValue);      
           }
-          Vue.standByValues  = aStandByValue;
+          Vue.filter.standByValues  = aStandByValue;
       });  
      },
 
@@ -219,10 +214,10 @@ export default {
     //选择过滤器类型
     selectFilterType(filterType){
       let Vue = this;
-      Vue.setFilterTypeValue(filterType);
-      Vue.initFilterValue(filterType);
+      Vue.setFilterTypeValue(filterType);//过滤器类型值设置（由于是层级选择框，所以绑定的type需进一步处理）
+      Vue.initFilterValue(filterType);//初始化过滤器默认值
       if(Vue.$refs.multiSelectComp){
-        Vue.$refs.multiSelectComp.selectedMultiple = [];
+        Vue.$refs.multiSelectComp.selectedMultiple = [];//多选框切换到单选框时，由于Vue的渲染机制，此处强制性清空默认值select选项框
       }    
     },
     
@@ -274,9 +269,9 @@ export default {
      if(Vue.filter.type == 'singleSelect'){
        Vue.filter.value = [Vue.filter.value];
      }
+     //为了不改变原始filter，存储对象使用深拷贝后的filter
      Vue._filter = $.extend(true,{},Vue.filter);
      Vue.globalFilters.push(Vue._filter);
-     /*Vue.handleReset(globalFilter);*/
     },
 
     //存储全局过滤器数据
@@ -284,19 +279,8 @@ export default {
       let Vue = this;
       this.$store.commit("saveReportGlobalFilter",Vue.globalFilters);
     },
-
-    //删除关联过滤器tag
-    deleteRelatedFilter(event, name){
-      let Vue = this;
-      for(let i in Vue.relatedFilterSelectedList){
-        if(Vue.relatedFilterSelectedList[i].chartName== name){
-          Vue.relatedFilterSelectedList.splice(i,1);
-          break;   
-        }
-      }
-    },
     
-    //删除全局过滤器列表选项
+    //删除全局过滤器列表选项(前端删除)
     deleteGlobalFilter(event, params){
       let Vue = this;
       for(let i in Vue.globalFilterTabledata){

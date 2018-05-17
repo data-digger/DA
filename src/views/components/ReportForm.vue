@@ -7,7 +7,7 @@
           <Card style='margin:10px' >
             <p slot="title">过滤条件</p>
             <Row>
-              <Col span='12' v-for='(cmp,index) in globalFilters' :key='"filter"+index' >
+              <Col span='12' v-for='(cmp,index) in globalFilters' :key='"filter"+index' style='margin-bottom: 5px'>
                 <Col span='3' style='line-height: 30px'>{{cmp.alias}}</Col>
                 <Col span='10'>
                   <component 
@@ -21,7 +21,7 @@
                     :randomName ="cmp.randomName"
                   ></component>                
                 </Col>
-              </Col span='12'> 
+              </Col>
             </Row>
           </Card>          
   
@@ -158,7 +158,6 @@ export default {
     /*初始化过滤器组件*/
     initFilter(defineJSON){
       let Vue = this;
-      Vue.test = false;
       Vue.globalFilters = [];
       let reportDefineObject = JSON.parse(defineJSON);
       let globalFiltersArray = reportDefineObject.header.globalFilter;
@@ -178,27 +177,17 @@ export default {
         }
         //当过滤器为单选框或者多选框
         if(globalFiltersArray[i].type == 'singleSelect' || globalFiltersArray[i].type == 'multiSelect'){
-          let aStandByValue = [];
-          Vue.AxiosPost("getReportRelatedStandBy",{"relatedJSON":JSON.stringify(globalFiltersArray[i].related)},
-            function(response){
-              for(let i in response.data.content){
-                let oStandByValue = {};
-                oStandByValue.value = response.data.content[i];
-                oStandByValue.label = response.data.content[i];
-                aStandByValue.push(oStandByValue);      
-              }
-              if(globalFiltersArray[i].type == 'singleSelect'){
-                globalFiltersArray[i].value = globalFiltersArray[i].value[0];
-              }
-              aGlobalFilters.push({
-                component:'list',
-                alias:globalFiltersArray[i].alias,
-                standByValue:aStandByValue,
-                defaultValue:globalFiltersArray[i].value,
-                type:globalFiltersArray[i].type,
-                randomName:randomName
-              });
-            });            
+          if(globalFiltersArray[i].type == 'singleSelect'){
+            globalFiltersArray[i].value = globalFiltersArray[i].value[0];
+          }
+          aGlobalFilters.push({
+            component:'list',
+            alias:globalFiltersArray[i].alias,
+            standByValue:globalFiltersArray[i].standByValues,
+            defaultValue:globalFiltersArray[i].value,
+            type:globalFiltersArray[i].type,
+            randomName:randomName
+          });                 
           
         }
         //当过滤器为输入框
