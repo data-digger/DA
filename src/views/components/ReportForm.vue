@@ -24,8 +24,6 @@
               </Col>
             </Row>
           </Card>          
-  
-
 
           <grid-item v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h":i="item.i" :key='item.i'>
             <div class='griditem-title'>{{item.tabs[0].title}}</div>
