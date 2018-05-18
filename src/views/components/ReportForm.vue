@@ -39,7 +39,7 @@
             <component v-if='item.component != "Table"' 
                        :ref="'chartContainer'+item.i"
                        :is="item.component" 
-                       :option="'COption'+item.i"
+                       :option="option[itemIndex]"
                        :chartId='report.id+item.i'
                        :styles='chartStyles'>
             </component>
@@ -88,7 +88,8 @@ export default {
       globalFilters:[],
       tableContent:{'0':null,'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null,'9':null},//表格组件的内容
       paramSelected:null,//选择的参数值
-      report_replace:null//用于更新数据的report替身
+      report_replace:null,//用于更新数据的report替身
+      option:[]
     }
   }, 
   methods:{
@@ -247,12 +248,12 @@ export default {
     drawChart (chartData) {
       let Vue = this;
       let data = chartData.data;
-      let currentCOption = "COption" + chartData.portletID ;
-      Vue[currentCOption]= JSON.parse(chartData.defineJSON).option;
+      let Coption = JSON.parse(chartData.defineJSON).option;
+      Vue.option.push(Coption);
       var type = chartData.type;
-      chartUtil.analysis(Vue[currentCOption],type,data);
+      chartUtil.analysis(Coption,type,data);
       Vue.$nextTick(function(){
-        Vue.$refs['chartContainer'+chartData.portletID][0].show(Vue[currentCOption]);
+        Vue.$refs['chartContainer'+chartData.portletID][0].show(Coption);
       })     
     },   
 
