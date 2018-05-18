@@ -207,6 +207,7 @@ export default {
     /*绘制报表*/
     drawReport(response){
       let Vue = this;
+      Vue.option = [];
       var chartDataArray = response.chartData;
       var tableDataArray = response.tableData;
       if(chartDataArray.length != 0){//chart图形
