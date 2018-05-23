@@ -20,7 +20,7 @@
                         :countSize="countSize"
                         :countWeight="countWeight"
                     >
-                        <p class="infor-intro-text" :style="{color: introColor, fontSize: introSize, fontWeight: introWeight}" slot="intro">{{ introText }}</p>
+                        <p class="infor-intro-text" :style="{color: introColor, fontSize: introSize, fontWeight: introWeight, textAlign:'center'}" slot="intro">{{ introText }}</p>
                     </count-up>
                 </Row>
             </Col>
