@@ -5,7 +5,7 @@
           <div class="demo-carousel"><SelectLayout></SelectLayout></div>
         </CarouselItem>
         <CarouselItem>
-          <div class="demo-carousel"><component :is="currentLayout"></component></div>
+          <div class="demo-carousel"><component :is="currentLayout" ref='currentLayout'></component></div>
         </CarouselItem>
         <CarouselItem>
           <div class="demo-carousel"><globalFilter ref='globalFilter'></globalFilter></div>
@@ -14,7 +14,7 @@
           <div class="demo-carousel"><reportForm ref='reportForm'></reportForm></div>
         </CarouselItem>
         <CarouselItem>
-          <div class="demo-carousel"><BaseInfo ref='initBaseInfo'></BaseInfo></div>
+          <div class="demo-carousel"><BaseInfo ref='baseInfo'></BaseInfo></div>
         </CarouselItem>
     </Carousel>
      <Row  class='button'>
@@ -99,7 +99,7 @@ export default {
       /*新建报表*/
       createReport(){
        let Vue = this;
-       Vue.$refs.initBaseInfo.initBaseInfo();
+       Vue.$refs.baseInfo.initBaseInfo();
        var ClonedReport = JSON.parse(JSON.stringify(Vue.report));
        var defineJSON = JSON.stringify(ClonedReport.defineJSON);
        ClonedReport.defineJSON = defineJSON;

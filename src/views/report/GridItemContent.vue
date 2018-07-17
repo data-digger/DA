@@ -108,10 +108,7 @@ export default {
         if(Vue.currentTab == "table"){
           chart = Vue.tableList[Vue.tableSelected];
         }
-        Vue.chartID = chart.id;
-        if(Vue.chartView != null){
-          Vue.chartView.dispose();
-        }       
+        Vue.chartID = chart.id;      
         Vue.AxiosPost("getChartData",{'chartId':chart.id},
           function(response){
             if(chart.type){
@@ -125,7 +122,9 @@ export default {
               }
             }else{
                             
-            }        
+            }     
+            
+            
             //存储tabs
             var tabs = [{"tabID":Vue.portletID,"title":Vue.portletTitle,"objid":chart.id,"objtype":chart.type?chart.type:'Table'}];
             Vue.$store.commit("saveTabs",tabs); 
@@ -140,8 +139,8 @@ export default {
         let style = {};
         let $grid_item = $("#portlet"+Vue.portletID);
         let $grid_item_title = $grid_item.find(".griditem_title");
-        style.width = $grid_item.width()+"px";
-        style.height = ($grid_item.height()-$grid_item_title.height())*0.8+"px";
+        style.width = '100%';
+        style.height = '80%';
         Vue.chartStyles = style;
         let Coption = JSON.parse(chartData.defineJSON).option;
         Vue.option = Coption;
@@ -149,7 +148,17 @@ export default {
         chartUtil.analysis(Coption,type,data);
         Vue.$nextTick(function(){
           Vue.$refs['chartContainer'+Vue.portletID].show(Coption);
+          Vue.chartView =Vue.$refs['chartContainer'+Vue.portletID].getChartView();
         }) 
+      },
+      //
+      resized(){
+        let Vue = this;
+         EleResize.on(document.getElementById('portlet'+Vue.portletID), function(){
+          if(Vue.chartView){
+            Vue.chartView.resize();
+          }                
+        });
       },
       deletePortlet(portletID){
         let Vue = this;
@@ -166,6 +175,8 @@ export default {
       }
     },
     mounted(){
+      let Vue = this;
+      Vue.resized();   
     }
 }
 </script>

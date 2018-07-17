@@ -27,6 +27,11 @@ export default {
                 Vue.chartView.dispose();
                 Vue.chartView = null;
             }
+        },
+        getChartView(){
+            let Vue =  this;
+            
+            return Vue.chartView;
         }
     },
     mounted(){

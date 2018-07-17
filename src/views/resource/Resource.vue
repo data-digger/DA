@@ -33,7 +33,7 @@
       </Col>
       <Row class='cardBox'>
         <QueryBox  v-for="(q,index) in queryList" :key='q.id':querybox='q' :index='index'></QueryBox>
-        <Creator :routerpath='createQuery' :id='creator_query_id'></Creator>
+        <Creator :routerpath='createQuery' :id='creator_query_id' abc='123'></Creator>
       </Row>
     </Row> 
 

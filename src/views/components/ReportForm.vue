@@ -252,8 +252,8 @@ export default {
       let style = {};
       let $grid_item = $("#grid_item"+chartData.portletID);
       let $grid_item_title = $grid_item.find(".griditem_title");
-      style.width = $grid_item.width()+"px";
-      style.height = ($grid_item.height()-$grid_item_title.height())*0.8+"px";
+      style.width = '100%';
+      style.height = '80%';
       Vue.chartStyles.push(style);
       let Coption = JSON.parse(chartData.defineJSON).option;
       Vue.option.push(Coption);
