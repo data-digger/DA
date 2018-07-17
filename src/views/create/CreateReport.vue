@@ -81,7 +81,6 @@ export default {
         if(Vue.step == 3){
           Vue.$refs.globalFilter.saveGlobalFilterData();//向store中存储全局过滤器
           Vue.$refs.reportForm.initChartComponent();//初始化图形组件
-          Vue.$refs.reportForm.initReportData();//初始化预览报表
         }
         if(Vue.step == 4){    
           Vue.finished = true;
@@ -144,7 +143,9 @@ export default {
 <style scope>
   .button {
     text-align: center;
-    margin-top: 0;
+    position: fixed;
+    bottom: 0px;
+    left: 50%;
   }
 
 </style>
