@@ -4,13 +4,17 @@
         <CarouselItem>
           <div class="demo-carousel"><SelectLayout></SelectLayout></div>
         </CarouselItem>
-        <CarouselItem>
+        <CarouselItem  style='background-color: #071432;'>
+          <div class="header">
+            <div class='left_logo'></div>
+            <div class='right_logo'></div>
+          </div>
           <div class="demo-carousel"><component :is="currentLayout" ref='currentLayout'></component></div>
         </CarouselItem>
         <CarouselItem>
           <div class="demo-carousel"><globalFilter ref='globalFilter'></globalFilter></div>
         </CarouselItem>
-        <CarouselItem>
+        <CarouselItem style='background-color: #071432;'>
           <div class="demo-carousel"><reportForm ref='reportForm'></reportForm></div>
         </CarouselItem>
         <CarouselItem>
@@ -141,11 +145,33 @@ export default {
 }
 </script>
 <style scope>
-  .button {
-    text-align: center;
-    position: fixed;
-    bottom: 0px;
-    left: 50%;
-  }
+.header{
+  width: 100%;
+  height: 90px;
+  margin-bottom: 25px;
+  background: url('./../../assets/img/report_header.png');
+}
+.header .left_logo,
+.header .right_logo{
+  width:400px;
+}
+.left_logo{
+  float: left;
+  height: 50px;
+  margin: 22px;
+  background: url('./../../assets/img/left_logo.png') no-repeat;
+}
+.right_logo{
+  float: right;
+  height: 90px;
+  margin:5px 10px;
+  background: url('./../../assets/img/right_logo.png') no-repeat;
+}
+.button {
+  text-align: center;
+  position: fixed;
+  bottom: 0px;
+  left: 50%;
+}
 
 </style>

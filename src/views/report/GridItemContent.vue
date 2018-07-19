@@ -1,50 +1,67 @@
 <template>
-    <div :id="'portlet'+portletID" class="text">
-        <div class="no-drag">
-        <div class='griditem_title'>
-          <div @click='deletePortlet(portletID)'><Icon class='delete-portlet' type="android-close" v-if='isShowExtraIcon()'></Icon></div>
-          <div v-if='flag' style='display:inline-block'><span @click='edit()'>{{portletTitle}}</span></div>
-          <input type="text" v-else v-model='portletTitle'@change='input()'>
-          <div style='float:right;margin-right:5px;cursor:pointer' @click = "selectReportChart()"><Icon type="plus-round"></Icon></div>
-        </div> 
-        <component v-if='itemComponent != "Table"' 
-                    :ref="'chartContainer'+portletID"
-                    :is="itemComponent" 
-                    :option="option"
-                    :chartId='"report"+portletID'
-                    :styles='chartStyles'>
-        </component>
-        <Modal
-          v-model="showSelectChartModal"
-          title="选择图表"
-          width ="1200px"
-          @on-ok="drawReportChart">
-            <Tabs type="card" v-model='currentTab'>
-                <TabPane label="选择图形" name='chart'>
-                  <RadioGroup v-model="chartSelected" type='button'>
-                    <Radio v-for='(chart,chartIndex) in chartList' :key='chart.id' :label='chartIndex'>
-                      <Card style="width:250px;margin:10px;display:inline-block;" >
-                          <p slot="title" :title="chart.name">{{chart.name}}</p>
-                          <p :title="chart.desc">{{chart.desc}}</p>      
-                      </Card> 
-                    </Radio>
-                  </RadioGroup>
-                </TabPane>
-                <TabPane label="选择表格" name='table'>
-                  <RadioGroup v-model="tableSelected" type='button'>
-                    <Radio v-for='(table,tableIndex) in tableList' :key='table.id' :label='tableIndex'>
-                      <Card style="width:250px;margin:10px;display:inline-block;">
-                        <p slot="title" :title="table.name">{{table.name}}</p>
-                        <p :title="table.desc">{{table.desc}}</p>      
-                      </Card>
-                    </Radio>
-                  </RadioGroup>
-                </TabPane>
-            </Tabs>                   
-        </Modal> 
-      </div>
-      <div class="vue-draggable-handle" v-if='isShowExtraIcon()'></div> 
-    </div>
+  <div :id="'portlet'+portletID" class="text">
+    <div class="no-drag">
+      <!-- title区 -->
+      <div class='griditem_title' :style="{background:'url('+imgSelecteToTitle+') no-repeat'}">
+        <div @click='deletePortlet(portletID)'><Icon class='delete-portlet' type="android-close" v-if='isShowExtraIcon()'></Icon></div>
+        <div v-if='flag' style='display:inline-block'><span @click='edit()'>{{portletTitle}}</span></div>
+        <input type="text" v-else v-model='portletTitle' @change='input()'>
+        <div style='float:right;margin-right:5px;cursor:pointer' @click = "selectReportChart()"><Icon type="plus-round"></Icon></div>
+      </div> 
+      <!-- echart图形组件 -->
+      <div :id="'chartBox'+portletID" class='chartBox' :style='chartStyles'>
+      <component v-if='itemComponent != "Table"' 
+                :ref="'chartContainer'+portletID"
+                :is="itemComponent" 
+                :option="option"
+                :chartId='"report"+portletID'
+                :styles='chartStyles'
+                >
+      </component></div>
+      <!-- 图形选择和背景图片选择 -->
+      <Modal
+        v-model="showSelectChartModal"
+        title="选择图表"
+        width ="1200px"
+        @on-ok="drawReportChart">
+          <!-- 背景图 -->
+          <!-- @on-change='renderTitleBgr' -->
+          <RadioGroup v-model="imgSelecteToTitle" class='imgSelecteToTitle'>选择title背景图：
+              <Radio :label="require('./../../assets/img/gridItemTitle1.png')"><img src="./../../assets/img/gridItemTitle1.png" alt=""></Radio>
+              <Radio :label="require('./../../assets/img/gridItemTitle2.png')"><img src="./../../assets/img/gridItemTitle2.png" alt=""></Radio>
+          </RadioGroup>
+          <RadioGroup v-model="imgSelecteTochartBox" class='imgSelecteTochartBox'>选择容器背景图：
+              <Radio :label="require('./../../assets/img/chartBox1.png')"><img src="./../../assets/img/chartBox1.png" alt=""></Radio>
+              <Radio :label="require('./../../assets/img/chartBox2.png')"><img src="./../../assets/img/chartBox2.png" alt=""></Radio>
+              <Radio label="">无背景</Radio>
+          </RadioGroup>  
+          <!-- 图形 -->
+          <Tabs type="card" v-model='currentTab'>
+              <TabPane label="选择图形" name='chart'>
+                <RadioGroup v-model="chartSelected" type='button'>
+                  <Radio v-for='(chart,chartIndex) in chartList' :key='chart.id' :label='chartIndex'>
+                    <Card style="width:250px;margin:10px;display:inline-block;" >
+                        <p slot="title" :title="chart.name">{{chart.name}}</p>
+                        <p :title="chart.desc">{{chart.desc}}</p>      
+                    </Card> 
+                  </Radio>
+                </RadioGroup>
+              </TabPane>
+              <TabPane label="选择表格" name='table'>
+                <RadioGroup v-model="tableSelected" type='button'>
+                  <Radio v-for='(table,tableIndex) in tableList' :key='table.id' :label='tableIndex'>
+                    <Card style="width:250px;margin:10px;display:inline-block;">
+                      <p slot="title" :title="table.name">{{table.name}}</p>
+                      <p :title="table.desc">{{table.desc}}</p>      
+                    </Card>
+                  </Radio>
+                </RadioGroup>
+              </TabPane>
+          </Tabs>                   
+      </Modal> 
+  </div>
+  <div class="vue-draggable-handle" v-if='isShowExtraIcon()'></div> 
+  </div>
 </template>
 
 <script>
@@ -57,7 +74,6 @@ import {mapGetters} from 'vuex'
 export default {
     props:['portletID','hasExtraIcon'],
     components:{
-      // infoCard
       Chart,
       CountCard
     },
@@ -69,17 +85,19 @@ export default {
     },    
     data(){
       return {
-        chartView:null,
+        chartView:null,//chart图形视图，用作chart图形resize
         flag:true,
         portletTitle:"点击编辑title",
-        showSelectChartModal:false,
-        chartID:null,
-        currentTab:"chart",
-        chartSelected:0,
-        tableSelected:0,
-        itemComponent:"",//图形组件
-        option:'',
-        chartStyles:''
+        showSelectChartModal:false,//显示图形选择modal
+        imgSelecteToTitle:require("./../../assets/img/gridItemTitle1.png"),//选中title的背景图
+        imgSelecteTochartBox:"",//选中chart容器的背景图
+        chartID:null,//选中的chart图形id
+        currentTab:"chart",//modal中当前停留的的tab，默认chart
+        chartSelected:0,//选中的chart图形
+        tableSelected:0,//选中的table图形
+        itemComponent:"",//根据选择图形，渲染组件容器
+        option:'',//chart图形option
+        chartStyles:''//chart图形容器样式
       }
     },
     methods:{
@@ -96,6 +114,7 @@ export default {
       selectReportChart(){
         let Vue = this;
         Vue.showSelectChartModal = true;
+        Vue.getChartBoxStyle();
       },
 
       //绘制报表图形
@@ -136,12 +155,6 @@ export default {
       drawEChart (chartData) {
         let Vue = this;
         let data = chartData.data;
-        let style = {};
-        let $grid_item = $("#portlet"+Vue.portletID);
-        let $grid_item_title = $grid_item.find(".griditem_title");
-        style.width = '100%';
-        style.height = '80%';
-        Vue.chartStyles = style;
         let Coption = JSON.parse(chartData.defineJSON).option;
         Vue.option = Coption;
         var type = chartData.type;
@@ -149,8 +162,20 @@ export default {
         Vue.$nextTick(function(){
           Vue.$refs['chartContainer'+Vue.portletID].show(Coption);
           Vue.chartView =Vue.$refs['chartContainer'+Vue.portletID].getChartView();
+          $("#chartBox"+Vue.portletID).css('background','url('+Vue.imgSelecteTochartBox+') no-repeat');
         }) 
       },
+
+      getChartBoxStyle (){
+        let Vue = this;
+        let style = {};
+        let $grid_item = $("#portlet"+Vue.portletID);
+        let $grid_item_title = $grid_item.find(".griditem_title");
+        style.width = '100%';
+        style.height = ($grid_item.height()-$grid_item_title.height())/$grid_item.height()*100+"%";
+        Vue.chartStyles = style;
+      },
+
       //
       resized(){
         let Vue = this;
@@ -172,7 +197,7 @@ export default {
         let Vue = this;
         Vue.flag=true;
         Vue.$store.commit("savePortletTitle",{"portletTitle":Vue.portletTitle,"portletID":Vue.portletID}); 
-      }
+      },
     },
     mounted(){
       let Vue = this;
@@ -182,14 +207,16 @@ export default {
 </script>
 
 <style scoped lang='less'>
+.chartBox{
+  background-size:100% 100% !important; 
+}
 .griditem_title{
-  height: 40px;
-  line-height: 40px;
+  height: 45px;
+  line-height: 45px;
   text-align:left;
-  background-color: #f8f8f9;
-  border-bottom: 0.5px solid lightgray;
+  background-size:100% 100% !important; 
   padding-left: 11px;
-  color: black;
+  color:white;
   font-size: 14px;
 }
 .delete-portlet{
@@ -198,10 +225,13 @@ export default {
 }
 .ivu-radio-group-button .ivu-radio-wrapper{
   height:100% !important;
-}
-.infoCard{
-  width: 80%;
   margin: 10px;
+}
+.imgSelecteToTitle{
+  margin: 10px 0px 20px 10px;
+}
+.imgSelecteTochartBox{
+  margin: 0px 0px 50px 10px;
 }
 </style>
 

@@ -1,51 +1,49 @@
 <template> 
     <div>
-      <grid-layout :layout="report.defineJSON.content.portlets" :col-num="12" :row-height="30" :is-draggable="false" :is-resizable="false" :vertical-compact="true" :use-css-transforms="true">
-
-
-          <!-- 过滤器 -->
-          <Card style='margin:10px' >
-            <p slot="title">过滤条件</p>
-            <Row>
-              <Col span='12' v-for='(cmp,index) in globalFilters' :key='"filter"+index' style='margin-bottom: 5px'>
-                <Col span='3' style='line-height: 30px'>{{cmp.alias}}</Col>
-                <Col span='10'>
-                  <component 
-                    class='globalFilters'       
-                    :is="cmp.component"        
-                    :componentType='cmp.type'
-                    :defaultValue='cmp.defaultValue'
-                    :index='index'
-                    @sentDate = 'updateReport'
-                    :standByValue = "cmp.standByValue"
-                    :randomName ="cmp.randomName"
-                  ></component>                
-                </Col>
-              </Col>
-            </Row>
-          </Card>          
-
-          <grid-item :id="'grid_item'+item.i" v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key='item.i'>
-            <div class='griditem_title'>{{item.tabs[0].title}}</div>
-            <!-- 表格 -->
-            <component v-if='item.component == "Table"' 
-                       :tableContent='tableContent[item.i]'
-                       :is="item.component"
-                       :ifPage='true'>
-            </component>
-            <!-- Chart图 -->
-            <component v-if='item.component != "Table"' 
-                       :ref="'chartContainer'+item.i"
-                       :is="item.component" 
-                       :option="option[itemIndex]"
-                       :chartId='report.id+item.i'
-                       :styles='chartStyles[itemIndex]'>
-            </component>
-          </grid-item>    
-
-
-
-      </grid-layout>
+      <div class="header">
+        <div class='left_logo'></div>
+        <div class='right_logo'></div>
+    </div>    
+    <!-- 过滤器 -->
+    <Card style='margin:10px' >
+      <p slot="title">过滤条件</p>
+      <Row>
+        <Col span='12' v-for='(cmp,index) in globalFilters' :key='"filter"+index' style='margin-bottom: 5px'>
+          <Col span='3' style='line-height: 30px'>{{cmp.alias}}</Col>
+          <Col span='10'>
+            <component 
+              class='globalFilters'       
+              :is="cmp.component"        
+              :componentType='cmp.type'
+              :defaultValue='cmp.defaultValue'
+              :index='index'
+              @sentDate = 'updateReport'
+              :standByValue = "cmp.standByValue"
+              :randomName ="cmp.randomName"
+            ></component>                
+          </Col>
+        </Col>
+      </Row>
+    </Card>   
+    <grid-layout :layout="report.defineJSON.content.portlets" :col-num="12" :row-height="30" :is-draggable="false" :is-resizable="false" :vertical-compact="true" :use-css-transforms="true">
+        <grid-item :id="'grid_item'+item.i" v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key='item.i'>
+          <div class='griditem_title'>{{item.tabs[0].title}}</div>
+          <!-- 表格 -->
+          <component v-if='item.component == "Table"' 
+                      :tableContent='tableContent[item.i]'
+                      :is="item.component"
+                      :ifPage='true'>
+          </component>
+          <!-- Chart图 -->
+          <component v-if='item.component != "Table"' 
+                      :ref="'chartContainer'+item.i"
+                      :is="item.component" 
+                      :option="option[itemIndex]"
+                      :chartId='report.id+item.i'
+                      :styles='chartStyles[itemIndex]'>
+          </component>
+        </grid-item>    
+    </grid-layout>
     </div>    
 </template>
 <script>
@@ -275,13 +273,26 @@ export default {
 
 <style scoped lang='less'>
 .header{
-  width: 99%;
-  margin: 0px 10px;
-  height: 45px;
-  background-color: #f8f8f9;
-  border-radius: 4px;
-  border: 1px solid lightgray;
-  box-shadow: 3px 6px 3px -2px lightgrey;
+  width: 100%;
+  height: 90px;
+  margin-bottom: 25px;
+  background: url('./../../assets/img/report_header.png');
+}
+.header .left_logo,
+.header .right_logo{
+  width:400px;
+}
+.left_logo{
+  float: left;
+  height: 50px;
+  margin: 22px;
+  background: url('./../../assets/img/left_logo.png') no-repeat;
+}
+.right_logo{
+  float: right;
+  height: 90px;
+  margin:5px 10px;
+  background: url('./../../assets/img/right_logo.png') no-repeat;
 }
 .griditem_title{
   height: 40px;
@@ -291,10 +302,6 @@ export default {
   padding-left: 11px;
   color: black;
   font-size: 14px;
-}
-.infoCard{
-  width: 80%;
-  margin: 10px;
 }
 .grid-layout{
   background-color:#f0f0f0 !important;

@@ -45,8 +45,8 @@
 }
 
 .vue-grid-item:not(.vue-grid-placeholder) {
-    background: #fff;
-    border: 1px solid #efeff0;
+    background: #071432;
+    /* border: 1px solid #efeff0; */
 }
 
 .vue-grid-item.resizing {
@@ -58,8 +58,8 @@
 }
 .vue-grid-item{
     /*border: 0.5px solid lightgray !important;*/
-    border-radius: 3px;
-    box-shadow: 1px 2px 1px 2px lightgray;
+    /* border-radius: 3px; */
+    box-shadow: 1px 2px 1px 2px #071432;
     overflow-y: auto;
 }
 .vue-grid-item .text {
