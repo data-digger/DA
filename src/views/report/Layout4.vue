@@ -44,7 +44,7 @@ export default {
             var portlet ={ "portletID":""+this.index,
                            "name":"portleName",
                            "x":0,"y":0,"w":6,"h":4,"i":""+this.index,
-                           "tabs":[{"id":this.index,"title":"","objtype":"","objid":""}]
+                           "tabs":[{"id":this.index,"title":"",'titleBackgroundImg':"",'chartBoxBackgroundImg':"","objtype":"","objid":""}]
                          };
             this.report.defineJSON.content.portlets.push(portlet);
             this.$store.commit("addDefinePorlets",this.report.defineJSON);

@@ -5,7 +5,7 @@
         <div class='right_logo'></div>
     </div>    
     <!-- 过滤器 -->
-    <Card style='margin:10px' >
+    <!-- <Card style='margin:10px' >
       <p slot="title">过滤条件</p>
       <Row>
         <Col span='12' v-for='(cmp,index) in globalFilters' :key='"filter"+index' style='margin-bottom: 5px'>
@@ -24,24 +24,28 @@
           </Col>
         </Col>
       </Row>
-    </Card>   
+    </Card>    -->
     <grid-layout :layout="report.defineJSON.content.portlets" :col-num="12" :row-height="30" :is-draggable="false" :is-resizable="false" :vertical-compact="true" :use-css-transforms="true">
         <grid-item :id="'grid_item'+item.i" v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key='item.i'>
-          <div class='griditem_title'>{{item.tabs[0].title}}</div>
-          <!-- 表格 -->
-          <component v-if='item.component == "Table"' 
-                      :tableContent='tableContent[item.i]'
-                      :is="item.component"
-                      :ifPage='true'>
-          </component>
-          <!-- Chart图 -->
-          <component v-if='item.component != "Table"' 
-                      :ref="'chartContainer'+item.i"
-                      :is="item.component" 
-                      :option="option[itemIndex]"
-                      :chartId='report.id+item.i'
-                      :styles='chartStyles[itemIndex]'>
-          </component>
+          <div class='griditem_title' :style="{background:'url('+item.tabs[0].titleBackgroundImg+') no-repeat'}">{{item.tabs[0].title}}</div>
+           <div :id="'chartBox'+item.i" 
+                class='chartBox' 
+                :style='{width:chartBackgroundStyles[item.i].width,height:chartBackgroundStyles[item.i].height,background:"url("+item.tabs[0].chartBoxBackgroundImg+") no-repeat"}'>
+              <!-- 表格 -->
+              <component v-if='item.component == "Table"' 
+                          :tableContent='tableContent[item.i]'
+                          :is="item.component"
+                          :ifPage='true'>
+              </component>
+              <!-- Chart图 -->
+              <component v-if='item.component != "Table"' 
+                          :ref="'chartContainer'+item.i"
+                          :is="item.component" 
+                          :option="option[itemIndex]"
+                          :chartId='report.id+item.i'
+                          :styles='chartBackgroundStyles[itemIndex]'>
+              </component>
+          </div>
         </grid-item>    
     </grid-layout>
     </div>    
@@ -85,7 +89,7 @@ export default {
       paramSelected:null,//选择的参数值
       report_replace:null,//用于更新数据的report替身
       option:[],
-      chartStyles:[]
+      chartBackgroundStyles:[]
     }
   }, 
   methods:{
@@ -207,7 +211,7 @@ export default {
     drawReport(response){
       let Vue = this;
       Vue.option = [];
-      Vue.chartStyles = [];
+      Vue.chartBackgroundStyles = [];
       var chartDataArray = response.chartData;
       var tableDataArray = response.tableData;
       if(chartDataArray.length != 0){//chart图形
@@ -232,6 +236,33 @@ export default {
       }
     },
 
+  
+    //获取背景图片容器样式
+    getChartBackgroundStyle (chartData){
+      let Vue = this;
+      let style = {};
+      let $grid_item = $("#grid_item"+chartData.portletID);
+      let $grid_item_title = $grid_item.find(".griditem_title");
+      style.width = '100%';
+      style.height = ($grid_item.height()-$grid_item_title.height())/$grid_item.height()*100+"%";
+      Vue.chartBackgroundStyles.push(style);
+    },  
+
+    /*绘制Chart图形*/  
+    drawChart (chartData) {
+      let Vue = this;
+      let data = chartData.data;
+      let Coption = JSON.parse(chartData.defineJSON).option;
+      Vue.option.push(Coption);
+      var type = chartData.type;
+      Vue.getChartBackgroundStyle(chartData);
+      chartUtil.analysis(Coption,type,data);
+      Vue.$nextTick(function(){
+        Vue.$refs['chartContainer'+chartData.portletID][0].show(Coption);
+      })     
+    },   
+
+
     /*更新报表数据*/
     updateReport(param){
       let Vue = this;
@@ -241,27 +272,6 @@ export default {
           Vue.drawReport(response.data.content);
       })       
     },
-
-      
-    /*绘制Chart图形*/  
-    drawChart (chartData) {
-      let Vue = this;
-      let data = chartData.data;
-      let style = {};
-      let $grid_item = $("#grid_item"+chartData.portletID);
-      let $grid_item_title = $grid_item.find(".griditem_title");
-      style.width = '100%';
-      style.height = '80%';
-      Vue.chartStyles.push(style);
-      let Coption = JSON.parse(chartData.defineJSON).option;
-      Vue.option.push(Coption);
-      var type = chartData.type;
-      chartUtil.analysis(Coption,type,data);
-      Vue.$nextTick(function(){
-        Vue.$refs['chartContainer'+chartData.portletID][0].show(Coption);
-      })     
-    },   
-
   },
   mounted(){
     let Vue = this;
@@ -294,13 +304,16 @@ export default {
   margin:5px 10px;
   background: url('./../../assets/img/right_logo.png') no-repeat;
 }
+.chartBox{
+  background-size:100% 100% !important; 
+}
 .griditem_title{
-  height: 40px;
-  line-height: 40px;
-  background-color: #f8f8f9;
-  border-bottom: 0.5px solid lightgray;
+  height: 45px;
+  line-height: 45px;
+  text-align:left;
+  background-size:100% 100% !important; 
   padding-left: 11px;
-  color: black;
+  color:white;
   font-size: 14px;
 }
 .grid-layout{

@@ -9,13 +9,15 @@
         <div style='float:right;margin-right:5px;cursor:pointer' @click = "selectReportChart()"><Icon type="plus-round"></Icon></div>
       </div> 
       <!-- echart图形组件 -->
-      <div :id="'chartBox'+portletID" class='chartBox' :style='chartStyles'>
+      <div :id="'chartBox'+portletID" 
+           class='chartBox' 
+           :style='{width:chartBackgroundStyles.width,height:chartBackgroundStyles.height,background:"url("+imgSelecteTochartBox+") no-repeat"}'>
       <component v-if='itemComponent != "Table"' 
                 :ref="'chartContainer'+portletID"
                 :is="itemComponent" 
                 :option="option"
                 :chartId='"report"+portletID'
-                :styles='chartStyles'
+                :styles='chartBackgroundStyles'
                 >
       </component></div>
       <!-- 图形选择和背景图片选择 -->
@@ -97,7 +99,7 @@ export default {
         tableSelected:0,//选中的table图形
         itemComponent:"",//根据选择图形，渲染组件容器
         option:'',//chart图形option
-        chartStyles:''//chart图形容器样式
+        chartBackgroundStyles:''//chart背景容器容器样式
       }
     },
     methods:{
@@ -114,7 +116,7 @@ export default {
       selectReportChart(){
         let Vue = this;
         Vue.showSelectChartModal = true;
-        Vue.getChartBoxStyle();
+        Vue.getChartBackgroundStyle();
       },
 
       //绘制报表图形
@@ -142,10 +144,14 @@ export default {
             }else{
                             
             }     
-            
-            
             //存储tabs
-            var tabs = [{"tabID":Vue.portletID,"title":Vue.portletTitle,"objid":chart.id,"objtype":chart.type?chart.type:'Table'}];
+            var tabs =[{"tabID":Vue.portletID,
+                         "title":Vue.portletTitle,
+                         "objid":chart.id,
+                         "objtype":chart.type?chart.type:'Table',
+                         'titleBackgroundImg':Vue.imgSelecteToTitle,
+                         'chartBoxBackgroundImg':Vue.imgSelecteTochartBox}
+                      ];
             Vue.$store.commit("saveTabs",tabs); 
           }
         );
@@ -162,18 +168,18 @@ export default {
         Vue.$nextTick(function(){
           Vue.$refs['chartContainer'+Vue.portletID].show(Coption);
           Vue.chartView =Vue.$refs['chartContainer'+Vue.portletID].getChartView();
-          $("#chartBox"+Vue.portletID).css('background','url('+Vue.imgSelecteTochartBox+') no-repeat');
         }) 
       },
-
-      getChartBoxStyle (){
+    
+      //获取背景图片容器样式
+      getChartBackgroundStyle (){
         let Vue = this;
         let style = {};
         let $grid_item = $("#portlet"+Vue.portletID);
         let $grid_item_title = $grid_item.find(".griditem_title");
         style.width = '100%';
         style.height = ($grid_item.height()-$grid_item_title.height())/$grid_item.height()*100+"%";
-        Vue.chartStyles = style;
+        Vue.chartBackgroundStyles = style;
       },
 
       //
