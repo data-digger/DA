@@ -3,8 +3,9 @@
 </template>
 <script>
 import ChartTemplate from './../../../libs/ChartTemplate.js'
-import Bar1 from './Bar1'
-import Pie from './Pie'
+import Bar from './NoThemeBar'
+import Pie from './NoThemePie'
+import Stack from './NoThemeStack'
 import {mapGetters} from 'vuex'
 export default {
     props:{
@@ -14,8 +15,9 @@ export default {
             },
     },
     components:{
-        Bar1,
-        Pie
+        Bar,
+        Pie,
+        Stack
     },
     computed: {
       ...mapGetters({
@@ -24,9 +26,11 @@ export default {
       nothemecomponent: function(){
           switch(this.chartType){
               case 'Bar':
-                return Bar1;
+                return Bar;
               case 'Pie':
                 return Pie;
+              case 'Stack':
+                return Stack;
           }
       }
     },

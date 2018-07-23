@@ -18,7 +18,7 @@
                     </Select>
                 </FormItem>
                 <FormItem label="图表选项" prop="defineJSON">
-                    <ChartOption ref='optionSelected' @getSelectedOption = 'setOption' :type="myChart.type"/>
+                    <ChartOption ref='optionSelected' @getSelectedOption = 'setOption' :chart-type="myChart.type"/>
                 </FormItem>
                 <FormItem>
                     <Button type="ghost" shape="circle" icon="ios-search"  @click="previewChart"></Button>

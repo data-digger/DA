@@ -26,7 +26,6 @@ import ChartTemplate from './../../../libs/ChartTemplate.js'
 import {mapGetters} from 'vuex'
 import util from './../util.js'
 export default {
-    props:[],
     computed: {
       ...mapGetters({
 
@@ -64,7 +63,6 @@ export default {
                                 inside: false,
                                 textStyle: {
                                     color: '#ffffff',
-                                    fontWeight: 'normal',
                                     fontWeight: 'bolder',
                                     fontSize: '12',
                                     textAlign:'left',

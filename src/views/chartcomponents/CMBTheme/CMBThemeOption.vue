@@ -3,7 +3,8 @@
 </template>
 <script>
 import ChartTemplate from './../../../libs/ChartTemplate.js'
-import CMBBar1 from './CMBBar1'
+import CMBThemeBar from './CMBThemeBar'
+import CMBThemeStack from './CMBThemeStack'
 import {mapGetters} from 'vuex'
 export default {
     props:{
@@ -13,7 +14,8 @@ export default {
             },
     },
     components:{
-        CMBBar1,
+        CMBThemeBar,
+        CMBThemeStack
     },
     computed: {
       ...mapGetters({
@@ -22,7 +24,9 @@ export default {
       cmbthemecomponent: function(){
           switch(this.chartType){
               case 'Bar':
-                return CMBBar1;
+                return CMBThemeBar;
+               case 'Stack':
+                return CMBThemeStack;
           }
       }
     },

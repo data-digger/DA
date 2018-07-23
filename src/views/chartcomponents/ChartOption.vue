@@ -3,8 +3,8 @@
 </style>
 <template>
    <Row>
-       <DataSelectOption ref='dataSelectOption'  :type="type"/>
-       <ThemeOption ref='themeOption' :type="type"/>
+       <DataSelectOption ref='dataSelectOption'  :chart-type="chartType"/>
+       <ThemeOption ref='themeOption' :chart-type="chartType"/>
     </Row>
 </template>
 <script>
@@ -12,7 +12,12 @@ import DataSelectOption from './DataSelect/DataSelectOption'
 import ThemeOption from './ThemeOption'
 import {mapGetters} from 'vuex'
 export default {
-    props:['type'],
+    props: {
+            chartType: {
+                type: String,
+                default:'Bar'
+            },
+        },
     computed: {
       ...mapGetters({
       }),
