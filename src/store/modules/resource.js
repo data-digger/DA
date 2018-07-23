@@ -15,14 +15,41 @@ const state = {
     alias:'',
     desc:'',
     defineJSON:{
-      header:{globalFilter:[]},
+      header:{
+        conditons:[],
+        globalFilter:[]
+      },
       content:{
-        portlets:[]
+        portlets:[
+          {
+            "portletID": "",
+            "name": "",
+            "x": "",
+            "y": "",
+            "w": "",
+            "h": "",
+            "i": "",
+            "tabs": [{
+                "tabID": "",
+                "title": "",
+                "objid": "",
+                "objtype": "",
+                "titleBackgroundImg": "",
+                "chartBoxBackgroundImg": "",
+                "chartBackgroundStyles": {
+                    "width": "",
+                    "height": ""
+                }
+            }],
+            "moved": "",
+            "component": ""
+          }]
       },
       tail:{}
     }
   },
-  currentLayout:"",
+
+  currentReportLayout:"Layout1",
   queryFields:[],//查询器字段集合
   dimensions:[], //维度字段集合
   metrics:[], //度量字段集合
@@ -39,7 +66,7 @@ const getters = {
   chartList: state => state.chartList,
   queryList: state => state.queryList,
   tableList: state => state.tableList,
-  currentLayout: state => state.currentLayout,
+  currentReportLayout: state => state.currentReportLayout,
   report: state => state.report,
   queryFields: state => state.queryFields,
   dimensions: state => state.dimensions,
@@ -91,18 +118,18 @@ const mutations = {
   getReportBox(state,param){
     var paramData = param.data.content;
     for (var i in paramData) {
-           var defineJSON = JSON.parse(paramData[i].defineJSON);
-           paramData[i].defineJSON = defineJSON;
+      var defineJSON = JSON.parse(paramData[i].defineJSON);
+      paramData[i].defineJSON = defineJSON;
     }
     state.reportList = paramData;
   },
   saveReportBaseInfo(state,param){
-     state.report.name = param.name;
-     state.report.alias = param.alias;
-     state.report.desc = param.desc;
+    state.report.name = param.name;
+    state.report.alias = param.alias;
+    state.report.desc = param.desc;
   },
-  currentLayout(state,param){
-    state.currentLayout = param;
+  currentReportLayout(state,param){
+    state.currentReportLayout = param;
   },
   initDefaultdPortlets(state,param){
     state.report.defineJSON.content.portlets=param;
@@ -115,15 +142,15 @@ const mutations = {
 
   /*删除portlet操作，更新portlets*/
   deletePortlet(state,param){
-     let portlets = state.report.defineJSON.content.portlets
-     for(var i in portlets){
-        if(portlets[i].portletID == param){
-          portlets.splice(i,1);
-          break;
-        }
-     }
+    let portlets = state.report.defineJSON.content.portlets
+    for(var i in portlets){
+      if(portlets[i].portletID == param){
+        portlets.splice(i,1);
+        break;
+      }
+    }
   },
-
+  /*保存报表tabs*/
   saveTabs(state,param){
     for( let index in state.report.defineJSON.content.portlets){
       if(state.report.defineJSON.content.portlets[index].portletID == param[0].tabID){

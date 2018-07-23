@@ -38,17 +38,17 @@ export default {
             portlets:[{"portletID":"0",
                      "name":"",
                      "x":0,"y":0,"w":12,"h":8,"i":"0",
-                     "tabs":[{"id":"0","title":"","objtype":"","objid":""}]
+                     "tabs":[{"id":"0","title":"","objtype":"","objid":"",'titleBackgroundImg':"",'chartBoxBackgroundImg':"",'chartBackgroundStyles':""}]
                     },
                     {"portletID":"1",
                      "name":"",
                      "x":0,"y":8,"w":6,"h":6,"i":"1",
-                     "tabs":[{"id":"1","title":"","objtype":"","objid":""}]
+                     "tabs":[{"id":"1","title":"","objtype":"","objid":"",'titleBackgroundImg':"",'chartBoxBackgroundImg':"",'chartBackgroundStyles':""}]
                     } ,
                     {"portletID":"2",
                      "name":"",
                      "x":6,"y":6,"w":6,"h":6,"i":"2",
-                     "tabs":[{"id":"2","title":"","objtype":"","objid":""}]
+                     "tabs":[{"id":"2","title":"","objtype":"","objid":"",'titleBackgroundImg':"",'chartBoxBackgroundImg':"",'chartBackgroundStyles':""}]
                     }]        
         }
     },

@@ -142,7 +142,9 @@ export default {
   },
   methods:{
 
-    //初始化单选，多选候选值
+    /**
+     * 初始化单选，多选候选值
+     */
     initStandByValue(){
       let Vue = this;
       let aRelated = Vue.handleFilterRelated();
@@ -159,7 +161,9 @@ export default {
       });  
      },
 
-    //设置过滤器类型
+    /**
+     * 设置过滤器类型
+     */
     setFilterTypeValue(filterType){
       let Vue = this;
       if(filterType.length == 2){
@@ -173,7 +177,9 @@ export default {
       }        
     },
 
-    //初始化过滤器默认值
+    /**
+     * 初始化过滤器默认值
+     */
     initFilterValue(filterType){
       let Vue = this;
       let DATE = new Date();
@@ -196,7 +202,9 @@ export default {
      
     },
      
-    //过滤器related参数处理
+    /**
+     * 过滤器related参数处理
+     */
     handleFilterRelated(){
       let Vue = this;
       let aRelated = [];
@@ -211,7 +219,9 @@ export default {
       return aRelated;
     },
 
-    //选择过滤器类型
+    /**
+     * 选择过滤器类型
+     */
     selectFilterType(filterType){
       let Vue = this;
       Vue.setFilterTypeValue(filterType);//过滤器类型值设置（由于是层级选择框，所以绑定的type需进一步处理）
@@ -221,7 +231,9 @@ export default {
       }    
     },
     
-    //初始化关联过滤器层连选项
+    /**
+     * 初始化关联过滤器层连选项
+     */
     initRelatedFilterSelections(){
       let Vue = this;
       let aRelatedFilter = [];
@@ -246,7 +258,9 @@ export default {
       Vue.relatedFilterSelections = aRelatedFilter;       
     },
 
-    //添加全局过滤器描述表格
+    /**
+     * 添加全局过滤器描述表格
+     */
     addGlobalFilter(globalFilter){
       let Vue = this;
       let _filter = [];
@@ -274,13 +288,17 @@ export default {
      Vue.globalFilters.push(Vue._filter);
     },
 
-    //存储全局过滤器数据
+    /**
+     * 存储全局过滤器数据
+     */
     saveGlobalFilterData(){
       let Vue = this;
       this.$store.commit("saveReportGlobalFilter",Vue.globalFilters);
     },
     
-    //删除全局过滤器列表选项(前端删除)
+    /**
+     * 删除全局过滤器列表选项(前端删除)
+     */
     deleteGlobalFilter(event, params){
       let Vue = this;
       for(let i in Vue.globalFilterTabledata){
@@ -291,14 +309,13 @@ export default {
         }
       }     
     },
-    //重置表单
+    /**
+     * 重置全局过滤器表单
+     */
     handleReset (name) {
       let Vue = this;
       this.$refs[name].resetFields();
     }
-  },
-  mounted(){
-     
   }
 }
 </script>

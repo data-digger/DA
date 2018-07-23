@@ -61,42 +61,34 @@ export default {
             let Vue = this;
             Vue.index = Vue.index+1;
             var portlet ={ "portletID":""+Vue.index,
-                           "name":"portleName",
-                           "x":0,"y":0,"w":6,"h":4,"i":""+Vue.index,
-                           "tabs":[{"id":""+Vue.index,
+                            "name":"portleName",
+                            "x":0,"y":0,"w":6,"h":4,"i":""+Vue.index,
+                            "tabs":[{"id":""+Vue.index,
                                    "title":"",
                                    'titleBackgroundImg':"",
                                    'chartBoxBackgroundImg':"",
                                    'chartBackgroundStyles':"",
                                    "objtype":"",
                                    "objid":""}
-                                ]
+                            ]
                          };
             Vue.report.defineJSON.content.portlets.push(portlet);
-            // Vue.$refs.gridItemContent[0].getChartBackgroundStyle();
             Vue.$store.commit("addDefinePorlets",Vue.report.defineJSON);
         }
-    },
-    created(){
-        console.log('Layout4 created');
-    },
-    mounted(){
-        console.log('Layout4 mounted');
     }
 }
 </script>
 
-<style scoped lang='less'>
-@background-color:#2d8cf0;
+<style scoped>
 .toolbar{
-    padding: 3px;
-    margin: 3px;
+   padding: 3px;
+   margin: 3px;
 }
 .toolbar Button{
-  background-color:@background-color;
-  color:white;
+   background-color:#2d8cf0;
+   color:white;
 }
 .delete-icon{
-    float: right;
+   float: right;
 }
 </style>

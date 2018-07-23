@@ -24,23 +24,23 @@
 </template>
 
 <script>
- export default { 
-    data(){
-       return {
-          layoutSelected:"布局1"
-       }
-    },
-    methods:{
-      //存储选中的布局
-      layoutselected(){
-        let currentLayout = null;
-        if(this.layoutSelected == "布局1"){ currentLayout = 'Layout1'};
-        if(this.layoutSelected == "布局2"){ currentLayout = 'Layout2'};
-        if(this.layoutSelected == "布局3"){ currentLayout = 'Layout3'};
-        if(this.layoutSelected == "自定义"){ currentLayout = 'Layout4'};
-        this.$store.commit("currentLayout",currentLayout);
-      }
+export default { 
+  data(){
+    return {
+      layoutSelected:"布局1"
     }
+  },
+  methods:{
+    //向store中存储选中的布局
+    layoutselected(){
+      let currentReportLayout = null;
+      if(this.layoutSelected == "布局1"){ currentReportLayout = 'Layout1'};
+      if(this.layoutSelected == "布局2"){ currentReportLayout = 'Layout2'};
+      if(this.layoutSelected == "布局3"){ currentReportLayout = 'Layout3'};
+      if(this.layoutSelected == "自定义"){ currentReportLayout = 'Layout4'};
+      this.$store.commit("currentReportLayout",currentReportLayout);
+    }
+  }
 }
 </script>
 

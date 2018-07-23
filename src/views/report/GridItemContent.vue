@@ -3,23 +3,31 @@
     <div class="no-drag">
       <!-- title区 -->
       <div class='griditem_title' :style="{background:'url('+imgSelecteToTitle+') no-repeat'}">
-        <div @click='deletePortlet(portletID)'><Icon class='delete-portlet' type="android-close" v-if='isShowExtraIcon()'></Icon></div>
-        <div v-if='flag' style='display:inline-block'><span @click='edit()'>{{portletTitle}}</span></div>
+        <div @click='deletePortlet(portletID)'>
+          <Icon class='delete-portlet' type="android-close" v-if='isShowExtraIcon()'></Icon>
+        </div>
+        <div v-if='flag' style='display:inline-block'>
+          <span @click='edit()'>{{portletTitle}}</span>
+        </div>
         <input type="text" v-else v-model='portletTitle' @change='input()'>
-        <div style='float:right;margin-right:5px;cursor:pointer' @click = "selectReportChart()"><Icon type="plus-round"></Icon></div>
+        <div class='selectReportChart' @click = "selectReportChart()">
+          <Icon type="plus-round"></Icon>
+        </div>
       </div> 
-      <!-- echart图形组件 -->
-      <div :id="'chartBox'+portletID" 
-           class='chartBox' 
-           :style='{width:chartBackgroundStyles.width,height:chartBackgroundStyles.height,background:"url("+imgSelecteTochartBox+") no-repeat"}'>
-      <component v-if='itemComponent != "Table"' 
-                :ref="'chartContainer'+portletID"
-                :is="itemComponent" 
-                :option="option"
-                :chartId='"report"+portletID'
-                :styles='chartBackgroundStyles'
-                >
-      </component></div>
+      <!-- chart图形背景容器 -->
+      <div :id="'chartBox'+portletID" class='chartBox' 
+           :style='{width:chartBackgroundStyles.width,
+                    height:chartBackgroundStyles.height,
+                    background:"url("+imgSelecteTochartBox+") no-repeat"}'>
+          <!-- chart图形组件 -->          
+          <component v-if='itemComponent != "Table"' 
+                    :ref="'chartContainer'+portletID"
+                    :is="itemComponent" 
+                    :option="option"
+                    :chartId='"report"+portletID'
+                    :styles='chartBackgroundStyles'>
+          </component>
+      </div>
       <!-- 图形选择和背景图片选择 -->
       <Modal
         v-model="showSelectChartModal"
@@ -89,7 +97,7 @@ export default {
       return {
         chartView:null,//chart图形视图，用作chart图形resize
         flag:true,
-        portletTitle:"点击编辑title",
+        portletTitle:"点击编辑title", //点击编辑title
         showSelectChartModal:false,//显示图形选择modal
         imgSelecteToTitle:require("./../../assets/img/gridItemTitle1.png"),//选中title的背景图
         imgSelecteTochartBox:require('./../../assets/img/chartBox2.png'),//选中chart容器的背景图
@@ -238,6 +246,11 @@ export default {
 }
 .imgSelecteTochartBox{
   margin: 0px 0px 50px 10px;
+}
+.selectReportChart{
+  float:right;
+  margin-right:5px;
+  cursor:pointer;
 }
 </style>
 

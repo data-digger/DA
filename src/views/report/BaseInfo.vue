@@ -33,14 +33,14 @@ import {mapGetters} from 'vuex'
        }
     },
     methods:{
-       //更新报表中baseInfo
-       initBaseInfo(){
-         this.$store.commit("saveReportBaseInfo",this.report)
+       /**
+        * 向store中保存报表中基本信息
+        */
+       saveReportBaseInfo(){
+         this.$store.commit("saveReportBaseInfo",this.report);
        }
-    },
-    mounted(){
     }
-}
+ }
 </script>
 
 <style scoped>
