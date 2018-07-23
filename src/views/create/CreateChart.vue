@@ -13,16 +13,12 @@
                     </Select>
                 </FormItem>
                 <FormItem label="类型" prop="type">
-                  <RadioGroup v-model="myChart.type" type="button">
-                    <Tooltip v-for="T in chartType" :content="T.desc" :key="T.type" placement="top">
-                        <Radio :label="T.type">
-                            <img v-bind:src="T.src">
-                        </Radio>
-                    </Tooltip> 
-                  </RadioGroup>
+                    <Select class="form-control" v-model="myChart.type">               
+                        <Option v-for="T in chartType" :key='T.type' :value="T.type" >{{T.desc}}</option>
+                    </Select>
                 </FormItem>
                 <FormItem label="图表选项" prop="defineJSON">
-                    <component ref='optionSelected' :is="chartComponent" @getSelectedOption = 'setOption'></component>
+                    <ChartOption ref='optionSelected' @getSelectedOption = 'setOption' :type="myChart.type"/>
                 </FormItem>
                 <FormItem>
                     <Button type="ghost" shape="circle" icon="ios-search"  @click="previewChart"></Button>
@@ -69,8 +65,8 @@ import list from "./../paramcomponents/List"
 import ChartTemplate from './../../libs/ChartTemplate.js'
 import chartUtil from './../../libs/chartUtil.js'
 import Chart from './../chartcomponents/Chart'
+import ChartOption from './../chartcomponents/ChartOption'
 import CountCard from './../chartcomponents/CountCard'
-import BarOption from './../chartcomponents/BarOption'
 import PieOption from './../chartcomponents/PieOption'
 import LineOption from './../chartcomponents/LineOption'
 import HBarOption from './../chartcomponents/HBarOption'
@@ -85,7 +81,7 @@ export default {
   components:{
     datepicker,
     list,
-    BarOption,
+    ChartOption,
     PieOption,
     LineOption,
     HBarOption,
@@ -118,6 +114,7 @@ export default {
       },
       finished:false,
       filters:{},
+      theme:0,
       queryData:null,
       eoption:null,
       chartType:ChartTemplate.TYPE,
@@ -225,6 +222,7 @@ export default {
         let define = JSON.parse(Vue.myChart.defineJSON);
         Vue.eoption = define.option;
         Vue.filters = define.filters;
+        Vue.theme = define.theme;
         Vue.optionValid = true;
       }
       
@@ -250,7 +248,7 @@ export default {
                   Vue.columns = response.data.content;
                   if(Vue.isInit && !Vue.isNew){ //在编辑图表的时候，必须等到获取到列信息之后进行图表选项、过滤选项的初始化
                     Vue.$nextTick(function(){
-                        Vue.$refs['optionSelected'].setData(Vue.eoption,Vue.filters); 
+                        Vue.$refs['optionSelected'].setData(Vue.eoption,Vue.filters,Vue.theme); 
                         Vue.$refs['fieldList'].setData(Vue.filters);
                         Vue.initChart();
                         Vue.isInit = false; //初始化完成，初始化标识置为false
@@ -269,7 +267,8 @@ export default {
         Vue.eoption = $.extend(true, {}, selectdOption.option);
         Vue.filters.value = selectdOption.filter.value;
         Vue.filters.groupby = selectdOption.filter.groupby;
-        Vue.filters.isgroupby = selectdOption.filter.isgroupby;     
+        Vue.filters.isgroupby = selectdOption.filter.isgroupby;  
+        Vue.theme =  selectdOption.theme; 
       }
     },
     /*封装过滤条件*/
@@ -279,14 +278,14 @@ export default {
     },
     analyzeOption:function(){  
       let Vue = this;
-      chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
+      chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData,Vue.theme);
     },
     /*预览图表*/
     previewChart:function(){
         let Vue = this;
         Vue.chartPreview = true;
         Vue.$refs['fieldList'].sentFilter(); //调用过滤条件组件的传递参数方法
-        Vue.$refs['optionSelected'].sentOption();//调用图表选项组件的传递参数方法
+        Vue.$refs['optionSelected'].getOption();//调用图表选项组件的传递参数方法
         if(Vue.optionValid){
            Vue.AxiosPost("chartPreview",{bizViewId:Vue.myChart.bizViewId,filterJSON:JSON.stringify(Vue.filters)},
               function(response){
@@ -325,7 +324,7 @@ export default {
     /*画图*/
     drawChart(){
       let Vue = this;
-      chartUtil.analysis(Vue.eoption,Vue.myChart.type,Vue.queryData);
+      Vue.$refs['optionSelected'].attachData(Vue.eoption,Vue.queryData);
       Vue.$nextTick(function(){
          Vue.$refs['chartContainer'].show(Vue.eoption);
        })
@@ -335,8 +334,8 @@ export default {
     saveChart:function(){
       let Vue = this;
       Vue.$refs['fieldList'].sentFilter();
-      Vue.$refs['optionSelected'].sentOption();
-      let chartOption = {filters:Vue.filters,option:Vue.eoption};
+      Vue.$refs['optionSelected'].getOption();
+      let chartOption = {filters:Vue.filters,option:Vue.eoption,theme:Vue.theme};
       Vue.myChart.defineJSON = JSON.stringify(chartOption);
       Vue.$refs["chartInfo"].validate((valid) => {
                     if (valid && Vue.optionValid) {
@@ -443,3 +442,6 @@ export default {
   min-height: 550px
 } */
 </style>
+
+
+

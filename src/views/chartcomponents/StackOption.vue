@@ -112,6 +112,7 @@ export default {
                 selectedX:-1,
                 selectedY:[],                
                 colorSelected:0,
+                isLine:false,
                 params:{value:[],groupby:null,isgroupby:true}
             }
     },
@@ -173,7 +174,7 @@ export default {
                         let yAlias = Vue.aggregationFun[Vue.selectedY[i]].columnAlias;
                         Vue.selectdOption.series.push({name:yAlias,
                                                         data:yName,
-                                                        type: 'line',
+                                                        type: 'bar',
                                                         areaStyle: {},
                                                         stack: '总量',})
                         // Vue.params.value.push(Vue.aggregationFun[Vue.selectedY[i]]);
@@ -183,7 +184,7 @@ export default {
                         var yAlias = Vue.metrics[Vue.selectedY[i]].columnAlias;
                         Vue.selectdOption.series.push({name:yAlias,
                                                         data:yName,
-                                                        type: 'line',
+                                                        type: 'bar',
                                                         areaStyle: {},
                                                         stack: '总量',})
                         //Vue.params.value.push(Vue.metrics[Vue.selectedY[i]]);
@@ -217,3 +218,5 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+
+

@@ -33,7 +33,7 @@
 <script>
 import echarts from 'echarts'
 import ChartForm from './../components/ChartForm'
-import chartUtil from './../../libs/chartUtil.js'
+import util from './../chartcomponents/util.js'
 import infoCard from './../home/components/inforCard'
 import datepicker from "./../paramcomponents/DatePicker"
 import list from "./../paramcomponents/List"
@@ -57,7 +57,8 @@ export default {
       eoption:null,
       queryData:null,
       paramComponent:[],
-      paramSelected:null
+      paramSelected:null,
+      theme:0
     }
   },
   props:['chartbox','index'],
@@ -92,6 +93,7 @@ export default {
            Vue.queryData = response.data.content.data;
            let define = JSON.parse(response.data.content.defineJSON);
            Vue.eoption = define.option;
+           Vue.theme = define.theme?define.theme:0;
            Vue.drawChart();
 
       });
@@ -115,7 +117,7 @@ export default {
     drawChart(){
       let Vue = this;
       Vue.chartShow = true;
-      chartUtil.analysis(Vue.eoption,Vue.chartbox.type,Vue.queryData);
+      util.attachData(Vue.eoption,Vue.queryData,Vue.chartbox.type,Vue.theme)
       Vue.modalpreview = true;
       Vue.$nextTick(function(){
          Vue.$refs['chart'+Vue.chartbox.id].show(Vue.eoption);

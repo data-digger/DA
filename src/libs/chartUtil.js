@@ -1,3 +1,6 @@
+import CMBBar from './../views/chartcomponents/CMBTheme/CMBBar.js'
+import Bar from './../views/chartcomponents/NoTheme/Bar.js'
+
 function validColName(colName){
     let regex = /^@/;
     if(regex.test(colName)){
@@ -125,7 +128,7 @@ function analysisMapChart(option,data){
 let chartUtil = {
 
 };
-chartUtil.analysis = function (option,type,data) {
+chartUtil.analysis = function (option,type,data,theme) {
     if(type == 'Card'){
     analysisCardChart(option,data)
     }
@@ -136,7 +139,13 @@ chartUtil.analysis = function (option,type,data) {
     analysisGridChart(option,data)
    }
    if(type == 'Bar'){
-    analysisGridChart(option,data)
+    switch(theme){
+        case 1:
+            CMBBar.attachData(option,data,getColData);
+            break;
+        default:
+            Bar.attachData(option,data,getColData);
+    }
    }
    if(type == 'Pie'){
     analysisCirChart(option,data)

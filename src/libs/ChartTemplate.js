@@ -24,6 +24,8 @@ ChartTemplate.COLORS =[ {color:['#63c5d0','#ff9b4f','#4ac6ff','#58b0e8','#b39ddb
 
 ChartTemplate.ICONS = ['person-add','stats-bars','pie-graph','arrow-graph-up-right','clock',
                         'paper-airplane'];
+
+ChartTemplate.THEME = ['无','CMB主题1'];
 ChartTemplate.Card = `{
     data:"@colName",
     iconType:"android-person-add",
