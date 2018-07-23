@@ -1,9 +1,27 @@
 <template>
      <div>
       <div class="toolbar"><Button @click="addPortlet()">添加模块</Button></div>
-      <grid-layout :layout="report.defineJSON.content.portlets" :col-num="12" :row-height="30" :is-draggable="draggable" :is-resizable="resizable" :vertical-compact="true" :use-css-transforms="true">
-        <grid-item v-for="item in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key='item.i' drag-ignore-from=".no-drag" drag-allow-from=".vue-draggable-handle">
-           <GridItemContent :griditemTitle='item.name+item.i' :portletID="item.i"  :ifDeletePortlet = 'true' ref='gridItemContent'></GridItemContent>
+      <grid-layout :layout="report.defineJSON.content.portlets" 
+                    :col-num="12" 
+                    :row-height="30" 
+                    :is-draggable="draggable" 
+                    :is-resizable="resizable" 
+                    :vertical-compact="true" 
+                    :use-css-transforms="true">
+        <grid-item v-for="item in report.defineJSON.content.portlets" 
+                   :x="item.x" 
+                   :y="item.y" 
+                   :w="item.w" 
+                   :h="item.h" 
+                   :i="item.i" 
+                   :key='item.i' 
+                   drag-ignore-from=".no-drag" 
+                   drag-allow-from=".vue-draggable-handle">
+            <GridItemContent :griditemTitle='item.name+item.i' 
+                             :portletID="item.i"  
+                             :ifDeletePortlet = 'true' 
+                             ref='gridItemContent'>
+            </GridItemContent>
         </grid-item>
       </grid-layout>        
     </div>
@@ -40,11 +58,12 @@ export default {
     },
     methods:{
         addPortlet(){
-            this.index = this.index+1;
-            var portlet ={ "portletID":""+this.index,
+            let Vue = this;
+            Vue.index = Vue.index+1;
+            var portlet ={ "portletID":""+Vue.index,
                            "name":"portleName",
-                           "x":0,"y":0,"w":6,"h":4,"i":""+this.index,
-                           "tabs":[{"id":this.index,
+                           "x":0,"y":0,"w":6,"h":4,"i":""+Vue.index,
+                           "tabs":[{"id":""+Vue.index,
                                    "title":"",
                                    'titleBackgroundImg':"",
                                    'chartBoxBackgroundImg':"",
@@ -53,9 +72,9 @@ export default {
                                    "objid":""}
                                 ]
                          };
-            this.report.defineJSON.content.portlets.push(portlet);
-            this.$refs.gridItemContent[0].getChartBackgroundStyle();
-            this.$store.commit("addDefinePorlets",this.report.defineJSON);
+            Vue.report.defineJSON.content.portlets.push(portlet);
+            // Vue.$refs.gridItemContent[0].getChartBackgroundStyle();
+            Vue.$store.commit("addDefinePorlets",Vue.report.defineJSON);
         }
     },
     created(){
