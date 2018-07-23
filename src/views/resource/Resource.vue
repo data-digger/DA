@@ -8,7 +8,7 @@
       </Col>
       <Row class='cardBox'>
         <DatasourceBox v-for="ds in datasourceList" :key='ds.id' :datasource = 'ds'></DatasourceBox>
-        <Creator :routerpath="createDatasource" :id='creator_datasource_id'></Creator>     
+        <Creator routerpath="/createDatasource" id='creator_datasource'></Creator>     
       </Row>
     </Row>
 <!-- 
@@ -20,7 +20,7 @@
       </Col>
       <Row class='cardBox'>
         <ParamBox v-for="pr in paramList" :key='pr.id' :parambox = 'pr'></ParamBox>
-        <Creator :routerpath='createParam' :id='creator_param_id'></Creator>
+        <Creator routerpath='/createParam' id='creator_param'></Creator>
       </Row>       
     </Row>  -->
 
@@ -33,7 +33,7 @@
       </Col>
       <Row class='cardBox'>
         <QueryBox  v-for="(q,index) in queryList" :key='q.id':querybox='q' :index='index'></QueryBox>
-        <Creator :routerpath='createQuery' :id='creator_query_id'></Creator>
+        <Creator routerpath='/createQuery' id='creator_query' abc='123'></Creator>
       </Row>
     </Row> 
 
@@ -46,12 +46,12 @@
       </Col>
       <Row class='cardBox'>
         <ChartBox v-for="(chart,index) in chartList" :key='chart.id' :chartbox='chart' :index='index'></ChartBox>
-        <Creator :routerpath='creatEchart' :id='creator_chart_id'></Creator>
+        <Creator routerpath='/creatEchart' id='creator_chart'></Creator>
       </Row>
     </Row>
 
 
-    <Row id='scroll-table'  class=" table">
+    <!-- <Row id='scroll-table'  class=" table">
       <Col>
         <div class="note note-table">
           <h3 id='scroll-table' class="block ">表格</h3>
@@ -59,9 +59,9 @@
       </Col>
       <Row class='cardBox'>
         <TableBox v-for="(tb,index) in tableList" :key='tb.id' :tablebox='tb' :index='index'></TableBox>
-        <Creator :routerpath='createTable' :id='creator_table_id'></Creator>
+        <Creator routerpath='/createTable' id='creator_table'></Creator>
       </Row>
-    </Row>  
+    </Row>   -->
 
     <Row  id='scroll-report' class=" report">
       <Col>
@@ -71,13 +71,13 @@
         </Col>
         <Row class='cardBox'>
           <ReportBox v-for="(rp,index) in reportList" :key='rp.id' :reportbox='rp' :index='index'></ReportBox>
-          <Creator :routerpath='createReport' :id='creator_report_id'></Creator>
+          <Creator routerpath='/createReport' id='creator_report'></Creator>
         </Row>
     </Row>
     <ButtonGroup vertical class="demo-affix" style='right:18px;position:fixed;top:50%;'>
-          <Tooltip class='monitor' :content="m.title" placement="left-end" v-for='(m,index) in monitor' :key='index'>
-             <div :id='m.id' @click='scroll(m.id)'><img v-bind:src="m.src" style='width:50%;height:50%'></div>
-          </Tooltip>
+        <Tooltip class='monitor' :content="m.title" placement="left-end" v-for='(m,index) in monitor' :key='index'>
+          <div :id='m.id' @click='scroll(m.id)'><img v-bind:src="m.src" style='width:50%;height:50%'></div>
+        </Tooltip>
     </ButtonGroup>     
 </div>
 </template>
@@ -95,24 +95,12 @@ export default {
   name: 'Resource',
   data(){
     return {
-      createDatasource:'/createDatasource',
-      creatEchart:'/createChart',
-      createQuery:'/createQuery',
-      createReport:'/createReport',
-      createTable:'/createTable',
-      /*createParam:'/createParam',*/
       monitor:[{title:'数据源' ,src:require('./../../assets/img/datasource_small.png'),id:'scroll-datasource'},
       /*{title:'参数' ,src:require('./../../assets/img/parameter_small.png'),id:'scroll-param'},*/
       {title:'查询器', src:require('./../../assets/img/search_small.png'),id:'scroll-query'},
       {title:'图表' ,src:require('./../../assets/img/chart_small.png'),id:'scroll-chart'},
-      {title:'表格' ,src:require('./../../assets/img/table_small.png'),id:'scroll-table'},
+      // {title:'表格' ,src:require('./../../assets/img/table_small.png'),id:'scroll-table'},
       {title:'报表', src:require('./../../assets/img/report_small.png'),id:'scroll-report'}],
-      creator_datasource_id:'creator_datasource',
-      creator_query_id:'creator_query',
-      /*creator_param_id:'creator_param',*/
-      creator_chart_id:'creator_chart',
-      creator_table_id:'creator_table',
-      creator_report_id:'creator_report',
     }
   },
   components:{
@@ -121,7 +109,7 @@ export default {
     ReportBox,
     QueryBox,
     ChartBox,
-    TableBox,
+    // TableBox,
    /* ParamBox*/
   },
   computed: {
@@ -131,7 +119,7 @@ export default {
       reportList:'reportList',
       chartList:'chartList',
       queryList:'queryList',
-      tableList:'tableList',
+      // tableList:'tableList',
     })
   },
   methods:{
@@ -180,14 +168,14 @@ export default {
         }
       );
     },
-    getTableBox (){
-      let Vue = this;
-      Vue.AxiosPost("getTableList",'',
-        function(response){
-          Vue.$store.dispatch('getTableBox',response);
-        }
-      );      
-    },
+    // getTableBox (){
+    //   let Vue = this;
+    //   Vue.AxiosPost("getTableList",'',
+    //     function(response){
+    //       Vue.$store.dispatch('getTableBox',response);
+    //     }
+    //   );      
+    // },
     scroll(id){
       document.getElementById(id).scrollIntoView();
      /*$('html,body').animate({scrollTop:$('#'+id).offset().top}, 300)*/
@@ -199,7 +187,7 @@ export default {
      this.getReportBox();
      this.getQueryBox();
      this.getChartBox();
-     this.getTableBox();
+    //  this.getTableBox();
   }
 }
 </script>

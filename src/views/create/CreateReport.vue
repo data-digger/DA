@@ -1,20 +1,26 @@
 <template>
   <div>
     <Carousel v-model="step" :dots="carouselSetting.dots" :arrow="carouselSetting.arrow" ref='slide'>
+        <!-- 选择布局走马灯-->
         <CarouselItem>
           <div class="demo-carousel"><SelectLayout></SelectLayout></div>
         </CarouselItem>
-        <CarouselItem>
-          <div class="demo-carousel"><component :is="currentLayout"></component></div>
+        <!-- 绘制报表走马灯-->
+        <CarouselItem class='carousel-repor'>
+          <div class="header"><div class='left_logo'></div><div class='right_logo'></div></div>
+          <div class="demo-carousel"><component :is="currentLayout" ref='currentLayout'></component></div>
         </CarouselItem>
+        <!-- 过滤器走马灯-->
         <CarouselItem>
           <div class="demo-carousel"><globalFilter ref='globalFilter'></globalFilter></div>
         </CarouselItem>
-        <CarouselItem>
-          <div class="demo-carousel"><reportForm ref='reportForm'></reportForm></div>
+        <!-- 预览报表走马灯-->
+        <CarouselItem class='carousel-repor'>
+          <div class="demo-carousel"><reportPreview v-if='loadReportPreview' ref='reportPreview'></reportPreview></div>
         </CarouselItem>
+        <!-- 报表信息走马灯-->
         <CarouselItem>
-          <div class="demo-carousel"><BaseInfo ref='initBaseInfo'></BaseInfo></div>
+          <div class="demo-carousel"><BaseInfo ref='baseInfo'></BaseInfo></div>
         </CarouselItem>
     </Carousel>
      <Row  class='button'>
@@ -33,7 +39,7 @@ import Layout2 from "./../report/Layout2"
 import Layout3 from "./../report/Layout3"
 import Layout4 from "./../report/Layout4"
 import globalFilter from "./../report/GlobalFilter"
-import reportForm from "./../components/ReportForm"
+import reportPreview from "./../components/ReportPreview"
 import {mapGetters} from 'vuex'
 export default {
     components:{
@@ -44,11 +50,11 @@ export default {
       Layout3,
       Layout4,
       globalFilter,
-      reportForm
+      reportPreview
     },
     computed: {
       ...mapGetters({
-        layoutSelected:'layoutSelected',
+        currentLayout:'currentLayout',
         report:'report'
       })
     },
@@ -56,13 +62,12 @@ export default {
       return {
         finished:false,
         step: 0,
-        carouselSetting: {
-            height:"200",
-            dots:"none",
-            arrow:"never",
+        carouselSetting: {//走马灯设置
+          height:"200",
+          dots:"none",
+          arrow:"never",
         },
-        currentLayout:Layout1,
-        currentReport:null
+        loadReportPreview:false
       }
     },
     methods:{
@@ -72,16 +77,13 @@ export default {
         let Vue = this;
         if (Vue.step >=4) return ;
         Vue.$refs.slide.arrowEvent(1); //Slide向前移一步       
-        if(Vue.step == 1){//根据选择的布局
-          if(Vue.layoutSelected == "布局1"){ Vue.currentLayout = Layout1};
-          if(Vue.layoutSelected == "布局2"){ Vue.currentLayout = Layout2};
-          if(Vue.layoutSelected == "布局3"){ Vue.currentLayout = Layout3};
-          if(Vue.layoutSelected == "自定义"){ Vue.currentLayout = Layout4};
-        }
         if(Vue.step == 3){
           Vue.$refs.globalFilter.saveGlobalFilterData();//向store中存储全局过滤器
-          Vue.$refs.reportForm.initChartComponent();//初始化图形组件
-          Vue.$refs.reportForm.initReportData();//初始化预览报表
+          Vue.loadReportPreview = true;
+          Vue.$nextTick(function(){
+            Vue.$refs.reportPreview.initChartComponent();//初始化图形组件 
+          }) 
+          
         }
         if(Vue.step == 4){    
           Vue.finished = true;
@@ -100,7 +102,7 @@ export default {
       /*新建报表*/
       createReport(){
        let Vue = this;
-       Vue.$refs.initBaseInfo.initBaseInfo();
+       Vue.$refs.baseInfo.initBaseInfo();
        var ClonedReport = JSON.parse(JSON.stringify(Vue.report));
        var defineJSON = JSON.stringify(ClonedReport.defineJSON);
        ClonedReport.defineJSON = defineJSON;
@@ -142,9 +144,34 @@ export default {
 }
 </script>
 <style scope>
-  .button {
-    text-align: center;
-    margin-top: 0;
-  }
-
+.header{
+  width: 100%;
+  height: 90px;
+  background: url('./../../assets/img/report_header.png');
+}
+.header .left_logo,
+.header .right_logo{
+  width:400px;
+}
+.left_logo{
+  float: left;
+  height: 50px;
+  margin: 22px;
+  background: url('./../../assets/img/left_logo.png') no-repeat;
+}
+.right_logo{
+  float: right;
+  height: 90px;
+  margin:5px 10px;
+  background: url('./../../assets/img/right_logo.png') no-repeat;
+}
+.carousel-repor{
+  background-color: #071432;
+}
+.button {
+  text-align: center;
+  position: fixed;
+  bottom: 0px;
+  left: 50%;
+}
 </style>

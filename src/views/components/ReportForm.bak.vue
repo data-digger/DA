@@ -25,8 +25,8 @@
             </Row>
           </Card>          
 
-          <grid-item v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h":i="item.i" :key='item.i'>
-            <div class='griditem-title'>{{item.tabs[0].title}}</div>
+          <grid-item :id="'grid_item'+item.i" v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key='item.i'>
+            <div class='griditem_title'>{{item.tabs[0].title}}</div>
             <!-- 表格 -->
             <component v-if='item.component == "Table"' 
                        :tableContent='tableContent[item.i]'
@@ -39,7 +39,7 @@
                        :is="item.component" 
                        :option="option[itemIndex]"
                        :chartId='report.id+item.i'
-                       :styles='chartStyles'>
+                       :styles='chartStyles[itemIndex]'>
             </component>
           </grid-item>    
 
@@ -81,13 +81,13 @@ export default {
   data(){
     return { 
       isIntoFromResource:false,//是否从资源入口进入
-      chartStyles:{height:400+'px'},//chart图样式
       cardShow:false,//显示卡片容器
       globalFilters:[],
       tableContent:{'0':null,'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null,'9':null},//表格组件的内容
       paramSelected:null,//选择的参数值
       report_replace:null,//用于更新数据的report替身
-      option:[]
+      option:[],
+      chartStyles:[]
     }
   }, 
   methods:{
@@ -119,6 +119,7 @@ export default {
           portlets[i].component = 'Chart'
         }
       };
+      Vue.initReportData();
     },
 
     /*初始化报表数据*/
@@ -208,6 +209,7 @@ export default {
     drawReport(response){
       let Vue = this;
       Vue.option = [];
+      Vue.chartStyles = [];
       var chartDataArray = response.chartData;
       var tableDataArray = response.tableData;
       if(chartDataArray.length != 0){//chart图形
@@ -247,6 +249,12 @@ export default {
     drawChart (chartData) {
       let Vue = this;
       let data = chartData.data;
+      let style = {};
+      let $grid_item = $("#grid_item"+chartData.portletID);
+      let $grid_item_title = $grid_item.find(".griditem_title");
+      style.width = $grid_item.width()+"px";
+      style.height = ($grid_item.height()-$grid_item_title.height())*0.8+"px";
+      Vue.chartStyles.push(style);
       let Coption = JSON.parse(chartData.defineJSON).option;
       Vue.option.push(Coption);
       var type = chartData.type;
@@ -275,7 +283,7 @@ export default {
   border: 1px solid lightgray;
   box-shadow: 3px 6px 3px -2px lightgrey;
 }
-.griditem-title{
+.griditem_title{
   height: 40px;
   line-height: 40px;
   background-color: #f8f8f9;
