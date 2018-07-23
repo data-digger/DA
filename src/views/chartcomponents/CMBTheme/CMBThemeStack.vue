@@ -26,7 +26,6 @@ import ChartTemplate from './../../../libs/ChartTemplate.js'
 import {mapGetters} from 'vuex'
 import util from './../util.js'
 export default {
-    props:[],
     computed: {
       ...mapGetters({
 
@@ -53,7 +52,8 @@ export default {
                     },
                     grid: {
                         left: '3%',
-                        right: '4%',
+                        right: '10%',
+                        top: '10%',
                         bottom: '3%',
                         containLabel: true
                     },
@@ -104,7 +104,8 @@ export default {
                                         }
                             ],
                     series: []
-                    }             
+                    },
+                    colors:['#FF534D',"#E9F01D",'#00FF80']            
             }
     },
     methods: {
@@ -123,11 +124,14 @@ export default {
                         data: seriesName[i].yName,
                         type: 'bar',
                         barWidth: '70%',
-                        stack: 'group1',   
+                        stack: 'group1',  
+                        color : this.colors[i % 3],
                         label: {
                             normal: {
                             show: true,
-                            position: 'inside'
+                            position: 'inside',
+                            fontWeight: 'bolder',
+                            
                             }
                         }
                     }
