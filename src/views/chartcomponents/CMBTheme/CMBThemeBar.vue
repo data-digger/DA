@@ -64,7 +64,6 @@ export default {
                                 inside: false,
                                 textStyle: {
                                     color: '#ffffff',
-                                    fontWeight: 'normal',
                                     fontWeight: 'bolder',
                                     fontSize: '12',
                                     textAlign:'left',

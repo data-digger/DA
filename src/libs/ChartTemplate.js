@@ -4,7 +4,7 @@ let  ChartTemplate= {
 ChartTemplate.TYPE = [  {type:'Bar',src:require('./../views/chartcomponents/ChartIcon/Bar.png'),desc:'柱状图'},
                         {type:'HBar',src:require('./../views/chartcomponents/ChartIcon/HBar.png'),desc:'条形图'},
                         {type:'Line',src:require('./../views/chartcomponents/ChartIcon/Line.png'),desc:'折线图'},
-                        {type:'Stack',src:require('./../views/chartcomponents/ChartIcon/Stack.png'),desc:'区域堆叠图'},
+                        {type:'Stack',src:require('./../views/chartcomponents/ChartIcon/Stack.png'),desc:'堆叠柱状图'},
                         {type:'Pie',src:require('./../views/chartcomponents/ChartIcon/Pie.png'),desc:'饼图'},
                         {type:'Ring',src:require('./../views/chartcomponents/ChartIcon/Ring.png'),desc:'环图'},
                         {type:'Card',src:require('./../views/chartcomponents/ChartIcon/Card.png'),desc:'统计卡'},

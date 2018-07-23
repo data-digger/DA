@@ -42,19 +42,16 @@ util.getColData = function(colName,data){
     }
 
 }
-util.analysisNothemeGridChart = function(option,data){
+util.analysisGridChart = function(option,data){
     let xName = option.xAxis.data;
-    let series = [];
     option.xAxis.data = util.getColData(xName,data);
     for(let i = 0; i<option.series.length; i++){
         let sName = option.series[i].data;
         let sDate = util.getColData(sName,data);
         option.series[i].data = sDate;
     }
-    option.color = util.getColors(option.color);
 },
-
-util.analysisNothemeCirChart = function(option,data){
+util.analysisCirChart = function(option,data){
     for(let s in option.series){
         let nameCol = option.series[s].data.name;
         let valueCol = option.series[s].data.value;
@@ -65,6 +62,14 @@ util.analysisNothemeCirChart = function(option,data){
             option.series[s].data.push({name:nameList[i],value:valueList[i]})
         }
     } 
+},
+util.analysisNothemeGridChart = function(option,data){
+    util.analysisGridChart(option,data);
+    option.color = util.getColors(option.color);
+},
+
+util.analysisNothemeCirChart = function(option,data){
+    util.analysisCirChart(option,data);
     option.color = util.getColors(option.color);
 },
 util.analysisCMBBar = function(option,data){
@@ -117,6 +122,9 @@ util.analysisNothemeOption = function(eoption,data,type){
         case 'Pie':
             util.analysisNothemeCirChart(eoption,data);
             break;
+        case 'Stack':
+            util.analysisNothemeGridChart(eoption,data);
+            break;
     }
 },
 
@@ -124,6 +132,9 @@ util.analysisCMBthemeOption = function(eoption,data,type){
     switch (type){
         case 'Bar':
             util.analysisCMBBar(eoption,data);
+            break;
+        case 'Stack':
+            util.analysisGridChart(eoption,data);
             break;
     }
 },

@@ -3,8 +3,8 @@
 </template>
 <script>
 
-import BarData from './BarDataSelect'
-import PieData from './PieDataSelect'
+import BarData from './DataSelectBar'
+import PieData from './DataSelectPie'
 import {mapGetters} from 'vuex'
 
 export default {
@@ -27,6 +27,8 @@ export default {
                 return BarData;
               case 'Pie':
                 return PieData;
+              case 'Stack':
+                return BarData;
           }
         }
     },
