@@ -92,14 +92,14 @@ export default {
         portletTitle:"点击编辑title",
         showSelectChartModal:false,//显示图形选择modal
         imgSelecteToTitle:require("./../../assets/img/gridItemTitle1.png"),//选中title的背景图
-        imgSelecteTochartBox:"",//选中chart容器的背景图
+        imgSelecteTochartBox:require('./../../assets/img/chartBox2.png'),//选中chart容器的背景图
         chartID:null,//选中的chart图形id
         currentTab:"chart",//modal中当前停留的的tab，默认chart
         chartSelected:0,//选中的chart图形
         tableSelected:0,//选中的table图形
         itemComponent:"",//根据选择图形，渲染组件容器
         option:'',//chart图形option
-        chartBackgroundStyles:''//chart背景容器容器样式
+        chartBackgroundStyles:{width:"",height:""}//chart背景容器容器样式
       }
     },
     methods:{
@@ -116,7 +116,6 @@ export default {
       selectReportChart(){
         let Vue = this;
         Vue.showSelectChartModal = true;
-        Vue.getChartBackgroundStyle();
       },
 
       //绘制报表图形
@@ -139,22 +138,22 @@ export default {
               }else{
                 Vue.itemComponent = "Chart" ;
                 Vue.drawEChart(response.data.content);        
-
               }
             }else{
                             
             }     
-            //存储tabs
-            var tabs =[{"tabID":Vue.portletID,
-                         "title":Vue.portletTitle,
-                         "objid":chart.id,
-                         "objtype":chart.type?chart.type:'Table',
-                         'titleBackgroundImg':Vue.imgSelecteToTitle,
-                         'chartBoxBackgroundImg':Vue.imgSelecteTochartBox}
-                      ];
-            Vue.$store.commit("saveTabs",tabs); 
           }
         );
+        //存储tabs
+        var tabs =[{"tabID":Vue.portletID,
+                      "title":Vue.portletTitle,
+                      "objid":Vue.chartID,
+                      "objtype":chart.type?chart.type:'Table',
+                      'titleBackgroundImg':Vue.imgSelecteToTitle,
+                      'chartBoxBackgroundImg':Vue.imgSelecteTochartBox,
+                      'chartBackgroundStyles':Vue.chartBackgroundStyles}
+                  ];
+        Vue.$store.commit("saveTabs",tabs); 
       },
 
       //绘制EChart图形

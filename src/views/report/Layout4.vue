@@ -3,7 +3,7 @@
       <div class="toolbar"><Button @click="addPortlet()">添加模块</Button></div>
       <grid-layout :layout="report.defineJSON.content.portlets" :col-num="12" :row-height="30" :is-draggable="draggable" :is-resizable="resizable" :vertical-compact="true" :use-css-transforms="true">
         <grid-item v-for="item in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key='item.i' drag-ignore-from=".no-drag" drag-allow-from=".vue-draggable-handle">
-           <GridItemContent :griditemTitle='item.name+item.i' :portletID="item.i"  :ifDeletePortlet = 'true'></GridItemContent>
+           <GridItemContent :griditemTitle='item.name+item.i' :portletID="item.i"  :ifDeletePortlet = 'true' ref='gridItemContent'></GridItemContent>
         </grid-item>
       </grid-layout>        
     </div>
@@ -44,9 +44,17 @@ export default {
             var portlet ={ "portletID":""+this.index,
                            "name":"portleName",
                            "x":0,"y":0,"w":6,"h":4,"i":""+this.index,
-                           "tabs":[{"id":this.index,"title":"",'titleBackgroundImg':"",'chartBoxBackgroundImg':"","objtype":"","objid":""}]
+                           "tabs":[{"id":this.index,
+                                   "title":"",
+                                   'titleBackgroundImg':"",
+                                   'chartBoxBackgroundImg':"",
+                                   'chartBackgroundStyles':"",
+                                   "objtype":"",
+                                   "objid":""}
+                                ]
                          };
             this.report.defineJSON.content.portlets.push(portlet);
+            this.$refs.gridItemContent[0].getChartBackgroundStyle();
             this.$store.commit("addDefinePorlets",this.report.defineJSON);
         }
     },

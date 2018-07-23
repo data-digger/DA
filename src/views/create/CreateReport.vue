@@ -148,7 +148,6 @@ export default {
 .header{
   width: 100%;
   height: 90px;
-  margin-bottom: 25px;
   background: url('./../../assets/img/report_header.png');
 }
 .header .left_logo,

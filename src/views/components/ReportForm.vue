@@ -3,7 +3,7 @@
       <div class="header">
         <div class='left_logo'></div>
         <div class='right_logo'></div>
-    </div>    
+      </div>    
     <!-- 过滤器 -->
     <!-- <Card style='margin:10px' >
       <p slot="title">过滤条件</p>
@@ -27,23 +27,17 @@
     </Card>    -->
     <grid-layout :layout="report.defineJSON.content.portlets" :col-num="12" :row-height="30" :is-draggable="false" :is-resizable="false" :vertical-compact="true" :use-css-transforms="true">
         <grid-item :id="'grid_item'+item.i" v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key='item.i'>
-          <div class='griditem_title' :style="{background:'url('+item.tabs[0].titleBackgroundImg+') no-repeat'}">{{item.tabs[0].title}}</div>
+           <div class='griditem_title' :style="{background:'url('+item.tabs[0].titleBackgroundImg+') no-repeat'}">{{item.tabs[0].title}}</div>
            <div :id="'chartBox'+item.i" 
                 class='chartBox' 
-                :style='{width:chartBackgroundStyles[item.i].width,height:chartBackgroundStyles[item.i].height,background:"url("+item.tabs[0].chartBoxBackgroundImg+") no-repeat"}'>
-              <!-- 表格 -->
-              <component v-if='item.component == "Table"' 
-                          :tableContent='tableContent[item.i]'
-                          :is="item.component"
-                          :ifPage='true'>
-              </component>
+                :style='{width:item.tabs[0].chartBackgroundStyles.width,height:item.tabs[0].chartBackgroundStyles.height,background:"url("+item.tabs[0].chartBoxBackgroundImg+") no-repeat"}'>
               <!-- Chart图 -->
               <component v-if='item.component != "Table"' 
                           :ref="'chartContainer'+item.i"
                           :is="item.component" 
                           :option="option[itemIndex]"
                           :chartId='report.id+item.i'
-                          :styles='chartBackgroundStyles[itemIndex]'>
+                          :styles='item.tabs[0].chartBackgroundStyles'>
               </component>
           </div>
         </grid-item>    
@@ -55,7 +49,7 @@ import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
 import echarts from 'echarts'
 import chartUtil from './../../libs/chartUtil.js'
 import {mapGetters} from 'vuex'
-import Table from './../chartcomponents/Table'//表格
+// import Table from './../chartcomponents/Table'//表格
 import datepicker from "./../paramcomponents/DatePicker"//日期
 import list from "./../paramcomponents/List"//列表
 import DefineInput from "./../paramcomponents/Input"//列表
@@ -68,7 +62,7 @@ export default {
   components: {
       "GridLayout": GridLayout,
       "GridItem": GridItem,
-      Table,
+      // Table,
       datepicker,
       list,
       Chart,
@@ -85,11 +79,11 @@ export default {
       isIntoFromResource:false,//是否从资源入口进入
       cardShow:false,//显示卡片容器
       globalFilters:[],
-      tableContent:{'0':null,'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null,'9':null},//表格组件的内容
+      //tableContent:{'0':null,'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null,'9':null},//表格组件的内容
       paramSelected:null,//选择的参数值
       report_replace:null,//用于更新数据的report替身
       option:[],
-      chartBackgroundStyles:[]
+      // chartBackgroundStyles:[{width:'',height:'',background:''}]
     }
   }, 
   methods:{
@@ -104,7 +98,7 @@ export default {
         Vue.report.desc= Vue.$route.params.desc;
         Vue.report.defineJSON= Vue.$route.params.defineJSON;
         Vue.report.alias= Vue.$route.params.alias;
-        Vue.initReportData();
+        Vue.initChartComponent();
       }
     },
 
@@ -114,14 +108,14 @@ export default {
       let portlets = Vue.report.defineJSON.content.portlets;
       for(var i in portlets){
         if(portlets[i].tabs[0].objtype == 'Table'){
-          portlets[i].component = 'Table';
+          // portlets[i].component = 'Table';
         }else if(portlets[i].tabs[0].objtype == 'Card'){
           portlets[i].component = 'CountCard'
         }else{
           portlets[i].component = 'Chart'
         }
       };
-      Vue.initReportData();
+      Vue.initReportData(); 
     },
 
     /*初始化报表数据*/
@@ -211,9 +205,9 @@ export default {
     drawReport(response){
       let Vue = this;
       Vue.option = [];
-      Vue.chartBackgroundStyles = [];
+      // Vue.chartBackgroundStyles = [];
       var chartDataArray = response.chartData;
-      var tableDataArray = response.tableData;
+      // var tableDataArray = response.tableData;
       if(chartDataArray.length != 0){//chart图形
         for (var i in chartDataArray){
           if(chartDataArray[i].type == 'Card'){
@@ -222,18 +216,18 @@ export default {
           Vue.drawChart(chartDataArray[i]);
         }        
       }   
-      if(tableDataArray.length != 0){//表格
+    /*  if(tableDataArray.length != 0){//表格
         for(var j in tableDataArray){
           Vue.tableContent[tableDataArray[j].portletID] = tableDataArray[j].data;
-/*          let portlets = Vue.report.defineJSON.content.portlets;
+          let portlets = Vue.report.defineJSON.content.portlets;
           for(var k in portlets){
             if(portlets[k].portletID == tableDataArray[j].portletID){
               portlets[k].cmpData = tableDataArray[j].data;
               console.log(Vue.report)
             }
-          }; */         
+          };        
         }
-      }
+      } */ 
     },
 
   
@@ -255,7 +249,7 @@ export default {
       let Coption = JSON.parse(chartData.defineJSON).option;
       Vue.option.push(Coption);
       var type = chartData.type;
-      Vue.getChartBackgroundStyle(chartData);
+      // Vue.getChartBackgroundStyle(chartData);
       chartUtil.analysis(Coption,type,data);
       Vue.$nextTick(function(){
         Vue.$refs['chartContainer'+chartData.portletID][0].show(Coption);
@@ -285,7 +279,6 @@ export default {
 .header{
   width: 100%;
   height: 90px;
-  margin-bottom: 25px;
   background: url('./../../assets/img/report_header.png');
 }
 .header .left_logo,
@@ -315,9 +308,6 @@ export default {
   padding-left: 11px;
   color:white;
   font-size: 14px;
-}
-.grid-layout{
-  background-color:#f0f0f0 !important;
 }
 .ivu-tooltip,.ivu-poptip{
   display:block !important;
