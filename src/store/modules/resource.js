@@ -22,7 +22,7 @@ const state = {
       tail:{}
     }
   },
-  layoutSelected:"布局1",
+  currentLayout:"",
   queryFields:[],//查询器字段集合
   dimensions:[], //维度字段集合
   metrics:[], //度量字段集合
@@ -39,7 +39,7 @@ const getters = {
   chartList: state => state.chartList,
   queryList: state => state.queryList,
   tableList: state => state.tableList,
-  layoutSelected: state => state.layoutSelected,
+  currentLayout: state => state.currentLayout,
   report: state => state.report,
   queryFields: state => state.queryFields,
   dimensions: state => state.dimensions,
@@ -101,8 +101,8 @@ const mutations = {
      state.report.alias = param.alias;
      state.report.desc = param.desc;
   },
-  layoutSelected(state,param){
-    state.layoutSelected = param;
+  currentLayout(state,param){
+    state.currentLayout = param;
   },
   initDefaultdPortlets(state,param){
     state.report.defineJSON.content.portlets=param;

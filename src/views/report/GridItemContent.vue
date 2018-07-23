@@ -116,6 +116,7 @@ export default {
       selectReportChart(){
         let Vue = this;
         Vue.showSelectChartModal = true;
+        Vue.getChartBackgroundStyle();
       },
 
       //绘制报表图形

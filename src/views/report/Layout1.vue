@@ -8,8 +8,7 @@
             :is-resizable="false"
             :vertical-compact="true"
             :margin="[10, 10]"
-            :use-css-transforms="true"
-    >
+            :use-css-transforms="true">
         <grid-item v-for="item in portlets"
                    :x="item.x"
                    :y="item.y"
@@ -17,7 +16,7 @@
                    :h="item.h"
                    :i="item.i"
                    :key='item.i'>
-         <GridItemContent :griditemTitle='item.i' :portletID="item.i" :hasExtraIcon = 'false'></GridItemContent>
+          <GridItemContent :griditemTitle='item.i' :portletID="item.i" :hasExtraIcon = 'false'></GridItemContent>
         </grid-item>
     </grid-layout>
   </div>

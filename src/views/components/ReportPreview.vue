@@ -4,35 +4,27 @@
         <div class='left_logo'></div>
         <div class='right_logo'></div>
       </div>    
-    <!-- 过滤器 -->
-    <!-- <Card style='margin:10px' >
-      <p slot="title">过滤条件</p>
-      <Row>
-        <Col span='12' v-for='(cmp,index) in globalFilters' :key='"filter"+index' style='margin-bottom: 5px'>
-          <Col span='3' style='line-height: 30px'>{{cmp.alias}}</Col>
-          <Col span='10'>
-            <component 
-              class='globalFilters'       
-              :is="cmp.component"        
-              :componentType='cmp.type'
-              :defaultValue='cmp.defaultValue'
-              :index='index'
-              @sentDate = 'updateReport'
-              :standByValue = "cmp.standByValue"
-              :randomName ="cmp.randomName"
-            ></component>                
-          </Col>
-        </Col>
-      </Row>
-    </Card>    -->
-    <grid-layout :layout="report.defineJSON.content.portlets" :col-num="12" :row-height="30" :is-draggable="false" :is-resizable="false" :vertical-compact="true" :use-css-transforms="true">
-        <grid-item :id="'grid_item'+item.i" v-for="(item,itemIndex) in report.defineJSON.content.portlets" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key='item.i'>
+    <grid-layout :layout="report.defineJSON.content.portlets" 
+                 :col-num="12" 
+                 :row-height="30" 
+                 :is-draggable="false" 
+                 :is-resizable="false" 
+                 :vertical-compact="true" 
+                 :use-css-transforms="true">
+        <grid-item :id="'grid_item'+item.i" 
+                   v-for="(item,itemIndex) in report.defineJSON.content.portlets" 
+                   :x="item.x" 
+                   :y="item.y" 
+                   :w="item.w" 
+                   :h="item.h" 
+                   :i="item.i" 
+                   :key='item.i'>
            <div class='griditem_title' :style="{background:'url('+item.tabs[0].titleBackgroundImg+') no-repeat'}">{{item.tabs[0].title}}</div>
            <div :id="'chartBox'+item.i" 
                 class='chartBox' 
                 :style='{width:item.tabs[0].chartBackgroundStyles.width,height:item.tabs[0].chartBackgroundStyles.height,background:"url("+item.tabs[0].chartBoxBackgroundImg+") no-repeat"}'>
               <!-- Chart图 -->
-              <component v-if='item.component != "Table"' 
+              <component  v-if='item.component != "Table"' 
                           :ref="'chartContainer'+item.i"
                           :is="item.component" 
                           :option="option[itemIndex]"
@@ -108,7 +100,7 @@ export default {
       let portlets = Vue.report.defineJSON.content.portlets;
       for(var i in portlets){
         if(portlets[i].tabs[0].objtype == 'Table'){
-          // portlets[i].component = 'Table';
+
         }else if(portlets[i].tabs[0].objtype == 'Card'){
           portlets[i].component = 'CountCard'
         }else{
@@ -216,32 +208,7 @@ export default {
           Vue.drawChart(chartDataArray[i]);
         }        
       }   
-    /*  if(tableDataArray.length != 0){//表格
-        for(var j in tableDataArray){
-          Vue.tableContent[tableDataArray[j].portletID] = tableDataArray[j].data;
-          let portlets = Vue.report.defineJSON.content.portlets;
-          for(var k in portlets){
-            if(portlets[k].portletID == tableDataArray[j].portletID){
-              portlets[k].cmpData = tableDataArray[j].data;
-              console.log(Vue.report)
-            }
-          };        
-        }
-      } */ 
     },
-
-  
-    //获取背景图片容器样式
-    getChartBackgroundStyle (chartData){
-      let Vue = this;
-      let style = {};
-      let $grid_item = $("#grid_item"+chartData.portletID);
-      let $grid_item_title = $grid_item.find(".griditem_title");
-      style.width = '100%';
-      style.height = ($grid_item.height()-$grid_item_title.height())/$grid_item.height()*100+"%";
-      Vue.chartBackgroundStyles.push(style);
-    },  
-
     /*绘制Chart图形*/  
     drawChart (chartData) {
       let Vue = this;
