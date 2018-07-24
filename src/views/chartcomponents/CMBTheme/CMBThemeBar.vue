@@ -34,7 +34,7 @@ export default {
     data () {
         return {
                 option:{
-                        backgroundColor: "#141f56",
+                        //backgroundColor: "#141f56",
                         tooltip: {
                             show: false,
                         },

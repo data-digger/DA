@@ -111,6 +111,22 @@ util.analysisCMBBar = function(option,data){
         return newParamsName;
     }
 },
+util.analysisCMBGuage = function(option,data){
+    let dataName = option.series[0].data[0].value;
+    let value = util.getColData(dataName,data);
+    if(value && value.length >0){
+        option.series[0].data[0].value = value;
+    }
+    let max = option.series[0].max;
+    let min = option.series[0].min;
+    option.series[0].axisLabel.formatter = function (value) {
+        if(value == min || value == max){
+            return value
+        } else {
+            return ''
+        }
+    }
+}
 util.getColors = function(selectedColor){
     return ChartTemplate.COLORS[selectedColor].color
 }
@@ -136,6 +152,8 @@ util.analysisCMBthemeOption = function(eoption,data,type){
         case 'Stack':
             util.analysisGridChart(eoption,data);
             break;
+        case 'Guage':
+            util.analysisCMBGuage(eoption,data);
     }
 },
 

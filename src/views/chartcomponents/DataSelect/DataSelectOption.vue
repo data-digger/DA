@@ -5,6 +5,7 @@
 
 import BarData from './DataSelectBar'
 import PieData from './DataSelectPie'
+import GaugeData from './DataSelectGauge'
 import {mapGetters} from 'vuex'
 
 export default {
@@ -16,7 +17,8 @@ export default {
     },
     components:{
         BarData,
-        PieData
+        PieData,
+        GaugeData
     },
     computed: {
         ...mapGetters({
@@ -29,6 +31,8 @@ export default {
                 return PieData;
               case 'Stack':
                 return BarData;
+              case 'Guage':
+                return GaugeData
           }
         }
     },

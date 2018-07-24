@@ -34,7 +34,7 @@ export default {
     data () {
         return {
                 option:{
-                    backgroundColor: "#141f56",
+                    //backgroundColor: "#141f56",
                     tooltip: {
                         trigger: 'axis',
                         axisPointer: {            // 坐标轴指示器，坐标轴触发有效
@@ -105,7 +105,7 @@ export default {
                             ],
                     series: []
                     },
-                    colors:['#FF534D',"#E9F01D",'#00FF80']            
+                    CMBThemeStack_colors:['#FF534D',"#E9F01D",'#00FF80']            
             }
     },
     methods: {
@@ -125,7 +125,7 @@ export default {
                         type: 'bar',
                         barWidth: '70%',
                         stack: 'group1',  
-                        color : this.colors[i % 3],
+                        color : this.CMBThemeStack_colors[i % 3],
                         label: {
                             normal: {
                             show: true,
