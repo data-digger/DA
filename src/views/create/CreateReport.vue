@@ -14,7 +14,9 @@
           <div class='right_logo'></div>
         </div>
         <div class="demo-carousel">
-          <component v-show='step==1?true:false' :is="currentReportLayout" ref='currentReportLayout'></component>
+          <keep-alive>
+            <component v-show='step==1?true:false' :is="currentReportLayout"></component>
+          </keep-alive>
         </div>
       </CarouselItem>
       <!-- 过滤器-->
