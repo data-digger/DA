@@ -69,18 +69,18 @@ export default {
   data(){
     return { 
       isIntoFromResource:false,//是否从资源入口进入
-      cardShow:false,//显示卡片容器
       globalFilters:[],
       //tableContent:{'0':null,'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null,'9':null},//表格组件的内容
       paramSelected:null,//选择的参数值
       report_replace:null,//用于更新数据的report替身
       option:[],
-      // chartBackgroundStyles:[{width:'',height:'',background:''}]
     }
   }, 
   methods:{
 
-    /*初始化报表*/
+    /**
+     * 初始化报表
+     */
     initReport(){
       let Vue =this;
       Vue.isIntoFromResource =  !$.isEmptyObject(Vue.$route.params);//判断是否从资源界面入口进入
@@ -94,7 +94,9 @@ export default {
       }
     },
 
-    /*初始化图形组件*/
+    /**
+     * 初始化图形组件
+     */
     initChartComponent(){
       let Vue = this;
       let portlets = Vue.report.defineJSON.content.portlets;
@@ -110,7 +112,9 @@ export default {
       Vue.initReportData(); 
     },
 
-    /*初始化报表数据*/
+    /**
+     * 初始化报表数据
+     */
     initReportData(){
       let Vue = this;   
       if(Vue.isIntoFromResource){//如果从资源界面进入
@@ -143,7 +147,9 @@ export default {
       } 
     },
 
-    /*初始化过滤器组件*/
+    /**
+     * 初始化过滤器组件
+     */
     initFilter(defineJSON){
       let Vue = this;
       Vue.globalFilters = [];
@@ -193,30 +199,30 @@ export default {
       Vue.globalFilters = aGlobalFilters;
     },
 
-    /*绘制报表*/
+    /**
+     * 绘制报表
+     */
     drawReport(response){
       let Vue = this;
       Vue.option = [];
-      // Vue.chartBackgroundStyles = [];
       var chartDataArray = response.chartData;
       // var tableDataArray = response.tableData;
       if(chartDataArray.length != 0){//chart图形
         for (var i in chartDataArray){
-          if(chartDataArray[i].type == 'Card'){
-            Vue.cardShow = true;
-          }
           Vue.drawChart(chartDataArray[i]);
         }        
       }   
     },
-    /*绘制Chart图形*/  
+
+    /**
+     * 绘制Chart图形
+     */  
     drawChart (chartData) {
       let Vue = this;
       let data = chartData.data;
       let Coption = JSON.parse(chartData.defineJSON).option;
       Vue.option.push(Coption);
       var type = chartData.type;
-      // Vue.getChartBackgroundStyle(chartData);
       chartUtil.analysis(Coption,type,data);
       Vue.$nextTick(function(){
         Vue.$refs['chartContainer'+chartData.portletID][0].show(Coption);
@@ -224,7 +230,9 @@ export default {
     },   
 
 
-    /*更新报表数据*/
+    /**
+     * 更新报表数据
+     */
     updateReport(param){
       let Vue = this;
       Vue.report_replace.defineJSON.header.globalFilter[param.index].value = param.value;
@@ -234,6 +242,7 @@ export default {
       })       
     },
   },
+  
   mounted(){
     let Vue = this;
     Vue.initReport();
