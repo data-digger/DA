@@ -25,7 +25,7 @@
                     :is="itemComponent" 
                     :option="option"
                     :chartId='"report"+portletID'
-                    :styles='chartBackgroundStyles'>
+                    :styles='{width:"100%",height:"100%"}'>
           </component>
       </div>
       <!-- 图形选择和背景图片选择 -->

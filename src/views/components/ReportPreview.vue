@@ -29,7 +29,7 @@
                           :is="item.component" 
                           :option="option[itemIndex]"
                           :chartId='report.id+item.i'
-                          :styles='item.tabs[0].chartBackgroundStyles'>
+                          :styles='{width:"100%",height:"100%"}'>
               </component>
           </div>
         </grid-item>    

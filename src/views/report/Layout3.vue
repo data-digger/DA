@@ -17,7 +17,7 @@
                    :h="item.h"
                    :i="item.i"
                    :key='item.i'>
-         <GridItemContent :griditemTitle='item.i' :portletID="item.i"  :hasExtraIcon = 'false'></GridItemContent>
+         <GridItemContent :portletID="item.i" :hasExtraIcon = 'false'></GridItemContent>
         </grid-item>
     </grid-layout>
   </div>

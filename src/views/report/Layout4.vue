@@ -17,11 +17,7 @@
                    :key='item.i' 
                    drag-ignore-from=".no-drag" 
                    drag-allow-from=".vue-draggable-handle">
-            <GridItemContent :griditemTitle='item.name+item.i' 
-                             :portletID="item.i"  
-                             :ifDeletePortlet = 'true' 
-                             ref='gridItemContent'>
-            </GridItemContent>
+            <GridItemContent :portletID="item.i" ref='gridItemContent'></GridItemContent>
         </grid-item>
       </grid-layout>        
     </div>
@@ -46,7 +42,10 @@ export default {
         index:-1,
         report:{
           defineJSON:{
-            header:{conditons:[{type:"",objid:""}]},
+            header:{
+              conditons:[],
+              globalFilter:[]
+            },
             content:{
               portlets:[]
             },
