@@ -23,6 +23,16 @@
                 Max
                 <Input v-model="option.series[0].max"></Input>                    
             </Col>
+        </FormItem>  
+        <FormItem prop="angle">
+            <Col span='8'>
+                startAngle
+                <Input v-model="option.series[0].startAngle"></Input>                    
+            </Col>
+            <Col span='7' offset='1'>
+                endAngle
+                <Input v-model="option.series[0].endAngle"></Input>                    
+            </Col>
         </FormItem>            
     </Row>
 </template>
@@ -63,12 +73,12 @@ export default {
                             endAngle: 0,
                             min:0,
                             max:100,
-                            radius: '60%',
+                            radius: '70%',
                             center: ['50%', '55%'], // 默认全局居中  
                             axisLine: {
                                 show: false,
                                 lineStyle: {
-                                    width: 25,
+                                    width: 40,
                                     shadowBlur: 0,
                                     color: [
                                         [0.5, '#91c7ae'],
@@ -92,7 +102,7 @@ export default {
                                 show: true,
                                 //color:'#ffffff',
                                 //inside: false,
-                                distance:'10',
+                                distance:'35',
                                 textStyle: {
                                 fontWeight: 'bolder',
                                 fontSize: 16,
@@ -109,13 +119,13 @@ export default {
                             pointer: {
                                 show: true,
                                 length: '58%',
-                                color:'#ffffff'
+                                //color:'#ffffff'
                             },
                             detail: {
                                 show: true,
                                 offsetCenter: [0, '60%'],
                                 textStyle: {
-                                    fontSize: 30,
+                                    fontSize: 32,
                                     fontWeight:'bolder'
                                 },
                                 formatter:'{value}%'

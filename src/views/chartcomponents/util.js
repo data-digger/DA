@@ -41,7 +41,8 @@ util.getColData = function(colName,data){
         return re;
     }
 
-}
+};
+
 util.analysisGridChart = function(option,data){
     let xName = option.xAxis.data;
     option.xAxis.data = util.getColData(xName,data);
@@ -50,7 +51,8 @@ util.analysisGridChart = function(option,data){
         let sDate = util.getColData(sName,data);
         option.series[i].data = sDate;
     }
-},
+};
+
 util.analysisCirChart = function(option,data){
     for(let s in option.series){
         let nameCol = option.series[s].data.name;
@@ -62,16 +64,18 @@ util.analysisCirChart = function(option,data){
             option.series[s].data.push({name:nameList[i],value:valueList[i]})
         }
     } 
-},
+}
+
 util.analysisNothemeGridChart = function(option,data){
     util.analysisGridChart(option,data);
     option.color = util.getColors(option.color);
-},
+};
 
 util.analysisNothemeCirChart = function(option,data){
     util.analysisCirChart(option,data);
     option.color = util.getColors(option.color);
-},
+};
+
 util.analysisCMBBar = function(option,data){
     let xName = option.xAxis[0].data;
     let yName = option.series[0].data;
@@ -110,7 +114,59 @@ util.analysisCMBBar = function(option,data){
         }
         return newParamsName;
     }
-},
+};
+
+util.analysisCMBFourQuadrant = function(eoption,data){
+    let name = eoption.series[0].data.name;
+    let valueName1 = eoption.series[0].data.value[0];
+    let valueName2 = eoption.series[0].data.value[1];
+    let xThreshold = Number(eoption.series[0].markLine.data[0].xAxis);
+    let yThreshold = Number(eoption.series[0].markLine.data[1].yAxis);
+    let seriesData1 = [];   //第一象限
+    let seriesData2 = [];   //第二象限
+    let seriesData3 = [];   //第三象限
+    let seriesData4 = [];   //第四象限
+    let nameData = util.getColData(name,data);
+    let value1 = util.getColData(valueName1,data);
+    let value2 = util.getColData(valueName2,data);
+    for (let i=0; i<nameData.length; i++){
+        if (value1[i] <= xThreshold) {
+            if(value2[i] > yThreshold){
+                seriesData1.push({name:nameData[i],value:[value1[i],value2[i]]});
+            } else {
+                seriesData3.push({name:nameData[i],value:[value1[i],value2[i]]});
+            }
+        } else {
+            if(value2[i] > yThreshold){
+                seriesData2.push({name:nameData[i],value:[value1[i],value2[i]]});
+            } else {
+                seriesData4.push({name:nameData[i],value:[value1[i],value2[i]]});
+            }
+        }
+    }
+    eoption.series[0].data = seriesData1;
+    eoption.series[1].data = seriesData2;
+    eoption.series[2].data = seriesData3;
+    eoption.series[3].data = seriesData4;
+
+    let seriesLabel = {
+        show: true,
+        position: 'bottom',
+        distance : 10,
+        color : '#ccc',
+        formatter: function(params) {
+            return params.name
+        },
+    };
+
+    for(let j=0; j<4; j++){
+        eoption.series[j].label = seriesLabel;
+    };
+    eoption.tooltip.formatter = function(params){
+        return params.name+': '+params.value[0]+' , '+params.value[1]
+    }
+};
+
 util.analysisCMBGuage = function(option,data){
     let dataName = option.series[0].data[0].value;
     let value = util.getColData(dataName,data);
@@ -154,6 +210,8 @@ util.analysisCMBthemeOption = function(eoption,data,type){
             break;
         case 'Guage':
             util.analysisCMBGuage(eoption,data);
+        case 'FourQuadrant':
+            util.analysisCMBFourQuadrant(eoption,data);
     }
 },
 
