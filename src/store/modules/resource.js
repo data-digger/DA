@@ -49,7 +49,7 @@ const state = {
     }
   },
 
-  currentReportLayout:"Layout1",
+  currentReportGridLayout:"GridLayoutPredefine1",
   queryFields:[],//查询器字段集合
   dimensions:[], //维度字段集合
   metrics:[], //度量字段集合
@@ -66,7 +66,7 @@ const getters = {
   chartList: state => state.chartList,
   queryList: state => state.queryList,
   tableList: state => state.tableList,
-  currentReportLayout: state => state.currentReportLayout,
+  currentReportGridLayout: state => state.currentReportGridLayout,
   report: state => state.report,
   queryFields: state => state.queryFields,
   dimensions: state => state.dimensions,
@@ -128,8 +128,8 @@ const mutations = {
     state.report.alias = param.alias;
     state.report.desc = param.desc;
   },
-  currentReportLayout(state,param){
-    state.currentReportLayout = param;
+  currentReportGridLayout(state,param){
+    state.currentReportGridLayout = param;
   },
   initDefaultdPortlets(state,param){
     state.report.defineJSON.content.portlets=param;

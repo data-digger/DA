@@ -1,5 +1,5 @@
 <template>
-  <RadioGroup id='selectLayout' v-model="layoutSelected" :on-change ='layoutselected()'>
+  <RadioGroup id='selectLayout' v-model="gridLayoutSelected" :on-change ='gridLayoutselected()'>
      <Radio label="布局1">
         <Card class='layoutCard'>
           <img class='layoutImg' src="./../../assets/img/default_layout_1.png">
@@ -27,18 +27,18 @@
 export default { 
   data(){
     return {
-      layoutSelected:"布局1"
+      gridLayoutSelected:"布局1"
     }
   },
   methods:{
     //向store中存储选中的布局
-    layoutselected(){
-      let currentReportLayout = null;
-      if(this.layoutSelected == "布局1"){ currentReportLayout = 'Layout1'};
-      if(this.layoutSelected == "布局2"){ currentReportLayout = 'Layout2'};
-      if(this.layoutSelected == "布局3"){ currentReportLayout = 'Layout3'};
-      if(this.layoutSelected == "自定义"){ currentReportLayout = 'Layout4'};
-      this.$store.commit("currentReportLayout",currentReportLayout);
+    gridLayoutselected(){
+      let currentReportGridLayout = null;
+      if(this.gridLayoutSelected == "布局1"){ currentReportGridLayout = 'GridLayoutPredefine1'};
+      if(this.gridLayoutSelected == "布局2"){ currentReportGridLayout = 'GridLayoutPredefine2'};
+      if(this.gridLayoutSelected == "布局3"){ currentReportGridLayout = 'GridLayoutPredefine3'};
+      if(this.gridLayoutSelected == "自定义"){ currentReportGridLayout = 'GridLayoutDefine'};
+      this.$store.commit("currentReportGridLayout",currentReportGridLayout);
     }
   }
 }
