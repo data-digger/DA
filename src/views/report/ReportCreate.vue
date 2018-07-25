@@ -1,9 +1,11 @@
 <template>
   <div>
-    <Carousel v-model="step" 
-              :dots="carouselSetting.dots" 
-              :arrow="carouselSetting.arrow" 
-              ref='slide'>
+    <Carousel 
+      v-model="step" 
+      :dots="carouselSetting.dots" 
+      :arrow="carouselSetting.arrow" 
+      ref='slide'
+    >
       <!-- 选择布局-->
       <CarouselItem>
         <div class="demo-carousel">
@@ -18,33 +20,56 @@
         </div>
         <div class="demo-carousel">
           <keep-alive>
-            <component v-show='step==1?true:false' :is="currentReportGridLayout"></component>
+            <component 
+              v-show='step==1?true:false' 
+              :is="currentReportGridLayout"
+            ></component>
           </keep-alive>
         </div>
       </CarouselItem>
       <!-- 过滤器-->
       <CarouselItem>
         <div class="demo-carousel">
-          <ReportFilterEdit v-show='step==2?true:false' ref='ReportFilterEdit'></ReportFilterEdit>
+          <ReportFilterEdit 
+            v-show='step==2?true:false' 
+            ref='ReportFilterEdit'
+          ></ReportFilterEdit>
         </div>
       </CarouselItem>
       <!-- 预览报表-->
       <CarouselItem class='carousel-repor'>
         <div class="demo-carousel">
-          <ReportPreview v-if='step==3?true:false' ref='ReportPreview'></ReportPreview>
+          <ReportPreview 
+            v-if='step==3?true:false' 
+            ref='ReportPreview'
+          ></ReportPreview>
         </div>
       </CarouselItem>
       <!-- 报表信息-->
       <CarouselItem>
         <div class="demo-carousel">
-          <ReportInfoEdit v-show='step==4?true:false' ref='ReportInfoEdit'></ReportInfoEdit>
+          <ReportInfoEdit 
+            v-show='step==4?true:false' 
+            ref='ReportInfoEdit'
+          ></ReportInfoEdit>
         </div>
       </CarouselItem>
     </Carousel>
-    <Row  class='button'>
-      <Button type="primary" @click='pre()'>上一步</Button>
-      <Button v-if="step!=4?true:false" type="primary" @click='next()'>下一步</Button>
-      <Button v-if="step==4?true:false" type="primary" @click='createReport()'>保存</Button>
+    <Row class='button'>
+      <Button 
+        type="primary" 
+        @click='pre()'
+      >上一步</Button>
+      <Button
+        v-if="step!=4?true:false" 
+        type="primary" 
+        @click='next()'
+      >下一步</Button>
+      <Button 
+        v-if="step==4?true:false" 
+        type="primary" 
+        @click='createReport()'
+      >保存</Button>
     </Row> 
   </div>
 </template>
@@ -55,7 +80,7 @@ import ReportInfoEdit from "./ReportInfoEdit"
 import GridLayoutPredefine1 from "./gridcomponents/GridLayoutPredefine1"
 import GridLayoutPredefine2 from "./gridcomponents/GridLayoutPredefine2"
 import GridLayoutPredefine3 from "./gridcomponents/GridLayoutPredefine3"
-import GridLayoutDefine from "./gridcomponents/GridLayoutDefine"
+import GridLayoutCustomDefine from "./gridcomponents/GridLayoutCustomDefine"
 import ReportFilterEdit from "./ReportFilterEdit"
 import ReportPreview from "./ReportPreview"
 import {mapGetters} from 'vuex'
@@ -66,16 +91,11 @@ export default {
     GridLayoutPredefine1,
     GridLayoutPredefine2,
     GridLayoutPredefine3,
-    GridLayoutDefine,
+    GridLayoutCustomDefine,
     ReportFilterEdit,
     ReportPreview
   },
-  computed: {
-    ...mapGetters({
-      currentReportGridLayout:'currentReportGridLayout',
-      report:'report'
-    })
-  },
+
   data () {
     return {
       step: 0,//走马灯步数
@@ -86,8 +106,15 @@ export default {
       }
     }
   },
-  methods:{
 
+  computed: {
+    ...mapGetters({
+      currentReportGridLayout:'currentReportGridLayout',
+      report:'report'
+    })
+  },
+
+  methods:{
     /**
      * 下一步操作
      */

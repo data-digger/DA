@@ -4,43 +4,51 @@
         <div class='left_logo'></div>
         <div class='right_logo'></div>
       </div>    
-    <grid-layout :layout="report.defineJSON.content.portlets" 
-                 :col-num="12" 
-                 :row-height="30" 
-                 :is-draggable="false" 
-                 :is-resizable="false" 
-                 :vertical-compact="true" 
-                 :use-css-transforms="true">
-        <grid-item :id="'grid_item'+item.i" 
-                   v-for="(item,itemIndex) in report.defineJSON.content.portlets" 
-                   :x="item.x" 
-                   :y="item.y" 
-                   :w="item.w" 
-                   :h="item.h" 
-                   :i="item.i" 
-                   :key='item.i'>
-           <div class='griditem_title' :style="{background:'url('+item.tabs[0].titleBackgroundImg+') no-repeat'}">{{item.tabs[0].title}}</div>
-           <div :id="'chartBox'+item.i" 
-                class='chartBox' 
-                :style='{width:item.tabs[0].chartBackgroundStyles.width,height:item.tabs[0].chartBackgroundStyles.height,background:"url("+item.tabs[0].chartBoxBackgroundImg+") no-repeat"}'>
-              <!-- Chart图 -->
-              <component  v-if='item.component != "Table"' 
-                          :ref="'chartContainer'+item.i"
-                          :is="item.component" 
-                          :option="option[itemIndex]"
-                          :chartId='report.id+item.i'
-                          :styles='{width:"100%",height:"100%"}'>
-              </component>
-          </div>
-        </grid-item>    
+    <grid-layout 
+      :layout="report.defineJSON.content.portlets" 
+      :col-num="12" 
+      :row-height="30" 
+      :is-draggable="false" 
+      :is-resizable="false" 
+      :vertical-compact="true" 
+      :use-css-transforms="true">
+      <grid-item 
+        :id="'grid_item'+item.i" 
+        v-for="(item,itemIndex) in report.defineJSON.content.portlets" 
+        :x="item.x" 
+        :y="item.y" 
+        :w="item.w" 
+        :h="item.h" 
+        :i="item.i" 
+        :key='item.i'>
+        <div 
+          class='griditem_title' 
+          :style="{background:'url('+item.tabs[0].titleBackgroundImg+') no-repeat'}"
+        >{{item.tabs[0].title}}</div>
+        <div 
+          :id="'chartBox'+item.i" 
+          class='chartBox' 
+          :style='{width:item.tabs[0].chartBackgroundStyles.width,
+                  height:item.tabs[0].chartBackgroundStyles.height,
+                  background:"url("+item.tabs[0].chartBoxBackgroundImg+") no-repeat"}'>
+          <!-- Chart图 -->
+          <component  
+            v-if='item.component != "Table"' 
+            :ref="'chartContainer'+item.i"
+            :is="item.component" 
+            :option="option[itemIndex]"
+            :chartId='report.id+item.i'
+            :styles='{width:"100%",height:"100%"}'>
+          </component>
+        </div>
+      </grid-item>    
     </grid-layout>
-    </div>    
+  </div>    
 </template>
 <script>
 import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
 import echarts from 'echarts'
 import {mapGetters} from 'vuex'
-// import Table from './../chartcomponents/Table'//表格
 import datepicker from "./../paramcomponents/DatePicker"//日期
 import list from "./../paramcomponents/List"//列表
 import DefineInput from "./../paramcomponents/Input"//列表
@@ -52,30 +60,34 @@ var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
 export default {
   components: {
-      "GridLayout": GridLayout,
-      "GridItem": GridItem,
-      // Table,
-      datepicker,
-      list,
-      Chart,
-      DefineInput,
-      CountCard     
-  },
-  computed:{
-    ...mapGetters({
-      report:'report'
-    })
+    "GridLayout": GridLayout,
+    "GridItem": GridItem,
+    datepicker,
+    list,
+    Chart,
+    DefineInput,
+    CountCard     
   },
   data(){
     return { 
       isIntoFromResource:false,//是否从资源入口进入
       globalFilters:[],
-      //tableContent:{'0':null,'1':null,'2':null,'3':null,'4':null,'5':null,'6':null,'7':null,'8':null,'9':null},//表格组件的内容
       paramSelected:null,//选择的参数值
       report_replace:null,//用于更新数据的report替身
       option:[],
     }
   }, 
+  computed:{
+    ...mapGetters({
+      report:'report'
+    })
+  },
+    
+  mounted(){
+    let Vue = this;
+    Vue.initReport();
+  },
+  
   methods:{
 
     /**
@@ -244,11 +256,6 @@ export default {
           Vue.drawReport(response.data.content);
       })       
     },
-  },
-  
-  mounted(){
-    let Vue = this;
-    Vue.initReport();
   }
 }
 </script>

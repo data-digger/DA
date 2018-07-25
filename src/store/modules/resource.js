@@ -128,20 +128,20 @@ const mutations = {
     state.report.alias = param.alias;
     state.report.desc = param.desc;
   },
-  currentReportGridLayout(state,param){
+  saveCurrentReportGridLayout(state,param){
     state.currentReportGridLayout = param;
   },
-  initDefaultdPortlets(state,param){
+  saveCurrentReportGridItem(state,param){
     state.report.defineJSON.content.portlets=param;
   },
 
-  /*保存报表中portlet Title*/
-  addDefinePorlets(state,param){
-    state.report.defineJSON = param;
-  },
+  // /*保存报表中portlet*/
+  // addReportGridItem(state,param){
+  //   state.report.defineJSON = param;
+  // },
 
-  /*删除portlet操作，更新portlets*/
-  deletePortlet(state,param){
+  /*删除griditem*/
+  deleteGridItem(state,param){
     let portlets = state.report.defineJSON.content.portlets
     for(var i in portlets){
       if(portlets[i].portletID == param){
@@ -159,7 +159,7 @@ const mutations = {
     }
   },
   /*保存报表中portlet Title*/
-  savePortletTitle(state,param){
+  saveGridItemTitle(state,param){
     for( let index in state.report.defineJSON.content.portlets){
       if(state.report.defineJSON.content.portlets[index].portletID == param.portletID){
         state.report.defineJSON.content.portlets[index].tabs[0].title= param.portletTitle;

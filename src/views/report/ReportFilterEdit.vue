@@ -3,7 +3,12 @@
     <Card style='margin:10px'>
       <p slot="title">添加全局过滤器</p>
       <Row>
-        <Form id="createGlobalFilter" :label-width="120"  :rules="ruleValidate" ref="globalFilter" :model='filter'>
+        <Form 
+          id="createGlobalFilter" 
+          :label-width="120"  
+          :rules="ruleValidate" 
+          ref="globalFilter" 
+          :model='filter'>
          <Col span='15'>
             <FormItem label="全局过滤器名称" prop="name">
               <Input v-model="filter.name" placeholder="输入名称"></Input>
@@ -20,35 +25,53 @@
                 :data="filterTypeSelections" 
                 trigger="hover" 
                 @on-change='selectFilterType' 
-                ></Cascader>
+              ></Cascader>
            </FormItem> 
           </Col>
           <Col span='24'>
             <FormItem label="关联过滤器" >
-              <Select v-model = 'relatedFilterSelectedList' multiple @click.native='initRelatedFilterSelections()'>
-                  <Option v-for="(item,index) in relatedFilterSelections" :value="index" :key="index">{{ item.label }}</Option>
+              <Select 
+                v-model = 'relatedFilterSelectedList' 
+                multiple 
+                @click.native='initRelatedFilterSelections()'>
+                  <Option 
+                    v-for="(item,index) in relatedFilterSelections" 
+                    :value="index" 
+                    :key="index"
+                  >{{ item.label }}</Option>
               </Select>       
             </FormItem>          
           </Col>
           <Col span='24'>
-            <FormItem label="默认值" v-if='filter.type == "singleSelect" || filter.type == "multiSelect" || filter.type == "input"' prop="dafaultValue">
+            <FormItem 
+              label="默认值" 
+              v-if='filter.type == "singleSelect" || filter.type == "multiSelect" || filter.type == "input"' prop="dafaultValue">
                <Select 
                   ref='multiSelectComp'
                   :multiple='filter.type == "multiSelect" ? true:false'
                   v-model="filter.value" 
                   v-if='filter.type == "singleSelect" || filter.type == "multiSelect"'
                   @click.native='initStandByValue'>
-                  <Option v-for="(standByValue,index) in filter.standByValues" 
+                  <Option 
+                    v-for="(standByValue,index) in filter.standByValues" 
                     :value="standByValue.value" 
                     :key="index">{{ standByValue.label }}
                   </Option>
               </Select> 
-              <Input v-model="filter.value"  placeholder="请输入" v-if='filter.type == "input"'></Input>
+              <Input 
+                v-model="filter.value"  
+                placeholder="请输入" 
+                v-if='filter.type == "input"'
+              ></Input>
             </FormItem> 
           </Col>
         </Form>
         <Col span='18'>
-          <Button type="primary" size="small" @click='addGlobalFilter("globalFilter")'>添加</Button> 
+          <Button 
+            type="primary" 
+            size="small" 
+            @click='addGlobalFilter("globalFilter")'
+          >添加</Button> 
         </Col>
       </Row>
     </Card>    
@@ -67,12 +90,6 @@ import DatePicker from "./../paramcomponents/DatePicker"
 export default {
   components:{
     DatePicker
-  },
-  computed: {
-    ...mapGetters({
-      report:'report',
-      chartList:'chartList'
-    })
   },
   data () {
     return {
@@ -139,6 +156,12 @@ export default {
           }
       }],
     }
+  },
+  computed: {
+    ...mapGetters({
+      report:'report',
+      chartList:'chartList'
+    })
   },
   methods:{
 

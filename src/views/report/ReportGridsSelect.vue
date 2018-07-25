@@ -1,23 +1,34 @@
 <template>
-  <RadioGroup id='selectLayout' v-model="gridLayoutSelected" :on-change ='gridLayoutselected()'>
+  <RadioGroup 
+    id='selectLayout' 
+    v-model="gridLayoutSelected" 
+    :on-change ='saveCurrentReportGridLayout()'>
      <Radio label="布局1">
         <Card class='layoutCard'>
-          <img class='layoutImg' src="./../../assets/img/default_layout_1.png">
+          <img 
+            class='layoutImg' 
+            src="./../../assets/img/default_layout_1.png">
         </Card>
      </Radio >
      <Radio label="布局2">
         <Card class='layoutCard'>
-          <img class='layoutImg' src="./../../assets/img/default_layout_2.png">
+          <img 
+            class='layoutImg' 
+            src="./../../assets/img/default_layout_2.png">
         </Card>
      </Radio >
      <Radio label="布局3">
         <Card class='layoutCard'>
-          <img class='layoutImg' src="./../../assets/img/default_layout_3.png">
+          <img 
+            class='layoutImg' 
+            src="./../../assets/img/default_layout_3.png">
         </Card>
      </Radio >
     <Radio label="自定义">
         <Card class='layoutCard'>
-          <img class='layoutImg' src="./../../assets/img/diy.png">
+          <img 
+            class='layoutImg' 
+            src="./../../assets/img/diy.png">
         </Card>
      </Radio >
   </RadioGroup>
@@ -32,13 +43,13 @@ export default {
   },
   methods:{
     //向store中存储选中的布局
-    gridLayoutselected(){
+    saveCurrentReportGridLayout(){
       let currentReportGridLayout = null;
       if(this.gridLayoutSelected == "布局1"){ currentReportGridLayout = 'GridLayoutPredefine1'};
       if(this.gridLayoutSelected == "布局2"){ currentReportGridLayout = 'GridLayoutPredefine2'};
       if(this.gridLayoutSelected == "布局3"){ currentReportGridLayout = 'GridLayoutPredefine3'};
-      if(this.gridLayoutSelected == "自定义"){ currentReportGridLayout = 'GridLayoutDefine'};
-      this.$store.commit("currentReportGridLayout",currentReportGridLayout);
+      if(this.gridLayoutSelected == "自定义"){ currentReportGridLayout = 'GridLayoutCustomDefine'};
+      this.$store.commit("saveCurrentReportGridLayout",currentReportGridLayout);
     }
   }
 }
