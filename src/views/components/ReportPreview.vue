@@ -45,6 +45,7 @@ import {mapGetters} from 'vuex'
 import datepicker from "./../paramcomponents/DatePicker"//日期
 import list from "./../paramcomponents/List"//列表
 import DefineInput from "./../paramcomponents/Input"//列表
+import util from './../chartcomponents/util.js'
 import Chart from "./../chartcomponents/Chart"//echart图形
 import CountCard from "./../chartcomponents/CountCard"//统计卡
 
@@ -220,13 +221,11 @@ export default {
     drawChart (chartData) {
       let Vue = this;
       let data = chartData.data;
-      let Coption = JSON.parse(chartData.defineJSON).option;
-      Vue.option.push(Coption);
-      var type = chartData.type;
-      chartUtil.analysis(Coption,type,data);
-      Vue.$nextTick(function(){
-        Vue.$refs['chartContainer'+chartData.portletID][0].show(Coption);
-      })     
+      Vue.option = JSON.parse(chartData.defineJSON).option;
+      let type = chartData.type;
+      let theme = chartData.theme
+      util.attachData(Vue.option,data,type,1);
+      Vue.$refs['chartContainer'+chartData.portletID][0].show(Vue.option);    
     },   
 
 

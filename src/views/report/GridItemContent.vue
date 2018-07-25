@@ -42,6 +42,7 @@ import echarts from 'echarts'
 import chartUtil from './../../libs/chartUtil.js'
 import EleResize from './../../libs/resize.js'
 import ChartSelectModal from './SelectChart'
+import util from './../chartcomponents/util.js'
 import Chart from "./../chartcomponents/Chart"//echart图形
 import CountCard from "./../chartcomponents/CountCard"//统计卡
 import {mapGetters} from 'vuex'
@@ -138,12 +139,12 @@ export default {
       drawEChart (chartData) {
         let Vue = this;
         let data = chartData.data;
-        let Coption = JSON.parse(chartData.defineJSON).option;
-        Vue.option = Coption;
-        var type = chartData.type;
-        chartUtil.analysis(Coption,type,data);
+        Vue.option = JSON.parse(chartData.defineJSON).option;
+        let type = chartData.type;
+        let theme = chartData.theme;
+        util.attachData(Vue.option,data,type,1)
         Vue.$nextTick(function(){
-          Vue.$refs['chartContainer'+Vue.portletID].show(Coption);
+          Vue.$refs['chartContainer'+Vue.portletID].show(Vue.option);
           Vue.chartView =Vue.$refs['chartContainer'+Vue.portletID].getChartView();
         }) 
       },
