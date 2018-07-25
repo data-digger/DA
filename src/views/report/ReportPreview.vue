@@ -209,7 +209,13 @@ export default {
       // var tableDataArray = response.tableData;
       if(chartDataArray.length != 0){//chart图形
         for (var i in chartDataArray){
-          Vue.drawChart(chartDataArray[i]);
+          let chartData = chartDataArray[i];
+          let portletID = chartData.portletID;
+          let type = chartData.type;
+          let theme = chartData.theme;
+          let cOption = JSON.parse(chartData.defineJSON).option;
+          Vue.option.push(cOption);
+          Vue.drawChart(cOption,chartData.data,type,portletID,1);
         }        
       }   
     },
@@ -217,14 +223,13 @@ export default {
     /**
      * 绘制Chart图形
      */  
-    drawChart (chartData) {
+    drawChart (option,data,type,portletID,theme) {
       let Vue = this;
-      let data = chartData.data;
-      Vue.option = JSON.parse(chartData.defineJSON).option;
-      let type = chartData.type;
-      let theme = chartData.theme
-      util.attachData(Vue.option,data,type,1);
-      Vue.$refs['chartContainer'+chartData.portletID][0].show(Vue.option);    
+      util.attachData(option,data,type,theme);
+      Vue.$nextTick(function(){
+        Vue.$refs['chartContainer'+portletID][0].show(option); 
+      });
+         
     },   
 
 
