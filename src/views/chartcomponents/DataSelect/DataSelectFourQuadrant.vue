@@ -45,15 +45,15 @@ export default {
             Vue.params.groupby = filters.groupby;
             Vue.params.isgroupby = filters.isgroupby;
             Vue.selectedY = [];
-            Vue.selectedX = util.findIndex(Vue.groupbyList,eoption.xAxis.data);
+            Vue.selectedX = util.findIndex(Vue.groupbyList,eoption.series[0].data.name );
             if(Vue.params.isgroupby){
-                for(let i in eoption.series){
-                    let yIndex = util.findIndex(Vue.aggregationFun,eoption.series[i].data);
+                for(let i=0; i<2; i++){
+                    let yIndex = util.findIndex(Vue.aggregationFun,eoption.series[0].data.value[i]);
                     Vue.selectedY.push(yIndex);
                 } 
             } else {
-                for(let i in eoption.series){
-                        let yIndex = util.findIndex(Vue.metricNoFun,eoption.series[i].data);
+                for(let i=0; i<2; i++){
+                        let yIndex = util.findIndex(Vue.metricNoFun,eoption.series[0].data.value[i]);
                         Vue.selectedY.push(yIndex);
                     } 
             }
