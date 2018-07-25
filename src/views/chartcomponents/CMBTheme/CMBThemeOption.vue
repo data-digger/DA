@@ -6,6 +6,7 @@ import ChartTemplate from './../../../libs/ChartTemplate.js'
 import CMBThemeBar from './CMBThemeBar'
 import CMBThemeStack from './CMBThemeStack'
 import CMBThemeGuage from './CMBThemeGuage'
+import CMBThemeFourQuadrant from './CMBThemeFourQuadrant'
 import {mapGetters} from 'vuex'
 export default {
     props:{
@@ -17,7 +18,8 @@ export default {
     components:{
         CMBThemeBar,
         CMBThemeStack,
-        CMBThemeGuage
+        CMBThemeGuage,
+        CMBThemeFourQuadrant
     },
     computed: {
       ...mapGetters({
@@ -30,7 +32,9 @@ export default {
                 case 'Stack':
                     return CMBThemeStack;
                 case 'Guage':
-                    return CMBThemeGuage
+                    return CMBThemeGuage;
+                case 'FourQuadrant':
+                    return CMBThemeFourQuadrant;
                
           }
       }

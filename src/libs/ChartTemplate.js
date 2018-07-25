@@ -8,6 +8,7 @@ ChartTemplate.TYPE = [  {type:'Bar',src:require('./../views/chartcomponents/Char
                         {type:'Pie',src:require('./../views/chartcomponents/ChartIcon/Pie.png'),desc:'饼图'},
                         {type:'Ring',src:require('./../views/chartcomponents/ChartIcon/Ring.png'),desc:'环图'},
                         {type:'Guage',src:require('./../views/chartcomponents/ChartIcon/Ring.png'),desc:'仪表盘'},
+                        {type:'FourQuadrant',src:require('./../views/chartcomponents/ChartIcon/Ring.png'),desc:'四象限散点图'},                        
                         {type:'Card',src:require('./../views/chartcomponents/ChartIcon/Card.png'),desc:'统计卡'},
                         {type:'ChinaMap',src:require('./../views/chartcomponents/ChartIcon/Ring.png'),desc:'中国地图'},];
 
