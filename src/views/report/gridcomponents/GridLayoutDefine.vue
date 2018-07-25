@@ -56,12 +56,23 @@ export default {
       }       
     },
     methods:{
+      _getBottom() {
+           let Vue = this;
+           let layouts = Vue.report.defineJSON.content.portlets;
+           let max = 0, bottomY;
+           for (let i = 0, len = layouts.length; i < len; i++) {
+               bottomY = layouts[i]. y + layouts[i].h;
+               if (bottomY > max) max = bottomY;
+           }
+           return max;
+       },
         addPortlet(){
             let Vue = this;
+            let y = Vue._getBottom();
             Vue.index = Vue.index+1;
             var portlet ={ "portletID":""+Vue.index,
                             "name":"portleName",
-                            "x":0,"y":0,"w":6,"h":4,"i":""+Vue.index,
+                            "x":0,"y":y,"w":6,"h":4,"i":""+Vue.index,
                             "tabs":[{"id":""+Vue.index,
                                    "title":"",
                                    'titleBackgroundImg':"",
