@@ -6,6 +6,7 @@ import ChartTemplate from './../../../libs/ChartTemplate.js'
 import Bar from './NoThemeBar'
 import Pie from './NoThemePie'
 import Stack from './NoThemeStack'
+import HBar from './NoThemeHBar'
 import {mapGetters} from 'vuex'
 export default {
     props:{
@@ -17,7 +18,8 @@ export default {
     components:{
         Bar,
         Pie,
-        Stack
+        Stack,
+        HBar
     },
     computed: {
       ...mapGetters({
@@ -25,12 +27,15 @@ export default {
       }),
       nothemecomponent: function(){
           switch(this.chartType){
-              case 'Bar':
-                return Bar;
-              case 'Pie':
-                return Pie;
-              case 'Stack':
-                return Stack;
+                case 'Bar':
+                    return Bar;
+                case 'Pie':
+                    return Pie;
+                case 'Stack':
+                    return Stack;
+                case 'HBar':
+                    return HBar;
+
           }
       }
     },
