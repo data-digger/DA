@@ -1,5 +1,5 @@
 <template>
-  <div :id="'portlet'+portletID" class="text">
+  <div :id="'portlet'+portletID" class="text" style="border:1px solid">
     <!-- 不可拖拽区 -->
     <div class="no-drag">
       <!-- title区 -->
@@ -39,12 +39,11 @@
 
 <script>
 import echarts from 'echarts'
-import chartUtil from './../../libs/chartUtil.js'
-import EleResize from './../../libs/resize.js'
-import ChartSelectModal from './SelectChart'
-import util from './../chartcomponents/util.js'
-import Chart from "./../chartcomponents/Chart"//echart图形
-import CountCard from "./../chartcomponents/CountCard"//统计卡
+import EleResize from './../../../libs/resize.js'
+import ChartSelectModal from './../ReportChartSelect'
+import util from './../../chartcomponents/util.js'
+import Chart from "./../../chartcomponents/Chart"//echart图形
+import CountCard from "./../../chartcomponents/CountCard"//统计卡
 import {mapGetters} from 'vuex'
 export default {
     props:['portletID','hasExtraIcon'],

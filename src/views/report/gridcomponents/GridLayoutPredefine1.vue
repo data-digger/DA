@@ -23,7 +23,7 @@
 </template>
 <script>
 import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
-import GridItemContent from "./GridItemContent.vue"
+import GridItemContent from "./GridItem.vue"
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
 export default {
@@ -65,7 +65,7 @@ export default {
 .header{
   width: 100%;
   height: 90px;
-  background: url('./../../assets/img/report_header.png');
+  background: url('./../../../assets/img/report_header.png');
 }
 .header .left_logo,
 .header .right_logo{
@@ -75,13 +75,13 @@ export default {
   float: left;
   height: 50px;
   margin: 22px;
-  background: url('./../../assets/img/left_logo.png') no-repeat;
+  background: url('./../../../assets/img/left_logo.png') no-repeat;
 }
 .right_logo{
   float: right;
   height: 90px;
   margin:5px 10px;
-  background: url('./../../assets/img/right_logo.png') no-repeat;
+  background: url('./../../../assets/img/right_logo.png') no-repeat;
 }
 .griditem-title{
  background-color:lightgray;

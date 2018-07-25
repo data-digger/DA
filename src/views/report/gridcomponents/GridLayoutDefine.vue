@@ -25,7 +25,7 @@
 
 <script>
 import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
-import GridItemContent from "./GridItemContent.vue"
+import GridItemContent from "./GridItem.vue"
 import {mapGetters} from 'vuex'
 var GridLayout = VueGridLayout.GridLayout;
 var GridItem = VueGridLayout.GridItem;
