@@ -18,7 +18,7 @@
         </div>
         <div class="demo-carousel">
           <keep-alive>
-            <component v-show='step==1?true:false' :is="currentReportLayout"></component>
+            <component v-show='step==1?true:false' :is="currentReportGridLayout"></component>
           </keep-alive>
         </div>
       </CarouselItem>
@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentReportLayout:'currentReportLayout',
+      currentReportGridLayout:'currentReportGridLayout',
       report:'report'
     })
   },
