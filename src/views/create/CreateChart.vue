@@ -69,7 +69,6 @@ import ChartOption from './../chartcomponents/ChartOption'
 import CountCard from './../chartcomponents/CountCard'
 import PieOption from './../chartcomponents/PieOption'
 import LineOption from './../chartcomponents/LineOption'
-import HBarOption from './../chartcomponents/HBarOption'
 import CardOption from './../chartcomponents/CardOption'
 import RingOption from './../chartcomponents/RingOption'
 import StackOption from './../chartcomponents/StackOption'
@@ -84,7 +83,6 @@ export default {
     ChartOption,
     PieOption,
     LineOption,
-    HBarOption,
     CardOption,
     Chart,
     CountCard,
@@ -147,25 +145,25 @@ export default {
     ...mapGetters({
       queryList:'queryList',
     }),
-      chartComponent:function(){
-        if (this.myChart.type == 'Bar'){
-          return BarOption
-        } else if (this.myChart.type == 'Pie'){
-          return PieOption
-        } else if (this.myChart.type == 'Line'){
-          return LineOption
-        } else if (this.myChart.type == 'HBar'){
-          return HBarOption
-        } else if (this.myChart.type == 'Card'){
-          return CardOption
-        } else if (this.myChart.type == 'Ring'){
-          return RingOption
-        } else if (this.myChart.type == 'Stack'){
-          return StackOption
-        } else if (this.myChart.type == 'ChinaMap'){
-          return ChinaMapOption
-        }
-      },
+      // chartComponent:function(){
+      //   if (this.myChart.type == 'Bar'){
+      //     return BarOption
+      //   } else if (this.myChart.type == 'Pie'){
+      //     return PieOption
+      //   } else if (this.myChart.type == 'Line'){
+      //     return LineOption
+      //   } else if (this.myChart.type == 'HBar'){
+      //     return HBarOption
+      //   } else if (this.myChart.type == 'Card'){
+      //     return CardOption
+      //   } else if (this.myChart.type == 'Ring'){
+      //     return RingOption
+      //   } else if (this.myChart.type == 'Stack'){
+      //     return StackOption
+      //   } else if (this.myChart.type == 'ChinaMap'){
+      //     return ChinaMapOption
+      //   }
+      // },
       chartContainer: function(){
         if(this.myChart.type == 'Card'){
           return CountCard

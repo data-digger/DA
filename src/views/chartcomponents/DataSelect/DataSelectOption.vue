@@ -7,6 +7,7 @@ import BarData from './DataSelectBar'
 import PieData from './DataSelectPie'
 import GaugeData from './DataSelectGauge'
 import FourQuadrantData from './DataSelectFourQuadrant'
+import HBarData from './DataSelectHBar'
 import {mapGetters} from 'vuex'
 
 export default {
@@ -20,23 +21,27 @@ export default {
         BarData,
         PieData,
         GaugeData,
-        FourQuadrantData
+        FourQuadrantData,
+        HBarData
+                
     },
     computed: {
         ...mapGetters({
         }),
         dataselect : function(){
             switch(this.chartType){
-              case 'Bar':
-                return BarData;
-              case 'Pie':
-                return PieData;
-              case 'Stack':
-                return BarData;
-              case 'Guage':
-                return GaugeData;
-             case 'FourQuadrant':
-                return FourQuadrantData;
+                case 'Bar':
+                    return BarData;
+                case 'Pie':
+                    return PieData;
+                case 'Stack':
+                    return BarData;
+                case 'Guage':
+                    return GaugeData;
+                case 'FourQuadrant':
+                    return FourQuadrantData;
+                case 'HBar':
+                    return HBarData;
           }
         }
     },

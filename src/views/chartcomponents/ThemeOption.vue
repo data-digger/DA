@@ -67,5 +67,3 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-
-{"filters":{"orderby":{"field":"","type":"ASC"},"limit":200,"where":[{"field":"category_id","mark":"=","value":"1"}],"whereType":["select"],"value":["film_cnt"],"groupby":null,"isgroupby":false},"option":{"backgroundColor":"#031845","title":[{"x":"center","top":"59%","text":"总数统计","textStyle":{"fontWeight":"bolder","fontSize":18,"color":"#fff"}}],"tooltip":{"show":true},"series":[{"name":"总数统计","type":"gauge","startAngle":180,"endAngle":0,"min":"0","max":100,"radius":"60%","center":["50%","55%"],"axisLine":{"show":false,"lineStyle":{"width":25,"shadowBlur":0,"color":[[0.5,"#91c7ae"],[0.8,"#EFC631"],[1,"#c23531"]]}},"axisTick":{"show":false,"splitNumber":0},"splitLine":{"show":false,"length":20},"axisLabel":{"show":true,"distance":"10","textStyle":{"fontWeight":"bolder","fontSize":16}},"pointer":{"show":true,"length":"58%","color":"#ffffff"},"detail":{"show":true,"offsetCenter":[0,"60%"],"textStyle":{"fontSize":30,"fontWeight":"bolder"},"formatter":"{value}%"},"itemStyle":{"normal":{"color":"#ffffff"}},"data":[{"value":"film_cnt"}]}]},"theme":1}

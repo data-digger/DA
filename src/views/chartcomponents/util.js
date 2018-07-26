@@ -1,4 +1,5 @@
 import ChartTemplate from './../../libs/ChartTemplate.js'
+import echarts from 'echarts'
 let util = {
 
 };
@@ -52,7 +53,15 @@ util.analysisGridChart = function(option,data){
         option.series[i].data = sDate;
     }
 };
-
+util.analysisHbarChart = function(option,data){
+    let yName = option.yAxis[0].data;
+    option.yAxis[0].data = util.getColData(yName,data);
+    for(let i = 0; i<option.series.length; i++){
+        let sName = option.series[i].data;
+        let sDate = util.getColData(sName,data);
+        option.series[i].data = sDate;
+    }
+}
 util.analysisCirChart = function(option,data){
     for(let s in option.series){
         let nameCol = option.series[s].data.name;
@@ -75,7 +84,10 @@ util.analysisNothemeCirChart = function(option,data){
     util.analysisCirChart(option,data);
     option.color = util.getColors(option.color);
 };
-
+util.analysisNothemeHBarChart = function(option,data){
+    util.analysisHbarChart(option,data);
+    option.color = util.getColors(option.color);
+};
 util.analysisCMBBar = function(option,data){
     let xName = option.xAxis[0].data;
     let yName = option.series[0].data;
@@ -167,6 +179,16 @@ util.analysisCMBFourQuadrant = function(eoption,data){
     }
 };
 
+util.analysisCMBHBar = function(option,data){
+    let yName = option.yAxis[0].data;
+    option.yAxis[0].data = util.getColData(yName,data);
+    let xName = option.series[0].data;
+    let xDate = util.getColData(xName,data);
+    option.series[0].data = xDate;
+    let selectedColor = option.series[0].itemStyle.normal.color;
+    option.series[0].itemStyle.normal.color = util.getCMBHbarColor(selectedColor);
+};
+
 util.analysisCMBGuage = function(option,data){
     let dataName = option.series[0].data[0].value;
     let value = util.getColData(dataName,data);
@@ -186,6 +208,34 @@ util.analysisCMBGuage = function(option,data){
 util.getColors = function(selectedColor){
     return ChartTemplate.COLORS[selectedColor].color
 }
+util.getCMBHbarColor = function(selectedColor){
+    switch(selectedColor){
+        case 'red':
+            return new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                offset: 0,
+                color: '#e12945'
+            }, {
+                offset: 1,
+                color: '#f7734e'
+            }]);
+        case 'green':
+            return new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                offset: 0,
+                color: '#01babc'
+            }, {
+                offset: 1,
+                color: '#96d668'
+            }]);
+        case 'blue':
+            return new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                offset: 0,
+                color: '#7049f0'
+            }, {
+                offset: 1,
+                color: '#1a98f8'
+            }]);
+    }
+}
 util.analysisNothemeOption = function(eoption,data,type){
     switch (type){
         case 'Bar':
@@ -197,6 +247,8 @@ util.analysisNothemeOption = function(eoption,data,type){
         case 'Stack':
             util.analysisNothemeGridChart(eoption,data);
             break;
+        case 'HBar':
+            util.analysisNothemeHBarChart(eoption,data)
     }
 },
 
@@ -212,6 +264,8 @@ util.analysisCMBthemeOption = function(eoption,data,type){
             util.analysisCMBGuage(eoption,data);
         case 'FourQuadrant':
             util.analysisCMBFourQuadrant(eoption,data);
+        case 'HBar':
+            util.analysisCMBHBar(eoption,data);
     }
 },
 
