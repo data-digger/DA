@@ -8,8 +8,8 @@
       :layout="report.defineJSON.content.portlets" 
       :col-num="12" 
       :row-height="30" 
-      :is-draggable="false" 
-      :is-resizable="false" 
+      :is-draggable="true" 
+      :is-resizable="true" 
       :vertical-compact="true" 
       :use-css-transforms="true">
       <grid-item 

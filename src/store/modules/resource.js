@@ -20,6 +20,7 @@ const state = {
         globalFilter:[]
       },
       content:{
+        currentReportGridLayout:"GridLayoutPredefine1",
         portlets:[
           {
             "portletID": "",
@@ -47,9 +48,7 @@ const state = {
       },
       tail:{}
     }
-  },
-
-  currentReportGridLayout:"GridLayoutPredefine1",
+  }, 
   queryFields:[],//查询器字段集合
   dimensions:[], //维度字段集合
   metrics:[], //度量字段集合
@@ -66,7 +65,6 @@ const getters = {
   chartList: state => state.chartList,
   queryList: state => state.queryList,
   tableList: state => state.tableList,
-  currentReportGridLayout: state => state.currentReportGridLayout,
   report: state => state.report,
   queryFields: state => state.queryFields,
   dimensions: state => state.dimensions,
@@ -129,7 +127,7 @@ const mutations = {
     state.report.desc = param.desc;
   },
   saveCurrentReportGridLayout(state,param){
-    state.currentReportGridLayout = param;
+    state.report.defineJSON.content.currentReportGridLayout = param;
   },
   saveCurrentReportGridItem(state,param){
     state.report.defineJSON.content.portlets=param;

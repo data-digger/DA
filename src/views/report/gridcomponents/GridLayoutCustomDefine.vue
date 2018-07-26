@@ -1,66 +1,52 @@
 <template>
      <div>
       <div class="toolbar"><Button @click="addPortlet()">添加模块</Button></div>
-      <grid-layout 
-        :layout="report.defineJSON.content.portlets" 
-        :col-num="12" 
-        :row-height="30" 
-        :is-draggable="draggable" 
-        :is-resizable="resizable" 
-        :vertical-compact="true" 
-        :use-css-transforms="true">
-        <grid-item 
-          v-for="item in report.defineJSON.content.portlets" 
-          :x="item.x" 
-          :y="item.y" 
-          :w="item.w" 
-          :h="item.h" 
-          :i="item.i" 
-          :key='item.i' 
-          drag-ignore-from=".no-drag" 
-          drag-allow-from=".vue-draggable-handle">
-          <GridItemContent 
-            :portletID="item.i" 
-            ref='gridItemContent'
-          ></GridItemContent>
-        </grid-item>
-      </grid-layout>        
+      <Grid 
+        :portlets='portlets'
+        hasExtraIcon='true'></Grid>      
     </div>
 </template>
 
 <script>
-import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
-import GridItemContent from "./GridItem.vue"
-import {mapGetters} from 'vuex'
-var GridLayout = VueGridLayout.GridLayout;
-var GridItem = VueGridLayout.GridItem;
+
+import Grid from "./Grid"
 export default {
   components: {
-    "GridLayout": GridLayout,
-    "GridItem": GridItem,
-    GridItemContent
+    Grid
   },
   data () {
     return {
-      draggable: true,
-      resizable: true,
-      index:-1,
-      report:{
-        defineJSON:{
-          header:{
-            conditons:[],
-            globalFilter:[]
-          },
-          content:{
-            portlets:[]
-          },
-          tail:{}
-        }
-      }
-      
+      portlets:[],
+      index:-1
     }       
   },
   methods:{
+    /**
+     * 添加porlet模块
+     */
+    addPortlet(){
+      let Vue = this;
+      let layout = Vue.portlets;
+      let y = Vue._getBottom(layout);
+      Vue.index = Vue.index+1;
+      let portlet = { 
+        "portletID":""+Vue.index,
+        "name":"portleName",
+        "x":0,"y":0,"w":6,"h":4,"i":""+Vue.index,
+        "tabs":[{
+        "id":""+Vue.index,
+        "title":"",
+        'titleBackgroundImg':"",
+        'chartBoxBackgroundImg':"",
+        'chartBackgroundStyles':"",
+        "objtype":"",
+        "objid":""}]
+      };
+      portlet = Vue._compactItem(layout,portlet,true);
+      Vue.portlets.push(portlet);
+      Vue.$store.commit("saveCurrentReportGridItem",Vue.portlets);
+     },
+     
     _isCollides(layoutItem1, layoutItem2) {
         let Vue = this;
         if (layoutItem1 === layoutItem2) return false; // same element
@@ -102,32 +88,7 @@ export default {
               if (bottomY > max) max = bottomY;
           }
           return max;
-      },
-    /**
-     * 添加porlet模块
-     */
-    addPortlet(){
-      let Vue = this;
-      let layout = Vue.report.defineJSON.content.portlets;
-      let y = Vue._getBottom(layout);
-      Vue.index = Vue.index+1;
-      var portlet = { 
-        "portletID":""+Vue.index,
-        "name":"portleName",
-        "x":0,"y":0,"w":6,"h":4,"i":""+Vue.index,
-        "tabs":[{
-          "id":""+Vue.index,
-          "title":"",
-          'titleBackgroundImg':"",
-          'chartBoxBackgroundImg':"",
-          'chartBackgroundStyles':"",
-          "objtype":"",
-          "objid":""}]
-      };
-      portlet = Vue._compactItem(layout,portlet,true);
-      Vue.report.defineJSON.content.portlets.push(portlet);
-      Vue.$store.commit("saveCurrentReportGridItem",Vue.report.defineJSON.content.portlets);
-    }
+      }
   }
 }
 </script>

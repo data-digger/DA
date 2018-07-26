@@ -6,7 +6,7 @@
         <p>{{reportbox.alias}}</p>   
       </div>
       <div :id='"report_shade"+reportbox.name' class='card-shade' @mouseleave="leave()">
-        <img src="./../../assets/img/edit.png">
+        <img src="./../../assets/img/edit.png" @click='editReport("/editReport")'>
         <img src="./../../assets/img/preview.png" @click='viewReport("/viewReport")'>
         <Tooltip placement="right" transfer>
           <img src="./../../assets/img/info.png">
@@ -34,6 +34,13 @@ export default {
       let Vue = this;
       $(".card-shade").css("display",'none');
       $('#report'+Vue.reportbox.name).css('-webkit-transform','scale(1)');  
+    },
+    editReport(routerpath){
+      this.$router.push({
+        path:routerpath,
+        name:"editReport",
+        params:this.reportbox
+      }); 
     },
     viewReport(routerpath){
       this.$router.push({

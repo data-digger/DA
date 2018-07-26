@@ -3,28 +3,28 @@
     id='selectLayout' 
     v-model="gridLayoutSelected" 
     :on-change ='saveCurrentReportGridLayout()'>
-     <Radio label="布局1">
+     <Radio label="GridLayoutPredefine1">
         <Card class='layoutCard'>
           <img 
             class='layoutImg' 
             src="./../../assets/img/default_layout_1.png">
         </Card>
      </Radio >
-     <Radio label="布局2">
+     <Radio label="GridLayoutPredefine2">
         <Card class='layoutCard'>
           <img 
             class='layoutImg' 
             src="./../../assets/img/default_layout_2.png">
         </Card>
      </Radio >
-     <Radio label="布局3">
+     <Radio label="GridLayoutPredefine3">
         <Card class='layoutCard'>
           <img 
             class='layoutImg' 
             src="./../../assets/img/default_layout_3.png">
         </Card>
      </Radio >
-    <Radio label="自定义">
+    <Radio label="GridLayoutCustomDefine">
         <Card class='layoutCard'>
           <img 
             class='layoutImg' 
@@ -38,18 +38,13 @@
 export default { 
   data(){
     return {
-      gridLayoutSelected:"布局1"
+      gridLayoutSelected:"GridLayoutPredefine1"
     }
   },
   methods:{
-    //向store中存储选中的布局
+    //保存选中的布局
     saveCurrentReportGridLayout(){
-      let currentReportGridLayout = null;
-      if(this.gridLayoutSelected == "布局1"){ currentReportGridLayout = 'GridLayoutPredefine1'};
-      if(this.gridLayoutSelected == "布局2"){ currentReportGridLayout = 'GridLayoutPredefine2'};
-      if(this.gridLayoutSelected == "布局3"){ currentReportGridLayout = 'GridLayoutPredefine3'};
-      if(this.gridLayoutSelected == "自定义"){ currentReportGridLayout = 'GridLayoutCustomDefine'};
-      this.$store.commit("saveCurrentReportGridLayout",currentReportGridLayout);
+      this.$store.commit("saveCurrentReportGridLayout",this.gridLayoutSelected);
     }
   }
 }

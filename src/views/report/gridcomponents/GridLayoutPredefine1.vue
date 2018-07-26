@@ -1,39 +1,11 @@
 <template>
-  <grid-layout
-    :layout="portlets"
-    :col-num="12"
-    :row-height="30"
-    :is-draggable="false"
-    :is-resizable="false"
-    :vertical-compact="true"
-    :margin="[10, 10]"
-    :use-css-transforms="true"
-  >
-    <grid-item 
-      v-for="item in portlets"
-      :x="item.x"
-      :y="item.y"
-      :w="item.w"
-      :h="item.h"
-      :i="item.i"
-      :key='item.i'>
-      <GridItemContent 
-        :portletID="item.i" 
-        :hasExtraIcon = 'false'
-      ></GridItemContent>
-    </grid-item>
-</grid-layout>
+   <Grid :portlets='portlets' hasExtraIcon='true'></Grid>
 </template>
 <script>
-import VueGridLayout from "vue-grid-layout/dist/vue-grid-layout.js"
-import GridItemContent from "./GridItem.vue"
-var GridLayout = VueGridLayout.GridLayout;
-var GridItem = VueGridLayout.GridItem;
+import Grid from "./Grid"
 export default {
   components: {
-    "GridLayout": GridLayout,
-    "GridItem": GridItem,
-    GridItemContent
+    Grid
   },
   data(){
     return{
@@ -60,9 +32,6 @@ export default {
     }
   },
 
-  mounted(){
-    this.saveCurrentReportGridItem();
-  },
   methods:{
     saveCurrentReportGridItem(){
       this.$store.commit("saveCurrentReportGridItem",this.portlets); 
