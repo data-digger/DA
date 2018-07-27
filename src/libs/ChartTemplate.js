@@ -10,6 +10,7 @@ ChartTemplate.TYPE = [  {type:'Bar',src:require('./../views/chartcomponents/Char
                         {type:'Guage',src:require('./../views/chartcomponents/ChartIcon/Ring.png'),desc:'仪表盘'},
                         {type:'FourQuadrant',src:require('./../views/chartcomponents/ChartIcon/Ring.png'),desc:'四象限散点图'},                        
                         {type:'Card',src:require('./../views/chartcomponents/ChartIcon/Card.png'),desc:'统计卡'},
+                        {type:'InforList',src:require('./../views/chartcomponents/ChartIcon/Card.png'),desc:'信息列表'},
                         {type:'ChinaMap',src:require('./../views/chartcomponents/ChartIcon/Ring.png'),desc:'中国地图'},];
 
 ChartTemplate.COLORS =[ {color:['#63c5d0','#ff9b4f','#4ac6ff','#58b0e8','#b39ddb','#ffc400','#8dc93f','#8294e3','#e089be'],

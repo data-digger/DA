@@ -27,7 +27,7 @@
             </Form>
           </Col>
           <Col span="12">  
-            <Row><component v-show='chartPreview' ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption' :styles='styles'></component></Row>  
+            <Row><component v-show='chartPreview' ref='chartContainer' :is="chartContainer" chartId='CR' :option='eoption' :styles='styles'></component></Row> 
           </Col>
         </CarouselItem>
         <CarouselItem>
@@ -65,6 +65,7 @@ import list from "./../paramcomponents/List"
 import ChartTemplate from './../../libs/ChartTemplate.js'
 import chartUtil from './../../libs/chartUtil.js'
 import Chart from './../chartcomponents/Chart'
+import ContainerInfoList from './../chartcomponents/ContainerInfoList'
 import ChartOption from './../chartcomponents/ChartOption'
 import CountCard from './../chartcomponents/CountCard'
 import PieOption from './../chartcomponents/PieOption'
@@ -90,6 +91,7 @@ export default {
     StackOption,
     ChinaMapOption,
     FieldList,
+    ContainerInfoList
   },
   data () {
     return {
@@ -167,14 +169,18 @@ export default {
       chartContainer: function(){
         if(this.myChart.type == 'Card'){
           return CountCard
-        } else {
+        } else if (this.myChart.type == 'InforList'){
+          return ContainerInfoList
+        }else {
           return Chart
         }
       },
     styles: function(){
       if(this.myChart.type == 'Card'){
           return {}
-        } else {
+        } else if (this.myChart.type == 'InforList'){
+          return {width:'350px'}
+        }else {
           return {height:400+'px'}
         }
     }

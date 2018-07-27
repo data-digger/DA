@@ -69,12 +69,14 @@ import ChartSelectModal from './../ReportChartSelect'
 import util from './../../chartcomponents/util.js'
 import Chart from "./../../chartcomponents/Chart"//echart图形
 import CountCard from "./../../chartcomponents/CountCard"//统计卡
+import ContainerInfoList from "./../../chartcomponents/ContainerInfoList"//信息列表
 import {mapGetters} from 'vuex'
 export default {
   components:{
     ChartSelectModal,
     Chart,
-    CountCard
+    CountCard,
+    ContainerInfoList
   },   
   props:['portletID','hasExtraIcon'],
   data(){
@@ -142,11 +144,14 @@ export default {
             if(chart.type == 'Card'){
               Vue.itemComponent = "CountCard"; 
               Vue.drawEChart(response.data.content);            
-            }else{
+            } else if(chart.type == 'InforList'){
+              Vue.itemComponent = "ContainerInfoList";
+              Vue.drawEChart(response.data.content);
+            } else{
               Vue.itemComponent = "Chart" ;
               Vue.drawEChart(response.data.content);        
-            }
-          }   
+            } 
+          }
         }
       );
       //存储tabs

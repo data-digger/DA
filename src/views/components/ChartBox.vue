@@ -39,6 +39,7 @@ import datepicker from "./../paramcomponents/DatePicker"
 import list from "./../paramcomponents/List"
 import Chart from "./../chartcomponents/Chart"
 import CountCard from "./../chartcomponents/CountCard"
+import ContainerInfoList from "./../chartcomponents/ContainerInfoList"
 export default {
   name: 'ChartBox',
   components:{
@@ -47,7 +48,8 @@ export default {
     datepicker,
     list,
     Chart,
-    CountCard
+    CountCard,
+    ContainerInfoList
   },
   data(){
     return {
@@ -67,6 +69,8 @@ export default {
       let Vue = this;
       if(Vue.chartbox.type=='Card'){
         return CountCard
+      } else if(Vue.chartbox.type == 'InforList'){
+        return ContainerInfoList
       } else {
         return Chart
       }

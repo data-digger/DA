@@ -204,7 +204,14 @@ util.analysisCMBGuage = function(option,data){
             return ''
         }
     }
-}
+},
+util.analysisCMBInforList = function(eoption,data){
+    eoption.circleText = util.getColData(eoption.circleText,data);
+    eoption.title = util.getColData(eoption.title,data);
+    eoption.subTitle = util.getColData(eoption.subTitle,data);
+    eoption.detail = util.getColData(eoption.detail,data);
+    eoption.dayTime = util.getColData(eoption.dayTime,data);    
+};
 util.getColors = function(selectedColor){
     return ChartTemplate.COLORS[selectedColor].color
 }
@@ -248,7 +255,8 @@ util.analysisNothemeOption = function(eoption,data,type){
             util.analysisNothemeGridChart(eoption,data);
             break;
         case 'HBar':
-            util.analysisNothemeHBarChart(eoption,data)
+            util.analysisNothemeHBarChart(eoption,data);
+            break;
     }
 },
 
@@ -262,10 +270,16 @@ util.analysisCMBthemeOption = function(eoption,data,type){
             break;
         case 'Guage':
             util.analysisCMBGuage(eoption,data);
+            break;
         case 'FourQuadrant':
             util.analysisCMBFourQuadrant(eoption,data);
+            break;
         case 'HBar':
             util.analysisCMBHBar(eoption,data);
+            break;
+        case 'InforList':
+            util.analysisCMBInforList(eoption,data);
+            break;
     }
 },
 
@@ -276,6 +290,7 @@ util.attachData = function(eoption,data,type,theme){
             break;
         case 1:
             util.analysisCMBthemeOption(eoption,data,type);
+            break;
     }
 }
 export default util;
