@@ -1,24 +1,24 @@
 <template>
   <Form 
     id="createReport"  
-    :model="report" 
+    :model="reportInfo" 
     :label-width="80" 
     :rules="ruleValidate">
     <FormItem label="名称" prop="name">
         <Input 
-          v-model="report.name" 
+          v-model="reportInfo.name" 
           placeholder="输入名称"
         ></Input>
     </FormItem>
     <FormItem label="别名" prop="alias">
         <Input 
-          v-model="report.alias" 
+          v-model="reportInfo.alias" 
           placeholder="输入别名"
         ></Input>
     </FormItem>
     <FormItem label="描述" prop="desc">
         <Input 
-          v-model="report.desc" 
+          v-model="reportInfo.desc" 
           type="textarea" 
           :autosize="{minRows: 2,maxRows: 5}" 
           placeholder="Enter report descript..."
@@ -32,7 +32,7 @@ import {mapGetters} from 'vuex'
 export default {
     data(){
         return {
-            report:{
+            reportInfo:{
                 name:'',
                 alias:'',
                 desc:''
@@ -52,7 +52,7 @@ export default {
         * 向store中保存报表中基本信息
         */
         saveReportBaseInfo(){
-            this.$store.commit("saveReportBaseInfo",this.report);
+            this.$store.commit("saveReportBaseInfo",this.reportInfo);
         }
     }
 }

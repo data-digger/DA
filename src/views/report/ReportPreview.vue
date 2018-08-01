@@ -13,7 +13,6 @@
 </template>
 <script>
 import Grid from "./gridcomponents/Grid"
-import echarts from 'echarts'
 import {mapGetters} from 'vuex'
 
 export default {
@@ -85,21 +84,25 @@ export default {
         for (let i in chartDataArray){
           let chartData = chartDataArray[i];
           let portlets = Vue.report.defineJSON.content.portlets;
-          let gridItemContent = {
-              gridItemTitle:"",
-              gridItemTitleBackgroundImg:portlets[chartData.portletID].tabs[0].gridItemTitleBackgroundImg,//选中title的背景图
-              gridItemChartBoxBackgroundImg:portlets[chartData.portletID].tabs[0].gridItemChartBoxBackgroundImg,//选中chart容器的背景图
-              chartBoxBackgroundStyles:portlets[chartData.portletID].tabs[0].chartBoxBackgroundStyles,
-              chartId:chartData.id,
-              chartType:chartData.type,
-              chartComponent:"Chart",
-              chartOption:'',
-              chartData:chartData      
+          for(let p in portlets){
+            if(portlets[p].portletID == chartData.portletID){
+              let gridItemContent = {
+                  gridItemTitle:"",
+                  gridItemTitleBackgroundImg:portlets[p].tabs[0].gridItemTitleBackgroundImg,//选中title的背景图
+                  gridItemChartBoxBackgroundImg:portlets[p].tabs[0].gridItemChartBoxBackgroundImg,//选中chart容器的背景图
+                  chartBoxBackgroundStyles:portlets[p].tabs[0].chartBoxBackgroundStyles,
+                  chartId:chartData.id,
+                  chartType:chartData.type,
+                  chartComponent:"Chart",
+                  chartOption:'',
+                  chartData:chartData      
+                }
+              Vue.$refs.Grid.$refs.gridItemContent[p].initGridItemContent(gridItemContent);              
             }
-          Vue.$refs.Grid.$refs.gridItemContent[chartData.portletID].initGridItemContent(gridItemContent);
+          }
         }        
       }   
-    }
+    },
   }
 }
 </script>

@@ -12,8 +12,17 @@
            <div class="toolbar"><Button @click="addPortlet()">添加模块</Button></div>
            <Grid        
              :portlets='report.defineJSON.content.portlets'
-             hasExtraIcon='true'
+             isEdit='true'
+             ref='Grid'
            ></Grid>
+        </div>
+      </CarouselItem>
+      <!-- 报表信息-->
+      <CarouselItem>
+        <div class="demo-carousel">
+          <ReportInfoEdit 
+            ref='ReportInfoEdit'
+          ></ReportInfoEdit>
         </div>
       </CarouselItem>
     </Carousel>
@@ -23,12 +32,12 @@
         @click='pre()'
       >上一步</Button>
       <Button
-        v-if="step!=4?true:false" 
+        v-if="step!=1?true:false" 
         type="primary" 
         @click='next()'
       >下一步</Button>
       <Button 
-        v-if="step==4?true:false" 
+        v-if="step==1?true:false" 
         type="primary" 
         @click='createReport()'
       >保存</Button>
@@ -38,10 +47,12 @@
 
 <script>
 import Grid from "./gridcomponents/Grid"
+import ReportInfoEdit from "./ReportInfoEdit"
 import {mapGetters} from 'vuex'
 export default {
   components:{
-    Grid
+    Grid,
+    ReportInfoEdit
   },
 
   data () {
@@ -52,24 +63,103 @@ export default {
         dots:"none",
         arrow:"never"
       },
-      report:{},
       index:10
     }
   },
 
-  beforeMount(){
-    let Vue = this;
-    if(!$.isEmptyObject(Vue.$route.params)){
-      Vue.report = Vue.$route.params;
-    }
+  computed:{
+    ...mapGetters({
+      report:'report'
+    })
   },
+
+  mounted(){
+    let Vue = this;
+    Vue.initReport();
+  },
+
   methods:{
+
+    /**
+     * 初始化报表
+     */
+    initReport(){
+      let Vue =this;
+      if(!$.isEmptyObject(Vue.$route.params)){
+        Vue.report.name= Vue.$route.params.name;
+        Vue.report.id= Vue.$route.params.id;
+        Vue.report.desc= Vue.$route.params.desc;
+        Vue.report.defineJSON= Vue.$route.params.defineJSON;
+        Vue.report.alias= Vue.$route.params.alias;
+      }
+      Vue.getReportData();
+    },
+
+    /**
+     * 获取报表数据
+     */
+    getReportData(){
+      let Vue = this;   
+      Vue.AxiosPost("getReportDataById",{'reportID':Vue.report.id},
+      function(response){
+        Vue.drawReport(response.data.content);
+      })          
+    },
+
+    /**
+     * 绘制报表
+     */
+    drawReport(response){
+      let Vue = this;
+      let chartDataArray = response.chartData;
+      if(chartDataArray.length != 0){//chart图形
+        for (let i in chartDataArray){
+          let chartData = chartDataArray[i];
+          let portlets = Vue.report.defineJSON.content.portlets;
+          for(let p in portlets){
+            if(portlets[p].portletID == chartData.portletID){
+              let gridItemContent = {
+                  gridItemTitle:"",
+                  gridItemTitleBackgroundImg:portlets[p].tabs[0].gridItemTitleBackgroundImg,//选中title的背景图
+                  gridItemChartBoxBackgroundImg:portlets[p].tabs[0].gridItemChartBoxBackgroundImg,//选中chart容器的背景图
+                  chartBoxBackgroundStyles:portlets[p].tabs[0].chartBoxBackgroundStyles,
+                  chartId:chartData.id,
+                  chartType:chartData.type,
+                  chartComponent:"Chart",
+                  chartOption:'',
+                  chartData:chartData      
+                }
+              Vue.$refs.Grid.$refs.gridItemContent[p].initGridItemContent(gridItemContent);              
+            }
+          }
+        }        
+      }   
+    },
+
+     /**
+     * 新建报表
+     */
+    createReport(){
+      let Vue = this;
+      Vue.$refs.ReportInfoEdit.saveReportBaseInfo();//保存报表信息
+      var ClonedReport = JSON.parse(JSON.stringify(Vue.report));
+      var defineJSON = JSON.stringify(ClonedReport.defineJSON);
+      ClonedReport.defineJSON = defineJSON;
+      Vue.AxiosPost("createReport",
+        ClonedReport,
+        function(){
+          Vue.$Message.success('新建成功!');
+          Vue.closePage(event,'createReport');
+        });
+    },
+
     /**
      * 下一步操作
      */
     next() {
       let Vue = this;
-     
+      if (Vue.step >=1) return ;
+      Vue.$refs.slide.arrowEvent(1); //Slide向前移一步  
     },
 
     /**
@@ -77,7 +167,7 @@ export default {
      */
     pre() {
       let Vue = this;
-   
+      Vue.$refs.slide.arrowEvent(-1); //Slide后退一步 
     },
 
     addPortlet(){

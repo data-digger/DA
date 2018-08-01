@@ -22,19 +22,20 @@
         </div>
       </div> 
       <!-- chart图形背景容器 -->
-      <div :id="'chartBox'+portletID" 
-           class='chartBox' 
-           :style='{width:chartBoxBackgroundStyles.width,
-                    height:chartBoxBackgroundStyles.height,
-                    background:"url("+gridItemContent.gridItemChartBoxBackgroundImg+") no-repeat"}'>
-          <!-- chart图形组件 -->          
-          <component  
-            :ref="'chartContainer'+portletID"
-            :is="gridItemContent.chartComponent" 
-            :option="gridItemContent.chartOption"
-            :chartId='isEdit=="true"?"reportE"+portletID:"reportP"+portletID'
-            :styles='{width:"100%",height:"100%"}'
-          ></component>
+      <div 
+        :id="'chartBox'+portletID" 
+        class='chartBox' 
+        :style='{width:chartBoxBackgroundStyles.width,
+                height:chartBoxBackgroundStyles.height,
+                background:"url("+gridItemContent.gridItemChartBoxBackgroundImg+") no-repeat"}'>
+        <!-- chart图形组件 -->          
+       <component  
+         :ref="'chartContainer'+portletID"
+         :is="gridItemContent.chartComponent" 
+         :option="gridItemContent.chartOption"
+         :chartId='isEdit=="true"?"reportE"+portletID:"reportP"+portletID'
+         :styles='{width:"100%",height:"100%"}'
+       ></component>
       </div>
       <!-- 图形选择modal -->
       <ChartSelectModal 
