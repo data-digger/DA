@@ -3,7 +3,8 @@
       <div class="toolbar"><Button @click="addPortlet()">添加模块</Button></div>
       <Grid 
         :portlets='portlets'
-        hasExtraIcon='true'></Grid>      
+        isEdit='true'
+      ></Grid>      
     </div>
 </template>
 

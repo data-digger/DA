@@ -20,8 +20,8 @@
         drag-allow-from=".vue-draggable-handle">
         <GridItemContent 
           :portletID="item.i" 
-          :hasExtraIcon = 'hasExtraIcon'
-           ref='gridItemContent'        
+          :isEdit = 'isEdit'
+          ref='gridItemContent'        
         ></GridItemContent>
     </grid-item>
     </grid-layout>        
@@ -45,7 +45,7 @@ export default {
       resizable: true,
     }       
   },
-  props:['portlets','gridItemContent','hasExtraIcon']
+  props:['portlets','isEdit']
 }
 </script>
 

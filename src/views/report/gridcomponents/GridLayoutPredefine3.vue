@@ -1,5 +1,5 @@
 <template>
-    <Grid :portlets='portlets' hasExtraIcon='true'></Grid>
+    <Grid :portlets='portlets' isEdit='true'></Grid>
 </template>
 <script>
 import Grid from "./Grid"

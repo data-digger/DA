@@ -128,7 +128,11 @@ export default {
         }
       }     
       if(Vue.step == 3){
-        Vue.previewReport();  
+        Vue.$refs.ReportFilterEdit.saveGlobalFilterData(); 
+        Vue.$nextTick(function(){
+          Vue.$refs.ReportPreview.initReport(); 
+        });
+        
       }        
     },
 
@@ -140,21 +144,11 @@ export default {
       if(Vue.step !=0){
         Vue.$refs.slide.arrowEvent(-1); //Slide后退一步  
         if(Vue.step == 3){
-          Vue.previewReport(); 
+          Vue.$refs.ReportFilterEdit.saveGlobalFilterData();
+          Vue.$refs.ReportPreview.initReport(); 
         } 
       }
     },
-
-    /**
-     * 预览报表
-     */
-    previewReport(){
-      let Vue = this;
-      Vue.$refs.ReportFilterEdit.saveGlobalFilterData(); //向store中存储全局过滤器
-      Vue.$nextTick(function(){
-        Vue.$refs.ReportPreview.initChartComponent(); //初始化图形组件 
-      });        
-    },  
 
     /**
      * 新建报表

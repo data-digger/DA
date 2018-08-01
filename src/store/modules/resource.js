@@ -133,11 +133,6 @@ const mutations = {
     state.report.defineJSON.content.portlets=param;
   },
 
-  // /*保存报表中portlet*/
-  // addReportGridItem(state,param){
-  //   state.report.defineJSON = param;
-  // },
-
   /*删除griditem*/
   deleteGridItem(state,param){
     let portlets = state.report.defineJSON.content.portlets
