@@ -21,6 +21,7 @@
       v-model="modalpreview"
       width ="1200px"
       title="图表预览"
+      :closable="false"
       @on-ok="previewOk"
       @on-cancel="cancel">
       <!-- <Condition :showOptions='showOptions'></Condition> -->
@@ -113,10 +114,14 @@ export default {
       this.$refs.chartedit.saveChart();
     },
     previewOk(){
-
+      if(this.chartbox.type == 'InforList'){
+          this.$refs['chart'+this.chartbox.id].stopScroll();
+        }
     },
     cancel(){
-      
+        if(this.chartbox.type == 'InforList'){
+          this.$refs['chart'+this.chartbox.id].stopScroll();
+        }
     },
     drawChart(){
       let Vue = this;

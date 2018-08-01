@@ -2,6 +2,7 @@ let  ChartTemplate= {
 
 };
 ChartTemplate.TYPE = [  {type:'Bar',src:require('./../views/chartcomponents/ChartIcon/Bar.png'),desc:'柱状图'},
+                        {type:'Bar2',src:require('./../views/chartcomponents/ChartIcon/Bar.png'),desc:'柱状图2'},
                         {type:'HBar',src:require('./../views/chartcomponents/ChartIcon/HBar.png'),desc:'条形图'},
                         {type:'Line',src:require('./../views/chartcomponents/ChartIcon/Line.png'),desc:'折线图'},
                         {type:'Stack',src:require('./../views/chartcomponents/ChartIcon/Stack.png'),desc:'堆叠柱状图'},

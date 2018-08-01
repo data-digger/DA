@@ -45,7 +45,9 @@ export default {
                 case 'HBar':
                     return HBarData;
                 case 'InforList':
-                    return InforListData
+                    return InforListData;
+                case 'Bar2':
+                    return BarData;
           }
         }
     },

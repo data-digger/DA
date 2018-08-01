@@ -125,6 +125,7 @@ export default {
                                 show: true,
                                 offsetCenter: [0, '60%'],
                                 textStyle: {
+                                    fontFamily: 'bebas',
                                     fontSize: 32,
                                     fontWeight:'bolder'
                                 },
@@ -173,3 +174,9 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+<style>
+@font-face{
+    font-family: 'bebas';
+    src : url('./BEBAS___.ttf');
+}
+</style>

@@ -13,7 +13,17 @@
                 textSize
                 <Input v-model="option.textSize"></Input>                    
             </Col> 
-        </FormItem>          
+        </FormItem>   
+        <FormItem prop="ScollStyle">
+            <Col span='7'>
+                scollPerView
+                <Input v-model="option.scollPerView"></Input>                    
+            </Col>
+             <Col span='8' offset='1'>
+                delay(ms)
+                <Input v-model="option.delay"></Input>                    
+            </Col>
+        </FormItem>         
     </Row>
 </template>
 <script>
@@ -36,7 +46,10 @@ export default {
                         dayTime:'',
                         circleSize:'40px',
                         circleTextSize:'20px',
-                        textSize:'12px'
+                        textSize:'12px',
+                        scollPerView:3,
+                        delay:3000
+
                     }              
             }
     },

@@ -43,6 +43,14 @@ util.getColData = function(colName,data){
     }
 
 };
+util.splitArray = function(arr,len){
+    let arr_length = arr.length;
+    let newArr = [];
+    for(let i=0;i<arr_length;i+=len){
+        newArr.push(arr.slice(i,i+len));
+    }
+    return newArr;
+},
 
 util.analysisGridChart = function(option,data){
     let xName = option.xAxis.data;

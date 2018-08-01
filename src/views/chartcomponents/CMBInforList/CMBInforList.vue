@@ -1,7 +1,7 @@
 <template>
     <div class='infor-list-con'>
-        <CMBInforListItem v-for = "item in dataList" 
-        :key='item.id' 
+        <CMBInforListItem v-for="(item,index) in dataList" 
+        :key='index' 
         :circleText='item.circleText' 
         :title="item.title"
         :subTitle="item.subTitle"
