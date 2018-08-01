@@ -8,6 +8,7 @@ import PieData from './DataSelectPie'
 import GaugeData from './DataSelectGauge'
 import FourQuadrantData from './DataSelectFourQuadrant'
 import HBarData from './DataSelectHBar'
+import InforListData from './DataSelectInforList'
 import {mapGetters} from 'vuex'
 
 export default {
@@ -22,7 +23,8 @@ export default {
         PieData,
         GaugeData,
         FourQuadrantData,
-        HBarData
+        HBarData,
+        InforListData
                 
     },
     computed: {
@@ -42,6 +44,8 @@ export default {
                     return FourQuadrantData;
                 case 'HBar':
                     return HBarData;
+                case 'InforList':
+                    return InforListData
           }
         }
     },

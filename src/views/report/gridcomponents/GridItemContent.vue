@@ -57,13 +57,15 @@ import ChartSelectModal from './../ReportChartSelect'
 import util from './../../chartcomponents/util.js'
 import Chart from "./../../chartcomponents/Chart"//echart图形
 import CountCard from "./../../chartcomponents/CountCard"//统计卡
+import ContainerInfoList from "./../../chartcomponents/ContainerInfoList"//信息列表
 import {mapGetters} from 'vuex'
 import { isExportDeclaration } from 'babel-types';
 export default {
   components:{
     ChartSelectModal,
     Chart,
-    CountCard
+    CountCard,
+    ContainerInfoList
   },   
   props:['portletID','isEdit'],
   data(){
@@ -116,12 +118,39 @@ export default {
      */
     drawReportChart(){
       let Vue = this;
+<<<<<<< HEAD
       let data = Vue.gridItemContent.chartData.data;
       let option = JSON.parse(Vue.gridItemContent.chartData.defineJSON).option;
       let type = Vue.gridItemContent.chartData.type;
       let theme = Vue.gridItemContent.chartData.theme;
       Vue.gridItemContent.chartOption = option;
       Vue.drawEChart(option,data,type,1);
+=======
+      Vue.imgAndChartInfo = imgAndChartInfo;
+      let chart = null;
+      if(Vue.imgAndChartInfo.tabType == "chart"){
+        chart = Vue.chartList[Vue.imgAndChartInfo.chartSelected];
+      }
+      if(Vue.imgAndChartInfo.tabType == "table"){
+        chart = Vue.tableList[Vue.imgAndChartInfo.tableSelected];
+      };    
+      Vue.AxiosPost("getChartData",{'chartId':chart.id},
+        function(response){
+          if(chart.type){
+            if(chart.type == 'Card'){
+              Vue.itemComponent = "CountCard"; 
+              Vue.drawEChart(response.data.content);            
+            } else if(chart.type == 'InforList'){
+              Vue.itemComponent = "ContainerInfoList";
+              Vue.drawEChart(response.data.content);
+            } else{
+              Vue.itemComponent = "Chart" ;
+              Vue.drawEChart(response.data.content);        
+            } 
+          }
+        }
+      );
+>>>>>>> 9dd5daf4312b9f690808eb8638dd523c0dfc9228
       //存储tabs
       var tabs =[{"tabID":Vue.portletID,
                   "title":Vue.gridItemContent.gridItemTitle,

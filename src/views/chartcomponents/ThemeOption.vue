@@ -58,7 +58,7 @@ export default {
             this.$refs['theme'].attachData(eoption,data);
         },
         reset:function(){
-            this.selectedTheme = 0;
+            this.selectedTheme = 1;
             this.option = null;
         }
     },

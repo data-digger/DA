@@ -8,6 +8,7 @@ import CMBThemeStack from './CMBThemeStack'
 import CMBThemeGuage from './CMBThemeGuage'
 import CMBThemeFourQuadrant from './CMBThemeFourQuadrant'
 import CMBThemeHBar from './CMBThemeHBar'
+import CMBInforList from './CMBThemeInforList'
 import {mapGetters} from 'vuex'
 export default {
     props:{
@@ -21,7 +22,8 @@ export default {
         CMBThemeStack,
         CMBThemeGuage,
         CMBThemeFourQuadrant,
-        CMBThemeHBar
+        CMBThemeHBar,
+        CMBInforList
     },
     computed: {
       ...mapGetters({
@@ -39,6 +41,8 @@ export default {
                     return CMBThemeFourQuadrant;
                 case 'HBar':
                     return CMBThemeHBar;
+                case 'InforList':
+                    return CMBInforList
           }
       }
     },
