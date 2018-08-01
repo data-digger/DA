@@ -52,7 +52,7 @@
           <ReportInfoEdit 
             v-show='step==4?true:false' 
             ref='ReportInfoEdit'
-            :reportInfo='report'
+            :reportInfo='reportInfo'
             isCreat='true'
           ></ReportInfoEdit>
         </div>
@@ -102,6 +102,11 @@ export default {
   data () {
     return {
       step: 0,//走马灯步数
+      reportInfo:{
+        name:"",
+        alias:"",
+        desc:""
+      },
       carouselSetting: {//走马灯设置
         height:"200",
         dots:"none",

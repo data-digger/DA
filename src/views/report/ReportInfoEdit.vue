@@ -35,9 +35,6 @@ export default {
         }
     },
     props:["reportInfo",'isCreat'],
-    mounted(){
-        console.log(this.reportInfo);
-    },
     methods:{
         /**
         * 向store中保存报表中基本信息
