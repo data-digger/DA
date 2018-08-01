@@ -52,6 +52,8 @@
           <ReportInfoEdit 
             v-show='step==4?true:false' 
             ref='ReportInfoEdit'
+            :reportInfo='reportInfo'
+            isCreat='true'
           ></ReportInfoEdit>
         </div>
       </CarouselItem>
@@ -100,6 +102,11 @@ export default {
   data () {
     return {
       step: 0,//走马灯步数
+      reportInfo:{
+        name:"",
+        alias:"",
+        desc:""
+      },
       carouselSetting: {//走马灯设置
         height:"200",
         dots:"none",
@@ -128,7 +135,9 @@ export default {
         }
       }     
       if(Vue.step == 3){
-        Vue.previewReport();  
+        Vue.$refs.ReportFilterEdit.saveGlobalFilterData(); 
+
+        
       }        
     },
 
@@ -139,22 +148,9 @@ export default {
       let Vue = this;
       if(Vue.step !=0){
         Vue.$refs.slide.arrowEvent(-1); //Slide后退一步  
-        if(Vue.step == 3){
-          Vue.previewReport(); 
-        } 
+        
       }
     },
-
-    /**
-     * 预览报表
-     */
-    previewReport(){
-      let Vue = this;
-      Vue.$refs.ReportFilterEdit.saveGlobalFilterData(); //向store中存储全局过滤器
-      Vue.$nextTick(function(){
-        Vue.$refs.ReportPreview.initChartComponent(); //初始化图形组件 
-      });        
-    },  
 
     /**
      * 新建报表

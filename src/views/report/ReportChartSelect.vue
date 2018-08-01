@@ -7,8 +7,8 @@
     @on-ok="drawReportChart">
       <!-- 背景图 -->
       <RadioGroup 
-        v-model="imgAndChartInfo.imgSelecteToTitle" 
-        class='imgSelecteToTitle'
+        v-model="gridItemContent.gridItemTitleBackgroundImg" 
+        class='gridItemTitleBackgroundImg'
       >选择title背景图：
         <Radio :label="require('./../../assets/img/gridItemTitle1.png')">
           <img 
@@ -22,8 +22,8 @@
         </Radio>
       </RadioGroup>
       <RadioGroup 
-        v-model="imgAndChartInfo.imgSelecteTochartBox" 
-        class='imgSelecteTochartBox'
+        v-model="gridItemContent.gridItemChartBoxBackgroundImg" 
+        class='gridItemChartBoxBackgroundImg'
       >选择容器背景图：
         <Radio :label="require('./../../assets/img/chartBox1.png')">
           <img 
@@ -40,13 +40,13 @@
       <!-- 图形 -->
       <Tabs 
         type="card" 
-        v-model='imgAndChartInfo.tabType'
+        v-model='tabType'
       >
         <TabPane 
           label="选择图形" 
           name='chart'>
           <RadioGroup 
-            v-model="imgAndChartInfo.chartSelected" 
+            v-model="chartSelected" 
             type='button'>
             <Radio 
               v-for='(chart,chartIndex) in chartList' 
@@ -63,7 +63,7 @@
             label="选择表格" 
             name='table'>
             <RadioGroup 
-              v-model="imgAndChartInfo.tableSelected" 
+              v-model="tableSelected" 
               type='button'>
               <Radio 
                 v-for='(table,tableIndex) in tableList' 
@@ -92,23 +92,44 @@ export default {
   data(){
     return {
       isShow:false,
-      imgAndChartInfo:{
-        imgSelecteToTitle:require("./../../assets/img/gridItemTitle1.png"),//选中title的背景图
-        imgSelecteTochartBox:require('./../../assets/img/chartBox2.png'),//选中chart容器的背景图
-        tabType:"chart",//modal中当前停留的的tab，默认chart
-        chartSelected:0,//选中的chart图形
-        tableSelected:0,//选中的table图形        
+      tabType:"chart",//modal中当前停留的的tab，默认chart
+      chartSelected:0,//选中的chart图形
+      tableSelected:0,
+      gridItemContent:{
+        gridItemTitle:"",
+        gridItemTitleBackgroundImg:require("./../../assets/img/gridItemTitle1.png"),//选中title的背景图
+        gridItemChartBoxBackgroundImg:require('./../../assets/img/chartBox2.png'),//选中chart容器的背景图
+        chartId:"",
+        chartType:'',
+        chartComponent:"",
+        chartOption:'',
+        chartData:null      
       }
     }
   },
   methods:{
+
     showChartSelectModal(){
       let Vue = this;
       Vue.isShow = true;
     },
+
     drawReportChart(){
       let Vue = this;
-      this.$emit('drawReportChart', Vue.imgAndChartInfo)
+      let chart = {};
+      if(Vue.tabType == "chart"){
+        chart = Vue.chartList[Vue.chartSelected];
+      }
+      Vue.gridItemContent.chartId = chart.id;
+      Vue.gridItemContent.chartType = chart.type;
+      Vue.AxiosPost("getChartData",{'chartId':chart.id},
+        function(response){
+          Vue.gridItemContent.chartData = response.data.content;    
+          Vue.gridItemContent.chartComponent = "Chart" ;
+          Vue.$emit('initGridItemContent', Vue.gridItemContent);    
+        }
+      );
+
     }
   }
 
@@ -121,10 +142,10 @@ export default {
   margin:10px;
   display:inline-block;
 }
-.imgSelecteToTitle{
+.gridItemTitleBackgroundImg{
   margin: 10px 0px 20px 10px;
 }
-.imgSelecteTochartBox{
+.gridItemChartBoxBackgroundImg{
   margin: 0px 0px 50px 10px;
 }
 .ivu-radio-group-button .ivu-radio-wrapper{
