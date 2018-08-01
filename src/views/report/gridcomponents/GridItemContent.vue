@@ -32,7 +32,7 @@
             :ref="'chartContainer'+portletID"
             :is="gridItemContent.chartComponent" 
             :option="gridItemContent.chartOption"
-            :chartId='"report"+portletID'
+            :chartId='isEdit=="true"?"reportE"+portletID:"reportP"+portletID'
             :styles='{width:"100%",height:"100%"}'
           ></component>
       </div>
@@ -118,39 +118,12 @@ export default {
      */
     drawReportChart(){
       let Vue = this;
-<<<<<<< HEAD
       let data = Vue.gridItemContent.chartData.data;
       let option = JSON.parse(Vue.gridItemContent.chartData.defineJSON).option;
       let type = Vue.gridItemContent.chartData.type;
       let theme = Vue.gridItemContent.chartData.theme;
       Vue.gridItemContent.chartOption = option;
       Vue.drawEChart(option,data,type,1);
-=======
-      Vue.imgAndChartInfo = imgAndChartInfo;
-      let chart = null;
-      if(Vue.imgAndChartInfo.tabType == "chart"){
-        chart = Vue.chartList[Vue.imgAndChartInfo.chartSelected];
-      }
-      if(Vue.imgAndChartInfo.tabType == "table"){
-        chart = Vue.tableList[Vue.imgAndChartInfo.tableSelected];
-      };    
-      Vue.AxiosPost("getChartData",{'chartId':chart.id},
-        function(response){
-          if(chart.type){
-            if(chart.type == 'Card'){
-              Vue.itemComponent = "CountCard"; 
-              Vue.drawEChart(response.data.content);            
-            } else if(chart.type == 'InforList'){
-              Vue.itemComponent = "ContainerInfoList";
-              Vue.drawEChart(response.data.content);
-            } else{
-              Vue.itemComponent = "Chart" ;
-              Vue.drawEChart(response.data.content);        
-            } 
-          }
-        }
-      );
->>>>>>> 9dd5daf4312b9f690808eb8638dd523c0dfc9228
       //存储tabs
       var tabs =[{"tabID":Vue.portletID,
                   "title":Vue.gridItemContent.gridItemTitle,
@@ -168,8 +141,8 @@ export default {
      */
     drawEChart (option,data,type,theme) {
       let Vue = this;
-      util.attachData(option,data,type,theme);
       Vue.$nextTick(function(){
+        util.attachData(option,data,type,theme)
         Vue.$refs['chartContainer'+Vue.portletID].show(option);
         Vue.chartView =Vue.$refs['chartContainer'+Vue.portletID].getChartView();
       }) 

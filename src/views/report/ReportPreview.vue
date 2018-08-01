@@ -34,7 +34,7 @@ export default {
     
   mounted(){
     let Vue = this;
-    // Vue.initReport();
+    Vue.initReport();
   },
   
   methods:{
@@ -80,7 +80,7 @@ export default {
      */
     drawReport(response){
       let Vue = this;
-      var chartDataArray = response.chartData;
+      let chartDataArray = response.chartData;
       if(chartDataArray.length != 0){//chart图形
         for (let i in chartDataArray){
           let chartData = chartDataArray[i];

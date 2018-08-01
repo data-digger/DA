@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <Carousel 
       v-model="step" 
       :dots="carouselSetting.dots" 
