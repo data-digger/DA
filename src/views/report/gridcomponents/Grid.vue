@@ -3,8 +3,8 @@
     :layout='portlets'
     :col-num="12" 
     :row-height="30" 
-    :is-draggable="draggable" 
-    :is-resizable="resizable" 
+    :is-draggable="isEdit=='true'?true:false" 
+    :is-resizable="isEdit=='true'?true:false" 
     :vertical-compact="true" 
     :use-css-transforms="true">
     <grid-item 

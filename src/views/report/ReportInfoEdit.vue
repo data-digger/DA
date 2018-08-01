@@ -1,22 +1,21 @@
 <template>
   <Form 
     id="createReport"  
-    :model="reportInfo" 
-    :label-width="80" 
-    :rules="ruleValidate">
-    <FormItem label="名称" prop="name">
+    :label-width="80">
+    <FormItem label="名称">
         <Input 
           v-model="reportInfo.name" 
           placeholder="输入名称"
+          :disabled='isCreat=="true"?false:true'
         ></Input>
     </FormItem>
-    <FormItem label="别名" prop="alias">
+    <FormItem label="别名">
         <Input 
           v-model="reportInfo.alias" 
           placeholder="输入别名"
         ></Input>
     </FormItem>
-    <FormItem label="描述" prop="desc">
+    <FormItem label="描述">
         <Input 
           v-model="reportInfo.desc" 
           type="textarea" 
@@ -28,24 +27,16 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+
 export default {
     data(){
         return {
-            reportInfo:{
-                name:'',
-                alias:'',
-                desc:''
-            },
-            ruleValidate:{
-                name: [
-                    { required: true, message: '名称不能为空', trigger: 'blur' }
-                ],
-                alias: [
-                    { required: true, message: '别名不能为空', trigger: 'blur' }
-                ]
-            }         
+               
         }
+    },
+    props:["reportInfo",'isCreat'],
+    mounted(){
+        console.log(this.reportInfo);
     },
     methods:{
         /**

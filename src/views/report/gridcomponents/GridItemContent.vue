@@ -89,6 +89,9 @@ export default {
     let Vue = this;
     Vue.resized();   
   },
+  watch:{
+    chartBoxBackgroundStyles:"saveTabs"
+  },
   methods:{
 
     /**
@@ -125,16 +128,9 @@ export default {
       let theme = Vue.gridItemContent.chartData.theme;
       Vue.gridItemContent.chartOption = option;
       Vue.drawEChart(option,data,type,1);
-      //存储tabs
-      var tabs =[{"tabID":Vue.portletID,
-                  "title":Vue.gridItemContent.gridItemTitle,
-                  "objid":Vue.gridItemContent.chartId,
-                  "objtype":Vue.gridItemContent.chartType,
-                  'gridItemTitleBackgroundImg':Vue.gridItemContent.gridItemTitleBackgroundImg,
-                  'gridItemChartBoxBackgroundImg':Vue.gridItemContent.gridItemChartBoxBackgroundImg,
-                  'chartBoxBackgroundStyles':Vue.chartBoxBackgroundStyles}
-                ];
-      Vue.$store.commit("saveTabs",tabs); 
+      if(Vue.isEdit == "true"){
+        Vue.saveTabs();
+      }
     },
 
     /**
@@ -169,6 +165,7 @@ export default {
       let Vue = this;
         EleResize.on(document.getElementById('portlet'+Vue.portletID), function(){
         if(Vue.chartView){
+          Vue.getChartBackgroundStyle();
           Vue.chartView.resize();
         }                
       });
@@ -181,6 +178,22 @@ export default {
       let Vue = this;
       Vue.$store.commit("deleteGridItem",portletID);
     },
+
+    /**
+     * 保存当前tabs
+     */
+    saveTabs(){
+      let Vue = this;
+      let tabs =[{"tabID":Vue.portletID,
+                  "title":Vue.gridItemContent.gridItemTitle,
+                  "objid":Vue.gridItemContent.chartId,
+                  "objtype":Vue.gridItemContent.chartType,
+                  'gridItemTitleBackgroundImg':Vue.gridItemContent.gridItemTitleBackgroundImg,
+                  'gridItemChartBoxBackgroundImg':Vue.gridItemContent.gridItemChartBoxBackgroundImg,
+                  'chartBoxBackgroundStyles':Vue.chartBoxBackgroundStyles}
+                ];
+      Vue.$store.commit("saveTabs",tabs); 
+    }
   }
 }
 </script>

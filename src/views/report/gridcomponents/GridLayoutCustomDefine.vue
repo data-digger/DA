@@ -33,7 +33,7 @@ export default {
       let portlet = { 
         "portletID":""+Vue.index,
         "name":"portleName",
-        "x":0,"y":0,"w":6,"h":4,"i":""+Vue.index,
+        "x":0,"y":y,"w":6,"h":4,"i":""+Vue.index,
         "tabs":[{
         "id":""+Vue.index,
         "title":"",

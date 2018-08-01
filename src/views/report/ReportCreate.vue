@@ -52,6 +52,8 @@
           <ReportInfoEdit 
             v-show='step==4?true:false' 
             ref='ReportInfoEdit'
+            :reportInfo='report'
+            isCreat='true'
           ></ReportInfoEdit>
         </div>
       </CarouselItem>
@@ -129,9 +131,7 @@ export default {
       }     
       if(Vue.step == 3){
         Vue.$refs.ReportFilterEdit.saveGlobalFilterData(); 
-        Vue.$nextTick(function(){
-          Vue.$refs.ReportPreview.initReport(); 
-        });
+
         
       }        
     },
@@ -143,10 +143,7 @@ export default {
       let Vue = this;
       if(Vue.step !=0){
         Vue.$refs.slide.arrowEvent(-1); //Slide后退一步  
-        if(Vue.step == 3){
-          Vue.$refs.ReportFilterEdit.saveGlobalFilterData();
-          Vue.$refs.ReportPreview.initReport(); 
-        } 
+        
       }
     },
 

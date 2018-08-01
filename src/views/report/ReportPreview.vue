@@ -84,8 +84,9 @@ export default {
         for (let i in chartDataArray){
           let chartData = chartDataArray[i];
           let portlets = Vue.report.defineJSON.content.portlets;
+          let gridItemContentCmps = Vue.$refs.Grid.$refs.gridItemContent;
           for(let p in portlets){
-            if(portlets[p].portletID == chartData.portletID){
+            if(portlets[p].portletID == chartData.portletID && chartData.portletID == gridItemContentCmps[p].portletID){
               let gridItemContent = {
                   gridItemTitle:"",
                   gridItemTitleBackgroundImg:portlets[p].tabs[0].gridItemTitleBackgroundImg,//选中title的背景图
@@ -97,7 +98,7 @@ export default {
                   chartOption:'',
                   chartData:chartData      
                 }
-              Vue.$refs.Grid.$refs.gridItemContent[p].initGridItemContent(gridItemContent);              
+              gridItemContentCmps[p].initGridItemContent(gridItemContent);              
             }
           }
         }        

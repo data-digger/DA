@@ -12,7 +12,6 @@
            <div class="toolbar"><Button @click="addPortlet()">添加模块</Button></div>
            <Grid        
              :portlets='report.defineJSON.content.portlets'
-             isEdit='true'
              ref='Grid'
            ></Grid>
         </div>
@@ -21,6 +20,8 @@
       <CarouselItem>
         <div class="demo-carousel">
           <ReportInfoEdit 
+            :reportInfo='report'
+            isCreat='false'
             ref='ReportInfoEdit'
           ></ReportInfoEdit>
         </div>
@@ -63,7 +64,7 @@ export default {
         dots:"none",
         arrow:"never"
       },
-      index:10
+      index:0
     }
   },
 
@@ -79,7 +80,15 @@ export default {
   },
 
   methods:{
-
+    indexFilter(){
+      let portlets = this.report.defineJSON.content.portlets;
+      let max = portlets[0].portletID;
+      for(let i in portlets){
+        let portletID = portlets[i].portletID;
+        portletID>max ? max=portletID : null;
+      }
+      return parseInt(max);
+    },
     /**
      * 初始化报表
      */
@@ -116,8 +125,9 @@ export default {
         for (let i in chartDataArray){
           let chartData = chartDataArray[i];
           let portlets = Vue.report.defineJSON.content.portlets;
+          let gridItemContentCmps = Vue.$refs.Grid.$refs.gridItemContent;
           for(let p in portlets){
-            if(portlets[p].portletID == chartData.portletID){
+            if(portlets[p].portletID == chartData.portletID && chartData.portletID == gridItemContentCmps[p].portletID){
               let gridItemContent = {
                   gridItemTitle:"",
                   gridItemTitleBackgroundImg:portlets[p].tabs[0].gridItemTitleBackgroundImg,//选中title的背景图
@@ -129,7 +139,7 @@ export default {
                   chartOption:'',
                   chartData:chartData      
                 }
-              Vue.$refs.Grid.$refs.gridItemContent[p].initGridItemContent(gridItemContent);              
+              gridItemContentCmps[p].initGridItemContent(gridItemContent);              
             }
           }
         }        
@@ -174,11 +184,11 @@ export default {
       let Vue = this;
       let layout = Vue.report.defineJSON.content.portlets;
       let y = Vue._getBottom(layout);
-      Vue.index = Vue.index+1;
+      Vue.index = Vue.indexFilter()+1;
       let portlet = { 
         "portletID":""+Vue.index,
         "name":"portleName",
-        "x":0,"y":0,"w":6,"h":4,"i":""+Vue.index,
+        "x":0,"y":y,"w":6,"h":4,"i":""+Vue.index,
         "tabs":[{
         "id":""+Vue.index,
         "title":"",
