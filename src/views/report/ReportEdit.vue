@@ -13,6 +13,7 @@
            <Grid        
              :portlets='report.defineJSON.content.portlets'
              ref='Grid'
+             isEdit='true'
            ></Grid>
         </div>
       </CarouselItem>
