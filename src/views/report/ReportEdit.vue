@@ -9,7 +9,7 @@
       <!-- 画图编辑-->
       <CarouselItem class='carousel-repor'>
         <div class="demo-carousel">
-           <div class="toolbar"><Button @click="addPortlet()">添加模块</Button></div>
+           <div class="toolbar"><Button @click="addPortlet()">添加指标</Button></div>
            <Grid        
              :portlets='report.defineJSON.content.portlets'
              ref='Grid'
