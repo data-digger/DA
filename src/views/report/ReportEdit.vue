@@ -83,10 +83,10 @@ export default {
   methods:{
     indexFilter(){
       let portlets = this.report.defineJSON.content.portlets;
-      let max = portlets[0].portletID;
+      let max = parseInt(portlets[0].portletID);
       for(let i in portlets){
         let portletID = portlets[i].portletID;
-        portletID>max ? max=portletID : null;
+        parseInt(portletID)>max ? max=parseInt(portletID) : null;
       }
       return parseInt(max);
     },
