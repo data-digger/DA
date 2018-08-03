@@ -175,8 +175,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-@font-face{
-    font-family: 'bebas';
-    src : url('./BEBAS___.ttf');
-}
+
 </style>

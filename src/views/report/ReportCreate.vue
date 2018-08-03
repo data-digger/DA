@@ -128,16 +128,9 @@ export default {
     next() {
       let Vue = this;
       if (Vue.step >=4) return ;
-      Vue.$refs.slide.arrowEvent(1); //Slide向前移一步  
-      if(Vue.step == 1){
-        if(Vue.report.defineJSON.content.currentReportGridLayout != 'GridLayoutCustomDefine'){
-          Vue.$refs.currentReportGridLayout.saveCurrentReportGridItem();
-        }
-      }     
+      Vue.$refs.slide.arrowEvent(1); //Slide向前移一步      
       if(Vue.step == 3){
         Vue.$refs.ReportFilterEdit.saveGlobalFilterData(); 
-
-        
       }        
     },
 
