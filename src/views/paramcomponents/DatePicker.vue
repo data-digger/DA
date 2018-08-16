@@ -10,28 +10,30 @@
 </template>
 <script>
     export default {
-        props:["componentType",'defaultValue','index','randomName'],
+        props:['cmpContent'],
         computed:{
-          datePickerType(){
-            let Vue = this;
-            if(Vue.componentType){
-              if(Vue.componentType == 'DateByMonth'){
-                return 'month'        
-              } 
-              if(Vue.componentType == 'DateByDay'){
-                return 'date'          
-              }           
-            }            
-          }
+          // datePickerType(){
+          //   let Vue = this;
+          //   if(Vue.componentType){
+          //     if(Vue.componentType == 'DateByMonth'){
+          //       return 'month'        
+          //     } 
+          //     if(Vue.componentType == 'DateByDay'){
+          //       return 'date'          
+          //     }           
+          //   }            
+          // }
         },
         watch:{
-          randomName (val) {
-             this.selectedValue = this.defaultValue;
-          }
+          // randomName (val) {
+          //    this.selectedValue = this.defaultValue;
+          // }
         },
         data () {
             return {
-              selectedValue:this.defaultValue
+              selectedValue:cmpContent.defaultValue,
+              datePickerType:cmpContent.type,
+              
             }
         },
         methods:{

@@ -11,7 +11,7 @@
         <Creator routerpath="/createDatasource" id='creator_datasource'></Creator>     
       </Row>
     </Row>
-<!-- 
+
     <Row id='scroll-param'  class=" param">
       <Col>
         <div class="note note-param">
@@ -22,7 +22,7 @@
         <ParamBox v-for="pr in paramList" :key='pr.id' :parambox = 'pr'></ParamBox>
         <Creator routerpath='/createParam' id='creator_param'></Creator>
       </Row>       
-    </Row>  -->
+    </Row>  
 
 
     <Row id='scroll-query'  class=" query">
@@ -84,7 +84,7 @@
 
 <script>
 import DatasourceBox from './../components/DatasourceBox'
-/*import ParamBox from './../components/ParamBox'*/
+import ParamBox from './../components/ParamBox'
 import Creator from './../components/Creator'
 import ReportBox from './../components/ReportBox'
 import ChartBox from './../components/ChartBox'
@@ -110,12 +110,12 @@ export default {
     QueryBox,
     ChartBox,
     // TableBox,
-   /* ParamBox*/
+   ParamBox
   },
   computed: {
     ...mapGetters({
       datasourceList: 'datasourceList',
-      /*paramList: 'paramList',*/
+      paramList: 'paramList',
       reportList:'reportList',
       chartList:'chartList',
       queryList:'queryList',
@@ -136,14 +136,14 @@ export default {
         }
       );   
     },
-/*    getParamBox(){
+    getParamBox(){
       let Vue = this;
       Vue.AxiosPost("getParamList",'',
         function(response){
           Vue.$store.dispatch('getParamBox',response);
         }
       );   
-    },*/
+    },
     getQueryBox (){
       let Vue = this;
       Vue.AxiosPost("getQueryList",'',
@@ -183,7 +183,7 @@ export default {
   },
   mounted (){
      this.getDatasourceBox();
-    /* this.getParamBox();*/
+     this.getParamBox();
      this.getReportBox();
      this.getQueryBox();
      this.getChartBox();
@@ -233,3 +233,5 @@ export default {
   opacity: 0.5;
 }
 </style>
+
+{"componenttype":"list","valuetype":"String","defalutDefine":{"key":"牛肉","value":"牛肉"},"standbyDefine":{"valueSource":"SQL","values":"select cname,cname from t_price;","dataSourceID":"DS.demo_db"},"formattype":"","datetime":""}

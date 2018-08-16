@@ -18,6 +18,7 @@ window.urlConf = {
     calculatedfield:`${window.uri}/bizview/column/calculatedfield/preview`,
     update_calculatedfield:`${window.uri}/bizview/column/save`,
     deleteField:`${window.uri}/bizview/column/delete`,
+    initData:`${window.uri}/bizview/initData`,
   },
   chart: {
     list:`${window.uri}/chart/list`,
@@ -44,7 +45,8 @@ window.urlConf = {
   param: {
     list:`${window.uri}/parameter/list`,
     save: `${window.uri}/parameter/save`,
-    getstandbyvalue: `${window.uri}/parameter/getValue`,
+    getSqlStandBy: `${window.uri}/parameter/getSqlStandBy`,
+    
   },
 }
 
@@ -178,8 +180,8 @@ export default {
       return axios.post(urlConf.param.list, params); 
     },
     /*获取参数候选值*/
-    getStandByValue(params){
-      return axios.post(urlConf.param.getstandbyvalue, params); 
+    getSqlStandBy(params){
+      return axios.post(urlConf.param.getSqlStandBy, params); 
     },
     /*获取图表数据*/
     chartPreview(params){
@@ -188,5 +190,9 @@ export default {
     /*获取过滤器列表候选值*/
     getFilterStandByValue(params){
       return axios.post(urlConf.chart.filterStandByValue, params); 
-    }
+    },
+     /*初始化查询器数据*/
+     initData(params){
+      return axios.post(urlConf.bizview.initData, params); 
+     }
 };

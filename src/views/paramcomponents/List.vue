@@ -1,36 +1,38 @@
 <template>
     <div>
+        {{pName}}:
         <Select 
             :value = "selectedValue" 
             style="width:300px" 
             class='select'
             :multiple='componentType == "multiSelect" ? true:false'
             @on-change='sentDate'>
-            <Option v-for='(sdbValue,sdbIndex) in standByValue' :value='sdbValue.value' :key='sdbValue.value'>{{sdbValue.value}}</Option>
+            <Option v-for='(sdbValue,sdbIndex) in standByValue' :value='sdbValue.key' :key='sdbValue.key'>{{sdbValue.value}}</Option>
         </Select>
     </div>
 </template>
 <script>
     export default {
-        props:["componentType",'standByValue','defaultValue','index','randomName'],
+        props:["cmpContent"],
         data(){
             return{
-                selectedValue:this.defaultValue
+                pId :this.cmpContent.pId,
+                pName:this.cmpContent.pName,
+                selectedValue:this.cmpContent.defaultValue,
+                standByValue : this.cmpContent.standByValue,
+                componentType: "singleSelect",
             }
-        },
-        watch:{
-          randomName (val) {
-             this.selectedValue = this.defaultValue;
-          }
         },
         methods:{
           //传递所选值到其他组件
           sentDate(selection){
             let Vue = this;
-            if(Vue.componentType == 'singleSelect'){
-                selection = [selection];
-            }
-            Vue.$emit("sentDate",{index:Vue.index,value:selection});
+            let paramValue = {};
+            paramValue[Vue.pId] = selection;
+            // if(Vue.componentType == 'singleSelect'){
+            //     selection = [selection];
+            // }
+            Vue.$emit("sentDate",paramValue);
           },
         },
     }

@@ -22,6 +22,9 @@
                 v-model="showSQLResultModal"
                 width ="1200px"
                 title="数据预览">
+                  <Row>
+                    <component class='paramcomponent' v-for='(cmp,index) in paramComponent' :is="cmp.component" :key='index' :cmpContent='cmp.content' @sentDate = 'refreshData' v-if="showSQLResultModal"></component>
+                  </Row>
                   <iviewtable :tableContent='queryMetaData' :pageSize='pageSize'></iviewtable>        
                 </Modal>
               </Col>
@@ -78,12 +81,16 @@ import {mapGetters} from 'vuex'
 import treebox from './../paramcomponents/Tree'
 import fieldTable from './../chartcomponents/FieldTable'
 import iviewtable from './../chartcomponents/Table'
+import datepicker from "./../paramcomponents/DatePicker"
+import list from "./../paramcomponents/List"
 export default {
   name:"createQuery",
   components:{
     treebox,
     fieldTable,
-    iviewtable
+    iviewtable,
+    list,
+    datepicker
   },
   computed:{
   ...mapGetters({
@@ -124,7 +131,9 @@ export default {
       route:null,
       isCreate:true,
       queryMetaData:null,
-      edit_queryMetaData:null
+      edit_queryMetaData:null,
+      paramComponent:[],
+      paramSelected:null,
     }
   },
   methods:{
@@ -284,7 +293,8 @@ export default {
     previewSQLResult(){
       let Vue = this;
       Vue.showSQLResultModal = true;
-      Vue.getQueryMetaData();
+      //Vue.getQueryMetaData();
+      Vue.initData();
     },
 
     /*获取查询器元数据，该数据包括预览结果集，字段元数据，输出字段数据类型*/
@@ -303,6 +313,80 @@ export default {
           else
             Vue.$Message.error('SQL Error: ' + response.data.content);
         });          
+    },
+    initData(){
+      let Vue = this;
+      Vue.bizView.defineJSON = Vue.sqlEditor.doc.getValue();
+      let params = {
+        'dataSourceId': Vue.bizView.dataSourceId,
+        'expStr': Vue.bizView.defineJSON
+      };
+      Vue.AxiosPost("initData",params,
+        function(response){        
+           if(response.data.success) {
+              Vue.queryMetaData = response.data.content.data;
+              let paramIds = response.data.content.pIds;
+              let parameters = response.data.content.paramters;
+              Vue.initParameterComponents(paramIds,parameters);
+           }
+            else
+              Vue.$Message.error('SQL Error: ' + response.data.content);
+        }); 
+    },
+
+    initParameterComponents(paramIds,parameters){
+      let Vue = this;
+      Vue.paramComponent = [];
+      if(paramIds.length > 0){
+        for(let i=0; i<paramIds.length; i++){
+          let pId = paramIds[i];
+          let parameter = parameters[pId];
+          let pName = parameter.name;
+          let parameterDefine = JSON.parse(parameter.defineJSON);
+          let paramType = parameterDefine.componenttype;
+          if(paramType == 'list'){
+            let cmpObj = {};
+            let content = {};
+            cmpObj.component = list;
+            content.pId = pId;
+            content.pName = pName;
+            content.defaultValue = parameterDefine.defalutDefine.key;
+            content.standByValue = parameter.standByList;
+            cmpObj.content = content; 
+            Vue.paramComponent.push(cmpObj);
+          };
+          if(paramType == 'date'){
+            // let cmpObj = {};
+            // cmpObj.component = datepicker;
+            // cmpObj.content = response.data.defaultParameters[i];
+            // Vue.paramComponent.push(cmpObj);
+          }
+        }            
+          }else{
+            Vue.currentTableData = response.data;
+          }
+    },
+
+    refreshData(param){
+      let Vue = this;
+      Vue.paramSelected = $.extend(Vue.paramSelected,param);
+      let paramLength = Object.keys(Vue.paramSelected).length;
+      let JSONParam = JSON.stringify(Vue.paramSelected);
+      if(paramLength == Vue.paramComponent.length){
+        Vue.AxiosPost("updateBizView",
+        {
+          'dataSourceId': Vue.bizView.dataSourceId,
+          'expStr': Vue.bizView.defineJSON,
+          "JSONParam":JSONParam
+        },
+        function(response){
+          if(response.data.success){
+            Vue.queryMetaData = response.data.content;
+            //Vue.currentTableData = [];
+          }  
+        });         
+      }
+     
     }
       
   },

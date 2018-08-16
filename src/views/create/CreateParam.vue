@@ -81,8 +81,18 @@
                     <textarea id='standbyDefineEditor'></textarea>
                 </FormItem>                
                 <FormItem label="缺省值" prop="defalutDefine"v-if = 'param.defineJSON.standbyDefine.valueSource == "SQL"?true:false'>
-                    <Col span='10'><Input size="small" v-model = 'param.defineJSON.defalutDefine.value'><span slot="prepend">值</span></Input></Col>
-                    <Col span='10'><Input size="small" v-model = 'param.defineJSON.defalutDefine.key'><span slot="prepend">码值</span></Input></Col>
+                    <Col span='1'>码值</Col>
+                    <Col span='10'>
+                      <Select size="small" v-model = 'param.defineJSON.defalutDefine.key' @on-open-change='getStandByValue'>
+                        <Option v-for="key in keyList" :value="key" :key="key">{{ key}}</Option>
+                      </Select>
+                    </Col>
+                    <Col span='1' offset='1'>表现值</Col>
+                    <Col span='10'>
+                      <Select size="small" v-model = 'param.defineJSON.defalutDefine.value' @on-open-change='getStandByValue'>
+                        <Option v-for="value in valueLsit" :value="value" :key="value">{{ value }}</Option>
+                      </Select>
+                    </Col>
                 </FormItem>
             </Col>
             <Col span="24" v-if = 'param.defineJSON.componenttype == "tree"?true:false'>
@@ -127,10 +137,13 @@ export default {
      data () {
         return {
         param:null,
+        standByisInit:true,
         standbyData:{
             value:null,
             key:null
         },
+        keyList:[],
+        valueLsit:[],
         dateType:{
           date:"DaterangeShow",
           month:"monthShow"
@@ -144,9 +157,9 @@ export default {
             alias: [
               { required: true, message: '别名不能为空'}
             ],
-            componenttype:[
-              { required :true, message:'不能为空',trigger:'change'}
-            ]
+            // componenttype:[
+            //   { required :true, message:'不能为空',trigger:'change'}
+            // ]
         }
     }
   },
@@ -154,7 +167,8 @@ export default {
     createParam(param){
       let Vue = this;
       if(Vue.param.defineJSON.standbyDefine.valueSource == 'SQL'){
-        Vue.param.defineJSON.standbyDefine.values.push(Vue.standbyData);
+        //Vue.param.defineJSON.standbyDefine.values.push(Vue.standbyData);
+        Vue.param.defineJSON.standbyDefine.values = Vue.standbyData.value
       }        
       var ClonedParam = JSON.parse(JSON.stringify(Vue.param));
       var defineJSON = JSON.stringify(ClonedParam.defineJSON);
@@ -238,6 +252,7 @@ export default {
         }); 
         Vue.editor1.on("change",function(){
             Vue.standbyData.value = Vue.editor1.getValue();
+            Vue.standByisInit = true;
         });   
     },
     changeValueSource(currentValueSource){
@@ -255,6 +270,35 @@ export default {
             }
             
         }
+    },
+    getStandByValue(isOpen){
+      let Vue = this;
+      let expr = this.standbyData.value;
+      let dataSourceId = Vue.param.defineJSON.standbyDefine.dataSourceID;
+      if(isOpen && Vue.standByisInit && expr && dataSourceId){
+        Vue.keyList = [];
+        Vue.valueLsit = [];
+        let params = {
+          'dataSourceId':dataSourceId,
+          'expStr':expr
+        }
+         Vue.AxiosPost("getSqlStandBy",params,
+               function(response){
+                 if(response.data.success){
+                   let standby = response.data.content;
+                   for(let i = 0; i < standby.length; i++){
+                     Vue.keyList.push(standby[i].key);
+                     Vue.valueLsit.push(standby[i].value);
+                   }
+                   Vue.standByisInit = false;
+                 }
+               });
+
+        
+        
+
+      }
+      
     },
     initParamData(to,from){
       let Vue = this;      
@@ -298,3 +342,4 @@ export default {
 <style scoped>
 
 </style>
+
